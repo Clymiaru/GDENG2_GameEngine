@@ -1,13 +1,13 @@
+#include <iostream>
+
 #include "AppWindow.h"
 #include "Engine/Utils/Math.h"
-#include "Engine/Utils/Debug.h"
-int main()
+
+auto main() -> int
 {
-	const auto APP_WINDOW_SIZE = Engine::Vector2Int({ 1280, 720 });
-
-	auto app = App::AppWindow(L"Game Engine", 
-							  APP_WINDOW_SIZE);
-
+	constexpr auto appWindowSize = Engine::Vector2Int({1280, 720});
+	auto app                     = App::AppWindow(L"Game Engine",
+	                                              appWindowSize);
 	if (app.Init())
 	{
 		while (app.IsRunning())
@@ -15,4 +15,11 @@ int main()
 			app.Broadcast();
 		}
 	}
+
+	// if (!app.Release())
+	// {
+	// 	std::cout << "App has an error being destroyed!\n";
+	// }
+	
+	return 0;
 }

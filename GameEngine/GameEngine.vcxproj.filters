@@ -27,6 +27,9 @@
     <ClInclude Include="Source\Engine\Graphics\SwapChain.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Engine\Utils\Color32.h">
       <Filter>Engine\Utils</Filter>
     </ClInclude>
@@ -42,7 +45,6 @@
     <ClInclude Include="Source\Engine\Window.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\App\AppWindow.cpp">
@@ -60,9 +62,11 @@
     <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp" />
   </ItemGroup>
 </Project>

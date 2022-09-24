@@ -33,6 +33,8 @@ project (ProjectName)
     language "C++"
     cppdialect "C++20"
     staticruntime "on"
+    toolset "v143"
+
     
     targetdir ("bin/"..OutputDir.."/%{prj.name}")
     objdir ("bin-int/"..OutputDir.."/%{prj.name}")
@@ -45,7 +47,8 @@ project (ProjectName)
 
     links
     {
-        "d3d11.lib"
+        "d3d11.lib",
+        "d3dcompiler.lib"
     }
 
 	filter "platforms:Win32"

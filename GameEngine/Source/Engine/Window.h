@@ -1,34 +1,46 @@
 #pragma once
-
 #include <Windows.h>
-#include "Utils/Math.h"
 #include <string>
+#include "Utils/Math.h"
 
 namespace Engine
 {
 	class Window
 	{
 	public:
-		Window(const std::wstring& windowName, 
-			   Vector2Int windowSize);
-		virtual ~Window();
+		Window(std::wstring windowName,
+		       Vector2Int windowSize);
 
-		bool Init();
-		bool Release();
-		bool Broadcast();
-		bool IsRunning();
+		virtual ~Window() = default;
 
-		virtual void OnCreate();
-		virtual void OnUpdate();
-		virtual void OnDestroy();
+		auto Init() -> bool;
 
-		RECT GetClientWindowRect();
-		void SetHandle(HWND windowHandle);
+		[[nodiscard]]
+		auto Release() const -> bool;
+
+		auto Broadcast() -> bool;
+
+		[[nodiscard]]
+		auto IsRunning() const -> bool;
+
+		[[nodiscard]]
+		auto GetClientWindowRect() const -> RECT;
+
+		auto SetHandle(HWND windowHandle) -> void;
+
+		virtual auto OnCreate() -> void;
+
+		virtual auto OnUpdate() -> void;
+
+		virtual auto OnDestroy() -> void;
 
 	protected:
 		HWND m_Handle;
+
 		bool m_IsRunning;
+
 		Vector2Int m_WindowSize;
+
 		std::wstring m_WindowName;
 	};
 }

@@ -5,20 +5,27 @@
 namespace Engine
 {
 	class DeviceContext;
+
 	class SwapChain
 	{
 	public:
 		SwapChain();
-		~SwapChain();
-		bool Init(HWND windowHandle, const Engine::Vector2Int& windowSize);
-		bool Present(bool vsync);
-		bool Release();
-		
+
+		~SwapChain() = default;
+
+		auto Init(HWND windowHandle,
+		          const Vector2Int& windowSize) -> bool;
+
+		auto Present(bool vsync) const -> void;
+
+		auto Release() const -> void;
+
 	private:
-		IDXGISwapChain* m_DXGISwapChain;
+		IDXGISwapChain* m_DxgiSwapChain;
+
 		ID3D11RenderTargetView* m_RenderTargetView;
 
-		void CreateRenderTargetView(ID3D11Resource* resource, ID3D11RenderTargetView** renderTargetView);
+		ID3D11DepthStencilView* m_DepthStencilView;
 
 		friend class DeviceContext;
 	};

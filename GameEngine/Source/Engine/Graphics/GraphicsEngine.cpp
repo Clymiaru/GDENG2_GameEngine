@@ -1,147 +1,182 @@
 #include "GraphicsEngine.h"
-#include <vector>
-
-#include "Engine/Utils/Debug.h"
-#include "Engine/Graphics/SwapChain.h"
-#include "Engine/Graphics/DeviceContext.h"
-#include "Engine/Graphics/VertexBuffer.h"
-
 #include <d3dcompiler.h>
+#include <vector>
+#include "Engine/Graphics/DeviceContext.h"
+#include "Engine/Graphics/SwapChain.h"
+#include "Engine/Graphics/VertexBuffer.h"
+#include "Engine/Graphics/VertexShader.h"
+#include "Engine/Graphics/PixelShader.h"
+#include "Engine/Utils/Debug.h"
 
 Engine::GraphicsEngine::GraphicsEngine() :
 	m_D3DDevice(nullptr),
 	m_FeatureLevel(D3D_FEATURE_LEVEL_11_0),
+	m_DxgiDevice{nullptr},
+	m_DxgiAdapter{nullptr},
+	m_DxgiFactory{nullptr},
 	m_DeviceContext(nullptr)
 {
 }
 
-void Engine::GraphicsEngine::Init(HWND windowHandle, const Engine::Vector2Int& windowSize)
+auto Engine::GraphicsEngine::Init() -> void
 {
-	std::vector<D3D_DRIVER_TYPE> driverTypes =
+	const std::vector<D3D_DRIVER_TYPE> driverTypes =
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
 		D3D_DRIVER_TYPE_WARP,
 		D3D_DRIVER_TYPE_REFERENCE
 	};
 
-	std::vector<D3D_FEATURE_LEVEL> featureLevels =
+	const std::vector<D3D_FEATURE_LEVEL> featureLevels =
 	{
 		D3D_FEATURE_LEVEL_11_0
 	};
 
 	HRESULT result = 0;
-	for (size_t i = 0; i < driverTypes.size(); ++i)
-	{
-		result = D3D11CreateDevice(NULL,
-			driverTypes[i],
-			NULL,
-			NULL,
-			featureLevels.data(),
-			featureLevels.size(),
-			D3D11_SDK_VERSION,
-			&m_D3DDevice,
-			&m_FeatureLevel,
-			&m_DeviceContext);
 
+	for (const auto& driverType : driverTypes)
+	{
+		result = D3D11CreateDevice(nullptr,
+		                           driverType,
+		                           nullptr,
+		                           NULL,
+		                           featureLevels.data(),
+		                           static_cast<UINT>(featureLevels.size()),
+		                           D3D11_SDK_VERSION,
+		                           &m_D3DDevice,
+		                           &m_FeatureLevel,
+		                           &m_DeviceContext);
 		if (SUCCEEDED(result))
 			break;
 	}
 
-	ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!");
+	//ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!")
 
 	m_ImmediateDeviceContext = CreateScope<DeviceContext>(m_DeviceContext);
 
-	m_D3DDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_DXGIDevice);
-	m_DXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&m_DXGIAdapter);
-	m_DXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_DXGIFactory);
+	m_D3DDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&m_DxgiDevice));
 
-	auto swapChainResult = InitSwapChain(windowHandle, windowSize);
+	m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&m_DxgiAdapter));
 
-	ENGINE_ASSERT(swapChainResult, "Failed to create Swap Chain!");
+	m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_DxgiFactory));
 }
 
-void Engine::GraphicsEngine::Release()
+auto Engine::GraphicsEngine::Release() const -> void
 {
-	if (m_VS)
-		m_VS->Release();
-	if (m_PS)
-		m_PS->Release();
-
+	if (m_VertexShader)
+		m_VertexShader->Release();
+	if (m_PixelShader)
+		m_PixelShader->Release();
 	if (m_VSblob)
 		m_VSblob->Release();
 	if (m_PSblob)
 		m_PSblob->Release();
 
-	m_SwapChain->Release();
-
-	m_DXGIDevice->Release();
-	m_DXGIAdapter->Release();
-	m_DXGIFactory->Release();
-
+	m_DxgiDevice->Release();
+	m_DxgiAdapter->Release();
+	m_DxgiFactory->Release();
 	m_ImmediateDeviceContext->Release();
 	m_D3DDevice->Release();
 }
 
-void Engine::GraphicsEngine::Clear(Color32 fillColor)
+auto Engine::GraphicsEngine::Clear(const Scope<SwapChain>& swapChain,
+                                   Color32 fillColor) const -> void
 {
-	GetInstance().GetImmediateDeviceContext()->ClearRenderTarget(&*m_SwapChain, { 1.0f, 0.0f, 1.0f, 1.0f });
+	GetInstance().GetImmediateDeviceContext()->ClearRenderTarget(swapChain, fillColor);
 }
 
-void Engine::GraphicsEngine::Draw()
+auto Engine::GraphicsEngine::CreateVertexBuffer() const -> Scope<VertexBuffer>
 {
-	m_SwapChain->Present(false);
+	return CreateScope<VertexBuffer>();
 }
 
-Engine::VertexBuffer* Engine::GraphicsEngine::CreateVertexBuffer()
+auto Engine::GraphicsEngine::CreateVertexShader(const void* shaderByteCode,
+                                                size_t byteCodeSize) const -> Scope<VertexShader>
 {
-	return new VertexBuffer();
+	auto vs = CreateScope<VertexShader>();
+	if (!vs->Init(shaderByteCode, byteCodeSize))
+	{
+		vs->Release();
+		return nullptr;
+	}
+	return vs;
 }
 
-bool Engine::GraphicsEngine::CreateShaders()
+auto Engine::GraphicsEngine::CreatePixelShader(const void* shaderByteCode,
+	size_t byteCodeSize) const -> Scope<PixelShader>
 {
-	ID3DBlob* errblob = nullptr;
-	D3DCompileFromFile(L"shader.fx", nullptr, nullptr, "vsmain", "vs_5_0", NULL, NULL, &m_VSblob, &errblob);
-	D3DCompileFromFile(L"shader.fx", nullptr, nullptr, "psmain", "ps_5_0", NULL, NULL, &m_PSblob, &errblob);
-	m_D3DDevice->CreateVertexShader(m_VSblob->GetBufferPointer(), m_vsblob->GetBufferSize(), nullptr, &m_VS);
-	m_D3DDevice->CreatePixelShader(m_PSblob->GetBufferPointer(), m_psblob->GetBufferSize(), nullptr, &m_PS);
+	auto ps = CreateScope<PixelShader>();
+	if (!ps->Init(shaderByteCode, byteCodeSize))
+	{
+		ps->Release();
+		return nullptr;
+	}
+	return ps;
+}
+
+auto Engine::GraphicsEngine::CompileVertexShader(const std::wstring& fileName,
+                                                 const std::string& entryPointName,
+                                                 void** shaderByteCode,
+                                                 size_t* byteCodeSize) -> bool
+{
+	ID3DBlob* errorBlob = nullptr;
+	if (!SUCCEEDED(
+		D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, entryPointName.c_str(), "vs_5_0", 0, 0, &m_Blob, &
+			errorBlob)))
+	{
+		if (errorBlob)
+		{
+			std::cout << "Vertex shader cannot be compiled! (" << (char*)errorBlob->GetBufferPointer() << ")\n";
+			errorBlob->Release();
+		}
+		return false;
+	}
+
+	*shaderByteCode = m_Blob->GetBufferPointer();
+	*byteCodeSize   = m_Blob->GetBufferSize();
 	return true;
 }
 
-bool Engine::GraphicsEngine::SetShaders()
+auto Engine::GraphicsEngine::CompilePixelShader(const std::wstring& fileName,
+	const std::string& entryPointName,
+	void** shaderByteCode,
+	size_t* byteCodeSize) -> bool
 {
-	m_ImmediateDeviceContext->VSSetShader(m_VS, nullptr, 0);
-	m_ImmediateDeviceContext->PSSetShader(m_PS, nullptr, 0);
+	ID3DBlob* errorBlob = nullptr;
+	if (!SUCCEEDED(
+		D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, entryPointName.c_str(), "ps_5_0", 0, 0, &m_Blob, &
+			errorBlob)))
+	{
+		if (errorBlob)
+		{
+			std::cout << "Pixel shader cannot be compiled! (" << (char*)errorBlob->GetBufferPointer() << ")\n";
+			errorBlob->Release();
+		}
+		return false;
+	}
+
+	*shaderByteCode = m_Blob->GetBufferPointer();
+	*byteCodeSize   = m_Blob->GetBufferSize();
 	return true;
 }
 
-void Engine::GraphicsEngine::GetShaderBufferAndSize(void** bytecode, UINT* size)
+auto Engine::GraphicsEngine::ReleaseCompiledShader() const -> void
 {
-	*bytecode = this->m_VSblob->GetBufferPointer();
-	*size = (UINT)this->m_VSblob->GetBufferSize();
+	if (m_Blob)
+		m_Blob->Release();
 }
 
-bool Engine::GraphicsEngine::InitSwapChain(HWND windowHandle, const Engine::Vector2Int& windowSize)
-{
-	m_SwapChain = CreateScope<SwapChain>();
-	m_SwapChain->Init(windowHandle, windowSize);
-	return true;
-}
-
-Engine::GraphicsEngine::~GraphicsEngine()
-{
-}
-
-Engine::Scope<Engine::SwapChain> Engine::GraphicsEngine::CreateSwapChain()
+auto Engine::GraphicsEngine::CreateSwapChain() const -> Scope<SwapChain>
 {
 	return CreateScope<SwapChain>();
 }
 
-const Engine::Scope<Engine::DeviceContext>& Engine::GraphicsEngine::GetImmediateDeviceContext()
+auto Engine::GraphicsEngine::GetImmediateDeviceContext() -> const Scope<DeviceContext>&
 {
 	return m_ImmediateDeviceContext;
 }
 
-Engine::GraphicsEngine& Engine::GraphicsEngine::GetInstance()
+auto Engine::GraphicsEngine::GetInstance() -> GraphicsEngine&
 {
 	static GraphicsEngine engine;
 	return engine;
