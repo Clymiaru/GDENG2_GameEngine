@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include "Engine/Window.h"
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/GraphicsEngine.h"
@@ -29,7 +31,7 @@ namespace App
 	private:
 		Engine::Scope<Engine::SwapChain> m_SwapChain;
 
-		Engine::Scope<Engine::VertexBuffer> m_VB;
+		std::vector<Engine::Scope<Engine::VertexBuffer>> m_VertexBuffers;
 
 		Engine::Scope<Engine::VertexShader> m_VertexShader;
 

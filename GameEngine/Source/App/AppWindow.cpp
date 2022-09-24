@@ -16,7 +16,7 @@ namespace App
 	                     const Engine::Vector2Int windowSize) :
 		Window(windowName, windowSize),
 		m_SwapChain{nullptr},
-		m_VB{nullptr},
+		m_VertexBuffers{},
 		m_VertexShader{nullptr},
 		m_PixelShader{nullptr}
 	{
@@ -35,15 +35,40 @@ namespace App
 		RECT rc = GetClientWindowRect();
 		m_SwapChain->Init(m_Handle, {rc.right - rc.left, rc.bottom - rc.top});
 
-		Vertex list[] =
+		Vertex rainbowRectangle[] =
 		{
-			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-			{{0.0f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-			{{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}
+			{{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+			{{-0.30f - 0.60f, 0.30f + 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{0.30f - 0.60f, 0.30f + 0.55f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+			{{0.30f - 0.60f, 0.30f + 0.55f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+			{{0.30f - 0.60f, -0.30f + 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}
 		};
 
-		m_VB                    = Engine::GraphicsEngine::GetInstance().CreateVertexBuffer();
-		constexpr UINT listSize = ARRAYSIZE(list);
+		Vertex rainbowTriangle[] =
+		{
+			{{-0.30f - 0.1f, -0.30f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+			{{0.0f - 0.1f, 0.30f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{0.30f - 0.1f, -0.30f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}
+		};
+
+		Vertex greenRectangle[] =
+		{
+			{{-0.30f + 0.60f, -0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{-0.30f + 0.60f, 0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{0.30f + 0.60f, 0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{0.30f + 0.60f, 0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{0.30f + 0.60f, -0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+			{{-0.30f + 0.60f, -0.30f - 0.55f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}
+		};
+
+		for (int i = 0; i < 3; i++)
+		{
+			m_VertexBuffers.push_back(Engine::GraphicsEngine::GetInstance().CreateVertexBuffer());
+		}
+		constexpr UINT rainbowRectangleListSize = ARRAYSIZE(rainbowRectangle);
+		constexpr UINT rainbowTriangleListSize = ARRAYSIZE(rainbowTriangle);
+		constexpr UINT greenRectangleListSize = ARRAYSIZE(greenRectangle);
 
 		void* shader_byte_code = nullptr;
 		size_t size_shader     = 0;
@@ -53,7 +78,11 @@ namespace App
 		                                                          &size_shader);
 
 		m_VertexShader = Engine::GraphicsEngine::GetInstance().CreateVertexShader(shader_byte_code, size_shader);
-		m_VB->Load(list, sizeof(Vertex), listSize, shader_byte_code, static_cast<UINT>(size_shader));
+
+		// BASIC RENDERER OUTPUTS
+		m_VertexBuffers[2]->Load(rainbowRectangle, sizeof(Vertex), rainbowRectangleListSize, shader_byte_code, static_cast<UINT>(size_shader));
+		m_VertexBuffers[1]->Load(rainbowTriangle, sizeof(Vertex), rainbowTriangleListSize, shader_byte_code, static_cast<UINT>(size_shader));
+		m_VertexBuffers[0]->Load(greenRectangle, sizeof(Vertex), greenRectangleListSize, shader_byte_code, static_cast<UINT>(size_shader));
 
 		Engine::GraphicsEngine::GetInstance().ReleaseCompiledShader();
 
@@ -80,10 +109,13 @@ namespace App
 		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetVertexShader(m_VertexShader);
 		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetPixelShader(m_PixelShader);
 
-		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetVertexBuffer(m_VB);
 
-		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->DrawTriangleList(
-			m_VB->GetVertexListSize(), 0);
+		for (const auto& vb : m_VertexBuffers)
+		{
+			Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetVertexBuffer(vb);
+			Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->DrawTriangleList(
+				vb->GetVertexListSize(), 0);
+		}
 
 		m_SwapChain->Present(true);
 	}
@@ -91,7 +123,10 @@ namespace App
 	auto AppWindow::OnDestroy() -> void
 	{
 		Window::OnDestroy();
-		m_VB->Release();
+		for (const auto& vb : m_VertexBuffers)
+		{
+			vb->Release();
+		}
 		m_SwapChain->Release();
 		m_VertexShader->Release();
 		m_PixelShader->Release();
