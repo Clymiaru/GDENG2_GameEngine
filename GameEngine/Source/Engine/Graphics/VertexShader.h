@@ -4,26 +4,26 @@
 namespace Engine
 {
 	class GraphicsEngine;
-
 	class DeviceContext;
 
 	class VertexShader final
 	{
 	public:
-		VertexShader();
+		VertexShader(const void* shaderByteCode,
+					size_t shaderByteCodeSize);
 
-		~VertexShader() = default;
+		~VertexShader();
 
-		auto Init(const void* shaderByteCode,
-		          size_t byteCodeSize) -> bool;
-
-		auto Release() const -> void;
+		// auto Init(const void* shaderByteCode,
+		//           size_t byteCodeSize) -> bool;
+		//
+		// auto Release() const -> void;
 
 	private:
-		ID3D11VertexShader* m_Data;
-
-		size_t m_Length;
-
+		ID3D11VertexShader* m_Data {};
+		size_t m_DataSize;
+		
+		friend class GraphicsEngine;
 		friend class DeviceContext;
 	};
 }

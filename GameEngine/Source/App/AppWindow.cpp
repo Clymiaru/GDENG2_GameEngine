@@ -128,8 +128,6 @@ namespace App
 			vb->Release();
 		}
 		m_SwapChain->Release();
-		m_VertexShader->Release();
-		m_PixelShader->Release();
 		Engine::GraphicsEngine::GetInstance().Release();
 	}
 }

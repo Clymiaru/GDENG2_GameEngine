@@ -3,30 +3,22 @@
 #include <iostream>
 
 #include "Engine/Graphics/GraphicsEngine.h"
+#include "Engine/Utils/Debug.h"
 
-Engine::VertexShader::VertexShader() :
-	m_Data{nullptr},
-	m_Length{0}
-{
-}
-
-auto Engine::VertexShader::Init(const void* shaderByteCode,
-                                size_t byteCodeSize) -> bool
+Engine::VertexShader::VertexShader(const void* shaderByteCode,
+                                   size_t shaderByteCodeSize) :
+	m_DataSize{shaderByteCodeSize}
 {
 	const auto result = GraphicsEngine::GetInstance().m_D3DDevice->CreateVertexShader(shaderByteCode,
-	                                                                                  byteCodeSize,
-	                                                                                  nullptr,
-	                                                                                  &m_Data);
-
-	if (!SUCCEEDED(result))
-	{
-		std::cout << "Error init vertex shader!\n";
-		return false;
-	}
-	return true;
+																							 m_DataSize,
+																							 nullptr,
+																							 &m_Data);
+	
+	ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 }
 
-auto Engine::VertexShader::Release() const -> void
+Engine::VertexShader::~VertexShader()
 {
 	m_Data->Release();
+	m_DataSize = 0;
 }

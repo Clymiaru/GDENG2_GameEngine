@@ -93,24 +93,14 @@ auto Engine::GraphicsEngine::CreateVertexBuffer() const -> Scope<VertexBuffer>
 auto Engine::GraphicsEngine::CreateVertexShader(const void* shaderByteCode,
                                                 size_t byteCodeSize) const -> Scope<VertexShader>
 {
-	auto vs = CreateScope<VertexShader>();
-	if (!vs->Init(shaderByteCode, byteCodeSize))
-	{
-		vs->Release();
-		return nullptr;
-	}
+	auto vs = CreateScope<VertexShader>(shaderByteCode, byteCodeSize);
 	return vs;
 }
 
 auto Engine::GraphicsEngine::CreatePixelShader(const void* shaderByteCode,
 	size_t byteCodeSize) const -> Scope<PixelShader>
 {
-	auto ps = CreateScope<PixelShader>();
-	if (!ps->Init(shaderByteCode, byteCodeSize))
-	{
-		ps->Release();
-		return nullptr;
-	}
+	auto ps = CreateScope<PixelShader>(shaderByteCode, byteCodeSize);
 	return ps;
 }
 

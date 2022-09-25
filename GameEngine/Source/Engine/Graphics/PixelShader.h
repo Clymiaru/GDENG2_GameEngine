@@ -6,22 +6,24 @@ namespace Engine
 	class GraphicsEngine;
 	class DeviceContext;
 	
-	class PixelShader
+	class PixelShader final
 	{
 	public:
-		PixelShader();
-		virtual ~PixelShader() = default;
+		PixelShader(const void* shaderByteCode,
+					size_t shaderByteCodeSize);
 
-		auto Release() -> void;
+		~PixelShader();
 
-		[[nodiscard]]
-		auto Init(const void* shaderByteCode, size_t byteCodeSize) -> bool;
+		// [[nodiscard]]
+		// auto Init(const void* shaderByteCode) -> bool;
+		//
+		// auto Release() -> void;
 
 	private:
-		ID3D11PixelShader* m_Data;
+		ID3D11PixelShader* m_Data {};
+		size_t m_DataSize;
 
 		friend class GraphicsEngine;
 		friend class DeviceContext;
-		
 	};
 }
