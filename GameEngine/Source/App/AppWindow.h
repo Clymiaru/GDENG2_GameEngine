@@ -1,13 +1,9 @@
 #pragma once
-#include <vector>
-
 #include "Engine/Window.h"
-#include "Engine/Graphics/DeviceContext.h"
-#include "Engine/Graphics/GraphicsEngine.h"
-#include "Engine/Graphics/SwapChain.h"
-#include "Engine/Graphics/VertexBuffer.h"
-#include "Engine/Graphics/VertexShader.h"
-#include "Engine/Graphics/PixelShader.h"
+#include "Engine/Graphics/Core/GraphicsEngine.h"
+#include "Engine/Graphics/Core/PixelShader.h"
+#include "Engine/Graphics/Core/VertexShader.h"
+#include "Engine/Graphics/Primitives/Triangle.h"
 
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
@@ -29,12 +25,16 @@ namespace App
 		auto OnDestroy() -> void override;
 
 	private:
-		Engine::Scope<Engine::SwapChain> m_SwapChain;
-
-		std::vector<Engine::Scope<Engine::VertexBuffer>> m_VertexBuffers;
+		Engine::Scope<Engine::ConstantBuffer> m_ConstantBuffer;
 
 		Engine::Scope<Engine::VertexShader> m_VertexShader;
 
 		Engine::Scope<Engine::PixelShader> m_PixelShader;
+
+		Engine::Scope<Engine::Triangle> m_Triangle;
+
+		unsigned long m_OldTime = 0;
+		float m_DeltaTime = 0;
+		float m_Angle = 0;
 	};
 }

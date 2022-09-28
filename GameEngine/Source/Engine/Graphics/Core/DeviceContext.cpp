@@ -1,8 +1,9 @@
-#include "DeviceContext.h"
-#include "SwapChain.h"
-#include "VertexBuffer.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
+#include "Engine/Graphics/Core/DeviceContext.h"
+#include "Engine/Graphics/Core/ConstantBuffer.h"
+#include "Engine/Graphics/Core/PixelShader.h"
+#include "Engine/Graphics/Core/SwapChain.h"
+#include "Engine/Graphics/Core/VertexBuffer.h"
+#include "Engine/Graphics/Core/VertexShader.h"
 
 Engine::DeviceContext::DeviceContext(ID3D11DeviceContext* deviceContext) :
 	m_DeviceContext(deviceContext)
@@ -28,6 +29,18 @@ auto Engine::DeviceContext::SetVertexBuffer(const Scope<VertexBuffer>& vertexBuf
 	const UINT offset = 0;
 	m_DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->m_Buffer, &stride, &offset);
 	m_DeviceContext->IASetInputLayout(vertexBuffer->m_Layout);
+}
+
+auto Engine::DeviceContext::SetConstantBuffer(const Scope<VertexShader>& vertexShader,
+                                              const Scope<ConstantBuffer>& constantBuffer) const -> void
+{
+	m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
+}
+
+auto Engine::DeviceContext::SetConstantBuffer(const Scope<PixelShader>& pixelShader,
+                                              const Scope<ConstantBuffer>& constantBuffer) const -> void
+{
+	m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 }
 
 auto Engine::DeviceContext::SetVertexShader(const Scope<VertexShader>& vertexShader) const -> void

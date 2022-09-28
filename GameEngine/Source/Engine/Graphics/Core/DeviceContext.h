@@ -9,6 +9,8 @@ namespace Engine
 
 	class VertexBuffer;
 
+	class ConstantBuffer;
+
 	class VertexShader;
 
 	class PixelShader;
@@ -27,6 +29,12 @@ namespace Engine
 
 		auto SetVertexBuffer(const Scope<VertexBuffer>& vertexBuffer) const -> void;
 
+		auto SetConstantBuffer(const Scope<VertexShader>& vertexShader,
+		                       const Scope<ConstantBuffer>& constantBuffer) const -> void;
+
+		auto SetConstantBuffer(const Scope<PixelShader>& pixelShader,
+		                       const Scope<ConstantBuffer>& constantBuffer) const -> void;
+
 		auto SetVertexShader(const Scope<VertexShader>& vertexShader) const -> void;
 
 		auto SetPixelShader(const Scope<PixelShader>& pixelShader) const -> void;
@@ -42,5 +50,7 @@ namespace Engine
 
 	private:
 		ID3D11DeviceContext* m_DeviceContext;
+
+		friend class ConstantBuffer;
 	};
 }

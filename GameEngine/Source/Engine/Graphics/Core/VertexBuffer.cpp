@@ -1,5 +1,5 @@
 #include "VertexBuffer.h"
-#include "Engine/Graphics/GraphicsEngine.h"
+#include "Engine/Graphics/Core/GraphicsEngine.h"
 
 Engine::VertexBuffer::VertexBuffer() :
 	m_VertexSize{0},
@@ -48,7 +48,9 @@ auto Engine::VertexBuffer::Load(void* listOfVertices,
 	D3D11_INPUT_ELEMENT_DESC indexLayout[] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 	UINT layoutSize = ARRAYSIZE(indexLayout);
 

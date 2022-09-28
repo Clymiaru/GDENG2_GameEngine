@@ -1,5 +1,5 @@
-#include "SwapChain.h"
-#include "GraphicsEngine.h"
+#include "Engine/Graphics/Core/SwapChain.h"
+#include "Engine/Graphics/Core/GraphicsEngine.h"
 
 Engine::SwapChain::SwapChain() :
 	m_DxgiSwapChain{nullptr},

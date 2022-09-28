@@ -5,12 +5,12 @@ namespace Engine
 {
 	class DeviceContext;
 
-	class VertexBuffer
+	class VertexBuffer final
 	{
 	public:
 		VertexBuffer();
 
-		virtual ~VertexBuffer();
+		~VertexBuffer();
 
 		[[nodiscard]]
 		auto GetVertexListSize() const -> UINT;

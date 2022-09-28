@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Engine/Graphics/GraphicsEngine.h"
+#include "Engine/Graphics/Core/GraphicsEngine.h"
 #include "Engine/Utils/Debug.h"
 
 Engine::VertexShader::VertexShader(const void* shaderByteCode,
