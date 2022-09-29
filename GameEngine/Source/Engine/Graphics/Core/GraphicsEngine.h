@@ -21,27 +21,17 @@ namespace Engine
 
 	class PixelShader;
 
-	class IRenderable;
+	class Renderable;
 
 	class GraphicsEngine final
 	{
 	public:
-		auto Init(HWND windowHandle,
-		          const Vector2Int& windowSize) -> void;
+		auto Init() -> void;
 
 		auto Release() const -> void;
 
-		auto static Clear(const Color32 fillColor) -> void;
-
-		auto static SetViewportSize(const UINT width,
-		                            const UINT height) -> void;
-
-		auto static Draw() -> void;
-
-		static auto RegisterRenderable(const Ref<IRenderable>& toRegister) -> void;
-
-		[[nodiscard]]
-		auto CreateSwapChain() const -> Scope<SwapChain>;
+		auto static SetViewportSize(UINT width,
+		                            UINT height) -> void;
 
 		[[nodiscard]]
 		auto CreateVertexBuffer() const -> Scope<VertexBuffer>;
@@ -78,15 +68,13 @@ namespace Engine
 
 		GraphicsEngine(const GraphicsEngine&);
 
-		GraphicsEngine& operator=(const GraphicsEngine&) = delete;
+		auto operator=(const GraphicsEngine&) -> GraphicsEngine& = delete;
 
 		GraphicsEngine(const GraphicsEngine&&) noexcept;
 
-		GraphicsEngine& operator=(const GraphicsEngine&&) = delete;
+		auto operator=(const GraphicsEngine&&) -> GraphicsEngine& = delete;
 
 		Scope<DeviceContext> m_ImmediateDeviceContext;
-
-		Scope<SwapChain> m_SwapChain;
 
 		ID3D11Device* m_D3DDevice;
 
@@ -105,8 +93,6 @@ namespace Engine
 		ID3D11VertexShader* m_VertexShader = nullptr;
 
 		ID3D11PixelShader* m_PixelShader = nullptr;
-
-		std::vector<Ref<IRenderable>> m_RenderList;
 
 		friend class SwapChain;
 

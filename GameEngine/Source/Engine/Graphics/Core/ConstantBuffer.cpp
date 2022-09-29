@@ -1,4 +1,6 @@
-﻿#include "Engine/Graphics/Core/ConstantBuffer.h"
+﻿#include "pch.h"
+
+#include "Engine/Graphics/Core/ConstantBuffer.h"
 #include "Engine/Graphics/Core/DeviceContext.h"
 #include "Engine/Graphics/Core/GraphicsEngine.h"
 
@@ -9,8 +11,8 @@ Engine::ConstantBuffer::ConstantBuffer() :
 
 Engine::ConstantBuffer::~ConstantBuffer() = default;
 
-bool Engine::ConstantBuffer::Load(const void* buffer,
-                                  const UINT bufferSize)
+auto Engine::ConstantBuffer::Load(const void* buffer,
+                                  const UINT bufferSize) -> bool
 {
 	if (m_BufferData != nullptr)
 		m_BufferData->Release();
@@ -32,8 +34,8 @@ bool Engine::ConstantBuffer::Load(const void* buffer,
 	return true;
 }
 
-void Engine::ConstantBuffer::Update(const Scope<DeviceContext>& deviceContext,
-                                    void* buffer)
+auto Engine::ConstantBuffer::Update(const Scope<DeviceContext>& deviceContext,
+                                    void* buffer) -> void
 {
 	deviceContext->m_DeviceContext->UpdateSubresource(m_BufferData,
 	                                                  NULL,
@@ -43,7 +45,7 @@ void Engine::ConstantBuffer::Update(const Scope<DeviceContext>& deviceContext,
 	                                                  NULL);
 }
 
-bool Engine::ConstantBuffer::Release() const
+auto Engine::ConstantBuffer::Release() const -> bool
 {
 	if (m_BufferData)
 		m_BufferData->Release();

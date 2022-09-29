@@ -1,4 +1,6 @@
-﻿#include "PixelShader.h"
+﻿#include "pch.h"
+
+#include "PixelShader.h"
 
 #include "GraphicsEngine.h"
 
@@ -9,10 +11,10 @@ Engine::PixelShader::PixelShader(const void* shaderByteCode,
 	m_DataSize{shaderByteCodeSize}
 {
 	const auto result = GraphicsEngine::GetInstance().m_D3DDevice->CreatePixelShader(shaderByteCode,
-																							m_DataSize,
-																							nullptr,
-																							&m_Data);
-	
+	                                                                                 m_DataSize,
+	                                                                                 nullptr,
+	                                                                                 &m_Data);
+
 	ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 }
 

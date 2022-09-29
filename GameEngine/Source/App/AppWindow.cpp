@@ -1,14 +1,15 @@
+#include "pch.h"
+
 #include "AppWindow.h"
 #include "Windows.h"
 
+#include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/Core/ConstantBuffer.h"
 #include "Engine/Graphics/Core/DeviceContext.h"
 #include "Engine/Graphics/Core/GraphicsEngine.h"
 #include "Engine/Graphics/Core/Vertex.h"
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Math.h"
-
-#include "Engine/Graphics/Primitives/Triangle.h"
 
 namespace App
 {
@@ -34,8 +35,8 @@ namespace App
 		Window::OnCreate();
 
 		RECT rc = GetClientWindowRect();
-		Engine::GraphicsEngine::GetInstance().Init(m_Handle, {rc.right - rc.left, rc.bottom - rc.top});
-
+		Engine::GraphicsEngine::GetInstance().Init();
+		Engine::RenderSystem::GetInstance().Initialize(m_Handle, {rc.right - rc.left, rc.bottom - rc.top});
 		Vertex rainbowRectangle[] =
 		{
 			{
@@ -77,7 +78,7 @@ namespace App
 				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
 				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
 				Engine::Color32{1.0f, 0.0f, 1.0f, 1.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f},
+				Engine::Color32{0.0f, 0.5f, 1.0f, 1.0f},
 			}
 		};
 
@@ -94,17 +95,34 @@ namespace App
 
 		m_VertexShader = Engine::GraphicsEngine::GetInstance().CreateVertexShader(shaderByteCode, shaderByteCodeSize);
 
-		m_Triangle = Engine::CreateScope<Engine::Triangle>(Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-		                                                   Engine::Vector3Float{-0.30f - 0.60f, 0.30f + 0.55f, 0.0f},
-		                                                   Engine::Vector3Float{0.30f - 0.60f, 0.30f + 0.55f, 0.0f},
-		                                                   Engine::Vector3Float{-0.30f, -0.30f + 0.55f, 0.0f},
-		                                                   Engine::Vector3Float{-0.30f, 0.30f + 0.55f, 0.0f},
-		                                                   Engine::Vector3Float{0.30f, 0.30f + 0.55f, 0.0f},
-		                                                   Engine::Color32{1.0f, 0.0f, 0.0f, 1.0f},
-		                                                   Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f});
+		// m_Triangle = Engine::CreateScope<Engine::Triangle>(Engine::Vector3Float{-0.30f - 0.60f, -0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Vector3Float{-0.30f - 0.60f, 0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Vector3Float{0.30f - 0.60f, 0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Vector3Float{-0.30f - 0.60f, -0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Vector3Float{-0.30f, 0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Vector3Float{0.30f, 0.30f - 0.55f, 0.0f},
+		//                                                    Engine::Color32{1.0f, 1.0f, 0.0f, 1.0f},
+		//                                                    Engine::Color32{0.0f, 1.0f, 1.0f, 1.0f});
+		//
+		// m_Triangle2 = Engine::CreateScope<Engine::Triangle>(Engine::Vector3Float{0.30f - 0.60f, 0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Vector3Float{0.30f - 0.60f, -0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Vector3Float{-0.30f - 0.60f, -0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Vector3Float{0.30f, 0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Vector3Float{0.30f - 0.60f, -0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Vector3Float{0.30f - 0.60f, 0.30f - 0.55f, 0.0f},
+		//                                                     Engine::Color32{0.0f, 1.0f, 1.0f, 1.0f},
+		//                                                     Engine::Color32{1.0f, 1.0f, 0.0f, 1.0f});
+		//
+		// m_Triangle->Init(shaderByteCode, shaderByteCodeSize);
+		// m_Triangle2->Init(shaderByteCode, shaderByteCodeSize);
 
-		m_Triangle->Init(shaderByteCode, shaderByteCodeSize);
-		Engine::GraphicsEngine::RegisterRenderable(m_Triangle->GetRenderable());
+		Engine::RenderSystem::GetInstance().RegisterObject(rainbowRectangle,
+		                                                   sizeof(Vertex),
+		                                                   rainbowRectangleListSize,
+		                                                   shaderByteCode,
+		                                                   shaderByteCodeSize);
+		// Engine::RenderSystem::RegisterObject(m_Triangle->GetRenderable());
+		// Engine::RenderSystem::RegisterObject(m_Triangle2->GetRenderable());
 
 		Engine::GraphicsEngine::GetInstance().ReleaseCompiledShader();
 
@@ -125,7 +143,7 @@ namespace App
 	auto AppWindow::OnUpdate() -> void
 	{
 		Window::OnUpdate();
-		Engine::GraphicsEngine::Clear({0.5f, 0.5f, 1.0f, 1.0f});
+		Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
 		const RECT rc = GetClientWindowRect();
 		Engine::GraphicsEngine::SetViewportSize(rc.right - rc.left,
@@ -151,7 +169,7 @@ namespace App
 		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetVertexShader(m_VertexShader);
 		Engine::GraphicsEngine::GetInstance().GetImmediateDeviceContext()->SetPixelShader(m_PixelShader);
 
-		Engine::GraphicsEngine::Draw();
+		Engine::RenderSystem::Draw();
 	}
 
 	auto AppWindow::OnDestroy() -> void

@@ -5,21 +5,25 @@
 namespace Engine
 {
 	class DeviceContext;
-	
+
 	class ConstantBuffer final
 	{
 	public:
 		ConstantBuffer();
+
 		~ConstantBuffer();
-		
-		bool Load(const void* buffer, UINT bufferSize);
-		void Update(const Scope<DeviceContext>& deviceContext, void* buffer);
-		bool Release() const;
+
+		auto Load(const void* buffer,
+		          UINT bufferSize) -> bool;
+
+		auto Update(const Scope<DeviceContext>& deviceContext,
+		            void* buffer) -> void;
+
+		auto Release() const -> bool;
 
 	private:
 		ID3D11Buffer* m_BufferData;
 
 		friend class DeviceContext;
 	};
-
 }

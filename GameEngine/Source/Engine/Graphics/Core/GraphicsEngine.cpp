@@ -1,8 +1,8 @@
+#include "pch.h"
+
 #include "GraphicsEngine.h"
 #include <d3dcompiler.h>
 #include <vector>
-
-#include "IRenderable.h"
 
 #include "Engine/Graphics/Core/ConstantBuffer.h"
 #include "Engine/Graphics/Core/DeviceContext.h"
@@ -14,7 +14,6 @@
 
 Engine::GraphicsEngine::GraphicsEngine() :
 	m_D3DDevice(nullptr),
-	m_SwapChain{nullptr},
 	m_FeatureLevel(D3D_FEATURE_LEVEL_11_0),
 	m_DxgiDevice{nullptr},
 	m_DxgiAdapter{nullptr},
@@ -23,9 +22,8 @@ Engine::GraphicsEngine::GraphicsEngine() :
 {
 }
 
-Engine::GraphicsEngine::GraphicsEngine(GraphicsEngine const&) :
+Engine::GraphicsEngine::GraphicsEngine(const GraphicsEngine&) :
 	m_D3DDevice{nullptr},
-	m_SwapChain{nullptr},
 	m_FeatureLevel{},
 	m_DxgiDevice{nullptr},
 	m_DxgiAdapter{nullptr},
@@ -44,8 +42,7 @@ Engine::GraphicsEngine::GraphicsEngine(const GraphicsEngine&&) noexcept:
 {
 }
 
-auto Engine::GraphicsEngine::Init(HWND windowHandle,
-                                  const Vector2Int& windowSize) -> void
+auto Engine::GraphicsEngine::Init() -> void
 {
 	const std::vector driverTypes =
 	{
@@ -86,20 +83,10 @@ auto Engine::GraphicsEngine::Init(HWND windowHandle,
 	m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&m_DxgiAdapter));
 
 	m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_DxgiFactory));
-
-	m_SwapChain = CreateSwapChain();
-	m_SwapChain->Init(windowHandle, windowSize);
 }
 
 auto Engine::GraphicsEngine::Release() const -> void
 {
-	m_SwapChain->Release();
-
-	for (auto& element : m_RenderList)
-	{
-		element->Release();
-	}
-
 	if (m_VertexShader)
 		m_VertexShader->Release();
 	if (m_PixelShader)
@@ -112,35 +99,11 @@ auto Engine::GraphicsEngine::Release() const -> void
 	m_D3DDevice->Release();
 }
 
-auto Engine::GraphicsEngine::Clear(const Color32 fillColor) -> void
-{
-	GetInstance().GetImmediateDeviceContext()->ClearRenderTarget(GetInstance().m_SwapChain, fillColor);
-}
-
 auto Engine::GraphicsEngine::SetViewportSize(const UINT width,
                                              const UINT height) -> void
 {
 	GetInstance().GetImmediateDeviceContext()->SetViewportSize(width,
 	                                                           height);
-}
-
-auto Engine::GraphicsEngine::Draw() -> void
-{
-	for (const auto& renderable : GetInstance().m_RenderList)
-	{
-		const auto& vb = renderable->GetVertexBuffer();
-		GetInstance().GetImmediateDeviceContext()->SetVertexBuffer(vb);
-		GetInstance().GetImmediateDeviceContext()->DrawTriangleList(vb->GetVertexListSize(),
-		                                                            0);
-	}
-
-	GetInstance().m_SwapChain->Present(true);
-}
-
-auto Engine::GraphicsEngine::RegisterRenderable(const Ref<IRenderable>& toRegister) -> void
-{
-	
-	GetInstance().m_RenderList.push_back(toRegister);
 }
 
 auto Engine::GraphicsEngine::CreateVertexBuffer() const -> Scope<VertexBuffer>
@@ -179,7 +142,8 @@ auto Engine::GraphicsEngine::CompileVertexShader(const std::wstring& fileName,
 	{
 		if (errorBlob)
 		{
-			std::cout << "Vertex shader cannot be compiled! (" << (char*)errorBlob->GetBufferPointer() << ")\n";
+			std::cout << "Vertex shader cannot be compiled! (" << static_cast<char*>(errorBlob->GetBufferPointer()) <<
+					")\n";
 			errorBlob->Release();
 		}
 		return false;
@@ -202,7 +166,8 @@ auto Engine::GraphicsEngine::CompilePixelShader(const std::wstring& fileName,
 	{
 		if (errorBlob)
 		{
-			std::cout << "Pixel shader cannot be compiled! (" << (char*)errorBlob->GetBufferPointer() << ")\n";
+			std::cout << "Pixel shader cannot be compiled! (" << static_cast<char*>(errorBlob->GetBufferPointer()) <<
+					")\n";
 			errorBlob->Release();
 		}
 		return false;
@@ -217,11 +182,6 @@ auto Engine::GraphicsEngine::ReleaseCompiledShader() const -> void
 {
 	if (m_Blob)
 		m_Blob->Release();
-}
-
-auto Engine::GraphicsEngine::CreateSwapChain() const -> Scope<SwapChain>
-{
-	return CreateScope<SwapChain>();
 }
 
 auto Engine::GraphicsEngine::GetImmediateDeviceContext() -> const Scope<DeviceContext>&

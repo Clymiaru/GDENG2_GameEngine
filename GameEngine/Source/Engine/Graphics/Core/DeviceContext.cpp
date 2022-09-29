@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "Engine/Graphics/Core/DeviceContext.h"
 #include "Engine/Graphics/Core/ConstantBuffer.h"
 #include "Engine/Graphics/Core/PixelShader.h"

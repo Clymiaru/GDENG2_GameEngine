@@ -38,6 +38,9 @@ project (ProjectName)
     
     targetdir ("bin/"..OutputDir.."/%{prj.name}")
     objdir ("bin-int/"..OutputDir.."/%{prj.name}")
+
+    pchheader "pch.h"
+    pchsource "GameEngine/Source/pch.cpp"
     
     files
     {

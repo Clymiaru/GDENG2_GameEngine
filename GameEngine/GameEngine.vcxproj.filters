@@ -10,6 +10,9 @@
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{7B960115-E721-6FD9-F032-F2CD5C3DCBD9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics\Core">
+      <UniqueIdentifier>{B3FFD265-9F8E-5C2F-48AD-702A341B6DD5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Utils">
       <UniqueIdentifier>{7B014596-6764-D43A-10EA-0CF1FC2BA0BD}</UniqueIdentifier>
     </Filter>
@@ -18,16 +21,31 @@
     <ClInclude Include="Source\App\AppWindow.h">
       <Filter>App</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\DeviceContext.h">
-      <Filter>Engine\Graphics</Filter>
+    <ClInclude Include="Source\Engine\Graphics\Core\ConstantBuffer.h">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\GraphicsEngine.h">
-      <Filter>Engine\Graphics</Filter>
+    <ClInclude Include="Source\Engine\Graphics\Core\DeviceContext.h">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\SwapChain.h">
-      <Filter>Engine\Graphics</Filter>
+    <ClInclude Include="Source\Engine\Graphics\Core\GraphicsEngine.h">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h">
+    <ClInclude Include="Source\Engine\Graphics\Core\PixelShader.h">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Core\SwapChain.h">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Core\Vertex.h">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Core\VertexBuffer.h">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Core\VertexShader.h">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\RenderSystem.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Utils\Color32.h">
@@ -45,6 +63,7 @@
     <ClInclude Include="Source\Engine\Window.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\App\AppWindow.cpp">
@@ -53,20 +72,36 @@
     <ClCompile Include="Source\App\Main.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp">
-      <Filter>Engine\Graphics</Filter>
+    <ClCompile Include="Source\Engine\Graphics\Core\ConstantBuffer.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\GraphicsEngine.cpp">
-      <Filter>Engine\Graphics</Filter>
+    <ClCompile Include="Source\Engine\Graphics\Core\DeviceContext.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp">
-      <Filter>Engine\Graphics</Filter>
+    <ClCompile Include="Source\Engine\Graphics\Core\GraphicsEngine.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp">
+    <ClCompile Include="Source\Engine\Graphics\Core\PixelShader.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Core\SwapChain.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Core\Vertex.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Core\VertexBuffer.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Core\VertexShader.cpp">
+      <Filter>Engine\Graphics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
 </Project>

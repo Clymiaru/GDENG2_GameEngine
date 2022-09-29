@@ -1,4 +1,4 @@
-#include <iostream>
+#include "pch.h"
 
 #include "AppWindow.h"
 #include "Engine/Utils/Math.h"
@@ -20,6 +20,6 @@ auto main() -> int
 	// {
 	// 	std::cout << "App has an error being destroyed!\n";
 	// }
-	
+
 	return 0;
 }

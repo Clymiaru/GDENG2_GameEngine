@@ -1,4 +1,6 @@
-﻿#include "VertexShader.h"
+﻿#include "pch.h"
+
+#include "VertexShader.h"
 
 #include <iostream>
 
@@ -10,10 +12,10 @@ Engine::VertexShader::VertexShader(const void* shaderByteCode,
 	m_DataSize{shaderByteCodeSize}
 {
 	const auto result = GraphicsEngine::GetInstance().m_D3DDevice->CreateVertexShader(shaderByteCode,
-																							 m_DataSize,
-																							 nullptr,
-																							 &m_Data);
-	
+	                                                                                  m_DataSize,
+	                                                                                  nullptr,
+	                                                                                  &m_Data);
+
 	ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 }
 

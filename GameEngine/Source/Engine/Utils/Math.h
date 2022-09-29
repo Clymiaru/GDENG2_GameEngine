@@ -10,7 +10,8 @@ namespace Engine
 	};
 
 	using Vector2Int = Vector2<int>;
-
+	using Vector2Uint = Vector2<unsigned int>;
+	
 	template <typename T>
 	struct Vector3
 	{

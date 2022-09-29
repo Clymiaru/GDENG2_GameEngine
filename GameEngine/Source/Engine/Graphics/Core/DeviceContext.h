@@ -25,7 +25,7 @@ namespace Engine
 		auto Release() const -> void;
 
 		auto ClearRenderTarget(const Scope<SwapChain>& swapChain,
-		                       const Color32 color) const -> void;
+		                       Color32 color) const -> void;
 
 		auto SetVertexBuffer(const Scope<VertexBuffer>& vertexBuffer) const -> void;
 
