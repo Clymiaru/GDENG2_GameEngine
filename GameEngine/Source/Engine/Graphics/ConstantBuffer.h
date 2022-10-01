@@ -16,10 +16,10 @@ namespace Engine
 		auto Load(const void* buffer,
 		          UINT bufferSize) -> bool;
 
-		auto Update(const Scope<DeviceContext>& deviceContext,
+		auto Update(DeviceContext& deviceContext,
 		            void* buffer) -> void;
 
-		auto Release() const -> bool;
+		auto Release() -> bool;
 
 	private:
 		ID3D11Buffer* m_BufferData;

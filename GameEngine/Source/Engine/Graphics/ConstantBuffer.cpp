@@ -1,8 +1,10 @@
 ﻿#include "pch.h"
 
-#include "Engine/Graphics/Core/ConstantBuffer.h"
-#include "Engine/Graphics/Core/DeviceContext.h"
-#include "Engine/Graphics/Core/GraphicsEngine.h"
+#include "Engine/Graphics/ConstantBuffer.h"
+
+#include "RenderSystem.h"
+
+#include "Engine/Graphics/DeviceContext.h"
 
 Engine::ConstantBuffer::ConstantBuffer() :
 	m_BufferData{nullptr}
@@ -27,25 +29,27 @@ auto Engine::ConstantBuffer::Load(const void* buffer,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = buffer;
 
-	if (FAILED(GraphicsEngine::GetInstance().m_D3DDevice->CreateBuffer(&bufferDesc, &initData, &m_BufferData)))
+	if (FAILED(RenderSystem::GetInstance().GetDevice()->CreateBuffer(&bufferDesc,
+		&initData,
+		&m_BufferData)))
 	{
 		return false;
 	}
 	return true;
 }
 
-auto Engine::ConstantBuffer::Update(const Scope<DeviceContext>& deviceContext,
+auto Engine::ConstantBuffer::Update(DeviceContext& deviceContext,
                                     void* buffer) -> void
 {
-	deviceContext->m_DeviceContext->UpdateSubresource(m_BufferData,
-	                                                  NULL,
-	                                                  nullptr,
-	                                                  buffer,
-	                                                  NULL,
-	                                                  NULL);
+	deviceContext.m_DeviceContext->UpdateSubresource(m_BufferData,
+	                                                 NULL,
+	                                                 nullptr,
+	                                                 buffer,
+	                                                 NULL,
+	                                                 NULL);
 }
 
-auto Engine::ConstantBuffer::Release() const -> bool
+auto Engine::ConstantBuffer::Release() -> bool
 {
 	if (m_BufferData)
 		m_BufferData->Release();

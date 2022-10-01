@@ -1,15 +1,13 @@
 #include "pch.h"
 #include "Window.h"
-#include "Utils/Pointers.h"
 
 namespace Engine
 {
-	Window::Window(std::wstring windowName,
-	               Vector2Int windowSize) :
+	Window::Window() :
 		m_Handle{nullptr},
 		m_IsRunning{false},
-		m_WindowSize{windowSize},
-		m_WindowName{std::move(windowName)}
+		m_WindowSize{0, 0},
+		m_WindowName{L"Untitled"}
 	{
 	}
 
@@ -22,7 +20,7 @@ namespace Engine
 		{
 			case WM_CREATE:
 			{
-				auto window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
+				auto* window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
 				SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
 				window->SetHandle(windowHandle);
 				window->OnCreate();
@@ -31,7 +29,7 @@ namespace Engine
 			case WM_DESTROY:
 			{
 				auto* window = reinterpret_cast<Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
-				window->OnDestroy();
+				window->OnTerminate();
 				PostQuitMessage(0);
 				break;
 			}
@@ -41,9 +39,15 @@ namespace Engine
 		return 0;
 	}
 
-	auto Window::Init() -> bool
+	auto Window::Initialize(const std::wstring windowName,
+	                        const Vector2Int windowSize) -> bool
 	{
-		WNDCLASSEX windowClass    = {};
+		m_WindowSize = windowSize;
+		m_WindowName = windowName;
+
+		std::cout << "Initialize Window\n";
+		
+		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);
 		windowClass.cbWndExtra    = NULL;
@@ -66,8 +70,8 @@ namespace Engine
 		                          WS_OVERLAPPEDWINDOW,
 		                          CW_USEDEFAULT,
 		                          CW_USEDEFAULT,
-		                          m_WindowSize.X,
-		                          m_WindowSize.Y,
+		                          static_cast<int>(m_WindowSize.X),
+		                          static_cast<int>(m_WindowSize.Y),
 		                          nullptr,
 		                          nullptr,
 		                          nullptr,
@@ -80,7 +84,7 @@ namespace Engine
 		return true;
 	}
 
-	auto Window::Release() const -> bool
+	auto Window::Terminate() const -> bool
 	{
 		if (!DestroyWindow(m_Handle))
 			return false;
@@ -107,15 +111,22 @@ namespace Engine
 
 	auto Window::OnCreate() -> void
 	{
+		std::cout << "Window Create\n";
+	}
+
+	auto Window::OnStart() -> void
+	{
+		std::cout << "Window Start\n";
 	}
 
 	auto Window::OnUpdate() -> void
 	{
 	}
 
-	auto Window::OnDestroy() -> void
+	auto Window::OnTerminate() -> void
 	{
 		m_IsRunning = false;
+		std::cout << "Window Terminate\n";
 	}
 
 	auto Window::GetClientWindowRect() const -> RECT
@@ -123,6 +134,11 @@ namespace Engine
 		RECT rc;
 		GetClientRect(m_Handle, &rc);
 		return rc;
+	}
+
+	auto Window::GetHandle() const -> HWND
+	{
+		return m_Handle;
 	}
 
 	auto Window::SetHandle(const HWND windowHandle) -> void

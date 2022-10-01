@@ -1,6 +1,8 @@
 #pragma once
 namespace Engine
 {
+	using Uint = unsigned int;
+	
 	template <typename T>
 	struct Vector2
 	{
@@ -9,9 +11,10 @@ namespace Engine
 		T Y;
 	};
 
-	using Vector2Int = Vector2<int>;
+	using Vector2Int = Vector2<Uint>;
 	using Vector2Uint = Vector2<unsigned int>;
-	
+	using Vector2Float = Vector2<float>;
+
 	template <typename T>
 	struct Vector3
 	{
@@ -22,6 +25,8 @@ namespace Engine
 		T Z;
 	};
 
+	using Vector3Int = Vector3<Uint>;
+	using Vector3Uint = Vector3<unsigned int>;
 	using Vector3Float = Vector3<float>;
 
 	template <typename T>

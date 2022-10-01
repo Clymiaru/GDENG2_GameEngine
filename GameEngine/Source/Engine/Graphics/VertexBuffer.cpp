@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "VertexBuffer.h"
-#include "Engine/Graphics/Core/GraphicsEngine.h"
+
+#include "RenderSystem.h"
 
 Engine::VertexBuffer::VertexBuffer() :
 	m_VertexSize{0},
@@ -41,7 +42,7 @@ auto Engine::VertexBuffer::Load(void* listOfVertices,
 	initData.pSysMem                = listOfVertices;
 	m_VertexSize                    = vertexSize;
 	m_ListSize                      = listSize;
-	if (FAILED(GraphicsEngine::GetInstance().m_D3DDevice->CreateBuffer(&bufferDesc, &initData, &m_Buffer)))
+	if (FAILED(RenderSystem::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &initData, &m_Buffer)))
 	{
 		return false;
 	}
@@ -55,7 +56,7 @@ auto Engine::VertexBuffer::Load(void* listOfVertices,
 	};
 	UINT layoutSize = ARRAYSIZE(indexLayout);
 
-	auto result = GraphicsEngine::GetInstance().m_D3DDevice->CreateInputLayout(
+	auto result = RenderSystem::GetInstance().GetDevice()->CreateInputLayout(
 		indexLayout, layoutSize, shaderByteCode, byteShaderSize, &m_Layout);
 
 	if (FAILED(result))

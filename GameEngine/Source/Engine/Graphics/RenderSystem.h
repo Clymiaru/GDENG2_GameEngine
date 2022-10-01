@@ -2,7 +2,7 @@
 #include <d3d11.h>
 #include <vector>
 
-#include "Core/SwapChain.h"
+#include "Engine/Graphics/SwapChain.h"
 
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Pointers.h"
@@ -18,7 +18,7 @@ namespace Engine
 	struct RenderObject
 	{
 		// Entity -> When we need reference to the one being rendered
-		Scope<VertexBuffer> VertexBuffer;
+		ScopePtr<VertexBuffer> VertexBuffer;
 	};
 
 	class RenderSystem final
@@ -29,7 +29,11 @@ namespace Engine
 		auto Initialize(HWND windowHandle,
 		                Vector2Int windowSize) -> void;
 
-		auto Release() -> void;
+		auto Terminate() -> void;
+
+		auto GetDevice() -> ID3D11Device*;
+
+		auto GetDeviceContext() -> DeviceContext&;
 
 		auto RegisterObject(void* listOfVertices,
 		                    UINT vertexSize,
@@ -42,6 +46,18 @@ namespace Engine
 		auto static Draw() -> void;
 
 		auto static SetViewportSize(Vector2Uint viewportSize) -> void;
+
+		auto CompileVertexShader(const std::wstring& fileName,
+		                         const std::string& entryPointName,
+		                         void** shaderByteCode,
+		                         size_t* byteCodeSize) -> bool;
+
+		auto CompilePixelShader(const std::wstring& fileName,
+		                        const std::string& entryPointName,
+		                        void** shaderByteCode,
+		                        size_t* byteCodeSize) -> bool;
+
+		auto ReleaseCompiledShader() const -> void;
 
 	private:
 		RenderSystem();
@@ -56,8 +72,27 @@ namespace Engine
 
 		auto operator=(const RenderSystem&&) -> RenderSystem& = delete;
 
-		Scope<SwapChain> m_SwapChain;
+		ScopePtr<SwapChain> m_SwapChain;
 
-		std::vector<Scope<RenderObject>> m_RenderList;
+		ScopePtr<DeviceContext> m_DeviceContext;
+
+		ID3D11Device* m_Device;
+
+		D3D_FEATURE_LEVEL m_FeatureLevel;
+
+		IDXGIDevice* m_DxgiDevice;
+
+		IDXGIAdapter* m_DxgiAdapter;
+
+		IDXGIFactory* m_DxgiFactory;
+
+		std::vector<ScopePtr<RenderObject>> m_RenderList;
+
+		// Transfer to a ShaderCompilerClass?
+		ID3DBlob* m_Blob = nullptr;
+
+		ID3D11VertexShader* m_VertexShader = nullptr;
+
+		ID3D11PixelShader* m_PixelShader = nullptr;
 	};
 }

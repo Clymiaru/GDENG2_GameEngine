@@ -3,8 +3,6 @@
 
 namespace Engine
 {
-	class GraphicsEngine;
-
 	class DeviceContext;
 
 	class VertexShader final
@@ -19,8 +17,6 @@ namespace Engine
 		ID3D11VertexShader* m_Data{};
 
 		size_t m_DataSize;
-
-		friend class GraphicsEngine;
 
 		friend class DeviceContext;
 	};

@@ -8,15 +8,15 @@ namespace Engine
 	class Window
 	{
 	public:
-		Window(std::wstring windowName,
-		       Vector2Int windowSize);
+		Window();
 
 		virtual ~Window() = default;
 
-		auto Init() -> bool;
+		auto Initialize(std::wstring windowName,
+		                Vector2Int windowSize) -> bool;
 
 		[[nodiscard]]
-		auto Release() const -> bool;
+		auto Terminate() const -> bool;
 
 		auto Broadcast() -> bool;
 
@@ -26,13 +26,18 @@ namespace Engine
 		[[nodiscard]]
 		auto GetClientWindowRect() const -> RECT;
 
+		[[nodiscard]]
+		auto GetHandle() const -> HWND;
+
 		auto SetHandle(HWND windowHandle) -> void;
 
-		virtual auto OnCreate() -> void;
+		virtual auto OnCreate() -> void;	
+
+		virtual auto OnStart() -> void;
 
 		virtual auto OnUpdate() -> void;
 
-		virtual auto OnDestroy() -> void;
+		virtual auto OnTerminate() -> void;
 
 	protected:
 		HWND m_Handle;
