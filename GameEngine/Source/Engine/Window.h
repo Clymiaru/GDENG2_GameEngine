@@ -31,7 +31,7 @@ namespace Engine
 
 		auto SetHandle(HWND windowHandle) -> void;
 
-		virtual auto OnCreate() -> void;	
+		virtual auto OnCreate() -> void;
 
 		virtual auto OnStart() -> void;
 

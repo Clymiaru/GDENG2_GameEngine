@@ -24,7 +24,9 @@ auto Engine::VertexBuffer::Load(void* listOfVertices,
                                 UINT vertexSize,
                                 UINT listSize,
                                 void* shaderByteCode,
-                                UINT byteShaderSize) -> bool
+                                UINT byteShaderSize,
+                                D3D11_INPUT_ELEMENT_DESC* indexLayout,
+                                size_t indexLayoutSize) -> bool
 {
 	if (m_Buffer)
 		m_Buffer->Release();
@@ -47,17 +49,8 @@ auto Engine::VertexBuffer::Load(void* listOfVertices,
 		return false;
 	}
 
-	D3D11_INPUT_ELEMENT_DESC indexLayout[] =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-	UINT layoutSize = ARRAYSIZE(indexLayout);
-
 	auto result = RenderSystem::GetInstance().GetDevice()->CreateInputLayout(
-		indexLayout, layoutSize, shaderByteCode, byteShaderSize, &m_Layout);
+		indexLayout, indexLayoutSize, shaderByteCode, byteShaderSize, &m_Layout);
 
 	if (FAILED(result))
 	{

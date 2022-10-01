@@ -26,25 +26,25 @@ namespace Engine
 
 		auto Terminate() -> void;
 
-		auto Clear(const ScopePtr<SwapChain>& swapChain,
+		auto Clear(const UniquePtr<SwapChain>& swapChain,
 		           Color32 color) const -> void;
 
 		auto SetViewportSize(UINT width,
 		                     UINT height) const -> void;
 
 		// Buffers
-		auto SetVertexBuffer(const ScopePtr<VertexBuffer>& vertexBuffer) const -> void;
+		auto SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void;
 
-		auto SetConstantBuffer(const ScopePtr<VertexShader>& vertexShader,
-		                       const ScopePtr<ConstantBuffer>& constantBuffer) const -> void;
+		auto SetConstantBuffer(const UniquePtr<VertexShader>& vertexShader,
+		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
-		auto SetConstantBuffer(const ScopePtr<PixelShader>& pixelShader,
-		                       const ScopePtr<ConstantBuffer>& constantBuffer) const -> void;
+		auto SetConstantBuffer(const UniquePtr<PixelShader>& pixelShader,
+		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
 		// Shaders
-		auto SetVertexShader(const ScopePtr<VertexShader>& vertexShader) const -> void;
+		auto SetVertexShader(const UniquePtr<VertexShader>& vertexShader) const -> void;
 
-		auto SetPixelShader(const ScopePtr<PixelShader>& pixelShader) const -> void;
+		auto SetPixelShader(const UniquePtr<PixelShader>& pixelShader) const -> void;
 
 		// Draw
 		auto DrawTriangleList(UINT vertexCount,

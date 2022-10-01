@@ -1,8 +1,17 @@
 ﻿#pragma once
 #include "Engine/Window.h"
-#include "Engine/Graphics/ConstantBuffer.h"
-#include "Engine/Graphics/PixelShader.h"
-#include "Engine/Graphics/VertexShader.h"
+#include "Engine/Graphics/Primitives/Quad.h"
+#include "Engine/Utils/DataStructures.h"
+#include "Engine/Utils/Pointers.h"
+
+namespace Engine
+{
+	class ConstantBuffer;
+
+	class PixelShader;
+
+	class VertexShader;
+}
 
 namespace Editor
 {
@@ -23,16 +32,18 @@ namespace Editor
 		auto OnTerminate() -> void override;
 
 	private:
-		Engine::ScopePtr<Engine::ConstantBuffer> m_ConstantBuffer;
+		Engine::UniquePtr<Engine::ConstantBuffer> m_ConstantBuffer;
 
-		Engine::ScopePtr<Engine::VertexShader> m_VertexShader;
+		Engine::UniquePtr<Engine::VertexShader> m_VertexShader;
 
-		Engine::ScopePtr<Engine::PixelShader> m_PixelShader;
+		Engine::UniquePtr<Engine::PixelShader> m_PixelShader;
 
 		unsigned long m_OldTime = 0;
 
 		float m_DeltaTime = 0;
 
-		float m_Angle = 0;
+		float m_Time = 0;
+
+		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Quads;
 	};
 }

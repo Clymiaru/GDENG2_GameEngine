@@ -98,14 +98,18 @@ auto Engine::RenderSystem::RegisterObject(void* listOfVertices,
                                           UINT vertexSize,
                                           UINT listSize,
                                           void* shaderByteCode,
-                                          UINT byteShaderSize) -> void
+                                          UINT byteShaderSize,
+                                          D3D11_INPUT_ELEMENT_DESC* indexLayout,
+                                          size_t indexLayoutSize) -> void
 {
 	const auto& obj = m_RenderList.emplace_back(CreateUniquePtr<RenderObject>(CreateUniquePtr<VertexBuffer>()));
 	obj->VertexBuffer->Load(listOfVertices,
 	                        vertexSize,
 	                        listSize,
 	                        shaderByteCode,
-	                        byteShaderSize);
+	                        byteShaderSize,
+	                        indexLayout,
+	                        indexLayoutSize);
 }
 
 auto Engine::RenderSystem::Clear(const Color32 fillColor) -> void
@@ -132,9 +136,9 @@ auto Engine::RenderSystem::SetViewportSize(Vector2Uint viewportSize) -> void
 }
 
 auto Engine::RenderSystem::CompileVertexShader(const std::wstring& fileName,
-												 const std::string& entryPointName,
-												 void** shaderByteCode,
-												 size_t* byteCodeSize) -> bool
+                                               const std::string& entryPointName,
+                                               void** shaderByteCode,
+                                               size_t* byteCodeSize) -> bool
 {
 	ID3DBlob* errorBlob = nullptr;
 	if (!SUCCEEDED(
@@ -156,9 +160,9 @@ auto Engine::RenderSystem::CompileVertexShader(const std::wstring& fileName,
 }
 
 auto Engine::RenderSystem::CompilePixelShader(const std::wstring& fileName,
-												const std::string& entryPointName,
-												void** shaderByteCode,
-												size_t* byteCodeSize) -> bool
+                                              const std::string& entryPointName,
+                                              void** shaderByteCode,
+                                              size_t* byteCodeSize) -> bool
 {
 	ID3DBlob* errorBlob = nullptr;
 	if (!SUCCEEDED(

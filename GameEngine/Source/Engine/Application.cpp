@@ -6,7 +6,7 @@ namespace Engine
 	Application::Application(ApplicationDescription description) :
 		m_IsRunning{false},
 		m_Description{std::move(description)},
-		m_Windows{List<ScopePtr<Window>>()}
+		m_Windows{List<UniquePtr<Window>>()}
 	{
 	}
 
@@ -31,7 +31,7 @@ namespace Engine
 		{
 			window->OnStart();
 		}
-		
+
 		m_IsRunning = true;
 		return true;
 	}

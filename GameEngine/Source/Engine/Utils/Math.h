@@ -2,7 +2,7 @@
 namespace Engine
 {
 	using Uint = unsigned int;
-	
+
 	template <typename T>
 	struct Vector2
 	{

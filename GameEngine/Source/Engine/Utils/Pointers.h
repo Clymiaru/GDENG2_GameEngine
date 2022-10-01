@@ -5,10 +5,10 @@
 namespace Engine
 {
 	template <typename T>
-	using ScopePtr = std::unique_ptr<T>;
+	using UniquePtr = std::unique_ptr<T>;
 
 	template <typename T, typename ... Args>
-	constexpr auto CreateUniquePtr(Args&& ... args) -> ScopePtr<T>
+	constexpr auto CreateUniquePtr(Args&& ... args) -> UniquePtr<T>
 	{
 		return std::make_unique<T>(std::forward<Args>(args)...);
 	}
@@ -17,7 +17,7 @@ namespace Engine
 	using SharedPtr = std::shared_ptr<T>;
 
 	template <typename T, typename ... Args>
-	constexpr auto CreateRef(Args&& ... args) -> SharedPtr<T>
+	constexpr auto CreateSharedPtr(Args&& ... args) -> SharedPtr<T>
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}

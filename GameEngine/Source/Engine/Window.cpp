@@ -46,7 +46,7 @@ namespace Engine
 		m_WindowName = windowName;
 
 		std::cout << "Initialize Window\n";
-		
+
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);

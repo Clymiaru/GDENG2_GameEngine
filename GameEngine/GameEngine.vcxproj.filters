@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="App">
-      <UniqueIdentifier>{46D6870B-B2DF-877C-3B5B-9E7CA763937C}</UniqueIdentifier>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
@@ -10,45 +10,54 @@
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{7B960115-E721-6FD9-F032-F2CD5C3DCBD9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\Core">
-      <UniqueIdentifier>{B3FFD265-9F8E-5C2F-48AD-702A341B6DD5}</UniqueIdentifier>
+    <Filter Include="Engine\Graphics\Primitives">
+      <UniqueIdentifier>{7631ABB9-6241-578A-CBFA-BBA8B7294623}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Utils">
       <UniqueIdentifier>{7B014596-6764-D43A-10EA-0CF1FC2BA0BD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\App\AppWindow.h">
-      <Filter>App</Filter>
+    <ClInclude Include="Source\Editor\EditorApplication.h">
+      <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\ConstantBuffer.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Editor\EditorWindow.h">
+      <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\DeviceContext.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Engine\Application.h">
+      <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\GraphicsEngine.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\PixelShader.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Engine\Graphics\DeviceContext.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\SwapChain.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Engine\Graphics\PixelShader.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\Vertex.h">
-      <Filter>Engine\Graphics\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\VertexBuffer.h">
-      <Filter>Engine\Graphics\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Core\VertexShader.h">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClInclude Include="Source\Engine\Graphics\Primitives\Quad.h">
+      <Filter>Engine\Graphics\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\RenderSystem.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\SwapChain.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Vertex.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\VertexShader.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Engine\Utils\Color32.h">
+      <Filter>Engine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Utils\DataStructures.h">
       <Filter>Engine\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Utils\Debug.h">
@@ -66,42 +75,43 @@
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\App\AppWindow.cpp">
-      <Filter>App</Filter>
+    <ClCompile Include="Source\Editor\EditorApplication.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\App\Main.cpp">
-      <Filter>App</Filter>
+    <ClCompile Include="Source\Editor\EditorWindow.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\ConstantBuffer.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClCompile Include="Source\Engine\Application.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\DeviceContext.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\GraphicsEngine.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\PixelShader.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\SwapChain.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\Vertex.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\VertexBuffer.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Core\VertexShader.cpp">
-      <Filter>Engine\Graphics\Core</Filter>
+    <ClCompile Include="Source\Engine\Graphics\Primitives\Quad.cpp">
+      <Filter>Engine\Graphics\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\pch.cpp" />
   </ItemGroup>
 </Project>

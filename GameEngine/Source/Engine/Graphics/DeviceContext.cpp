@@ -23,7 +23,7 @@ namespace Engine
 		m_DeviceContext->Release();
 	}
 
-	auto DeviceContext::Clear(const ScopePtr<SwapChain>& swapChain,
+	auto DeviceContext::Clear(const UniquePtr<SwapChain>& swapChain,
 	                          const Color32 color) const -> void
 	{
 		const float clearColor[] = {color.Red, color.Green, color.Blue, color.Alpha};
@@ -32,7 +32,7 @@ namespace Engine
 
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(swapChain->GetRenderTargetView());
-		
+
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    (renderTargetViews.data()),
 		                                    nullptr);
@@ -49,32 +49,32 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	auto DeviceContext::SetVertexBuffer(const ScopePtr<VertexBuffer>& vertexBuffer) const -> void
+	auto DeviceContext::SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void
 	{
-		const UINT stride = vertexBuffer->m_VertexSize;
+		const UINT stride     = vertexBuffer->m_VertexSize;
 		constexpr UINT offset = 0;
 		m_DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->m_Buffer, &stride, &offset);
 		m_DeviceContext->IASetInputLayout(vertexBuffer->m_Layout);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const ScopePtr<VertexShader>& vertexShader,
-	                                      const ScopePtr<ConstantBuffer>& constantBuffer) const -> void
+	auto DeviceContext::SetConstantBuffer(const UniquePtr<VertexShader>& vertexShader,
+	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const ScopePtr<PixelShader>& pixelShader,
-	                                      const ScopePtr<ConstantBuffer>& constantBuffer) const -> void
+	auto DeviceContext::SetConstantBuffer(const UniquePtr<PixelShader>& pixelShader,
+	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetVertexShader(const ScopePtr<VertexShader>& vertexShader) const -> void
+	auto DeviceContext::SetVertexShader(const UniquePtr<VertexShader>& vertexShader) const -> void
 	{
 		m_DeviceContext->VSSetShader(vertexShader->m_Data, nullptr, 0);
 	}
 
-	auto DeviceContext::SetPixelShader(const ScopePtr<PixelShader>& pixelShader) const -> void
+	auto DeviceContext::SetPixelShader(const UniquePtr<PixelShader>& pixelShader) const -> void
 	{
 		m_DeviceContext->PSSetShader(pixelShader->m_Data, nullptr, 0);
 	}

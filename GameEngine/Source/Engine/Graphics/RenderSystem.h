@@ -18,7 +18,7 @@ namespace Engine
 	struct RenderObject
 	{
 		// Entity -> When we need reference to the one being rendered
-		ScopePtr<VertexBuffer> VertexBuffer;
+		UniquePtr<VertexBuffer> VertexBuffer;
 	};
 
 	class RenderSystem final
@@ -39,7 +39,9 @@ namespace Engine
 		                    UINT vertexSize,
 		                    UINT listSize,
 		                    void* shaderByteCode,
-		                    UINT byteShaderSize) -> void;
+		                    UINT byteShaderSize,
+		                    D3D11_INPUT_ELEMENT_DESC* indexLayout,
+		                    size_t indexLayoutSize) -> void;
 
 		auto static Clear(Color32 fillColor) -> void;
 
@@ -72,9 +74,9 @@ namespace Engine
 
 		auto operator=(const RenderSystem&&) -> RenderSystem& = delete;
 
-		ScopePtr<SwapChain> m_SwapChain;
+		UniquePtr<SwapChain> m_SwapChain;
 
-		ScopePtr<DeviceContext> m_DeviceContext;
+		UniquePtr<DeviceContext> m_DeviceContext;
 
 		ID3D11Device* m_Device;
 
@@ -86,7 +88,7 @@ namespace Engine
 
 		IDXGIFactory* m_DxgiFactory;
 
-		std::vector<ScopePtr<RenderObject>> m_RenderList;
+		std::vector<UniquePtr<RenderObject>> m_RenderList;
 
 		// Transfer to a ShaderCompilerClass?
 		ID3DBlob* m_Blob = nullptr;

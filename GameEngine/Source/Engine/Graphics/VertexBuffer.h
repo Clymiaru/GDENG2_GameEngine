@@ -19,7 +19,9 @@ namespace Engine
 		          UINT vertexSize,
 		          UINT listSize,
 		          void* shaderByteCode,
-		          UINT byteShaderSize) -> bool;
+		          UINT byteShaderSize,
+		          D3D11_INPUT_ELEMENT_DESC* indexLayout,
+		          size_t indexLayoutSize) -> bool;
 
 		auto Release() const -> void;
 

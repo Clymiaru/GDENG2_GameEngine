@@ -6,7 +6,7 @@
 auto main() -> int
 {
 	constexpr auto appWindowSize = Engine::Vector2Int({1280, 720});
-	auto editorApp = Editor::EditorApplication(appWindowSize);
+	auto editorApp               = Editor::EditorApplication(appWindowSize);
 
 	if (editorApp.Initialize())
 	{

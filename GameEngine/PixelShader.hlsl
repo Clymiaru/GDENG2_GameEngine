@@ -7,10 +7,10 @@ struct PS_INPUT
 
 cbuffer Constant: register(b0)
 {
-	float Angle;
+	float Time;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	return lerp(input.color, input.color1, (sin(Angle) + 1.0f) / 2.0f);
+	return lerp(input.color, input.color1, (sin(Time) + 1.0f) / 2.0f);
 }

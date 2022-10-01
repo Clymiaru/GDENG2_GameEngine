@@ -5,19 +5,22 @@
 
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/DeviceContext.h"
+#include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/RenderSystem.h"
-#include "Engine/Graphics/Vertex.h"
+#include "Engine/Graphics/VertexShader.h"
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Math.h"
+
+#include "Engine/Graphics/Primitives/Quad.h"
 
 namespace Editor
 {
 	__declspec(align(16))
 	struct Constant
 	{
-		float Angle;
+		float Time;
 	};
-	
+
 	EditorWindow::EditorWindow(const std::wstring& windowName,
 	                           const Engine::Vector2Int windowSize) :
 		Window()
@@ -32,85 +35,73 @@ namespace Editor
 		std::cout << "Editor Window Create\n";
 	}
 
-	void EditorWindow::OnStart()
+	auto EditorWindow::OnStart() -> void
 	{
 		Window::OnStart();
 		std::cout << "Editor Window Start\n";
 
-		Vertex rainbowRectangle[] =
-		{
-			{
-				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-				Engine::Color32{1.0f, 1.0f, 0.0f, 1.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f}
-			},
-		
-			{
-				Engine::Vector3Float{-0.30f - 0.60f, 0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{-0.30f, 0.30f + 0.55f, 0.0f},
-				Engine::Color32{1.0f, 0.0f, 0.0f, 1.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f}
-			},
-		
-			{
-				Engine::Vector3Float{0.30f - 0.60f, 0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{0.30f, 0.30f + 0.55f, 0.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f},
-				Engine::Color32{1.0f, 0.0f, 0.0f, 1.0f}
-			},
-		
-			{
-				Engine::Vector3Float{0.30f - 0.60f, 0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{0.30f, 0.30f + 0.55f, 0.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f},
-				Engine::Color32{1.0f, 0.0f, 0.0f, 1.0f},
-			},
-		
-			{
-				Engine::Vector3Float{0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{0.30f, -0.30f - 0.55f, 0.0f},
-				Engine::Color32{1.0f, 0.0f, 0.0f, 1.0f},
-				Engine::Color32{0.0f, 0.0f, 1.0f, 1.0f},
-			},
-		
-			{
-				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-				Engine::Vector3Float{-0.30f - 0.60f, -0.30f + 0.55f, 0.0f},
-				Engine::Color32{1.0f, 0.0f, 1.0f, 1.0f},
-				Engine::Color32{0.0f, 0.5f, 1.0f, 1.0f},
-			}
-		};
-		
-		constexpr UINT rainbowRectangleListSize = ARRAYSIZE(rainbowRectangle);
-		
 		void* shaderByteCode      = nullptr;
 		size_t shaderByteCodeSize = 0;
-		Engine::RenderSystem::GetInstance().CompileVertexShader(L"VertexShader.hlsl",
+		Engine::RenderSystem::GetInstance().CompileVertexShader(L"SinTimeAnimShader.hlsl",
 		                                                        "vsmain",
 		                                                        &shaderByteCode,
 		                                                        &shaderByteCodeSize);
-		
+
 		m_VertexShader = Engine::CreateUniquePtr<Engine::VertexShader>(shaderByteCode, shaderByteCodeSize);
-		
-		Engine::RenderSystem::GetInstance().RegisterObject(rainbowRectangle,
-		                                                   sizeof(Vertex),
-		                                                   rainbowRectangleListSize,
-		                                                   shaderByteCode,
-		                                                   shaderByteCodeSize);
-		
+
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{-0.55f, 0.10f},
+		                                                        Engine::Vector2Float{0.81f, 1.11f},
+		                                                        Engine::Color32{0.68f, 0, 0.83f, 1.0f}));
+
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{0.30f, 0.45f},
+		                                                        Engine::Vector2Float{0.40f, 0.90f},
+		                                                        Engine::Color32{0.27f, 0.51f, 0.41f, 1.0f}));
+
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{0.55f, -0.45f},
+		                                                        Engine::Vector2Float{0.75f, 0.65f},
+		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
+
+		// D3D11_INPUT_ELEMENT_DESC indexLayout[] =
+		// {
+		// 	{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		// };
+		// UINT layoutSize = ARRAYSIZE(indexLayout);
+
+		D3D11_INPUT_ELEMENT_DESC indexLayout[] =
+		{
+			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"SIZE", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+		UINT layoutSize = ARRAYSIZE(indexLayout);
+
+		for (auto& quad : m_Quads)
+		{
+			quad->SetIndexLayoutAndSize({indexLayout, layoutSize});
+			Engine::RenderSystem::GetInstance().RegisterObject(quad->GetListOfVertices(),
+			                                                   quad->GetVertexSize(),
+			                                                   quad->GetListOfVerticesSize(),
+			                                                   shaderByteCode,
+			                                                   shaderByteCodeSize,
+			                                                   quad->GetIndexLayoutAndSize().Data,
+			                                                   quad->GetIndexLayoutAndSize().Size);
+		}
+
 		Engine::RenderSystem::GetInstance().ReleaseCompiledShader();
-		
-		Engine::RenderSystem::GetInstance().CompilePixelShader(L"PixelShader.hlsl",
+
+		Engine::RenderSystem::GetInstance().CompilePixelShader(L"SinTimeAnimShader.hlsl",
 		                                                       "psmain",
 		                                                       &shaderByteCode,
 		                                                       &shaderByteCodeSize);
-		
+
 		m_PixelShader = Engine::CreateUniquePtr<Engine::PixelShader>(shaderByteCode, shaderByteCodeSize);
 		Engine::RenderSystem::GetInstance().ReleaseCompiledShader();
-		
+
 		Constant constant = {};
-		constant.Angle    = 0;
+		constant.Time     = 0;
 		m_ConstantBuffer  = Engine::CreateUniquePtr<Engine::ConstantBuffer>();
 		m_ConstantBuffer->Load(&constant, sizeof(Constant));
 	}
@@ -119,35 +110,35 @@ namespace Editor
 	{
 		Window::OnUpdate();
 		Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
-		
+
 		const RECT rc = GetClientWindowRect();
-	
-		Engine::RenderSystem::GetInstance().SetViewportSize({
+
+		Engine::RenderSystem::SetViewportSize({
 			static_cast<UINT>(rc.right - rc.left),
 			static_cast<UINT>(rc.bottom - rc.top)
 		});
-		
+
 		unsigned long newTime = 0;
 		if (m_OldTime)
 			newTime = GetTickCount() - m_OldTime;
 		m_DeltaTime = static_cast<float>(newTime) / 1000.0f;
 		m_OldTime   = GetTickCount();
-		
-		m_Angle += 1.57f * m_DeltaTime;
+
+		m_Time += m_DeltaTime;
 		Constant constant = {};
-		constant.Angle    = m_Angle;
-		
+		constant.Time     = m_Time;
+
 		auto device = Engine::RenderSystem::GetInstance().GetDevice();
 		m_ConstantBuffer->Update(Engine::RenderSystem::GetInstance().GetDeviceContext(), &constant);
-		
+
 		Engine::RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
 			m_VertexShader, m_ConstantBuffer);
 		Engine::RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
 			m_PixelShader, m_ConstantBuffer);
-		
+
 		Engine::RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(m_VertexShader);
 		Engine::RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(m_PixelShader);
-		
+
 		Engine::RenderSystem::Draw();
 	}
 
