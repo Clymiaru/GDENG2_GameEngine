@@ -7,6 +7,7 @@
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/RenderSystem.h"
+#include "Engine/Graphics/ShaderLibrary.h"
 #include "Engine/Graphics/VertexShader.h"
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Math.h"
@@ -19,8 +20,11 @@ namespace Editor
 	struct Constant
 	{
 		DirectX::XMMATRIX World;
+
 		DirectX::XMMATRIX View;
+
 		DirectX::XMMATRIX Projection;
+
 		float Time;
 	};
 
@@ -43,15 +47,6 @@ namespace Editor
 		Window::OnStart();
 		std::cout << "Editor Window Start\n";
 
-		void* shaderByteCode      = nullptr;
-		size_t shaderByteCodeSize = 0;
-		Engine::RenderSystem::GetInstance().CompileVertexShader(L"SinTimeAnimShader.hlsl",
-		                                                        "vsmain",
-		                                                        &shaderByteCode,
-		                                                        &shaderByteCodeSize);
-
-		m_VertexShader = Engine::CreateUniquePtr<Engine::VertexShader>(shaderByteCode, shaderByteCodeSize);
-
 		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{-300.0f, 100.0f},
 		                                                        Engine::Vector2Float{400.f, 400.0f},
 		                                                        Engine::Color32{0.68f, 0, 0.83f, 1.0f}));
@@ -64,26 +59,28 @@ namespace Editor
 		                                                        Engine::Vector2Float{500.0f, 225.0f},
 		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
 
+		void* shaderByteCode      = nullptr;
+		size_t shaderByteCodeSize = 0;
+
+		Engine::ShaderLibrary::GetInstance().RegisterVertexShader(L"SinTimeAnimShader.hlsl",
+		                                                         "vsmain");
+
+		Engine::ShaderLibrary::GetInstance().RegisterPixelShader(L"SinTimeAnimShader.hlsl",
+																 "psmain");
+
+		auto& vs = Engine::ShaderLibrary::GetInstance().GetVertexShader(L"SinTimeAnimShader.hlsl");
+		auto& ps = Engine::ShaderLibrary::GetInstance().GetPixelShader(L"SinTimeAnimShader.hlsl");
+		
 		for (auto& quad : m_Quads)
 		{
 			Engine::RenderSystem::GetInstance().RegisterObject(quad->GetListOfVertices(),
 			                                                   quad->GetVertexSize(),
 			                                                   quad->GetListOfVerticesSize(),
-			                                                   shaderByteCode,
-			                                                   shaderByteCodeSize,
+			                                                   vs.GetData(),
+			                                                   vs.GetDataSize(),
 			                                                   quad->GetIndexLayoutAndSize().Data,
 			                                                   quad->GetIndexLayoutAndSize().Size);
 		}
-
-		Engine::RenderSystem::GetInstance().ReleaseCompiledShader();
-
-		Engine::RenderSystem::GetInstance().CompilePixelShader(L"SinTimeAnimShader.hlsl",
-		                                                       "psmain",
-		                                                       &shaderByteCode,
-		                                                       &shaderByteCodeSize);
-
-		m_PixelShader = Engine::CreateUniquePtr<Engine::PixelShader>(shaderByteCode, shaderByteCodeSize);
-		Engine::RenderSystem::GetInstance().ReleaseCompiledShader();
 
 		Constant constant = {};
 		constant.Time     = 0;
@@ -97,7 +94,6 @@ namespace Editor
 		Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
 		const RECT rc = GetClientWindowRect();
-
 		Engine::RenderSystem::SetViewportSize({
 			static_cast<UINT>(rc.right - rc.left),
 			static_cast<UINT>(rc.bottom - rc.top)
@@ -113,11 +109,9 @@ namespace Editor
 		Constant constant = {};
 		constant.Time     = m_Time;
 
-		constant.World = DirectX::XMMatrixIdentity();
-		constant.World = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-		
-		constant.View = DirectX::XMMatrixIdentity();
-
+		constant.World      = DirectX::XMMatrixIdentity();
+		constant.World      = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+		constant.View       = DirectX::XMMatrixIdentity();
 		constant.Projection = DirectX::XMMatrixIdentity();
 		constant.Projection = DirectX::XMMatrixOrthographicLH(
 			1280.0f,
@@ -132,8 +126,8 @@ namespace Editor
 		Engine::RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
 			m_PixelShader, m_ConstantBuffer);
 
-		Engine::RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(m_VertexShader);
-		Engine::RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(m_PixelShader);
+		Engine::RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(L"SinTimeAnimShader.hlsl");
+		Engine::RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(L"SinTimeAnimShader.hlsl");
 
 		Engine::RenderSystem::Draw();
 	}

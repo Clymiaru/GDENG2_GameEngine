@@ -23,7 +23,7 @@ namespace Engine
 		m_Vertices{nullptr},
 		m_VerticesSize{0}
 	{
-		auto vertices   = new QuadVertex[6]
+		auto vertices = new QuadVertex[6]
 		{
 			{
 				Vector3Float{m_Position.X - m_Size.X / 2.0f, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
@@ -65,8 +65,6 @@ namespace Engine
 		m_Vertices     = vertices;
 		m_VerticesSize = 6;
 
-
-
 		auto* layout = new D3D11_INPUT_ELEMENT_DESC[3]
 		{
 			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -74,7 +72,7 @@ namespace Engine
 			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 		auto layoutSize = 3U;
-		SetIndexLayoutAndSize({ layout, layoutSize });
+		SetIndexLayoutAndSize({layout, layoutSize});
 	}
 
 	Quad::~Quad()
@@ -105,14 +103,24 @@ namespace Engine
 	{
 		m_IndexLayout = CreateUniquePtr<IndexLayoutInfo>(indexLayoutInfo);
 	}
+
+	auto Quad::SetVertexAndPixelShader(SharedPtr<VertexShader> vertexShader,
+	                                   SharedPtr<PixelShader> pixelShader) -> void
+	{
+		m_VertexShader = vertexShader;
+		m_PixelShader = pixelShader;
+	}
+
 	auto Quad::GetTransform() -> DirectX::XMMATRIX&
 	{
 		return m_ModelMat;
 	}
+
 	auto Quad::GetConstantBuffer() -> ConstantBuffer*
 	{
 		return m_ConstantBuffer;
 	}
+
 	auto Quad::SetConstantBuffer(ConstantBuffer* constantBuffer) -> void
 	{
 		m_ConstantBuffer = std::move(constantBuffer);

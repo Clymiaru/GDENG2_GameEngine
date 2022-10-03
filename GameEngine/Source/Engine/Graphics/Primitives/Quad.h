@@ -5,6 +5,8 @@
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
 #include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/Graphics/PixelShader.h"
+#include "Engine/Graphics/VertexShader.h"
 
 namespace Engine
 {
@@ -34,6 +36,9 @@ namespace Engine
 
 		auto SetIndexLayoutAndSize(IndexLayoutInfo indexLayoutInfo) -> void;
 
+		auto SetVertexAndPixelShader(SharedPtr<VertexShader> vertexShader,
+		                             SharedPtr<PixelShader> pixelShader) -> void;
+
 		auto GetTransform() -> DirectX::XMMATRIX&;
 
 		auto GetConstantBuffer() -> ConstantBuffer*;
@@ -52,6 +57,10 @@ namespace Engine
 		size_t m_VerticesSize;
 
 		UniquePtr<IndexLayoutInfo> m_IndexLayout;
+
+		SharedPtr<VertexShader> m_VertexShader;
+
+		SharedPtr<PixelShader> m_PixelShader;
 
 		ConstantBuffer* m_ConstantBuffer;
 

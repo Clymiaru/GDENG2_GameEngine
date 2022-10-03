@@ -1,6 +1,9 @@
 #include "pch.h"
 
 #include "Engine/Graphics/DeviceContext.h"
+
+#include "ShaderLibrary.h"
+
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/SwapChain.h"
@@ -57,26 +60,36 @@ namespace Engine
 		m_DeviceContext->IASetInputLayout(vertexBuffer->m_Layout);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const UniquePtr<VertexShader>& vertexShader,
+	auto DeviceContext::SetConstantBuffer(const SharedPtr<VertexShader>& vertexShader,
 	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const UniquePtr<PixelShader>& pixelShader,
+	auto DeviceContext::SetConstantBuffer(const SharedPtr<PixelShader>& pixelShader,
 	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetVertexShader(const UniquePtr<VertexShader>& vertexShader) const -> void
+	auto DeviceContext::SetVertexShader(const SharedPtr<VertexShader>& vertexShader) const -> void
 	{
 		m_DeviceContext->VSSetShader(vertexShader->m_Data, nullptr, 0);
 	}
 
-	auto DeviceContext::SetPixelShader(const UniquePtr<PixelShader>& pixelShader) const -> void
+	auto DeviceContext::SetPixelShader(const SharedPtr<PixelShader>& pixelShader) const -> void
 	{
 		m_DeviceContext->PSSetShader(pixelShader->m_Data, nullptr, 0);
+	}
+
+	auto DeviceContext::SetVertexShader(const std::wstring& filename) const -> void
+	{
+		m_DeviceContext->VSSetShader(ShaderLibrary::GetInstance().GetVertexShader(filename).m_Data, nullptr, 0);
+	}
+
+	auto DeviceContext::SetPixelShader(const std::wstring& filename) const -> void
+	{
+		m_DeviceContext->PSSetShader(ShaderLibrary::GetInstance().GetPixelShader(filename).m_Data, nullptr, 0);
 	}
 
 	auto DeviceContext::DrawTriangleList(UINT vertexCount,

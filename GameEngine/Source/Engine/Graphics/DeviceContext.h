@@ -35,16 +35,20 @@ namespace Engine
 		// Buffers
 		auto SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void;
 
-		auto SetConstantBuffer(const UniquePtr<VertexShader>& vertexShader,
+		auto SetConstantBuffer(const SharedPtr<VertexShader>& vertexShader,
 		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
-		auto SetConstantBuffer(const UniquePtr<PixelShader>& pixelShader,
+		auto SetConstantBuffer(const SharedPtr<PixelShader>& pixelShader,
 		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
 		// Shaders
-		auto SetVertexShader(const UniquePtr<VertexShader>& vertexShader) const -> void;
+		auto SetVertexShader(const SharedPtr<VertexShader>& vertexShader) const -> void;
 
-		auto SetPixelShader(const UniquePtr<PixelShader>& pixelShader) const -> void;
+		auto SetPixelShader(const SharedPtr<PixelShader>& pixelShader) const -> void;
+
+		auto SetVertexShader(const std::wstring& filename) const -> void;
+
+		auto SetPixelShader(const std::wstring& filename) const -> void;
 
 		// Draw
 		auto DrawTriangleList(UINT vertexCount,

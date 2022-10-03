@@ -68,11 +68,7 @@ namespace Engine
 
 		RenderSystem(const RenderSystem&);
 
-		auto operator=(const RenderSystem&) -> RenderSystem& = delete;
-
 		RenderSystem(const RenderSystem&&) noexcept;
-
-		auto operator=(const RenderSystem&&) -> RenderSystem& = delete;
 
 		UniquePtr<SwapChain> m_SwapChain;
 
@@ -92,6 +88,8 @@ namespace Engine
 
 		// Transfer to a ShaderCompilerClass?
 		ID3DBlob* m_Blob = nullptr;
+
+		ID3DBlob* m_Blob2 = nullptr;
 
 		ID3D11VertexShader* m_VertexShader = nullptr;
 

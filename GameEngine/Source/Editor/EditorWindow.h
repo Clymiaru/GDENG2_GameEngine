@@ -28,9 +28,9 @@ namespace Editor
 	private:
 		Engine::UniquePtr<Engine::ConstantBuffer> m_ConstantBuffer;
 
-		Engine::UniquePtr<Engine::VertexShader> m_VertexShader;
+		Engine::SharedPtr<Engine::VertexShader> m_VertexShader;
 
-		Engine::UniquePtr<Engine::PixelShader> m_PixelShader;
+		Engine::SharedPtr<Engine::PixelShader> m_PixelShader;
 
 		unsigned long m_OldTime = 0;
 

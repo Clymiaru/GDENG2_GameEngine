@@ -166,7 +166,7 @@ auto Engine::RenderSystem::CompilePixelShader(const std::wstring& fileName,
 {
 	ID3DBlob* errorBlob = nullptr;
 	if (!SUCCEEDED(
-		D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, entryPointName.c_str(), "ps_5_0", 0, 0, &m_Blob, &
+		D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, entryPointName.c_str(), "ps_5_0", 0, 0, &m_Blob2, &
 			errorBlob)))
 	{
 		if (errorBlob)
@@ -178,8 +178,8 @@ auto Engine::RenderSystem::CompilePixelShader(const std::wstring& fileName,
 		return false;
 	}
 
-	*shaderByteCode = m_Blob->GetBufferPointer();
-	*byteCodeSize   = m_Blob->GetBufferSize();
+	*shaderByteCode = m_Blob2->GetBufferPointer();
+	*byteCodeSize   = m_Blob2->GetBufferSize();
 	return true;
 }
 
@@ -187,6 +187,9 @@ auto Engine::RenderSystem::ReleaseCompiledShader() const -> void
 {
 	if (m_Blob)
 		m_Blob->Release();
+
+	if (m_Blob2)
+		m_Blob2->Release();
 }
 
 Engine::RenderSystem::RenderSystem(const RenderSystem&)

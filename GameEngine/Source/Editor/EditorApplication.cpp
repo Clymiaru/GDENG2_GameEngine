@@ -7,6 +7,8 @@
 #include "Editor/EditorApplication.h"
 #include "Editor/EditorWindow.h"
 
+#include "Engine/Graphics/ShaderLibrary.h"
+
 namespace Editor
 {
 	EditorApplication::EditorApplication(Engine::Vector2Uint startWindowSize) :
@@ -34,10 +36,13 @@ namespace Editor
 			                                               Engine::Vector2Int(rc.right - rc.left,
 			                                                                  rc.bottom - rc.top));
 		}
+
+		Engine::ShaderLibrary::GetInstance().Initialize();
 	}
 
 	auto EditorApplication::TerminateSystems() -> void
 	{
+		Engine::ShaderLibrary::GetInstance().Terminate();
 		Engine::RenderSystem::GetInstance().Terminate();
 	}
 }
