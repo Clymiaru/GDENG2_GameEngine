@@ -4,6 +4,7 @@
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
+#include "Engine/Graphics/ConstantBuffer.h"
 
 namespace Engine
 {
@@ -33,6 +34,12 @@ namespace Engine
 
 		auto SetIndexLayoutAndSize(IndexLayoutInfo indexLayoutInfo) -> void;
 
+		auto GetTransform() -> DirectX::XMMATRIX&;
+
+		auto GetConstantBuffer() -> ConstantBuffer*;
+
+		auto SetConstantBuffer(ConstantBuffer* constantBuffer) -> void;
+
 	private:
 		Vector2Float m_Position;
 
@@ -45,5 +52,9 @@ namespace Engine
 		size_t m_VerticesSize;
 
 		UniquePtr<IndexLayoutInfo> m_IndexLayout;
+
+		ConstantBuffer* m_ConstantBuffer;
+
+		DirectX::XMMATRIX m_ModelMat;
 	};
 }

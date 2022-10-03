@@ -33,8 +33,14 @@
     <ClInclude Include="Source\Engine\Graphics\DeviceContext.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Material.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\PixelShader.h">
       <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Primitives\Cube.h">
+      <Filter>Engine\Graphics\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Primitives\Quad.h">
       <Filter>Engine\Graphics\Primitives</Filter>
@@ -90,8 +96,14 @@
     <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Material.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp">
       <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Primitives\Cube.cpp">
+      <Filter>Engine\Graphics\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Primitives\Quad.cpp">
       <Filter>Engine\Graphics\Primitives</Filter>

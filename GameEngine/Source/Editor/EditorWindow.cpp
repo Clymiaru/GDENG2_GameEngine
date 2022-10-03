@@ -64,17 +64,8 @@ namespace Editor
 		                                                        Engine::Vector2Float{500.0f, 225.0f},
 		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
 
-		D3D11_INPUT_ELEMENT_DESC indexLayout[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"SIZE", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
-		UINT layoutSize = ARRAYSIZE(indexLayout);
-
 		for (auto& quad : m_Quads)
 		{
-			quad->SetIndexLayoutAndSize({indexLayout, layoutSize});
 			Engine::RenderSystem::GetInstance().RegisterObject(quad->GetListOfVertices(),
 			                                                   quad->GetVertexSize(),
 			                                                   quad->GetListOfVerticesSize(),

@@ -67,7 +67,6 @@ namespace Engine
 		Mat4();
 		~Mat4();
 
-		auto SetTranslation(const Vector3Float& amount) -> void;
 		auto Translate(const Vector3Float& amount) -> void;
 		auto SetOrthographicProjection(float width, float height, float nearPlane, float farPlane) -> void;
 	private:

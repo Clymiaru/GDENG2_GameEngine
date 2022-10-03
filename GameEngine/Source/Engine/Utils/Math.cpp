@@ -12,14 +12,9 @@ namespace Engine
 	{
 	}
 
-	auto Mat4::SetTranslation(const Vector3Float& amount) -> void
-	{
-		DirectX::XMMatrixTranslation(amount.X, amount.Y, amount.Z);
-	}
-
 	auto Mat4::Translate(const Vector3Float& amount) -> void
 	{
-		DirectX::XMMatrixTranslation(amount.X, amount.Y, amount.Z);
+		m_Data = DirectX::XMMatrixTranslation(amount.X, amount.Y, amount.Z);
 	}
 
 	auto Mat4::SetOrthographicProjection(float width,
@@ -27,6 +22,6 @@ namespace Engine
 	                                     float nearPlane,
 	                                     float farPlane) -> void
 	{
-		DirectX::XMMatrixOrthographicLH(width, height, nearPlane, farPlane);
+		m_Data = DirectX::XMMatrixOrthographicLH(width, height, nearPlane, farPlane);
 	}
 }
