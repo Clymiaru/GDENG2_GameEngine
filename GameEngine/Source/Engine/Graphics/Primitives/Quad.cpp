@@ -23,41 +23,40 @@ namespace Engine
 		m_Vertices{nullptr},
 		m_VerticesSize{0}
 	{
-		float animValue = 0.01f;
 		auto vertices   = new QuadVertex[6]
 		{
 			{
-				Vector3Float{m_Position.X - m_Size.X / 2.0f - animValue, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X - m_Size.X / 2.0f, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha}
 			},
 
 			{
-				Vector3Float{m_Position.X - m_Size.X / 2.0f - animValue, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X - m_Size.X / 2.0f, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha}
 			},
 
 			{
-				Vector3Float{m_Position.X + m_Size.X / 2.0f - animValue, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X + m_Size.X / 2.0f, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha}
 			},
 
 			{
-				Vector3Float{m_Position.X + m_Size.X / 2.0f - animValue, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X + m_Size.X / 2.0f, m_Position.Y + m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha},
 			},
 
 			{
-				Vector3Float{m_Position.X + m_Size.X / 2.0f - animValue, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X + m_Size.X / 2.0f, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha},
 			},
 
 			{
-				Vector3Float{m_Position.X - m_Size.X / 2.0f - animValue, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
+				Vector3Float{m_Position.X - m_Size.X / 2.0f, m_Position.Y - m_Size.Y / 2.0f, 0.0f},
 				Vector3Float{m_Size.X, m_Size.Y, 1.0f},
 				Color32{m_Color.Red, m_Color.Green, m_Color.Blue, m_Color.Alpha},
 			}

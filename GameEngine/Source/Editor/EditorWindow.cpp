@@ -18,6 +18,9 @@ namespace Editor
 	__declspec(align(16))
 	struct Constant
 	{
+		DirectX::XMMATRIX World;
+		DirectX::XMMATRIX View;
+		DirectX::XMMATRIX Projection;
 		float Time;
 	};
 
@@ -49,26 +52,17 @@ namespace Editor
 
 		m_VertexShader = Engine::CreateUniquePtr<Engine::VertexShader>(shaderByteCode, shaderByteCodeSize);
 
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{-0.55f, 0.10f},
-		                                                        Engine::Vector2Float{0.81f, 1.11f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{-300.0f, 100.0f},
+		                                                        Engine::Vector2Float{400.f, 400.0f},
 		                                                        Engine::Color32{0.68f, 0, 0.83f, 1.0f}));
 
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{0.30f, 0.45f},
-		                                                        Engine::Vector2Float{0.40f, 0.90f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{200.0f, 125.0f},
+		                                                        Engine::Vector2Float{225.0f, 425.0f},
 		                                                        Engine::Color32{0.27f, 0.51f, 0.41f, 1.0f}));
 
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{0.55f, -0.45f},
-		                                                        Engine::Vector2Float{0.75f, 0.65f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{200.0f, -225.0f},
+		                                                        Engine::Vector2Float{500.0f, 225.0f},
 		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
-
-		// D3D11_INPUT_ELEMENT_DESC indexLayout[] =
-		// {
-		// 	{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		// 	{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		// 	{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		// 	{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		// };
-		// UINT layoutSize = ARRAYSIZE(indexLayout);
 
 		D3D11_INPUT_ELEMENT_DESC indexLayout[] =
 		{
@@ -127,6 +121,17 @@ namespace Editor
 		m_Time += m_DeltaTime;
 		Constant constant = {};
 		constant.Time     = m_Time;
+
+		constant.World = DirectX::XMMatrixIdentity();
+		constant.World = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+		
+		constant.View = DirectX::XMMatrixIdentity();
+
+		constant.Projection = DirectX::XMMatrixIdentity();
+		constant.Projection = DirectX::XMMatrixOrthographicLH(
+			1280.0f,
+			720.0f,
+			-4.0f, 4.0f);
 
 		auto device = Engine::RenderSystem::GetInstance().GetDevice();
 		m_ConstantBuffer->Update(Engine::RenderSystem::GetInstance().GetDeviceContext(), &constant);

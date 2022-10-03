@@ -1,17 +1,11 @@
 ﻿#pragma once
 #include "Engine/Window.h"
+#include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/Graphics/PixelShader.h"
+#include "Engine/Graphics/VertexShader.h"
 #include "Engine/Graphics/Primitives/Quad.h"
 #include "Engine/Utils/DataStructures.h"
 #include "Engine/Utils/Pointers.h"
-
-namespace Engine
-{
-	class ConstantBuffer;
-
-	class PixelShader;
-
-	class VertexShader;
-}
 
 namespace Editor
 {

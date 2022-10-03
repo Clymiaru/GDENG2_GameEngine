@@ -108,6 +108,9 @@
     <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Utils\Math.cpp">
+      <Filter>Engine\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>

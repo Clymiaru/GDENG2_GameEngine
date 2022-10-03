@@ -14,6 +14,9 @@ struct VS_OUTPUT
 
 cbuffer Constant: register(b0)
 {
+	row_major float4x4 World;
+	row_major float4x4 View;
+	row_major float4x4 Projection;
 	float Time;
 };
 
@@ -21,7 +24,10 @@ VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	
-	output.position = input.position;
+	output.position = mul(input.position, World);
+	output.position = mul(output.position, View);
+	output.position = mul(output.position, Projection);
+	
 	output.color = input.color;
 	output.size = input.size;
 	return output;
