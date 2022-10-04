@@ -18,7 +18,7 @@ auto Engine::ShaderLibrary::Terminate() -> void
 }
 
 auto Engine::ShaderLibrary::RegisterVertexShader(const std::wstring& fileName,
-                                                const std::string& entryPointName) -> void
+                                                 const std::string& entryPointName) -> void
 {
 	ID3DBlob* errorBlob = nullptr;
 	ID3DBlob* blob      = nullptr;
@@ -41,11 +41,11 @@ auto Engine::ShaderLibrary::RegisterVertexShader(const std::wstring& fileName,
 		}
 	}
 
-	m_VertexShaderMap[fileName] = CreateSharedPtr<VertexShader>(blob);
+	m_VertexShaderMap[fileName] = CreateSharedPtr<VertexShader>(std::move(blob));
 }
 
 auto Engine::ShaderLibrary::RegisterPixelShader(const std::wstring& fileName,
-                                               const std::string& entryPointName) -> void
+                                                const std::string& entryPointName) -> void
 {
 	ID3DBlob* errorBlob = nullptr;
 	ID3DBlob* blob      = nullptr;
@@ -70,7 +70,7 @@ auto Engine::ShaderLibrary::RegisterPixelShader(const std::wstring& fileName,
 		}
 	}
 
-	m_PixelShaderMap[fileName] = CreateSharedPtr<PixelShader>(blob);
+	m_PixelShaderMap[fileName] = CreateSharedPtr<PixelShader>(std::move(blob));
 }
 
 auto Engine::ShaderLibrary::GetVertexShader(const std::wstring& filename) -> VertexShader&

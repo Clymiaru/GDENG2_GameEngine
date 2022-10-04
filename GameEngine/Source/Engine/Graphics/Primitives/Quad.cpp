@@ -108,7 +108,7 @@ namespace Engine
 	                                   SharedPtr<PixelShader> pixelShader) -> void
 	{
 		m_VertexShader = vertexShader;
-		m_PixelShader = pixelShader;
+		m_PixelShader  = pixelShader;
 	}
 
 	auto Quad::GetTransform() -> DirectX::XMMATRIX&

@@ -132,7 +132,7 @@ auto Engine::RenderSystem::Draw() -> void
 
 auto Engine::RenderSystem::SetViewportSize(Vector2Uint viewportSize) -> void
 {
-	GetInstance().m_DeviceContext->SetViewportSize(viewportSize.X, viewportSize.Y);
+	GetInstance().m_DeviceContext->SetViewportSize(viewportSize);
 }
 
 auto Engine::RenderSystem::CompileVertexShader(const std::wstring& fileName,

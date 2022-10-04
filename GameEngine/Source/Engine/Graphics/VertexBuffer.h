@@ -9,6 +9,7 @@ namespace Engine
 	{
 	public:
 		VertexBuffer();
+
 		~VertexBuffer();
 
 		[[nodiscard]]

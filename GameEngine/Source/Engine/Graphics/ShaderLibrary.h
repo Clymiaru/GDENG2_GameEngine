@@ -8,7 +8,6 @@
 
 namespace Engine
 {
-
 	class ShaderLibrary final
 	{
 	public:
@@ -19,10 +18,10 @@ namespace Engine
 		auto Terminate() -> void;
 
 		auto RegisterVertexShader(const std::wstring& fileName,
-		                         const std::string& entryPointName) -> void;
+		                          const std::string& entryPointName) -> void;
 
 		auto RegisterPixelShader(const std::wstring& fileName,
-		                        const std::string& entryPointName) -> void;
+		                         const std::string& entryPointName) -> void;
 
 		auto GetVertexShader(const std::wstring& filename) -> VertexShader&;
 
@@ -38,9 +37,11 @@ namespace Engine
 		ShaderLibrary(const ShaderLibrary&&) noexcept;
 
 		std::unordered_map<std::wstring, SharedPtr<VertexShader>> m_VertexShaderMap;
+
 		std::unordered_map<std::wstring, SharedPtr<PixelShader>> m_PixelShaderMap;
 
 		ID3D11VertexShader* m_VertexShader = nullptr;
+
 		ID3D11PixelShader* m_PixelShader = nullptr;
 	};
 }

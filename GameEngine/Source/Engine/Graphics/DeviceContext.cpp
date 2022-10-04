@@ -37,16 +37,15 @@ namespace Engine
 		renderTargetViews.push_back(swapChain->GetRenderTargetView());
 
 		m_DeviceContext->OMSetRenderTargets(1,
-		                                    (renderTargetViews.data()),
+		                                    renderTargetViews.data(),
 		                                    nullptr);
 	}
 
-	auto DeviceContext::SetViewportSize(const UINT width,
-	                                    const UINT height) const -> void
+	auto DeviceContext::SetViewportSize(const Vector2Uint size) const -> void
 	{
 		D3D11_VIEWPORT viewport = {};
-		viewport.Width          = static_cast<FLOAT>(width);
-		viewport.Height         = static_cast<FLOAT>(height);
+		viewport.Width          = static_cast<float>(size.X);
+		viewport.Height         = static_cast<float>(size.Y);
 		viewport.MinDepth       = 0.0f;
 		viewport.MaxDepth       = 1.0f;
 		m_DeviceContext->RSSetViewports(1, &viewport);
@@ -72,24 +71,16 @@ namespace Engine
 		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetVertexShader(const SharedPtr<VertexShader>& vertexShader) const -> void
-	{
-		m_DeviceContext->VSSetShader(vertexShader->m_Data, nullptr, 0);
-	}
-
-	auto DeviceContext::SetPixelShader(const SharedPtr<PixelShader>& pixelShader) const -> void
-	{
-		m_DeviceContext->PSSetShader(pixelShader->m_Data, nullptr, 0);
-	}
-
 	auto DeviceContext::SetVertexShader(const std::wstring& filename) const -> void
 	{
-		m_DeviceContext->VSSetShader(ShaderLibrary::GetInstance().GetVertexShader(filename).m_Data, nullptr, 0);
+		auto& vertexShader = ShaderLibrary::GetInstance().GetVertexShader(filename);
+		m_DeviceContext->VSSetShader(vertexShader.GetData(), nullptr, 0);
 	}
 
 	auto DeviceContext::SetPixelShader(const std::wstring& filename) const -> void
 	{
-		m_DeviceContext->PSSetShader(ShaderLibrary::GetInstance().GetPixelShader(filename).m_Data, nullptr, 0);
+		auto& pixelShader = ShaderLibrary::GetInstance().GetPixelShader(filename);
+		m_DeviceContext->PSSetShader(pixelShader.GetData(), nullptr, 0);
 	}
 
 	auto DeviceContext::DrawTriangleList(UINT vertexCount,

@@ -7,11 +7,6 @@ namespace Engine
 	class Cube
 	{
 	public:
-
 	private:
-		
 	};
-
-
-
 }

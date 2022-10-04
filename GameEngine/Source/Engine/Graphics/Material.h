@@ -1,9 +1,6 @@
-
-
 namespace Engine
 {
 	class Material
 	{
-
 	};
 }

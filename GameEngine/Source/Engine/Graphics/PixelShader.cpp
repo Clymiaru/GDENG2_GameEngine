@@ -6,44 +6,23 @@
 
 #include "Engine/Utils/Debug.h"
 
-Engine::PixelShader::PixelShader(const void* shaderByteCode,
-                                 size_t shaderByteCodeSize) :
-	m_DataBlob{nullptr},
-	m_DataSize{shaderByteCodeSize}
+namespace Engine
 {
-	const auto result = RenderSystem::GetInstance().GetDevice()->CreatePixelShader(shaderByteCode,
-	                                                                               m_DataSize,
-	                                                                               nullptr,
-	                                                                               &m_Data);
+	PixelShader::PixelShader(ID3DBlob* blob) :
+		Shader(blob)
+	{
+		const auto device = RenderSystem::GetInstance().GetDevice();
+		const auto result = device->CreatePixelShader(blob->GetBufferPointer(),
+		                                              blob->GetBufferSize(),
+		                                              nullptr,
+		                                              &m_Data);
 
-	ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
-}
+		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
+	}
 
-Engine::PixelShader::PixelShader(ID3DBlob* pixelShaderBlob)
-{
-	m_DataBlob        = std::move(pixelShaderBlob);
-	m_DataSize        = m_DataBlob->GetBufferSize();
-	const auto result = RenderSystem::GetInstance().GetDevice()->CreatePixelShader(m_DataBlob->GetBufferPointer(),
-	                                                                               m_DataBlob->GetBufferSize(),
-	                                                                               nullptr,
-	                                                                               &m_Data);
-
-	ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
-}
-
-Engine::PixelShader::~PixelShader()
-{
-	m_DataBlob->Release();
-	m_Data->Release();
-	m_DataSize = 0;
-}
-
-auto Engine::PixelShader::GetData() -> void*
-{
-	return m_DataBlob->GetBufferPointer();
-}
-
-auto Engine::PixelShader::GetDataSize() -> size_t
-{
-	return m_DataBlob->GetBufferSize();
+	PixelShader::~PixelShader()
+	{
+		m_Data->Release();
+		m_Blob->Release();
+	}
 }

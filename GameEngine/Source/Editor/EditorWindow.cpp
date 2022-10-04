@@ -5,6 +5,7 @@
 
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/DeviceContext.h"
+#include "Engine/Graphics/Shader.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
@@ -63,21 +64,21 @@ namespace Editor
 		size_t shaderByteCodeSize = 0;
 
 		Engine::ShaderLibrary::GetInstance().RegisterVertexShader(L"SinTimeAnimShader.hlsl",
-		                                                         "vsmain");
+		                                                          "vsmain");
 
 		Engine::ShaderLibrary::GetInstance().RegisterPixelShader(L"SinTimeAnimShader.hlsl",
-																 "psmain");
+		                                                         "psmain");
 
 		auto& vs = Engine::ShaderLibrary::GetInstance().GetVertexShader(L"SinTimeAnimShader.hlsl");
 		auto& ps = Engine::ShaderLibrary::GetInstance().GetPixelShader(L"SinTimeAnimShader.hlsl");
-		
+
 		for (auto& quad : m_Quads)
 		{
 			Engine::RenderSystem::GetInstance().RegisterObject(quad->GetListOfVertices(),
 			                                                   quad->GetVertexSize(),
 			                                                   quad->GetListOfVerticesSize(),
-			                                                   vs.GetData(),
-			                                                   vs.GetDataSize(),
+			                                                   vs.GetByteCodeData(),
+			                                                   vs.GetByteCodeSizeData(),
 			                                                   quad->GetIndexLayoutAndSize().Data,
 			                                                   quad->GetIndexLayoutAndSize().Size);
 		}

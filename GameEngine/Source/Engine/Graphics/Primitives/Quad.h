@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include <d3d11.h>
 
-#include "Engine/Utils/Color32.h"
-#include "Engine/Utils/Math.h"
-#include "Engine/Utils/Pointers.h"
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/VertexShader.h"
+#include "Engine/Utils/Color32.h"
+#include "Engine/Utils/Math.h"
+#include "Engine/Utils/Pointers.h"
 
 namespace Engine
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include "Engine/Utils/Color32.h"
+#include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
 
 namespace Engine
@@ -29,8 +30,7 @@ namespace Engine
 		auto Clear(const UniquePtr<SwapChain>& swapChain,
 		           Color32 color) const -> void;
 
-		auto SetViewportSize(UINT width,
-		                     UINT height) const -> void;
+		auto SetViewportSize(Vector2Uint size) const -> void;
 
 		// Buffers
 		auto SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void;
@@ -42,10 +42,6 @@ namespace Engine
 		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
 		// Shaders
-		auto SetVertexShader(const SharedPtr<VertexShader>& vertexShader) const -> void;
-
-		auto SetPixelShader(const SharedPtr<PixelShader>& pixelShader) const -> void;
-
 		auto SetVertexShader(const std::wstring& filename) const -> void;
 
 		auto SetPixelShader(const std::wstring& filename) const -> void;
