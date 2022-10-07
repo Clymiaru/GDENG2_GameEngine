@@ -39,9 +39,5 @@ namespace Engine
 		std::unordered_map<std::wstring, SharedPtr<VertexShader>> m_VertexShaderMap;
 
 		std::unordered_map<std::wstring, SharedPtr<PixelShader>> m_PixelShaderMap;
-
-		ID3D11VertexShader* m_VertexShader = nullptr;
-
-		ID3D11PixelShader* m_PixelShader = nullptr;
 	};
 }

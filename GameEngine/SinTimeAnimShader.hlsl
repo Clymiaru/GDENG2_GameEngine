@@ -33,7 +33,6 @@ VS_OUTPUT vsmain(VS_INPUT input)
 struct PS_INPUT
 {
 	float4 position: SV_POSITION;
-	float4 size: SIZE;
 	float4 color: COLOR;
 };
 
@@ -44,5 +43,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float4 resultColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	resultColor = smoothstep(input.color, colorA, (sin(Time) + 1.0f) / 2.0f);
+	
 	return resultColor;
 }

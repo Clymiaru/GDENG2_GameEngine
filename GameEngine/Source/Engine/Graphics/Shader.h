@@ -23,7 +23,7 @@ namespace Engine
 		auto GetByteCodeSizeData() const -> size_t;
 
 		[[nodiscard]]
-		auto GetData() -> T*;
+		auto GetData() -> T&;
 
 	protected:
 		T* m_Data;
@@ -55,8 +55,8 @@ namespace Engine
 	}
 
 	template <typename T>
-	auto Shader<T>::GetData() -> T*
+	auto Shader<T>::GetData() -> T&
 	{
-		return m_Data;
+		return *m_Data;
 	}
 }

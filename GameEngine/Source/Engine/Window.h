@@ -41,6 +41,8 @@ namespace Engine
 
 		virtual auto OnUpdate() -> void = 0;
 
+		virtual auto OnRender() -> void = 0;
+
 		virtual auto OnTerminate() -> void = 0;
 
 	protected:

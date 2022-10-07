@@ -4,9 +4,17 @@
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
+#include "Engine/Utils/Debug.h"
 
 namespace Engine
 {
+	struct Vertex
+	{
+		Vector3Float Position;
+
+		Color32 Color{};
+	};
+
 	__declspec(align(16))
 	struct Constant
 	{
@@ -19,7 +27,7 @@ namespace Engine
 		float Time;
 	};
 
-	Quad::Quad(const Vector2Float& position,
+	Quad::Quad(const Vector3Float& position,
 	           const Vector2Float& size,
 	           const Color32& color):
 		ARenderObject{},
@@ -27,9 +35,9 @@ namespace Engine
 		m_Size{size},
 		m_Color{color}
 	{
-		m_VertexData = InitializeVertexData();
+		m_VertexData       = InitializeVertexData();
 		m_VertexLayoutData = InitializeVertexLayout();
-		m_IndexData = InitializeIndexData();
+		m_IndexData        = InitializeIndexData();
 		InitializeShaderData();
 		SetBuffers();
 	}
@@ -37,40 +45,42 @@ namespace Engine
 	Quad::~Quad()
 	{
 		m_ConstantBuffer->Release();
-		delete constant;
+		delete m_Constant;
 	}
 
-	auto Quad::Update(float deltaTime) -> void
+	auto Quad::Update(const float deltaTime) -> void
 	{
 		using namespace DirectX;
-		constant->Time = deltaTime;
 
-		constant->Model = XMMatrixIdentity();
-		constant->Model *= XMMatrixScaling(m_Size.X,
-		                                   m_Size.Y,
-		                                   1.0f);
-		constant->Model *= XMMatrixTranslation(m_Position.X,
-		                                       m_Position.Y,
-		                                       0.0f);
-		constant->Model = XMMatrixTranspose(constant->Model);
+		m_Constant->Time = deltaTime;
 
-		constant->View       = XMMatrixIdentity();
-		constant->View       = XMMatrixTranspose(constant->View);
-		constant->Projection = XMMatrixIdentity();
+		m_TransformMatrix = XMMatrixIdentity();
+		m_TransformMatrix *= XMMatrixScaling(m_Size.X,
+		                                     m_Size.Y,
+		                                     1.0f);
+		m_TransformMatrix *= XMMatrixTranslation(m_Position.X,
+		                                         m_Position.Y,
+		                                         m_Position.Z);
+		m_Constant->Model = XMMatrixTranspose(m_TransformMatrix);
 
-		constant->Projection *= XMMatrixOrthographicLH(
+		m_Constant->View = XMMatrixIdentity();
+		m_Constant->View = XMMatrixTranspose(m_Constant->View);
+
+		m_Constant->Projection = XMMatrixIdentity();
+		m_Constant->Projection *= XMMatrixOrthographicLH(
 			1280.0f,
 			720.0f,
 			-4.0f, 4.0f);
+		m_Constant->Projection = XMMatrixTranspose(m_Constant->Projection);
+	}
 
-		constant->Projection = XMMatrixTranspose(constant->Projection);
-		m_ConstantBuffer->Update(RenderSystem::GetInstance().GetDeviceContext(), constant);
-
+	auto Quad::Render() const -> void
+	{
+		m_ConstantBuffer->Update(RenderSystem::GetInstance().GetDeviceContext(), m_Constant);
 		RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
-			*m_VertexShader, m_ConstantBuffer);
+			*m_VertexShader, *m_ConstantBuffer);
 		RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
-			*m_PixelShader, m_ConstantBuffer);
-
+			*m_PixelShader, *m_ConstantBuffer);
 		RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(L"SinTimeAnimShader.hlsl");
 		RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(L"SinTimeAnimShader.hlsl");
 	}
@@ -78,21 +88,24 @@ namespace Engine
 	auto Quad::SetBuffers() -> void
 	{
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>();
-		m_VertexBuffer->Load(m_VertexData.VertexList,
-		                     sizeof(Vertex),
-		                     m_VertexData.VertexListCount,
-		                     m_VertexShader->GetByteCodeData(),
-		                     m_VertexShader->GetByteCodeSizeData(),
-		                     m_VertexLayoutData.VertexLayout,
-		                     m_VertexLayoutData.VertexLayoutCount);
+		bool result    = m_VertexBuffer->Load(m_VertexData.VertexList,
+		                                      sizeof(Vertex),
+		                                      m_VertexData.VertexListCount,
+		                                      m_VertexShader->GetByteCodeData(),
+		                                      static_cast<Uint>(m_VertexShader->GetByteCodeSizeData()),
+		                                      m_VertexLayoutData.VertexLayout,
+		                                      m_VertexLayoutData.VertexLayoutCount);
+		ENGINE_ASSERT(result, "Vertex Buffer can't be loaded!")
 
 		m_IndexBuffer = CreateUniquePtr<IndexBuffer>();
-		m_IndexBuffer->Load(m_IndexData.IndexList,
-		                    m_IndexData.IndexListCount);
+		result        = m_IndexBuffer->Load(m_IndexData.IndexList,
+		                                    m_IndexData.IndexListCount);
+		ENGINE_ASSERT(result, "Index Buffer can't be loaded!")
 
 		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>();
-		constant         = new Constant({});
-		m_ConstantBuffer->Load(constant, sizeof(Constant));
+		m_Constant       = new Constant({});
+		result           = m_ConstantBuffer->Load(m_Constant, sizeof(Constant));
+		ENGINE_ASSERT(result, "Constant Buffer can't be loaded!")
 	}
 
 	auto Quad::InitializeVertexData() -> VertexData

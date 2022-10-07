@@ -64,9 +64,9 @@ namespace Engine
 		m_SwapChain->Present(vsync, NULL);
 	}
 
-	auto SwapChain::GetRenderTargetView() const -> ID3D11RenderTargetView*
+	auto SwapChain::GetRenderTargetView() const -> ID3D11RenderTargetView&
 	{
-		return m_RenderTargetView;
+		return *m_RenderTargetView;
 	}
 
 	auto SwapChain::Terminate() const -> void

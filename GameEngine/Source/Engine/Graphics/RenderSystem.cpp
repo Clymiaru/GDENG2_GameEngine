@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
+#include <d3dcompiler.h>
 
 #include "RenderSystem.h"
-#include "Engine/Graphics/RenderObject.h"
-#include <d3dcompiler.h>
 #include "Engine/Graphics/DeviceContext.h"
+#include "Engine/Graphics/IndexBuffer.h"
 #include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Utils/Debug.h"
 
@@ -80,9 +80,9 @@ namespace Engine
 		m_Device->Release();
 	}
 
-	auto RenderSystem::GetDevice() const -> ID3D11Device*
+	auto RenderSystem::GetDevice() const -> ID3D11Device&
 	{
-		return m_Device;
+		return *m_Device;
 	}
 
 	auto RenderSystem::GetDeviceContext() const -> DeviceContext&
@@ -92,29 +92,19 @@ namespace Engine
 
 	auto RenderSystem::Clear(const Color32 fillColor) const -> void
 	{
-		m_DeviceContext->Clear(m_SwapChain, fillColor);
+		m_DeviceContext->Clear(*m_SwapChain, fillColor);
 	}
 
-	auto RenderSystem::Draw(const UniquePtr<VertexBuffer>& vertexBuffer,
-	                        const UniquePtr<IndexBuffer>& indexBuffer) const -> void
-	{
-		const auto& vb = vertexBuffer;
-		m_DeviceContext->SetVertexBuffer(vb);
-		m_DeviceContext->SetIndexBuffer(indexBuffer);
-		m_DeviceContext->DrawTriangleList(vb->GetCount(),
-		                                  0);
-	}
-
-	auto RenderSystem::DrawIndexed(const UniquePtr<VertexBuffer>& vertexBuffer,
-		const UniquePtr<IndexBuffer>& indexBuffer) const -> void
+	auto RenderSystem::Draw(const VertexBuffer& vertexBuffer,
+	                        const IndexBuffer& indexBuffer) const -> void
 	{
 		m_DeviceContext->SetVertexBuffer(vertexBuffer);
 		m_DeviceContext->SetIndexBuffer(indexBuffer);
-		m_DeviceContext->DrawIndexed(vertexBuffer->GetCount(),
-										  0);
+		m_DeviceContext->DrawTriangleList(indexBuffer.GetCount(),
+		                                  0);
 	}
 
-	auto RenderSystem::Present() const -> void
+	auto RenderSystem::ShowFrame() const -> void
 	{
 		m_SwapChain->Present(true);
 	}
@@ -124,7 +114,16 @@ namespace Engine
 		m_DeviceContext->SetViewportSize(viewportSize);
 	}
 
-	RenderSystem::RenderSystem() = default;
+	RenderSystem::RenderSystem() :
+		m_SwapChain{nullptr},
+		m_DeviceContext{nullptr},
+		m_Device{nullptr},
+		m_FeatureLevel{},
+		m_DxgiDevice{nullptr},
+		m_DxgiAdapter{nullptr},
+		m_DxgiFactory{nullptr}
+	{
+	}
 
 	RenderSystem::~RenderSystem() = default;
 }

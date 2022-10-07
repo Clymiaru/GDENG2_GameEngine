@@ -13,11 +13,10 @@ namespace Engine
 	VertexShader::VertexShader(ID3DBlob* vertexShaderBlob) :
 		Shader(vertexShaderBlob)
 	{
-		const auto device = RenderSystem::GetInstance().GetDevice();
-		const auto result = device->CreateVertexShader(m_Blob->GetBufferPointer(),
-		                                               m_Blob->GetBufferSize(),
-		                                               nullptr,
-		                                               &m_Data);
+		const auto result = RenderSystem::GetInstance().GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
+		                                                                               m_Blob->GetBufferSize(),
+		                                                                               nullptr,
+		                                                                               &m_Data);
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 	}

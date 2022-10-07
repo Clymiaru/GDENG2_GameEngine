@@ -93,7 +93,7 @@ namespace Engine
 	auto Window::Broadcast() -> bool
 	{
 		MSG message;
-		OnUpdate();
+		Update();
 		while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE) > 0)
 		{
 			TranslateMessage(&message);
@@ -133,6 +133,7 @@ namespace Engine
 	auto Window::Update() -> void
 	{
 		OnUpdate();
+		OnRender();
 	}
 
 	auto Window::Close() -> void

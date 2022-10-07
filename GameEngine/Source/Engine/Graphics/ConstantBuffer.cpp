@@ -29,7 +29,7 @@ auto Engine::ConstantBuffer::Load(const void* buffer,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = buffer;
 
-	if (FAILED(RenderSystem::GetInstance().GetDevice()->CreateBuffer(&bufferDesc,
+	if (FAILED(RenderSystem::GetInstance().GetDevice().CreateBuffer(&bufferDesc,
 		&initData,
 		&m_BufferData)))
 	{

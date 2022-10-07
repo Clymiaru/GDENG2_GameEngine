@@ -3,13 +3,9 @@
 
 #include "Windows.h"
 
-#include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/DeviceContext.h"
-#include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/RenderSystem.h"
-#include "Engine/Graphics/Shader.h"
 #include "Engine/Graphics/ShaderLibrary.h"
-#include "Engine/Graphics/VertexShader.h"
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Math.h"
 
@@ -49,38 +45,48 @@ namespace Editor
 		                                                         "psmain");
 
 		// Object initialization
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{-300.0f, 100.0f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{-300.0f, 100.0f, 0.0f},
 		                                                        Engine::Vector2Float{400.f, 400.0f},
 		                                                        Engine::Color32{0.68f, 0, 0.83f, 1.0f}));
 
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{200.0f, 125.0f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{200.0f, 125.0f, 0.0f},
 		                                                        Engine::Vector2Float{225.0f, 425.0f},
 		                                                        Engine::Color32{0.27f, 0.51f, 0.41f, 1.0f}));
 
-		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector2Float{200.0f, -225.0f},
+		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{200.0f, -225.0f, 0.0f},
 		                                                        Engine::Vector2Float{500.0f, 225.0f},
 		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
 	}
 
 	auto EditorWindow::OnUpdate() -> void
 	{
-		Engine::RenderSystem::GetInstance().Clear({0.5f, 0.5f, 1.0f, 1.0f});
-
-		RECT rc = GetClientWindowRect();
-		Engine::RenderSystem::GetInstance().GetDeviceContext().SetViewportSize(
-			Engine::Vector2Uint{
-				static_cast<Engine::Uint>(rc.right - rc.left),
-				static_cast<Engine::Uint>(rc.bottom - rc.top)
-			});
+		m_Time = static_cast<float>(GetTickCount()) / 1000.0f;
 
 		for (const auto& quad : m_Quads)
 		{
 			quad->Update(m_Time);
-			Engine::RenderSystem::GetInstance().DrawIndexed(quad->GetVertexBuffer(),
-			                                         quad->GetIndexBuffer());
 		}
+	}
 
-		Engine::RenderSystem::GetInstance().Present();
+	auto EditorWindow::OnRender() -> void
+	{
+		Engine::RenderSystem::GetInstance().Clear({0.5f, 0.5f, 1.0f, 1.0f});
+		
+		const auto [left, top, right, bottom] = GetClientWindowRect();
+		Engine::RenderSystem::GetInstance().GetDeviceContext().SetViewportSize(
+			Engine::Vector2Uint{
+				static_cast<Engine::Uint>(right - left),
+				static_cast<Engine::Uint>(bottom - top)
+			});
+
+		for (const auto& quad : m_Quads)
+		{
+			quad->Render();
+			Engine::RenderSystem::GetInstance().Draw(quad->GetVertexBuffer(),
+													 quad->GetIndexBuffer());
+		}
+		
+		Engine::RenderSystem::GetInstance().ShowFrame();
 	}
 
 	auto EditorWindow::OnTerminate() -> void

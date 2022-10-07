@@ -11,8 +11,7 @@ namespace Engine
 	PixelShader::PixelShader(ID3DBlob* blob) :
 		Shader(blob)
 	{
-		const auto device = RenderSystem::GetInstance().GetDevice();
-		const auto result = device->CreatePixelShader(blob->GetBufferPointer(),
+		const auto result = RenderSystem::GetInstance().GetDevice().CreatePixelShader(blob->GetBufferPointer(),
 		                                              blob->GetBufferSize(),
 		                                              nullptr,
 		                                              &m_Data);

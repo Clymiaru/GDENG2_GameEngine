@@ -42,11 +42,10 @@ auto Engine::IndexBuffer::Load(const Uint* indexList,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = indexList;
 
-	auto* device = RenderSystem::GetInstance().GetDevice();
-	if (FAILED(device->CreateBuffer(&bufferDesc, &initData, &m_Data)))
+	if (FAILED(RenderSystem::GetInstance().GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data)))
 	{
 		return false;
 	}
-	
+
 	return true;
 }

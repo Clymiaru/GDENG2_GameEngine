@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d11.h>
 
-
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
@@ -25,27 +24,27 @@ namespace Engine
 	public:
 		explicit DeviceContext(ID3D11DeviceContext* deviceContext);
 
-		~DeviceContext() = default;
+		~DeviceContext();
 
 		auto Initialize() -> void;
 
 		auto Terminate() -> void;
 
-		auto Clear(const UniquePtr<SwapChain>& swapChain,
+		auto Clear(const SwapChain& swapChain,
 		           Color32 color) const -> void;
 
 		auto SetViewportSize(Vector2Uint size) const -> void;
 
 		// Buffers
-		auto SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void;
+		auto SetVertexBuffer(const VertexBuffer& vertexBuffer) const -> void;
 
-		auto SetIndexBuffer(const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
+		auto SetIndexBuffer(const IndexBuffer& indexBuffer) const -> void;
 
 		auto SetConstantBuffer(const VertexShader& vertexShader,
-		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
+		                       const ConstantBuffer& constantBuffer) const -> void;
 
 		auto SetConstantBuffer(const PixelShader& pixelShader,
-		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
+		                       const ConstantBuffer& constantBuffer) const -> void;
 
 		// Shaders
 		auto SetVertexShader(const std::wstring& filename) const -> void;
@@ -53,14 +52,8 @@ namespace Engine
 		auto SetPixelShader(const std::wstring& filename) const -> void;
 
 		// Draw
-		auto DrawTriangleList(UINT vertexCount,
-		                      UINT startVertexIndex) const -> void;
-
-		auto DrawTriangleStrip(UINT vertexCount,
-		                       UINT startVertexIndex) const -> void;
-
-		auto DrawIndexed(UINT vertexCount,
-							  UINT startVertexIndex) const -> void;
+		auto DrawTriangleList(Uint indexCount,
+		                      Uint startingIndex) const -> void;
 
 	private:
 		ID3D11DeviceContext* m_DeviceContext;

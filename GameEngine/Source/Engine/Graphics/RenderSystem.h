@@ -1,9 +1,7 @@
 ﻿#pragma once
 #include <d3d11.h>
-#include <vector>
 
 #include "Engine/Graphics/SwapChain.h"
-
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Pointers.h"
 
@@ -18,6 +16,8 @@ namespace Engine
 	class RenderSystem final
 	{
 	public:
+		RenderSystem(const RenderSystem&) = delete;
+
 		static auto GetInstance() -> RenderSystem&;
 
 		auto Initialize(HWND windowHandle,
@@ -26,20 +26,17 @@ namespace Engine
 		auto Terminate() const -> void;
 
 		[[nodiscard]]
-		auto GetDevice() const -> ID3D11Device*;
+		auto GetDevice() const -> ID3D11Device&;
 
 		[[nodiscard]]
 		auto GetDeviceContext() const -> DeviceContext&;
 
 		auto Clear(Color32 fillColor) const -> void;
 
-		auto Draw(const UniquePtr<VertexBuffer>& vertexBuffer,
-		          const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
+		auto Draw(const VertexBuffer& vertexBuffer,
+		          const IndexBuffer& indexBuffer) const -> void;
 
-		auto DrawIndexed(const UniquePtr<VertexBuffer>& vertexBuffer,
-				  const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
-
-		auto Present() const -> void;
+		auto ShowFrame() const -> void;
 
 		auto SetViewportSize(Vector2Uint viewportSize) const -> void;
 
@@ -47,10 +44,6 @@ namespace Engine
 		RenderSystem();
 
 		~RenderSystem();
-
-		RenderSystem(const RenderSystem&);
-
-		RenderSystem(const RenderSystem&&) noexcept = delete;
 
 		UniquePtr<SwapChain> m_SwapChain;
 
@@ -65,7 +58,5 @@ namespace Engine
 		IDXGIAdapter* m_DxgiAdapter;
 
 		IDXGIFactory* m_DxgiFactory;
-
-		std::vector<UniquePtr<RenderObject>> m_RenderList;
 	};
 }

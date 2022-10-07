@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-// Code Snippet Source: https://github.com/TheCherno/Hazel/blob/master/Hazel/src/Hazel/Core/Base.h
 namespace Engine
 {
 	template <typename T>

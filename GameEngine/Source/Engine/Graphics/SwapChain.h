@@ -22,7 +22,8 @@ namespace Engine
 
 		auto Present(bool vsync) const -> void;
 
-		auto GetRenderTargetView() const -> ID3D11RenderTargetView*;
+		[[nodiscard]]
+		auto GetRenderTargetView() const -> ID3D11RenderTargetView&;
 
 	private:
 		IDXGISwapChain* m_SwapChain;

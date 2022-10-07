@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <d3d11.h>
 
 #include "Engine/Graphics/ARenderObject.h"
 #include "Engine/Graphics/ConstantBuffer.h"
@@ -16,24 +15,18 @@ namespace Engine
 	class Quad final : public ARenderObject
 	{
 	public:
-		Quad(const Vector2Float& position,
+		Quad(const Vector3Float& position,
 		     const Vector2Float& size,
 		     const Color32& color);
 
-		~Quad();
+		~Quad() override;
 
 		auto Update(float deltaTime) -> void;
 
+		auto Render() const -> void;
 
 	private:
-		struct Vertex
-		{
-			Vector3Float Position;
-
-			Color32 Color;
-		};
-
-		Vector2Float m_Position;
+		Vector3Float m_Position;
 
 		Vector2Float m_Size;
 
@@ -41,9 +34,9 @@ namespace Engine
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer;
 
-		DirectX::XMMATRIX m_ModelMat;
+		DirectX::XMMATRIX m_TransformMatrix;
 
-		Constant* constant;
+		Constant* m_Constant;
 
 		auto SetBuffers() -> void;
 

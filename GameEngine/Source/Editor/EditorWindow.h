@@ -17,13 +17,15 @@ namespace Editor
 
 		~EditorWindow() override;
 
+	private:
 		auto OnStart() -> void override;
 
 		auto OnUpdate() -> void override;
 
+		auto OnRender() -> void override;
+
 		auto OnTerminate() -> void override;
 
-	private:
 		float m_Time = 0;
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Quads;
 	};

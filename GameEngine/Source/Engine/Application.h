@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "Window.h"
 
-#include "Graphics/RenderSystem.h"
-
 #include "Utils/Math.h"
 #include "Utils/Pointers.h"
 

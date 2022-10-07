@@ -14,9 +14,11 @@
 namespace Engine
 {
 	DeviceContext::DeviceContext(ID3D11DeviceContext* deviceContext) :
-		m_DeviceContext(deviceContext)
+		m_DeviceContext(std::move(deviceContext))
 	{
 	}
+
+	DeviceContext::~DeviceContext() = default;
 
 	auto DeviceContext::Initialize() -> void
 	{
@@ -27,15 +29,15 @@ namespace Engine
 		m_DeviceContext->Release();
 	}
 
-	auto DeviceContext::Clear(const UniquePtr<SwapChain>& swapChain,
+	auto DeviceContext::Clear(const SwapChain& swapChain,
 	                          const Color32 color) const -> void
 	{
 		const float clearColor[] = {color.Red, color.Green, color.Blue, color.Alpha};
-		m_DeviceContext->ClearRenderTargetView(swapChain->GetRenderTargetView(),
+		m_DeviceContext->ClearRenderTargetView(&swapChain.GetRenderTargetView(),
 		                                       clearColor);
 
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
-		renderTargetViews.push_back(swapChain->GetRenderTargetView());
+		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
 
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    renderTargetViews.data(),
@@ -52,62 +54,54 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	auto DeviceContext::SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void
+	auto DeviceContext::SetVertexBuffer(const VertexBuffer& vertexBuffer) const -> void
 	{
-		const UINT stride     = vertexBuffer->m_DataSize;
+		const UINT stride     = vertexBuffer.m_DataSize;
 		constexpr UINT offset = 0;
-		m_DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->m_Data, &stride, &offset);
-		m_DeviceContext->IASetInputLayout(vertexBuffer->m_DataLayout);
+		m_DeviceContext->IASetVertexBuffers(0,
+		                                    1,
+		                                    &vertexBuffer.m_Data,
+		                                    &stride,
+		                                    &offset);
+		m_DeviceContext->IASetInputLayout(vertexBuffer.m_DataLayout);
 	}
 
-	auto DeviceContext::SetIndexBuffer(const UniquePtr<IndexBuffer>& indexBuffer) const -> void
+	auto DeviceContext::SetIndexBuffer(const IndexBuffer& indexBuffer) const -> void
 	{
 		constexpr UINT offset = 0;
-		m_DeviceContext->IASetIndexBuffer(indexBuffer->m_Data, DXGI_FORMAT_R32_UINT, offset);
+		m_DeviceContext->IASetIndexBuffer(indexBuffer.m_Data, DXGI_FORMAT_R32_UINT, offset);
 	}
 
 	auto DeviceContext::SetConstantBuffer(const VertexShader& vertexShader,
-	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
+	                                      const ConstantBuffer& constantBuffer) const -> void
 	{
-		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
+		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
 	}
 
 	auto DeviceContext::SetConstantBuffer(const PixelShader& pixelShader,
-	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
+	                                      const ConstantBuffer& constantBuffer) const -> void
 	{
-		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
+		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
 	}
 
 	auto DeviceContext::SetVertexShader(const std::wstring& filename) const -> void
 	{
 		auto& vertexShader = ShaderLibrary::GetInstance().GetVertexShader(filename);
-		m_DeviceContext->VSSetShader(vertexShader.GetData(), nullptr, 0);
+		m_DeviceContext->VSSetShader(&vertexShader.GetData(), nullptr, 0);
 	}
 
 	auto DeviceContext::SetPixelShader(const std::wstring& filename) const -> void
 	{
 		auto& pixelShader = ShaderLibrary::GetInstance().GetPixelShader(filename);
-		m_DeviceContext->PSSetShader(pixelShader.GetData(), nullptr, 0);
+		m_DeviceContext->PSSetShader(&pixelShader.GetData(), nullptr, 0);
 	}
 
-	auto DeviceContext::DrawTriangleList(UINT vertexCount,
-	                                     UINT startVertexIndex) const -> void
+	auto DeviceContext::DrawTriangleList(const Uint indexCount,
+	                                     const Uint startingIndex) const -> void
 	{
 		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_DeviceContext->Draw(vertexCount, startVertexIndex);
-	}
-
-	auto DeviceContext::DrawTriangleStrip(UINT vertexCount,
-	                                      UINT startVertexIndex) const -> void
-	{
-		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-		m_DeviceContext->Draw(vertexCount, startVertexIndex);
-	}
-
-	auto DeviceContext::DrawIndexed(UINT vertexCount,
-	                                UINT startVertexIndex) const -> void
-	{
-		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_DeviceContext->DrawIndexed(6, 0, 0);
+		m_DeviceContext->DrawIndexed(indexCount,
+		                             startingIndex,
+		                             0);
 	}
 }

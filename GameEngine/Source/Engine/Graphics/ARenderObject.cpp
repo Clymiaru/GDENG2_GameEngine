@@ -15,13 +15,13 @@ namespace Engine
 
 	ARenderObject::~ARenderObject() = default;
 
-	auto ARenderObject::GetVertexBuffer() const -> const UniquePtr<VertexBuffer>&
+	auto ARenderObject::GetVertexBuffer() const -> VertexBuffer&
 	{
-		return m_VertexBuffer;
+		return *m_VertexBuffer;
 	}
 
-	auto ARenderObject::GetIndexBuffer() const -> const UniquePtr<IndexBuffer>&
+	auto ARenderObject::GetIndexBuffer() const -> IndexBuffer&
 	{
-		return m_IndexBuffer;
+		return *m_IndexBuffer;
 	}
 }

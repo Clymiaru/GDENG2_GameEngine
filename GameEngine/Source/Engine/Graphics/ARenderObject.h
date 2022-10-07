@@ -17,10 +17,10 @@ namespace Engine
 		virtual ~ARenderObject();
 
 		[[nodiscard]]
-		auto GetVertexBuffer() const -> const UniquePtr<VertexBuffer>&;
+		auto GetVertexBuffer() const -> VertexBuffer&;
 
 		[[nodiscard]]
-		auto GetIndexBuffer() const -> const UniquePtr<IndexBuffer>&;
+		auto GetIndexBuffer() const -> IndexBuffer&;
 		
 	protected:
 
