@@ -5,18 +5,14 @@
 
 auto main() -> int
 {
-	constexpr auto appWindowSize = Engine::Vector2Int({1280, 720});
-	auto editorApp               = Editor::EditorApplication(appWindowSize);
+	const auto windowRect = Engine::RectUint({0, 0, 1280, 720});
+	auto editorApp        = Editor::EditorApplication(windowRect);
 
-	if (editorApp.Initialize())
-	{
-		editorApp.Run();
-	}
+	editorApp.Initialize();
 
-	if (editorApp.Terminate())
-	{
-		std::cout << "App has an error being destroyed!\n";
-	}
+	editorApp.Run();
+
+	editorApp.Terminate();
 
 	return 0;
 }

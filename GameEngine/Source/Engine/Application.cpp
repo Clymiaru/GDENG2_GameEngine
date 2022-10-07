@@ -6,76 +6,51 @@ namespace Engine
 	Application::Application(ApplicationDescription description) :
 		m_IsRunning{false},
 		m_Description{std::move(description)},
-		m_Windows{List<UniquePtr<Window>>()}
+		m_Window{UniquePtr<Window>()}
 	{
 	}
 
 	Application::~Application() = default;
 
-	auto Application::Initialize() -> bool
+	auto Application::Initialize() -> void
 	{
 		std::cout << "Initialize Application\n";
-		for (const auto& window : m_Windows)
-		{
-			if (!window->Initialize(m_Description.ApplicationName,
-			                        m_Description.StartWindowSize))
-			{
-				return false;
-			}
-		}
+
+		const auto windowSize = Vector2Uint{
+			m_Description.StartWindowRect.Right - m_Description.StartWindowRect.Left,
+			m_Description.StartWindowRect.Bottom - m_Description.StartWindowRect.Top
+		};
+
+		m_Window->Initialize(m_Description.ApplicationName,
+		                     m_Description.StartWindowRect);
 
 		std::cout << "Initialize Systems\n";
 		InitializeSystems();
 
-		for (const auto& window : m_Windows)
-		{
-			window->OnStart();
-		}
+		m_Window->Start();
 
 		m_IsRunning = true;
-		return true;
 	}
 
-	auto Application::Terminate() -> bool
+	auto Application::Terminate() -> void
 	{
 		std::cout << "Terminate Application\n";
-		for (const auto& window : m_Windows)
-		{
-			if (!window->Terminate())
-			{
-				return false;
-			}
-		}
+
+		m_Window->Terminate();
 
 		std::cout << "Terminate Systems\n";
 		TerminateSystems();
 		m_IsRunning = false;
-		return true;
 	}
 
 	auto Application::Run() -> void
 	{
 		// May be the blocking point when considering multiple windows
-		const int numberOfWindows = static_cast<int>(m_Windows.size());
-		int counter               = 0;
-		while (m_IsRunning)
+		while (m_Window->IsRunning())
 		{
-			for (const auto& window : m_Windows)
-			{
-				if (window->IsRunning())
-				{
-					window->Broadcast();
-				}
-				else
-				{
-					counter++;
-				}
-			}
-
-			if (counter >= numberOfWindows)
-			{
-				m_IsRunning = false;
-			}
+			m_Window->Broadcast();
 		}
+
+		m_IsRunning = false;
 	}
 }

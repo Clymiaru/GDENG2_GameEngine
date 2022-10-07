@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d11.h>
+
+
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
@@ -9,6 +11,8 @@ namespace Engine
 	class SwapChain;
 
 	class VertexBuffer;
+
+	class IndexBuffer;
 
 	class ConstantBuffer;
 
@@ -35,10 +39,12 @@ namespace Engine
 		// Buffers
 		auto SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void;
 
-		auto SetConstantBuffer(const SharedPtr<VertexShader>& vertexShader,
+		auto SetIndexBuffer(const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
+
+		auto SetConstantBuffer(const VertexShader& vertexShader,
 		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
-		auto SetConstantBuffer(const SharedPtr<PixelShader>& pixelShader,
+		auto SetConstantBuffer(const PixelShader& pixelShader,
 		                       const UniquePtr<ConstantBuffer>& constantBuffer) const -> void;
 
 		// Shaders
@@ -52,6 +58,9 @@ namespace Engine
 
 		auto DrawTriangleStrip(UINT vertexCount,
 		                       UINT startVertexIndex) const -> void;
+
+		auto DrawIndexed(UINT vertexCount,
+							  UINT startVertexIndex) const -> void;
 
 	private:
 		ID3D11DeviceContext* m_DeviceContext;

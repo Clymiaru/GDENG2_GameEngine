@@ -1,23 +1,19 @@
 ﻿#pragma once
 #include <d3d11.h>
 
+#include "Engine/Graphics/ARenderObject.h"
 #include "Engine/Graphics/ConstantBuffer.h"
-#include "Engine/Graphics/PixelShader.h"
-#include "Engine/Graphics/VertexShader.h"
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
 
 namespace Engine
 {
-	struct IndexLayoutInfo
-	{
-		D3D11_INPUT_ELEMENT_DESC* Data;
+	struct Constant;
 
-		size_t Size;
-	};
+	struct IndexLayoutInfo;
 
-	class Quad final
+	class Quad final : public ARenderObject
 	{
 	public:
 		Quad(const Vector2Float& position,
@@ -26,44 +22,37 @@ namespace Engine
 
 		~Quad();
 
-		auto GetListOfVertices() -> void*;
+		auto Update(float deltaTime) -> void;
 
-		auto GetListOfVerticesSize() -> size_t;
-
-		auto GetVertexSize() -> size_t;
-
-		auto GetIndexLayoutAndSize() -> IndexLayoutInfo&;
-
-		auto SetIndexLayoutAndSize(IndexLayoutInfo indexLayoutInfo) -> void;
-
-		auto SetVertexAndPixelShader(SharedPtr<VertexShader> vertexShader,
-		                             SharedPtr<PixelShader> pixelShader) -> void;
-
-		auto GetTransform() -> DirectX::XMMATRIX&;
-
-		auto GetConstantBuffer() -> ConstantBuffer*;
-
-		auto SetConstantBuffer(ConstantBuffer* constantBuffer) -> void;
 
 	private:
+		struct Vertex
+		{
+			Vector3Float Position;
+
+			Color32 Color;
+		};
+
 		Vector2Float m_Position;
 
 		Vector2Float m_Size;
 
 		Color32 m_Color;
 
-		void* m_Vertices;
-
-		size_t m_VerticesSize;
-
-		UniquePtr<IndexLayoutInfo> m_IndexLayout;
-
-		SharedPtr<VertexShader> m_VertexShader;
-
-		SharedPtr<PixelShader> m_PixelShader;
-
-		ConstantBuffer* m_ConstantBuffer;
+		UniquePtr<ConstantBuffer> m_ConstantBuffer;
 
 		DirectX::XMMATRIX m_ModelMat;
+
+		Constant* constant;
+
+		auto SetBuffers() -> void;
+
+		auto InitializeVertexData() -> VertexData override;
+
+		auto InitializeVertexLayout() -> VertexLayoutData override;
+
+		auto InitializeIndexData() -> IndexData override;
+
+		auto InitializeShaderData() -> void override;
 	};
 }

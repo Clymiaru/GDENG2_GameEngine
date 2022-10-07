@@ -11,31 +11,28 @@
 
 namespace Editor
 {
-	EditorApplication::EditorApplication(Engine::Vector2Uint startWindowSize) :
+	EditorApplication::EditorApplication(Engine::RectUint windowRect) :
 		Application
 		{
 			Engine::ApplicationDescription
 			{
 				L"Engine Editor",
-				startWindowSize
+				windowRect
 			}
 		}
 	{
-		m_Windows.push_back(Engine::CreateUniquePtr<EditorWindow>(m_Description.ApplicationName,
-		                                                          m_Description.StartWindowSize));
+		m_Window = Engine::CreateUniquePtr<EditorWindow>(m_Description.ApplicationName,
+		                                                 m_Description.StartWindowRect);
 	}
 
 	EditorApplication::~EditorApplication() = default;
 
 	auto EditorApplication::InitializeSystems() -> void
 	{
-		for (const auto& window : m_Windows)
-		{
-			RECT rc = window->GetClientWindowRect();
-			Engine::RenderSystem::GetInstance().Initialize(window->GetHandle(),
-			                                               Engine::Vector2Int(rc.right - rc.left,
-			                                                                  rc.bottom - rc.top));
-		}
+		const auto rc = m_Window->GetClientWindowRect();
+		Engine::RenderSystem::GetInstance().Initialize(m_Window->GetHandle(),
+		                                               Engine::Vector2Int(rc.right - rc.left,
+		                                                                  rc.bottom - rc.top));
 
 		Engine::ShaderLibrary::GetInstance().Initialize();
 	}

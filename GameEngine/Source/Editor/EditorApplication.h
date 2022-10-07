@@ -6,7 +6,7 @@ namespace Editor
 	class EditorApplication final : public Engine::Application
 	{
 	public:
-		explicit EditorApplication(Engine::Vector2Uint startWindowSize);
+		explicit EditorApplication(Engine::RectUint windowRect);
 
 		~EditorApplication() override;
 

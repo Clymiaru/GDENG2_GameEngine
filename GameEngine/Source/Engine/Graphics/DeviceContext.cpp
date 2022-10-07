@@ -5,6 +5,7 @@
 #include "ShaderLibrary.h"
 
 #include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/Graphics/IndexBuffer.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Graphics/VertexBuffer.h"
@@ -53,19 +54,25 @@ namespace Engine
 
 	auto DeviceContext::SetVertexBuffer(const UniquePtr<VertexBuffer>& vertexBuffer) const -> void
 	{
-		const UINT stride     = vertexBuffer->m_VertexSize;
+		const UINT stride     = vertexBuffer->m_DataSize;
 		constexpr UINT offset = 0;
-		m_DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->m_Buffer, &stride, &offset);
-		m_DeviceContext->IASetInputLayout(vertexBuffer->m_Layout);
+		m_DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->m_Data, &stride, &offset);
+		m_DeviceContext->IASetInputLayout(vertexBuffer->m_DataLayout);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const SharedPtr<VertexShader>& vertexShader,
+	auto DeviceContext::SetIndexBuffer(const UniquePtr<IndexBuffer>& indexBuffer) const -> void
+	{
+		constexpr UINT offset = 0;
+		m_DeviceContext->IASetIndexBuffer(indexBuffer->m_Data, DXGI_FORMAT_R32_UINT, offset);
+	}
+
+	auto DeviceContext::SetConstantBuffer(const VertexShader& vertexShader,
 	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
 	}
 
-	auto DeviceContext::SetConstantBuffer(const SharedPtr<PixelShader>& pixelShader,
+	auto DeviceContext::SetConstantBuffer(const PixelShader& pixelShader,
 	                                      const UniquePtr<ConstantBuffer>& constantBuffer) const -> void
 	{
 		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer->m_BufferData);
@@ -95,5 +102,12 @@ namespace Engine
 	{
 		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		m_DeviceContext->Draw(vertexCount, startVertexIndex);
+	}
+
+	auto DeviceContext::DrawIndexed(UINT vertexCount,
+	                                UINT startVertexIndex) const -> void
+	{
+		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_DeviceContext->DrawIndexed(6, 0, 0);
 	}
 }

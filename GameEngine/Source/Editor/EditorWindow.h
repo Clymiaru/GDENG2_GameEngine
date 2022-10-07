@@ -13,11 +13,9 @@ namespace Editor
 	{
 	public:
 		EditorWindow(const std::wstring& windowName,
-		             Engine::Vector2Int windowSize);
+		             const Engine::RectUint& windowRect);
 
 		~EditorWindow() override;
-
-		auto OnCreate() -> void override;
 
 		auto OnStart() -> void override;
 
@@ -26,18 +24,7 @@ namespace Editor
 		auto OnTerminate() -> void override;
 
 	private:
-		Engine::UniquePtr<Engine::ConstantBuffer> m_ConstantBuffer;
-
-		Engine::SharedPtr<Engine::VertexShader> m_VertexShader;
-
-		Engine::SharedPtr<Engine::PixelShader> m_PixelShader;
-
-		unsigned long m_OldTime = 0;
-
-		float m_DeltaTime = 0;
-
 		float m_Time = 0;
-
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Quads;
 	};
 }

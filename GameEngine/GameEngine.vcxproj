@@ -195,10 +195,12 @@
         <ClInclude Include="Source\Engine\Application.h" />
         <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h" />
         <ClInclude Include="Source\Engine\Graphics\DeviceContext.h" />
+        <ClInclude Include="Source\Engine\Graphics\ARenderObject.h" />
+        <ClInclude Include="Source\Engine\Graphics\IndexBuffer.h" />
         <ClInclude Include="Source\Engine\Graphics\Material.h" />
         <ClInclude Include="Source\Engine\Graphics\PixelShader.h" />
-        <ClInclude Include="Source\Engine\Graphics\Primitives\Cube.h" />
         <ClInclude Include="Source\Engine\Graphics\Primitives\Quad.h" />
+        <ClInclude Include="Source\Engine\Graphics\RenderObject.h" />
         <ClInclude Include="Source\Engine\Graphics\RenderSystem.h" />
         <ClInclude Include="Source\Engine\Graphics\Shader.h" />
         <ClInclude Include="Source\Engine\Graphics\ShaderLibrary.h" />
@@ -220,10 +222,12 @@
         <ClCompile Include="Source\Engine\Application.cpp" />
         <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp" />
         <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\ARenderObject.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\IndexBuffer.cpp" />
         <ClCompile Include="Source\Engine\Graphics\Material.cpp" />
         <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp" />
-        <ClCompile Include="Source\Engine\Graphics\Primitives\Cube.cpp" />
         <ClCompile Include="Source\Engine\Graphics\Primitives\Quad.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\RenderObject.cpp" />
         <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp" />
         <ClCompile Include="Source\Engine\Graphics\Shader.cpp" />
         <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp" />

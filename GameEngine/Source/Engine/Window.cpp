@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "Window.h"
 
+#include "Utils/Debug.h"
+
 namespace Engine
 {
 	Window::Window() :
 		m_Handle{nullptr},
 		m_IsRunning{false},
-		m_WindowSize{0, 0},
+		m_WindowRect{0, 0, 0, 0},
 		m_WindowName{L"Untitled"}
 	{
 	}
@@ -23,13 +25,12 @@ namespace Engine
 				auto* window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
 				SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
 				window->SetHandle(windowHandle);
-				window->OnCreate();
 				break;
 			}
 			case WM_DESTROY:
 			{
 				auto* window = reinterpret_cast<Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
-				window->OnTerminate();
+				window->Close();
 				PostQuitMessage(0);
 				break;
 			}
@@ -39,10 +40,10 @@ namespace Engine
 		return 0;
 	}
 
-	auto Window::Initialize(const std::wstring windowName,
-	                        const Vector2Int windowSize) -> bool
+	auto Window::Initialize(const std::wstring& windowName,
+	                        const RectUint& windowRect) -> void
 	{
-		m_WindowSize = windowSize;
+		m_WindowRect = windowRect;
 		m_WindowName = windowName;
 
 		std::cout << "Initialize Window\n";
@@ -61,8 +62,7 @@ namespace Engine
 		windowClass.style         = NULL;
 		windowClass.lpfnWndProc   = &WindowsProcedure;
 
-		if (!RegisterClassEx(&windowClass))
-			return false;
+		ENGINE_ASSERT(RegisterClassEx(&windowClass), "Window cannot be registered!")
 
 		m_Handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
 		                          m_WindowName.c_str(),
@@ -70,25 +70,24 @@ namespace Engine
 		                          WS_OVERLAPPEDWINDOW,
 		                          CW_USEDEFAULT,
 		                          CW_USEDEFAULT,
-		                          static_cast<int>(m_WindowSize.X),
-		                          static_cast<int>(m_WindowSize.Y),
+		                          static_cast<int>(m_WindowRect.Width),
+		                          static_cast<int>(m_WindowRect.Height),
 		                          nullptr,
 		                          nullptr,
 		                          nullptr,
 		                          this);
-		if (!m_Handle)
-			return false;
+
+		ENGINE_ASSERT(m_Handle, "Handle cannot be retrieved!")
+		
 		ShowWindow(m_Handle, SW_SHOW);
 		UpdateWindow(m_Handle);
 		m_IsRunning = true;
-		return true;
 	}
 
-	auto Window::Terminate() const -> bool
+	auto Window::Terminate() const -> void
 	{
-		if (!DestroyWindow(m_Handle))
-			return false;
-		return true;
+		const auto result = DestroyWindow(m_Handle);
+		ENGINE_ASSERT(!result, "Window cannot be destroyed!")
 	}
 
 	auto Window::Broadcast() -> bool
@@ -109,26 +108,6 @@ namespace Engine
 		return m_IsRunning;
 	}
 
-	auto Window::OnCreate() -> void
-	{
-		std::cout << "Window Create\n";
-	}
-
-	auto Window::OnStart() -> void
-	{
-		std::cout << "Window Start\n";
-	}
-
-	auto Window::OnUpdate() -> void
-	{
-	}
-
-	auto Window::OnTerminate() -> void
-	{
-		m_IsRunning = false;
-		std::cout << "Window Terminate\n";
-	}
-
 	auto Window::GetClientWindowRect() const -> RECT
 	{
 		RECT rc;
@@ -144,5 +123,21 @@ namespace Engine
 	auto Window::SetHandle(const HWND windowHandle) -> void
 	{
 		m_Handle = windowHandle;
+	}
+
+	auto Window::Start() -> void
+	{
+		OnStart();
+	}
+
+	auto Window::Update() -> void
+	{
+		OnUpdate();
+	}
+
+	auto Window::Close() -> void
+	{
+		m_IsRunning = false;
+		OnTerminate();
 	}
 }

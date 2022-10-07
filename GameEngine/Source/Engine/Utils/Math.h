@@ -61,6 +61,8 @@ namespace Engine
 		}
 	};
 
+	using RectUint = Rect<Uint>;
+
 	class Mat4
 	{
 	public:

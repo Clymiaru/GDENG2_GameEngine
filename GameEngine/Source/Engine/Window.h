@@ -12,11 +12,10 @@ namespace Engine
 
 		virtual ~Window() = default;
 
-		auto Initialize(std::wstring windowName,
-		                Vector2Int windowSize) -> bool;
+		auto Initialize(const std::wstring& windowName,
+		                const RectUint& windowRect) -> void;
 
-		[[nodiscard]]
-		auto Terminate() const -> bool;
+		auto Terminate() const -> void;
 
 		auto Broadcast() -> bool;
 
@@ -31,20 +30,25 @@ namespace Engine
 
 		auto SetHandle(HWND windowHandle) -> void;
 
-		virtual auto OnCreate() -> void;
+		auto Start() -> void;
 
-		virtual auto OnStart() -> void;
+		auto Update() -> void;
 
-		virtual auto OnUpdate() -> void;
+		auto Close() -> void;
 
-		virtual auto OnTerminate() -> void;
+	private:
+		virtual auto OnStart() -> void = 0;
+
+		virtual auto OnUpdate() -> void = 0;
+
+		virtual auto OnTerminate() -> void = 0;
 
 	protected:
 		HWND m_Handle;
 
 		bool m_IsRunning;
 
-		Vector2Int m_WindowSize;
+		RectUint m_WindowRect;
 
 		std::wstring m_WindowName;
 	};

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Window.h"
-#include "Utils/DataStructures.h"
+
+#include "Graphics/RenderSystem.h"
+
 #include "Utils/Math.h"
 #include "Utils/Pointers.h"
 
@@ -9,8 +11,7 @@ namespace Engine
 	struct ApplicationDescription
 	{
 		std::wstring ApplicationName;
-
-		Vector2Int StartWindowSize;
+		RectUint StartWindowRect;
 	};
 
 	class Application
@@ -20,9 +21,9 @@ namespace Engine
 
 		virtual ~Application();
 
-		auto Initialize() -> bool;
+		auto Initialize() -> void;
 
-		auto Terminate() -> bool;
+		auto Terminate() -> void;
 
 		auto Run() -> void;
 
@@ -36,6 +37,6 @@ namespace Engine
 	protected:
 		ApplicationDescription m_Description;
 
-		List<UniquePtr<Window>> m_Windows;
+		UniquePtr<Window> m_Window;
 	};
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include <d3d11.h>
 
+#include "Engine/Utils/Math.h"
+
 namespace Engine
 {
 	class DeviceContext;
@@ -13,26 +15,24 @@ namespace Engine
 		~VertexBuffer();
 
 		[[nodiscard]]
-		auto GetVertexListSize() const -> UINT;
+		auto GetCount() const -> Uint;
 
-		auto Load(void* listOfVertices,
-		          UINT vertexSize,
-		          UINT listSize,
-		          void* shaderByteCode,
-		          UINT byteShaderSize,
-		          D3D11_INPUT_ELEMENT_DESC* indexLayout,
-		          size_t indexLayoutSize) -> bool;
+		[[nodiscard]]
+		auto GetSize() const -> Uint;
 
-		auto Release() const -> void;
+		auto Load(const void* vertexList,
+		          Uint vertexDataSize,
+		          Uint vertexListCount,
+		          const void* shaderByteCode,
+		          Uint shaderByteCodeSize,
+		          const D3D11_INPUT_ELEMENT_DESC* indexLayout,
+		          Uint indexLayoutSize) -> bool;
 
 	private:
-		UINT m_VertexSize;
-
-		UINT m_ListSize;
-
-		ID3D11Buffer* m_Buffer;
-
-		ID3D11InputLayout* m_Layout;
+		ID3D11Buffer* m_Data;
+		ID3D11InputLayout* m_DataLayout;
+		UINT m_DataSize;
+		UINT m_DataCount;
 
 		friend class DeviceContext;
 	};

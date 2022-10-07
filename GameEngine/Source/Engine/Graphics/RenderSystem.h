@@ -9,17 +9,11 @@
 
 namespace Engine
 {
+	class RenderObject;
+
 	class VertexBuffer;
 
-	// Idea is that all objects to be rendered are stored here with pre-allocated memory.
-	// Then, when rendering occurs, all stored will be rendered. (Not sure how to do other stuff
-	// like rendering in order)
-
-	struct RenderObject
-	{
-		// Entity -> When we need reference to the one being rendered
-		UniquePtr<VertexBuffer> VertexBuffer;
-	};
+	class IndexBuffer;
 
 	class RenderSystem final
 	{
@@ -29,46 +23,34 @@ namespace Engine
 		auto Initialize(HWND windowHandle,
 		                Vector2Int windowSize) -> void;
 
-		auto Terminate() -> void;
+		auto Terminate() const -> void;
 
-		auto GetDevice() -> ID3D11Device*;
+		[[nodiscard]]
+		auto GetDevice() const -> ID3D11Device*;
 
-		auto GetDeviceContext() -> DeviceContext&;
+		[[nodiscard]]
+		auto GetDeviceContext() const -> DeviceContext&;
 
-		auto RegisterObject(void* listOfVertices,
-		                    UINT vertexSize,
-		                    UINT listSize,
-		                    void* shaderByteCode,
-		                    UINT byteShaderSize,
-		                    D3D11_INPUT_ELEMENT_DESC* indexLayout,
-		                    size_t indexLayoutSize) -> void;
+		auto Clear(Color32 fillColor) const -> void;
 
-		auto static Clear(Color32 fillColor) -> void;
+		auto Draw(const UniquePtr<VertexBuffer>& vertexBuffer,
+		          const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
 
-		auto static Draw() -> void;
+		auto DrawIndexed(const UniquePtr<VertexBuffer>& vertexBuffer,
+				  const UniquePtr<IndexBuffer>& indexBuffer) const -> void;
 
-		auto static SetViewportSize(Vector2Uint viewportSize) -> void;
+		auto Present() const -> void;
 
-		auto CompileVertexShader(const std::wstring& fileName,
-		                         const std::string& entryPointName,
-		                         void** shaderByteCode,
-		                         size_t* byteCodeSize) -> bool;
-
-		auto CompilePixelShader(const std::wstring& fileName,
-		                        const std::string& entryPointName,
-		                        void** shaderByteCode,
-		                        size_t* byteCodeSize) -> bool;
-
-		auto ReleaseCompiledShader() const -> void;
+		auto SetViewportSize(Vector2Uint viewportSize) const -> void;
 
 	private:
 		RenderSystem();
 
-		~RenderSystem() = default;
+		~RenderSystem();
 
 		RenderSystem(const RenderSystem&);
 
-		RenderSystem(const RenderSystem&&) noexcept;
+		RenderSystem(const RenderSystem&&) noexcept = delete;
 
 		UniquePtr<SwapChain> m_SwapChain;
 
@@ -85,14 +67,5 @@ namespace Engine
 		IDXGIFactory* m_DxgiFactory;
 
 		std::vector<UniquePtr<RenderObject>> m_RenderList;
-
-		// Transfer to a ShaderCompilerClass?
-		ID3DBlob* m_Blob = nullptr;
-
-		ID3DBlob* m_Blob2 = nullptr;
-
-		ID3D11VertexShader* m_VertexShader = nullptr;
-
-		ID3D11PixelShader* m_PixelShader = nullptr;
 	};
 }
