@@ -83,18 +83,21 @@ auto Engine::ShaderLibrary::GetPixelShader(const std::wstring& filename) -> Pixe
 	return *m_PixelShaderMap[filename];
 }
 
-Engine::ShaderLibrary::ShaderLibrary()
+auto Engine::ShaderLibrary::GetVertexShaderRef(const std::wstring& filename) -> SharedPtr<VertexShader>
+{
+	return m_VertexShaderMap[filename];
+}
+
+auto Engine::ShaderLibrary::GetPixelShaderRef(const std::wstring& filename) -> SharedPtr<PixelShader>
+{
+	return m_PixelShaderMap[filename];
+}
+
+Engine::ShaderLibrary::ShaderLibrary() :
+	m_VertexShaderMap{},
+	m_PixelShaderMap{}
 {
 }
 
-Engine::ShaderLibrary::~ShaderLibrary()
-{
-}
+Engine::ShaderLibrary::~ShaderLibrary() = default;
 
-Engine::ShaderLibrary::ShaderLibrary(const ShaderLibrary&)
-{
-}
-
-Engine::ShaderLibrary::ShaderLibrary(const ShaderLibrary&&) noexcept
-{
-}

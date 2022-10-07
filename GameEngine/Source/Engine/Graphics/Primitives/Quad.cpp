@@ -33,7 +33,9 @@ namespace Engine
 		ARenderObject{},
 		m_Position{position},
 		m_Size{size},
-		m_Color{color}
+		m_Color{color},
+		m_TransformMatrix{DirectX::XMMatrixIdentity()},
+		m_Constant{nullptr}
 	{
 		m_VertexData       = InitializeVertexData();
 		m_VertexLayoutData = InitializeVertexLayout();
@@ -164,7 +166,7 @@ namespace Engine
 
 	auto Quad::InitializeShaderData() -> void
 	{
-		m_VertexShader = &ShaderLibrary::GetInstance().GetVertexShader(L"SinTimeAnimShader.hlsl");
-		m_PixelShader  = &ShaderLibrary::GetInstance().GetPixelShader(L"SinTimeAnimShader.hlsl");
+		m_VertexShader = ShaderLibrary::GetInstance().GetVertexShaderRef(L"SinTimeAnimShader.hlsl");
+		m_PixelShader  = ShaderLibrary::GetInstance().GetPixelShaderRef(L"SinTimeAnimShader.hlsl");
 	}
 }

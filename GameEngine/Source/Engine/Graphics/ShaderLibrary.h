@@ -11,6 +11,8 @@ namespace Engine
 	class ShaderLibrary final
 	{
 	public:
+		ShaderLibrary(const ShaderLibrary&) = delete;
+		
 		static auto GetInstance() -> ShaderLibrary&;
 
 		auto Initialize() -> void;
@@ -27,14 +29,16 @@ namespace Engine
 
 		auto GetPixelShader(const std::wstring& filename) -> PixelShader&;
 
+		auto GetVertexShaderRef(const std::wstring& filename) -> SharedPtr<VertexShader>;
+
+		auto GetPixelShaderRef(const std::wstring& filename) -> SharedPtr<PixelShader>;
+
 	private:
 		ShaderLibrary();
 
 		~ShaderLibrary();
 
-		ShaderLibrary(const ShaderLibrary&);
-
-		ShaderLibrary(const ShaderLibrary&&) noexcept;
+		
 
 		std::unordered_map<std::wstring, SharedPtr<VertexShader>> m_VertexShaderMap;
 

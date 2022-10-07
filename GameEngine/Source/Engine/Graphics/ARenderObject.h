@@ -43,8 +43,8 @@ namespace Engine
 			size_t IndexListCount;
 		} m_IndexData;
 		
-		VertexShader* m_VertexShader;
-		PixelShader* m_PixelShader;
+		SharedPtr<VertexShader> m_VertexShader;
+		SharedPtr<PixelShader> m_PixelShader;
 
 		UniquePtr<VertexBuffer> m_VertexBuffer;
 		UniquePtr<IndexBuffer> m_IndexBuffer;

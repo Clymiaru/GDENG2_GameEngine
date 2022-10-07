@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Application.h"
 
+#include "Time.h"
+
 namespace Engine
 {
 	Application::Application(ApplicationDescription description) :
@@ -21,6 +23,8 @@ namespace Engine
 			m_Description.StartWindowRect.Bottom - m_Description.StartWindowRect.Top
 		};
 
+		Time::Initialize();
+
 		m_Window->Initialize(m_Description.ApplicationName,
 		                     m_Description.StartWindowRect);
 
@@ -37,6 +41,7 @@ namespace Engine
 		std::cout << "Terminate Application\n";
 
 		m_Window->Terminate();
+		Time::Terminate();
 
 		std::cout << "Terminate Systems\n";
 		TerminateSystems();

@@ -3,6 +3,8 @@
 
 #include "Utils/Debug.h"
 
+#include "Engine/Time.h"
+
 namespace Engine
 {
 	Window::Window() :
@@ -93,6 +95,7 @@ namespace Engine
 	auto Window::Broadcast() -> bool
 	{
 		MSG message;
+		Time::LogFrameStart();
 		Update();
 		while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE) > 0)
 		{
@@ -100,6 +103,7 @@ namespace Engine
 			DispatchMessage(&message);
 		}
 		Sleep(1);
+		Time::LogFrameEnd();
 		return true;
 	}
 

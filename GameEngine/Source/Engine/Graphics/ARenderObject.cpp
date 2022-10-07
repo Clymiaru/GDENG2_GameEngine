@@ -9,7 +9,8 @@ namespace Engine
 		m_IndexData{},
 		m_VertexShader{nullptr},
 		m_PixelShader{nullptr},
-		m_VertexBuffer{nullptr}
+		m_VertexBuffer{nullptr},
+		m_IndexBuffer{nullptr}
 	{
 	}
 

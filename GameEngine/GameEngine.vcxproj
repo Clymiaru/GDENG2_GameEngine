@@ -205,6 +205,7 @@
         <ClInclude Include="Source\Engine\Graphics\SwapChain.h" />
         <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h" />
         <ClInclude Include="Source\Engine\Graphics\VertexShader.h" />
+        <ClInclude Include="Source\Engine\Time.h" />
         <ClInclude Include="Source\Engine\Utils\Color32.h" />
         <ClInclude Include="Source\Engine\Utils\DataStructures.h" />
         <ClInclude Include="Source\Engine\Utils\Debug.h" />
@@ -229,6 +230,7 @@
         <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp" />
         <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp" />
         <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp" />
+        <ClCompile Include="Source\Engine\Time.cpp" />
         <ClCompile Include="Source\Engine\Utils\Math.cpp" />
         <ClCompile Include="Source\Engine\Window.cpp" />
         <ClCompile Include="Source\Main.cpp" />
