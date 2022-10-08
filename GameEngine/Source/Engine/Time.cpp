@@ -31,12 +31,17 @@ Engine::Time::~Time()
 
 void Engine::Time::LogFrameStart()
 {
-	m_Instance->m_StartFrameTime = std::chrono::system_clock::now();
+	using namespace std::chrono;
+	m_Instance->m_StartFrameTime = steady_clock::now();
 }
 
 void Engine::Time::LogFrameEnd()
 {
-	m_Instance->m_EndFrameTime = std::chrono::system_clock::now();
+	using namespace std::chrono;
+	using namespace std::chrono_literals;
+
+	m_Instance->m_EndFrameTime = steady_clock::now();
 	const auto elapsedSeconds  = m_Instance->m_EndFrameTime - m_Instance->m_StartFrameTime;
-	m_Instance->m_DeltaTime    = static_cast<double>(elapsedSeconds.count());
+
+	m_Instance->m_DeltaTime = elapsedSeconds.count() / 100000000.0f;
 }

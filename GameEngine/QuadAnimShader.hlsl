@@ -24,9 +24,8 @@ cbuffer Constant: register(b0)
 VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
-	
-	output.position = mul(input.position, Model);
-	output.position = mul(output.position, View);
+
+	output.position = lerp(input.position, input.position1, Ratio);
 	output.position = mul(output.position, Projection);
 	
 	output.color = input.color;

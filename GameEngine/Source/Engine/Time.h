@@ -23,9 +23,9 @@ namespace Engine
 
 		double m_DeltaTime;
 
-		std::chrono::system_clock::time_point m_StartFrameTime;
+		std::chrono::steady_clock::time_point m_StartFrameTime;
 
-		std::chrono::system_clock::time_point m_EndFrameTime;
+		std::chrono::steady_clock::time_point m_EndFrameTime;
 
 		static void LogFrameStart();
 

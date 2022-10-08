@@ -102,8 +102,8 @@ namespace Engine
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
-		Sleep(1);
 		Time::LogFrameEnd();
+		Sleep(1);
 		return true;
 	}
 

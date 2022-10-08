@@ -89,10 +89,10 @@ auto Editor::AnimatedQuad::Update(float ratio) -> void
 	m_Constant->Ratio = ratio;
 
 	m_TransformMatrix = XMMatrixIdentity();
-	m_Constant->Model = XMMatrixTranspose(m_TransformMatrix);
+	//m_Constant->Model = XMMatrixTranspose(m_TransformMatrix);
 
 	m_Constant->View = XMMatrixIdentity();
-	m_Constant->View = XMMatrixTranspose(m_Constant->View);
+	//m_Constant->View = XMMatrixTranspose(m_Constant->View);
 
 	m_Constant->Projection = XMMatrixIdentity();
 	m_Constant->Projection *= XMMatrixOrthographicLH(
@@ -174,9 +174,9 @@ auto Editor::AnimatedQuad::InitializeVertexLayout() -> VertexLayoutData
 	auto* layout = new D3D11_INPUT_ELEMENT_DESC[4]
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12 + 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24 + 4 * 4, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 	constexpr size_t layoutSize = 4U; //INFO: Is there a way to automate this (to automate layoutSize calculation).
 	return {std::move(layout), layoutSize};
@@ -186,12 +186,12 @@ auto Editor::AnimatedQuad::InitializeIndexData() -> IndexData
 {
 	auto* indices = new Engine::Uint[6]
 	{
-		0,
 		1,
 		2,
-		2,
 		3,
-		0
+		3,
+		0,
+		1
 	};
 	constexpr size_t indexSize = sizeof indices;
 	return {std::move(indices), indexSize};
