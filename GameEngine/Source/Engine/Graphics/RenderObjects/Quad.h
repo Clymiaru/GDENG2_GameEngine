@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Engine/Graphics/ARenderObject.h"
 #include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/Graphics/RenderObjects/RenderObject.h"
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
@@ -12,7 +12,7 @@ namespace Engine
 
 	struct IndexLayoutInfo;
 
-	class Quad final : public ARenderObject
+	class Quad final : public RenderObject
 	{
 	public:
 		Quad(const Vector3Float& position,

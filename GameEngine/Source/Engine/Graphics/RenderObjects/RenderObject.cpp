@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
-#include "ARenderObject.h"
+#include "RenderObject.h"
 
 namespace Engine
 {
-	ARenderObject::ARenderObject() :
+	RenderObject::RenderObject() :
 		m_VertexData{},
 		m_VertexLayoutData{},
 		m_IndexData{},
@@ -14,14 +14,14 @@ namespace Engine
 	{
 	}
 
-	ARenderObject::~ARenderObject() = default;
+	RenderObject::~RenderObject() = default;
 
-	auto ARenderObject::GetVertexBuffer() const -> VertexBuffer&
+	auto RenderObject::GetVertexBuffer() const -> VertexBuffer&
 	{
 		return *m_VertexBuffer;
 	}
 
-	auto ARenderObject::GetIndexBuffer() const -> IndexBuffer&
+	auto RenderObject::GetIndexBuffer() const -> IndexBuffer&
 	{
 		return *m_IndexBuffer;
 	}

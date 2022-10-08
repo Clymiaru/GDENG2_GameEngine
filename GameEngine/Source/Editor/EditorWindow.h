@@ -1,9 +1,11 @@
 ﻿#pragma once
+#include "AnimatedQuad.h"
+
 #include "Engine/Window.h"
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/VertexShader.h"
-#include "Engine/Graphics/Primitives/Quad.h"
+#include "Engine/Graphics/RenderObjects/Quad.h"
 #include "Engine/Utils/DataStructures.h"
 #include "Engine/Utils/Pointers.h"
 
@@ -28,5 +30,7 @@ namespace Editor
 
 		float m_Time = 0;
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Quads;
+
+		Engine::List<Engine::UniquePtr<AnimatedQuad>> m_AnimQuads;
 	};
 }

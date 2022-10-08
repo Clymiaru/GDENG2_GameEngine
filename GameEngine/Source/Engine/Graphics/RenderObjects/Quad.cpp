@@ -30,7 +30,7 @@ namespace Engine
 	Quad::Quad(const Vector3Float& position,
 	           const Vector2Float& size,
 	           const Color32& color):
-		ARenderObject{},
+		RenderObject{},
 		m_Position{position},
 		m_Size{size},
 		m_Color{color},

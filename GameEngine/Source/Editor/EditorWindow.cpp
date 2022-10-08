@@ -9,22 +9,10 @@
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Math.h"
 
-#include "Engine/Graphics/Primitives/Quad.h"
+#include "Engine/Graphics/RenderObjects/Quad.h"
 
 namespace Editor
 {
-	__declspec(align(16))
-	struct Constant
-	{
-		DirectX::XMMATRIX World;
-
-		DirectX::XMMATRIX View;
-
-		DirectX::XMMATRIX Projection;
-
-		float Time;
-	};
-
 	EditorWindow::EditorWindow(const std::wstring& windowName,
 	                           const Engine::RectUint& windowRect) :
 		Window()
@@ -44,6 +32,12 @@ namespace Editor
 		Engine::ShaderLibrary::GetInstance().RegisterPixelShader(L"SinTimeAnimShader.hlsl",
 		                                                         "psmain");
 
+		Engine::ShaderLibrary::GetInstance().RegisterVertexShader(L"QuadAnimShader.hlsl",
+																  "vsmain");
+
+		Engine::ShaderLibrary::GetInstance().RegisterPixelShader(L"QuadAnimShader.hlsl",
+																 "psmain");
+
 		// Object initialization
 		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{-300.0f, 100.0f, 0.0f},
 		                                                        Engine::Vector2Float{400.f, 400.0f},
@@ -56,13 +50,32 @@ namespace Editor
 		m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{200.0f, -225.0f, 0.0f},
 		                                                        Engine::Vector2Float{500.0f, 225.0f},
 		                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
+
+		m_AnimQuads.push_back(Engine::CreateUniquePtr<Editor::AnimatedQuad>(
+			Engine::Vector3Float{-100.0f, -100.0f, 0.0f},
+			Engine::Vector3Float{-100.0f, -100.0f, 0.0f},
+			Engine::Vector3Float{-100.0f, 100.0f, 0.0f},
+			Engine::Vector3Float{-100.0f, 100.0f, 0.0f},
+			Engine::Vector3Float{100.0f, 100.0f, 0.0f},
+			Engine::Vector3Float{100.0f, 100.0f, 0.0f},
+			Engine::Vector3Float{100.0f, -100.0f, 0.0f},
+			Engine::Vector3Float{100.0f, -100.0f, 0.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f},
+			Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
+		
 	}
 
 	auto EditorWindow::OnUpdate() -> void
 	{
 		m_Time = static_cast<float>(GetTickCount()) / 1000.0f;
 
-		for (const auto& quad : m_Quads)
+		for (const auto& quad : m_AnimQuads)
 		{
 			quad->Update(m_Time);
 		}
@@ -79,7 +92,7 @@ namespace Editor
 				static_cast<Engine::Uint>(bottom - top)
 			});
 
-		for (const auto& quad : m_Quads)
+		for (const auto& quad : m_AnimQuads)
 		{
 			quad->Render();
 			Engine::RenderSystem::GetInstance().Draw(quad->GetVertexBuffer(),

@@ -27,20 +27,20 @@
     <ClInclude Include="Source\Engine\Application.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\ARenderObject.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\DeviceContext.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Material.h">
+    <ClInclude Include="Source\Engine\Graphics\IndexBuffer.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\PixelShader.h">
       <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Primitives\Cube.h">
-      <Filter>Engine\Graphics\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Primitives\Quad.h">
       <Filter>Engine\Graphics\Primitives</Filter>
@@ -48,10 +48,13 @@
     <ClInclude Include="Source\Engine\Graphics\RenderSystem.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\SwapChain.h">
+    <ClInclude Include="Source\Engine\Graphics\Shader.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Vertex.h">
+    <ClInclude Include="Source\Engine\Graphics\ShaderLibrary.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\SwapChain.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h">
@@ -59,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\VertexShader.h">
       <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Time.h">
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Utils\Color32.h">
       <Filter>Engine\Utils</Filter>
@@ -90,25 +96,31 @@
     <ClCompile Include="Source\Engine\Application.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\ARenderObject.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Material.cpp">
+    <ClCompile Include="Source\Engine\Graphics\IndexBuffer.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Primitives\Cube.cpp">
-      <Filter>Engine\Graphics\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Primitives\Quad.cpp">
       <Filter>Engine\Graphics\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shader.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp">
@@ -119,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp">
       <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Time.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Utils\Math.cpp">
       <Filter>Engine\Utils</Filter>
