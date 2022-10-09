@@ -16,32 +16,33 @@ namespace Engine
 	public:
 		RenderSystem(const RenderSystem&) = delete;
 
-		static auto GetInstance() -> RenderSystem&;
+		static auto Initialize(HWND windowHandle,
+		                       Vector2Int windowSize) -> void;
 
-		auto Initialize(HWND windowHandle,
-		                Vector2Int windowSize) -> void;
-
-		auto Terminate() const -> void;
+		static auto Terminate() -> void;
 
 		[[nodiscard]]
-		auto GetDevice() const -> ID3D11Device&;
+		static auto GetDevice() -> ID3D11Device&;
 
 		[[nodiscard]]
-		auto GetDeviceContext() const -> DeviceContext&;
+		static auto GetDeviceContext() -> DeviceContext&;
 
-		auto Clear(Color32 fillColor) const -> void;
+		//---------- RENDER COMMANDS
+		static auto Clear(Color32 fillColor) -> void;
 
-		auto Draw(const VertexBuffer& vertexBuffer,
-		          const IndexBuffer& indexBuffer) const -> void;
+		static auto Draw(const VertexBuffer& vertexBuffer,
+		                 const IndexBuffer& indexBuffer) -> void;
 
-		auto ShowFrame() const -> void;
+		static auto ShowFrame() -> void;
 
-		auto SetViewportSize(Vector2Uint viewportSize) const -> void;
+		static auto SetViewportSize(Vector2Uint viewportSize) -> void;
 
 	private:
 		RenderSystem();
 
 		~RenderSystem();
+
+		static RenderSystem m_Instance;
 
 		UniquePtr<SwapChain> m_SwapChain;
 

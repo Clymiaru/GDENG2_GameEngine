@@ -53,10 +53,10 @@ auto Editor::EditorLayer::OnUpdate() -> void
 
 auto Editor::EditorLayer::OnRender() -> void
 {
-	Engine::RenderSystem::GetInstance().Clear({0.5f, 0.5f, 1.0f, 1.0f});
+	Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
 	const auto [left, top, right, bottom] = Engine::Application::GetClientWindowRect();
-	Engine::RenderSystem::GetInstance().GetDeviceContext().SetViewportSize(
+	Engine::RenderSystem::GetDeviceContext().SetViewportSize(
 		Engine::Vector2Uint{
 			static_cast<Engine::Uint>(right - left),
 			static_cast<Engine::Uint>(bottom - top)
@@ -65,11 +65,11 @@ auto Editor::EditorLayer::OnRender() -> void
 	for (const auto& quad : m_Quads)
 	{
 		quad->Render();
-		Engine::RenderSystem::GetInstance().Draw(quad->GetVertexBuffer(),
-		                                         quad->GetIndexBuffer());
+		Engine::RenderSystem::Draw(quad->GetVertexBuffer(),
+		                           quad->GetIndexBuffer());
 	}
 
-	Engine::RenderSystem::GetInstance().ShowFrame();
+	Engine::RenderSystem::ShowFrame();
 }
 
 auto Editor::EditorLayer::OnDetach() -> void

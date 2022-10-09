@@ -9,42 +9,38 @@
 
 namespace Engine
 {
-	auto RenderSystem::GetInstance() -> RenderSystem&
+	RenderSystem RenderSystem::m_Instance = RenderSystem();
+
+	const std::vector<D3D_DRIVER_TYPE> DRIVER_TYPES_SUPPORTED
 	{
-		static RenderSystem instance;
-		return instance;
-	}
+		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_WARP,
+		D3D_DRIVER_TYPE_REFERENCE
+	};
+
+	const std::vector<D3D_FEATURE_LEVEL> FEATURE_LEVELS_SUPPORTED
+	{
+		D3D_FEATURE_LEVEL_11_0
+	};
 
 	auto RenderSystem::Initialize(const HWND windowHandle,
 	                              const Vector2Int windowSize) -> void
 	{
-		const std::vector driverTypes =
-		{
-			D3D_DRIVER_TYPE_HARDWARE,
-			D3D_DRIVER_TYPE_WARP,
-			D3D_DRIVER_TYPE_REFERENCE
-		};
-
-		const std::vector featureLevels =
-		{
-			D3D_FEATURE_LEVEL_11_0
-		};
-
 		HRESULT result = 0;
 
 		ID3D11DeviceContext* deviceContext = nullptr;
 
-		for (const auto& driverType : driverTypes)
+		for (const auto& driverType : DRIVER_TYPES_SUPPORTED)
 		{
 			result = D3D11CreateDevice(nullptr,
 			                           driverType,
 			                           nullptr,
 			                           NULL,
-			                           featureLevels.data(),
-			                           static_cast<UINT>(featureLevels.size()),
+			                           FEATURE_LEVELS_SUPPORTED.data(),
+			                           static_cast<UINT>(FEATURE_LEVELS_SUPPORTED.size()),
 			                           D3D11_SDK_VERSION,
-			                           &m_Device,
-			                           &m_FeatureLevel,
+			                           &m_Instance.m_Device,
+			                           &m_Instance.m_FeatureLevel,
 			                           &deviceContext);
 			if (SUCCEEDED(result))
 				break;
@@ -52,66 +48,66 @@ namespace Engine
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!")
 
-		m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
+		m_Instance.m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
 
-		m_Device->QueryInterface(__uuidof(IDXGIDevice),
-		                         reinterpret_cast<void**>(&m_DxgiDevice));
+		m_Instance.m_Device->QueryInterface(__uuidof(IDXGIDevice),
+		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiDevice));
 
-		m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
-		                        reinterpret_cast<void**>(&m_DxgiAdapter));
+		m_Instance.m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
+		                                   reinterpret_cast<void**>(&m_Instance.m_DxgiAdapter));
 
-		m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
-		                         reinterpret_cast<void**>(&m_DxgiFactory));
+		m_Instance.m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
+		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiFactory));
 
-		m_SwapChain = CreateUniquePtr<SwapChain>();
-		m_SwapChain->Initialize(windowHandle,
-		                        windowSize,
-		                        m_Device,
-		                        m_DxgiFactory);
+		m_Instance.m_SwapChain = CreateUniquePtr<SwapChain>();
+		m_Instance.m_SwapChain->Initialize(windowHandle,
+		                                   windowSize,
+		                                   m_Instance.m_Device,
+		                                   m_Instance.m_DxgiFactory);
 	}
 
-	auto RenderSystem::Terminate() const -> void
+	auto RenderSystem::Terminate() -> void
 	{
-		m_SwapChain->Terminate();
-		m_DxgiDevice->Release();
-		m_DxgiAdapter->Release();
-		m_DxgiFactory->Release();
-		m_DeviceContext->Terminate();
-		m_Device->Release();
+		m_Instance.m_SwapChain->Terminate();
+		m_Instance.m_DxgiDevice->Release();
+		m_Instance.m_DxgiAdapter->Release();
+		m_Instance.m_DxgiFactory->Release();
+		m_Instance.m_DeviceContext->Terminate();
+		m_Instance.m_Device->Release();
 	}
 
-	auto RenderSystem::GetDevice() const -> ID3D11Device&
+	auto RenderSystem::GetDevice() -> ID3D11Device&
 	{
-		return *m_Device;
+		return *m_Instance.m_Device;
 	}
 
-	auto RenderSystem::GetDeviceContext() const -> DeviceContext&
+	auto RenderSystem::GetDeviceContext() -> DeviceContext&
 	{
-		return *m_DeviceContext;
+		return *m_Instance.m_DeviceContext;
 	}
 
-	auto RenderSystem::Clear(const Color32 fillColor) const -> void
+	auto RenderSystem::Clear(const Color32 fillColor) -> void
 	{
-		m_DeviceContext->Clear(*m_SwapChain, fillColor);
+		m_Instance.m_DeviceContext->Clear(*m_Instance.m_SwapChain, fillColor);
 	}
 
 	auto RenderSystem::Draw(const VertexBuffer& vertexBuffer,
-	                        const IndexBuffer& indexBuffer) const -> void
+	                        const IndexBuffer& indexBuffer) -> void
 	{
-		m_DeviceContext->SetVertexBuffer(vertexBuffer);
-		m_DeviceContext->SetIndexBuffer(indexBuffer);
-		m_DeviceContext->DrawTriangleList(indexBuffer.GetCount(),
+		m_Instance.m_DeviceContext->SetVertexBuffer(vertexBuffer);
+		m_Instance.m_DeviceContext->SetIndexBuffer(indexBuffer);
+		m_Instance.m_DeviceContext->DrawTriangleList(indexBuffer.GetCount(),
 		                                  0);
 	}
 
-	auto RenderSystem::ShowFrame() const -> void
+	auto RenderSystem::ShowFrame() -> void
 	{
-		m_SwapChain->Present(true);
+		m_Instance.m_SwapChain->Present(true);
 	}
 
-	auto RenderSystem::SetViewportSize(Vector2Uint viewportSize) const -> void
+	auto RenderSystem::SetViewportSize(Vector2Uint viewportSize) -> void
 	{
-		m_DeviceContext->SetViewportSize(viewportSize);
+		m_Instance.m_DeviceContext->SetViewportSize(viewportSize);
 	}
 
 	RenderSystem::RenderSystem() :

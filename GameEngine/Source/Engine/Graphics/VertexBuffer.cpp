@@ -54,14 +54,14 @@ namespace Engine
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem                = vertexList;
 
-		const auto result = RenderSystem::GetInstance().GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data);
+		const auto result = RenderSystem::GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data);
 		if (FAILED(result))
 		{
 			return false;
 		}
 
 		const auto layoutResult =
-				RenderSystem::GetInstance().GetDevice().CreateInputLayout(
+				RenderSystem::GetDevice().CreateInputLayout(
 					indexLayout,
 					indexLayoutSize,
 					shaderByteCode,

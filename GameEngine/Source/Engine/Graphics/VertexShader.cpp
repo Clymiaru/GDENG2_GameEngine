@@ -13,7 +13,7 @@ namespace Engine
 	VertexShader::VertexShader(ID3DBlob* vertexShaderBlob) :
 		Shader(vertexShaderBlob)
 	{
-		const auto result = RenderSystem::GetInstance().GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
+		const auto result = RenderSystem::GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
 		                                                                               m_Blob->GetBufferSize(),
 		                                                                               nullptr,
 		                                                                               &m_Data);

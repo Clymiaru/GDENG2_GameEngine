@@ -38,7 +38,7 @@ namespace Engine
 
 		Time::Terminate();
 		ShaderLibrary::GetInstance().Terminate();
-		RenderSystem::GetInstance().Terminate();
+		RenderSystem::Terminate();
 		m_Instance.m_Window->Close();
 	}
 
@@ -82,7 +82,7 @@ namespace Engine
 				return;
 			}
 		}
-		
+
 		m_Instance.m_Layers.push_back(layer);
 	}
 
@@ -111,13 +111,12 @@ namespace Engine
 
 		ShaderLibrary::GetInstance().Initialize();
 
-		RenderSystem::GetInstance().Initialize(m_Window->GetHandle(),
-		                                       {1280, 720});
+		RenderSystem::Initialize(m_Window->GetHandle(),
+		                         {1280, 720});
 	}
 
 	auto Application::ClosingSystems() -> void
 	{
-		
 	}
 
 	auto Application::Update() -> void

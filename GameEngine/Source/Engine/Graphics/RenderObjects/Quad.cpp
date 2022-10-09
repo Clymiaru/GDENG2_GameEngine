@@ -78,13 +78,13 @@ namespace Engine
 
 	auto Quad::Render() const -> void
 	{
-		m_ConstantBuffer->Update(RenderSystem::GetInstance().GetDeviceContext(), m_Constant);
-		RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
+		m_ConstantBuffer->Update(RenderSystem::GetDeviceContext(), m_Constant);
+		RenderSystem::GetDeviceContext().SetConstantBuffer(
 			*m_VertexShader, *m_ConstantBuffer);
-		RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
+		RenderSystem::GetDeviceContext().SetConstantBuffer(
 			*m_PixelShader, *m_ConstantBuffer);
-		RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(L"SinTimeAnimShader");
-		RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(L"SinTimeAnimShader");
+		RenderSystem::GetDeviceContext().SetVertexShader(L"SinTimeAnimShader");
+		RenderSystem::GetDeviceContext().SetPixelShader(L"SinTimeAnimShader");
 	}
 
 	auto Quad::SetBuffers() -> void
