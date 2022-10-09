@@ -44,6 +44,25 @@ namespace Engine
 		SetBuffers();
 	}
 
+	Quad::Quad(const Vector3Float& position,
+	           const Vector2Float& size,
+	           const Color32& color,
+	           const std::wstring& shaderName) :
+		RenderObject{},
+		m_Position{position},
+		m_Size{size},
+		m_Color{color},
+		m_TransformMatrix{DirectX::XMMatrixIdentity()},
+		m_Constant{nullptr}
+	{
+		m_VertexData       = InitializeVertexData();
+		m_VertexLayoutData = InitializeVertexLayout();
+		m_IndexData        = InitializeIndexData();
+		m_VertexShader = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(shaderName);
+		m_PixelShader  = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(shaderName);
+		SetBuffers();
+	}
+
 	Quad::~Quad()
 	{
 		m_ConstantBuffer->Release();
@@ -83,8 +102,8 @@ namespace Engine
 			*m_VertexShader, *m_ConstantBuffer);
 		RenderSystem::GetDeviceContext().SetConstantBuffer(
 			*m_PixelShader, *m_ConstantBuffer);
-		RenderSystem::GetDeviceContext().SetVertexShader(L"SinTimeAnimShader");
-		RenderSystem::GetDeviceContext().SetPixelShader(L"SinTimeAnimShader");
+		RenderSystem::GetDeviceContext().SetShader<VertexShader>(*m_VertexShader);
+		RenderSystem::GetDeviceContext().SetShader<PixelShader>(*m_PixelShader);
 	}
 
 	auto Quad::SetBuffers() -> void

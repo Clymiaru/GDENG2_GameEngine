@@ -10,13 +10,13 @@ namespace Engine
 {
 	struct Vertex
 	{
-		Engine::Vector3Float Position;
+		Vector3Float Position;
 
-		Engine::Vector3Float Position1;
+		Vector3Float Position1;
 
-		Engine::Color32 Color{};
+		Color32 Color{};
 
-		Engine::Color32 Color1{};
+		Color32 Color1{};
 	};
 
 	__declspec(align(16))
@@ -109,8 +109,8 @@ auto Editor::AnimatedQuad::Render() const -> void
 		*m_VertexShader, *m_ConstantBuffer);
 	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer(
 		*m_PixelShader, *m_ConstantBuffer);
-	Engine::RenderSystem::GetDeviceContext().SetVertexShader(L"QuadAnimShader.hlsl");
-	Engine::RenderSystem::GetDeviceContext().SetPixelShader(L"QuadAnimShader.hlsl");
+	Engine::RenderSystem::GetDeviceContext().SetVertexShader(L"QuadAnimShader");
+	Engine::RenderSystem::GetDeviceContext().SetPixelShader(L"QuadAnimShader");
 }
 
 auto Editor::AnimatedQuad::SetBuffers() -> void
@@ -199,6 +199,6 @@ auto Editor::AnimatedQuad::InitializeIndexData() -> IndexData
 
 auto Editor::AnimatedQuad::InitializeShaderData() -> void
 {
-	m_VertexShader = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::VertexShader>(L"QuadAnimShader.hlsl");
-	m_PixelShader  = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::PixelShader>(L"QuadAnimShader.hlsl");
+	m_VertexShader = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::VertexShader>(L"QuadAnimShader");
+	m_PixelShader  = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::PixelShader>(L"QuadAnimShader");
 }

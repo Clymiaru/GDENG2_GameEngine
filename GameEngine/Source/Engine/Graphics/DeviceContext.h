@@ -1,6 +1,9 @@
 #pragma once
 #include <d3d11.h>
 
+#include "PixelShader.h"
+#include "VertexShader.h"
+
 #include "Engine/Utils/Color32.h"
 #include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
@@ -51,6 +54,9 @@ namespace Engine
 
 		auto SetPixelShader(const std::wstring& filename) const -> void;
 
+		template <typename T>
+		auto SetShader(T& shader) const -> void;
+
 		// Draw
 		auto DrawTriangleList(Uint indexCount,
 		                      Uint startingIndex) const -> void;
@@ -60,4 +66,16 @@ namespace Engine
 
 		friend class ConstantBuffer;
 	};
+
+	template <>
+	inline auto DeviceContext::SetShader<VertexShader>(VertexShader& shader) const -> void
+	{
+		m_DeviceContext->VSSetShader(&shader.GetData(), nullptr, 0);
+	}
+
+	template <>
+	inline auto DeviceContext::SetShader<PixelShader>(PixelShader& shader) const -> void
+	{
+		m_DeviceContext->PSSetShader(&shader.GetData(), nullptr, 0);
+	}
 }

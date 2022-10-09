@@ -21,7 +21,8 @@ double Engine::Time::GetDeltaTime()
 Engine::Time::Time() :
 	m_DeltaTime{0.0},
 	m_StartFrameTime{},
-	m_EndFrameTime{}
+	m_EndFrameTime{},
+	m_FrameCount{0}
 {
 }
 

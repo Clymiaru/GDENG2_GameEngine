@@ -23,6 +23,8 @@ namespace Engine
 
 		double m_DeltaTime;
 
+		int m_FrameCount;
+
 		std::chrono::steady_clock::time_point m_StartFrameTime;
 
 		std::chrono::steady_clock::time_point m_EndFrameTime;

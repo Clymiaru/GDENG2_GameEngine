@@ -24,7 +24,7 @@ Editor::EditorLayer::~EditorLayer()
 auto Editor::EditorLayer::OnAttach() -> void
 {
 	// Shader Resource Initialization
-	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"SinTimeAnimShader.hlsl",
+	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"DefaultShader.hlsl",
 	                                                                  "vsmain",
 	                                                                  "psmain");
 
