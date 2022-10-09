@@ -74,6 +74,8 @@ auto Sandbox::SandboxGridLayer::OnUpdate() -> void
 	{
 		quad->Update(0.0f);
 	}
+
+	//std::cout << Engine::ShaderLibrary::GetShaderRef<Engine::VertexShader>(L"DefaultShader").use_count() << "\n";
 }
 
 auto Sandbox::SandboxGridLayer::OnRender() -> void

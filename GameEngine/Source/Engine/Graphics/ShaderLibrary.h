@@ -26,8 +26,8 @@ namespace Engine
 		              const std::string& entryPointName) -> void;
 
 		auto RegisterVertexAndPixelShader(const std::wstring& fileName,
-		                                  const std::string& vertexShaderEntryPointName,
-		                                  const std::string& pixelShaderEntryPointName) -> void;
+		                                  const std::string& vsEntryPointName,
+		                                  const std::string& psEntryPointName) -> void;
 
 		template <typename T>
 		auto IsShaderRegistered(const std::wstring& name) -> bool;
@@ -59,29 +59,29 @@ namespace Engine
 	inline auto ShaderLibrary::Register<VertexShader>(const std::wstring& fileName,
 	                                                  const std::string& entryPointName) -> void
 	{
+		auto shaderName = fileName.substr(0, fileName.find(L"."));
+
+		if (IsShaderRegistered<VertexShader>(shaderName))
+		{
+			return;
+		}
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
-		const auto result   = D3DCompileFromFile(fileName.c_str(),
-		                                         nullptr,
-		                                         nullptr,
-		                                         entryPointName.c_str(),
-		                                         "vs_5_0",
-		                                         0,
-		                                         0,
-		                                         &blob,
-		                                         &errorBlob);
+		const auto result   = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr,
+		                                         entryPointName.c_str(), "vs_5_0", 0, 0,
+		                                         &blob, &errorBlob);
 		if (!SUCCEEDED(result))
 		{
 			if (errorBlob)
 			{
-				std::cout << "Vertex shader cannot be compiled! (" << static_cast<char*>(errorBlob->GetBufferPointer())
-						<<
-						")\n";
+				std::string errorString = "Vertex shader cannot be compiled! (";
+				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
+				errorString += ")\n";
+				ENGINE_ASSERT(errorBlob != nullptr, errorString)
 				errorBlob->Release();
 			}
 		}
 
-		auto shaderName               = fileName.substr(0, fileName.find(L"."));
 		m_VertexShaderMap[shaderName] = CreateSharedPtr<VertexShader>(std::move(blob));
 	}
 
@@ -89,6 +89,13 @@ namespace Engine
 	inline auto ShaderLibrary::Register<PixelShader>(const std::wstring& fileName,
 	                                                 const std::string& entryPointName) -> void
 	{
+		auto shaderName = fileName.substr(0, fileName.find(L"."));
+
+		if (IsShaderRegistered<PixelShader>(shaderName))
+		{
+			return;
+		}
+		
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
 		const auto result   = D3DCompileFromFile(fileName.c_str(),
@@ -106,14 +113,14 @@ namespace Engine
 		{
 			if (errorBlob)
 			{
-				std::cout << "Pixel shader cannot be compiled! (" << static_cast<char*>(errorBlob->GetBufferPointer())
-						<<
-						")\n";
+				std::string errorString = "Pixel shader cannot be compiled! (";
+				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
+				errorString += ")\n";
+				ENGINE_ASSERT(errorBlob != nullptr, errorString)
 				errorBlob->Release();
 			}
 		}
 
-		auto shaderName              = fileName.substr(0, fileName.find(L"."));
 		m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
 	}
 
@@ -127,13 +134,13 @@ namespace Engine
 	template <>
 	inline auto ShaderLibrary::IsShaderRegistered<VertexShader>(const std::wstring& name) -> bool
 	{
-		return m_VertexShaderMap.contains(name);
+		return m_VertexShaderMap.contains(name) != m_VertexShaderMap.end();
 	}
 
 	template <>
 	inline auto ShaderLibrary::IsShaderRegistered<PixelShader>(const std::wstring& name) -> bool
 	{
-		return m_PixelShaderMap.contains(name);
+		return m_PixelShaderMap.contains(name) != m_PixelShaderMap.end();
 	}
 
 	//---------- GET SHADER

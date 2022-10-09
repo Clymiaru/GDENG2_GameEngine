@@ -10,8 +10,6 @@ namespace Engine
 {
 	struct Constant;
 
-	struct IndexLayoutInfo;
-
 	class Quad final : public RenderObject
 	{
 	public:
