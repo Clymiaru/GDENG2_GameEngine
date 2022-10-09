@@ -54,52 +54,16 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	auto DeviceContext::SetVertexBuffer(const VertexBuffer& vertexBuffer) const -> void
+	auto DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) -> void
 	{
-		const UINT stride     = vertexBuffer.m_DataSize;
-		constexpr UINT offset = 0;
-		m_DeviceContext->IASetVertexBuffers(0,
-		                                    1,
-		                                    &vertexBuffer.m_Data,
-		                                    &stride,
-		                                    &offset);
-		m_DeviceContext->IASetInputLayout(vertexBuffer.m_DataLayout);
+		m_Topology = topology;
+		m_DeviceContext->IASetPrimitiveTopology(m_Topology);
 	}
 
-	auto DeviceContext::SetIndexBuffer(const IndexBuffer& indexBuffer) const -> void
+	auto DeviceContext::Draw(const Uint indexCount,
+	                         const Uint startingIndex) const -> void
 	{
-		constexpr UINT offset = 0;
-		m_DeviceContext->IASetIndexBuffer(indexBuffer.m_Data, DXGI_FORMAT_R32_UINT, offset);
-	}
-
-	auto DeviceContext::SetConstantBuffer(const VertexShader& vertexShader,
-	                                      const ConstantBuffer& constantBuffer) const -> void
-	{
-		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
-	}
-
-	auto DeviceContext::SetConstantBuffer(const PixelShader& pixelShader,
-	                                      const ConstantBuffer& constantBuffer) const -> void
-	{
-		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
-	}
-
-	auto DeviceContext::SetVertexShader(const std::wstring& filename) const -> void
-	{
-		auto& vertexShader = ShaderLibrary::GetInstance().GetShader<VertexShader>(filename);
-		m_DeviceContext->VSSetShader(&vertexShader.GetData(), nullptr, 0);
-	}
-
-	auto DeviceContext::SetPixelShader(const std::wstring& filename) const -> void
-	{
-		auto& pixelShader = ShaderLibrary::GetInstance().GetShader<PixelShader>(filename);
-		m_DeviceContext->PSSetShader(&pixelShader.GetData(), nullptr, 0);
-	}
-
-	auto DeviceContext::DrawTriangleList(const Uint indexCount,
-	                                     const Uint startingIndex) const -> void
-	{
-		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		ENGINE_ASSERT(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!")
 		m_DeviceContext->DrawIndexed(indexCount,
 		                             startingIndex,
 		                             0);

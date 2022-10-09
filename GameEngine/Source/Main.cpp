@@ -11,10 +11,12 @@ auto main() -> int
 {
 	//Engine::Application::RegisterLayer(new Editor::EditorLayer());
 
-	//Engine::Application::RegisterLayer(new Sandbox::SandboxGridLayer());
+	//Engine::Application::RegisterLayer(new Editor::AnimQuadLayer());
 
-	Engine::Application::RegisterLayer(new Editor::AnimQuadLayer());
+	Engine::Application::RegisterLayer(new Sandbox::SandboxGridLayer());
+	
 	Engine::Application::Run({L"Editor", 1280, 720});
+	
 	PostQuitMessage(0);
 	return 0;
 }

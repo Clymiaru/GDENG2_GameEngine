@@ -90,8 +90,6 @@ auto Sandbox::SandboxGridLayer::OnRender() -> void
 	for (const auto& quad : m_Tiles)
 	{
 		quad->Render();
-		Engine::RenderSystem::Draw(quad->GetVertexBuffer(),
-		                           quad->GetIndexBuffer());
 	}
 
 	Engine::RenderSystem::ShowFrame();

@@ -6,7 +6,6 @@
 namespace Engine
 {
 	class DeviceContext;
-
 	class VertexBuffer final
 	{
 	public:

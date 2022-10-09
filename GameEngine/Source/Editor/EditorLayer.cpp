@@ -65,8 +65,6 @@ auto Editor::EditorLayer::OnRender() -> void
 	for (const auto& quad : m_Quads)
 	{
 		quad->Render();
-		Engine::RenderSystem::Draw(quad->GetVertexBuffer(),
-		                           quad->GetIndexBuffer());
 	}
 
 	Engine::RenderSystem::ShowFrame();

@@ -98,12 +98,11 @@ namespace Engine
 	auto Quad::Render() const -> void
 	{
 		m_ConstantBuffer->Update(RenderSystem::GetDeviceContext(), m_Constant);
-		RenderSystem::GetDeviceContext().SetConstantBuffer(
-			*m_VertexShader, *m_ConstantBuffer);
-		RenderSystem::GetDeviceContext().SetConstantBuffer(
-			*m_PixelShader, *m_ConstantBuffer);
+		RenderSystem::GetDeviceContext().SetConstantBuffer<VertexShader>(*m_ConstantBuffer);
+		RenderSystem::GetDeviceContext().SetConstantBuffer<PixelShader>(*m_ConstantBuffer);
 		RenderSystem::GetDeviceContext().SetShader<VertexShader>(*m_VertexShader);
 		RenderSystem::GetDeviceContext().SetShader<PixelShader>(*m_PixelShader);
+		RenderSystem::Draw(*m_VertexBuffer, *m_IndexBuffer);
 	}
 
 	auto Quad::SetBuffers() -> void

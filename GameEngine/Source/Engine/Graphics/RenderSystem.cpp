@@ -6,6 +6,7 @@
 #include "Engine/Graphics/IndexBuffer.h"
 #include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Utils/Debug.h"
+#include "RenderObjects/RenderObject.h"
 
 namespace Engine
 {
@@ -94,10 +95,11 @@ namespace Engine
 	auto RenderSystem::Draw(const VertexBuffer& vertexBuffer,
 	                        const IndexBuffer& indexBuffer) -> void
 	{
-		m_Instance.m_DeviceContext->SetVertexBuffer(vertexBuffer);
-		m_Instance.m_DeviceContext->SetIndexBuffer(indexBuffer);
-		m_Instance.m_DeviceContext->DrawTriangleList(indexBuffer.GetCount(),
-		                                  0);
+		m_Instance.m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
+		m_Instance.m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
+		m_Instance.m_DeviceContext->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_Instance.m_DeviceContext->Draw(indexBuffer.GetCount(),
+		                                 0);
 	}
 
 	auto RenderSystem::ShowFrame() -> void

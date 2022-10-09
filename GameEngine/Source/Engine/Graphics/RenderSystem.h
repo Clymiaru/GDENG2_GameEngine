@@ -7,6 +7,11 @@
 
 namespace Engine
 {
+	class RenderObject;
+}
+
+namespace Engine
+{
 	class VertexBuffer;
 
 	class IndexBuffer;

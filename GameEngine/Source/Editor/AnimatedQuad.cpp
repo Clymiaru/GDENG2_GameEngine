@@ -105,12 +105,11 @@ auto Editor::AnimatedQuad::Update(float ratio) -> void
 auto Editor::AnimatedQuad::Render() const -> void
 {
 	m_ConstantBuffer->Update(Engine::RenderSystem::GetDeviceContext(), m_Constant);
-	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer(
-		*m_VertexShader, *m_ConstantBuffer);
-	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer(
-		*m_PixelShader, *m_ConstantBuffer);
-	Engine::RenderSystem::GetDeviceContext().SetVertexShader(L"QuadAnimShader");
-	Engine::RenderSystem::GetDeviceContext().SetPixelShader(L"QuadAnimShader");
+	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer<Engine::VertexShader>(*m_ConstantBuffer);
+	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer<Engine::PixelShader>(*m_ConstantBuffer);
+	Engine::RenderSystem::GetDeviceContext().SetShader<Engine::VertexShader>(*m_VertexShader);
+	Engine::RenderSystem::GetDeviceContext().SetShader<Engine::PixelShader>(*m_PixelShader);
+	Engine::RenderSystem::Draw(*m_VertexBuffer, *m_IndexBuffer);
 }
 
 auto Editor::AnimatedQuad::SetBuffers() -> void

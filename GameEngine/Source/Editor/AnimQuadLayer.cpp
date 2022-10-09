@@ -106,8 +106,6 @@ auto Editor::AnimQuadLayer::OnRender() -> void
 	for (const auto& quad : m_AnimQuads)
 	{
 		quad->Render();
-		Engine::RenderSystem::Draw(quad->GetVertexBuffer(),
-		                           quad->GetIndexBuffer());
 	}
 
 	Engine::RenderSystem::ShowFrame();
