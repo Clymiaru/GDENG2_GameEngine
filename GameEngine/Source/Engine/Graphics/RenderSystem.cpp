@@ -1,12 +1,14 @@
 ﻿#include "pch.h"
+#include "RenderSystem.h"
+
 #include <d3dcompiler.h>
 
-#include "RenderSystem.h"
+#include "SwapChain.h"
+
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/IndexBuffer.h"
 #include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Utils/Debug.h"
-#include "RenderObjects/RenderObject.h"
 
 namespace Engine
 {

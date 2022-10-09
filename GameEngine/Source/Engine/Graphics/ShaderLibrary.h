@@ -48,6 +48,25 @@ namespace Engine
 		std::unordered_map<std::wstring, SharedPtr<PixelShader>> m_PixelShaderMap;
 	};
 
+	//---------- IS SHADER REGISTERED
+	template <typename T>
+	auto ShaderLibrary::IsShaderRegistered(const std::wstring& name) -> bool
+	{
+		return false;
+	}
+
+	template <>
+	inline auto ShaderLibrary::IsShaderRegistered<VertexShader>(const std::wstring& name) -> bool
+	{
+		return m_VertexShaderMap.contains(name);
+	}
+
+	template <>
+	inline auto ShaderLibrary::IsShaderRegistered<PixelShader>(const std::wstring& name) -> bool
+	{
+		return m_PixelShaderMap.contains(name);
+	}
+
 	//---------- REGISTER SHADER
 	template <typename T>
 	auto ShaderLibrary::Register(const std::wstring& fileName,
@@ -124,24 +143,7 @@ namespace Engine
 		m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
 	}
 
-	//---------- IS SHADER REGISTERED
-	template <typename T>
-	auto ShaderLibrary::IsShaderRegistered(const std::wstring& name) -> bool
-	{
-		return false;
-	}
-
-	template <>
-	inline auto ShaderLibrary::IsShaderRegistered<VertexShader>(const std::wstring& name) -> bool
-	{
-		return m_VertexShaderMap.contains(name) != m_VertexShaderMap.end();
-	}
-
-	template <>
-	inline auto ShaderLibrary::IsShaderRegistered<PixelShader>(const std::wstring& name) -> bool
-	{
-		return m_PixelShaderMap.contains(name) != m_PixelShaderMap.end();
-	}
+	
 
 	//---------- GET SHADER
 	template <typename T>

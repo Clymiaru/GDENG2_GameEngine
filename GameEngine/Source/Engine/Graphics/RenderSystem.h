@@ -1,17 +1,18 @@
 ﻿#pragma once
 #include <d3d11.h>
 
-#include "Engine/Graphics/SwapChain.h"
 #include "Engine/Utils/Color32.h"
+#include "Engine/Utils/Math.h"
 #include "Engine/Utils/Pointers.h"
 
 namespace Engine
 {
+	class DeviceContext;
+	
 	class RenderObject;
-}
-
-namespace Engine
-{
+	
+	class SwapChain;
+	
 	class VertexBuffer;
 
 	class IndexBuffer;

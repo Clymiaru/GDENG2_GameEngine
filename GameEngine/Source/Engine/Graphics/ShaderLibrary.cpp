@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "ShaderLibrary.h"
 
-
 auto Engine::ShaderLibrary::GetInstance() -> ShaderLibrary&
 {
 	static ShaderLibrary instance;
