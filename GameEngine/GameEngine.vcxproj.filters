@@ -7,18 +7,21 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{130D9B61-7FC2-1357-08B7-0D2E746B0A5B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{7B960115-E721-6FD9-F032-F2CD5C3DCBD9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\Primitives">
-      <UniqueIdentifier>{7631ABB9-6241-578A-CBFA-BBA8B7294623}</UniqueIdentifier>
+    <Filter Include="Engine\Graphics\RenderObjects">
+      <UniqueIdentifier>{B4C68AE7-20DF-7111-E98B-01AB556306AB}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Utils">
       <UniqueIdentifier>{7B014596-6764-D43A-10EA-0CF1FC2BA0BD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Editor\EditorApplication.h">
+    <ClInclude Include="Source\Editor\AnimatedQuad.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\EditorWindow.h">
@@ -27,8 +30,8 @@
     <ClInclude Include="Source\Engine\Application.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\ARenderObject.h">
-      <Filter>Engine\Graphics</Filter>
+    <ClInclude Include="Source\Engine\Core\ISystem.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h">
       <Filter>Engine\Graphics</Filter>
@@ -42,8 +45,11 @@
     <ClInclude Include="Source\Engine\Graphics\PixelShader.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Graphics\Primitives\Quad.h">
-      <Filter>Engine\Graphics\Primitives</Filter>
+    <ClInclude Include="Source\Engine\Graphics\RenderObjects\Quad.h">
+      <Filter>Engine\Graphics\RenderObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\RenderObjects\RenderObject.h">
+      <Filter>Engine\Graphics\RenderObjects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\RenderSystem.h">
       <Filter>Engine\Graphics</Filter>
@@ -87,7 +93,7 @@
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Editor\EditorApplication.cpp">
+    <ClCompile Include="Source\Editor\AnimatedQuad.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorWindow.cpp">
@@ -96,8 +102,8 @@
     <ClCompile Include="Source\Engine\Application.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\ARenderObject.cpp">
-      <Filter>Engine\Graphics</Filter>
+    <ClCompile Include="Source\Engine\Core\ISystem.cpp">
+      <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp">
       <Filter>Engine\Graphics</Filter>
@@ -111,8 +117,11 @@
     <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\Primitives\Quad.cpp">
-      <Filter>Engine\Graphics\Primitives</Filter>
+    <ClCompile Include="Source\Engine\Graphics\RenderObjects\Quad.cpp">
+      <Filter>Engine\Graphics\RenderObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\RenderObjects\RenderObject.cpp">
+      <Filter>Engine\Graphics\RenderObjects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp">
       <Filter>Engine\Graphics</Filter>

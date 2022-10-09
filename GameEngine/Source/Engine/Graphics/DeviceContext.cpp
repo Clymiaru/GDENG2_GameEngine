@@ -86,13 +86,13 @@ namespace Engine
 
 	auto DeviceContext::SetVertexShader(const std::wstring& filename) const -> void
 	{
-		auto& vertexShader = ShaderLibrary::GetInstance().GetVertexShader(filename);
+		auto& vertexShader = ShaderLibrary::GetInstance().GetShader<VertexShader>(filename);
 		m_DeviceContext->VSSetShader(&vertexShader.GetData(), nullptr, 0);
 	}
 
 	auto DeviceContext::SetPixelShader(const std::wstring& filename) const -> void
 	{
-		auto& pixelShader = ShaderLibrary::GetInstance().GetPixelShader(filename);
+		auto& pixelShader = ShaderLibrary::GetInstance().GetShader<PixelShader>(filename);
 		m_DeviceContext->PSSetShader(&pixelShader.GetData(), nullptr, 0);
 	}
 

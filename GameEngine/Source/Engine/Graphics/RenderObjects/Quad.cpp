@@ -83,8 +83,8 @@ namespace Engine
 			*m_VertexShader, *m_ConstantBuffer);
 		RenderSystem::GetInstance().GetDeviceContext().SetConstantBuffer(
 			*m_PixelShader, *m_ConstantBuffer);
-		RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(L"SinTimeAnimShader.hlsl");
-		RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(L"SinTimeAnimShader.hlsl");
+		RenderSystem::GetInstance().GetDeviceContext().SetVertexShader(L"SinTimeAnimShader");
+		RenderSystem::GetInstance().GetDeviceContext().SetPixelShader(L"SinTimeAnimShader");
 	}
 
 	auto Quad::SetBuffers() -> void
@@ -166,7 +166,7 @@ namespace Engine
 
 	auto Quad::InitializeShaderData() -> void
 	{
-		m_VertexShader = ShaderLibrary::GetInstance().GetVertexShaderRef(L"SinTimeAnimShader.hlsl");
-		m_PixelShader  = ShaderLibrary::GetInstance().GetPixelShaderRef(L"SinTimeAnimShader.hlsl");
+		m_VertexShader = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(L"SinTimeAnimShader");
+		m_PixelShader  = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(L"SinTimeAnimShader");
 	}
 }

@@ -199,6 +199,6 @@ auto Editor::AnimatedQuad::InitializeIndexData() -> IndexData
 
 auto Editor::AnimatedQuad::InitializeShaderData() -> void
 {
-	m_VertexShader = Engine::ShaderLibrary::GetInstance().GetVertexShaderRef(L"QuadAnimShader.hlsl");
-	m_PixelShader  = Engine::ShaderLibrary::GetInstance().GetPixelShaderRef(L"QuadAnimShader.hlsl");
+	m_VertexShader = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::VertexShader>(L"QuadAnimShader.hlsl");
+	m_PixelShader  = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::PixelShader>(L"QuadAnimShader.hlsl");
 }

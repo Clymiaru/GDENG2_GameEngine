@@ -1,17 +1,18 @@
 #include "pch.h"
 #include "Window.h"
 
+#include "Application.h"
+
 #include "Utils/Debug.h"
 
 #include "Engine/Time.h"
 
 namespace Engine
 {
-	Window::Window() :
+	Window::Window(Profile profile) :
 		m_Handle{nullptr},
 		m_IsRunning{false},
-		m_WindowRect{0, 0, 0, 0},
-		m_WindowName{L"Untitled"}
+		m_Profile{std::move(profile)}
 	{
 	}
 
@@ -29,11 +30,13 @@ namespace Engine
 				window->SetHandle(windowHandle);
 				break;
 			}
+			case WM_CLOSE:
+			{
+				Application::Quit();
+				break;
+			}
 			case WM_DESTROY:
 			{
-				auto* window = reinterpret_cast<Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
-				window->Close();
-				PostQuitMessage(0);
 				break;
 			}
 			default:
@@ -42,74 +45,65 @@ namespace Engine
 		return 0;
 	}
 
-	auto Window::Initialize(const std::wstring& windowName,
-	                        const RectUint& windowRect) -> void
+	auto Window::Start() -> void
 	{
-		m_WindowRect = windowRect;
-		m_WindowName = windowName;
+		Create(m_Profile);
 
-		std::cout << "Initialize Window\n";
-
-		WNDCLASSEX windowClass;
-		windowClass.cbClsExtra    = NULL;
-		windowClass.cbSize        = sizeof(WNDCLASSEX);
-		windowClass.cbWndExtra    = NULL;
-		windowClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW);
-		windowClass.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-		windowClass.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
-		windowClass.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
-		windowClass.hInstance     = nullptr;
-		windowClass.lpszClassName = m_WindowName.c_str();
-		windowClass.lpszMenuName  = TEXT("");
-		windowClass.style         = NULL;
-		windowClass.lpfnWndProc   = &WindowsProcedure;
-
-		ENGINE_ASSERT(RegisterClassEx(&windowClass), "Window cannot be registered!")
-
-		m_Handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-		                          m_WindowName.c_str(),
-		                          m_WindowName.c_str(),
-		                          WS_OVERLAPPEDWINDOW,
-		                          CW_USEDEFAULT,
-		                          CW_USEDEFAULT,
-		                          static_cast<int>(m_WindowRect.Width),
-		                          static_cast<int>(m_WindowRect.Height),
-		                          nullptr,
-		                          nullptr,
-		                          nullptr,
-		                          this);
-
-		ENGINE_ASSERT(m_Handle, "Handle cannot be retrieved!")
-		
 		ShowWindow(m_Handle, SW_SHOW);
+
 		UpdateWindow(m_Handle);
+
 		m_IsRunning = true;
 	}
 
-	auto Window::Terminate() const -> void
+	auto Window::Close() -> void
 	{
 		const auto result = DestroyWindow(m_Handle);
-		ENGINE_ASSERT(!result, "Window cannot be destroyed!")
+		ENGINE_ASSERT(result, "Window cannot be destroyed!")
 	}
 
-	auto Window::Broadcast() -> bool
+	auto Window::Run(List<Layer*> layers) -> void
 	{
 		MSG message;
+
 		Time::LogFrameStart();
+
+		PollEvents(&message);
+
 		Update();
-		while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE) > 0)
+
+		for (auto* layer : layers)
 		{
-			TranslateMessage(&message);
-			DispatchMessage(&message);
+			layer->OnUpdate();
 		}
+
+		Render();
+
+		for (auto* layer : layers)
+		{
+			layer->OnRender();
+		}
+
 		Time::LogFrameEnd();
+
 		Sleep(1);
-		return true;
 	}
 
-	auto Window::IsRunning() const -> bool
+	auto Window::PollEvents(MSG* message) -> void
 	{
-		return m_IsRunning;
+		while (PeekMessage(message, nullptr, 0, 0, PM_REMOVE) > 0)
+		{
+			TranslateMessage(message);
+			DispatchMessage(message);
+		}
+	}
+
+	auto Window::Update() -> void
+	{
+	}
+
+	auto Window::Render() -> void
+	{
 	}
 
 	auto Window::GetClientWindowRect() const -> RECT
@@ -124,25 +118,44 @@ namespace Engine
 		return m_Handle;
 	}
 
-	auto Window::SetHandle(const HWND windowHandle) -> void
+	auto Window::SetHandle(HWND handle) -> void
 	{
-		m_Handle = windowHandle;
+		m_Handle = handle;
 	}
 
-	auto Window::Start() -> void
+	auto Window::Create(const Profile profile) -> HWND
 	{
-		OnStart();
-	}
+		WNDCLASSEX windowClass;
+		windowClass.cbClsExtra    = NULL;
+		windowClass.cbSize        = sizeof(WNDCLASSEX);
+		windowClass.cbWndExtra    = NULL;
+		windowClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW);
+		windowClass.hCursor       = LoadCursor(nullptr, IDC_ARROW);
+		windowClass.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
+		windowClass.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
+		windowClass.hInstance     = nullptr;
+		windowClass.lpszClassName = profile.Name.c_str();
+		windowClass.lpszMenuName  = TEXT("");
+		windowClass.style         = NULL;
+		windowClass.lpfnWndProc   = &WindowsProcedure;
 
-	auto Window::Update() -> void
-	{
-		OnUpdate();
-		OnRender();
-	}
+		ENGINE_ASSERT(RegisterClassEx(&windowClass), "Window cannot be registered!")
 
-	auto Window::Close() -> void
-	{
-		m_IsRunning = false;
-		OnTerminate();
+		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
+		                                   profile.Name.c_str(),
+		                                   profile.Name.c_str(),
+		                                   WS_OVERLAPPEDWINDOW,
+		                                   CW_USEDEFAULT,
+		                                   CW_USEDEFAULT,
+		                                   static_cast<int>(profile.Width),
+		                                   static_cast<int>(profile.Height),
+		                                   nullptr,
+		                                   nullptr,
+		                                   nullptr,
+		                                   this);
+
+		ENGINE_ASSERT(handle, "Handle cannot be retrieved!")
+
+		return handle;
 	}
 }

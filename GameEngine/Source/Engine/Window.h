@@ -1,26 +1,30 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+
+#include "Core/Layer.h"
+
+#include "Utils/DataStructures.h"
 #include "Utils/Math.h"
 
 namespace Engine
 {
+	class Application;
 	class Window
 	{
 	public:
-		Window();
+		struct Profile
+		{
+			std::wstring Name;
+			Uint Width;
+			Uint Height;
+		};
+		
+		Window(Profile profile);
 
 		virtual ~Window() = default;
 
-		auto Initialize(const std::wstring& windowName,
-		                const RectUint& windowRect) -> void;
-
-		auto Terminate() const -> void;
-
-		auto Broadcast() -> bool;
-
-		[[nodiscard]]
-		auto IsRunning() const -> bool;
+		auto Run(List<Layer*> layers) -> void;
 
 		[[nodiscard]]
 		auto GetClientWindowRect() const -> RECT;
@@ -28,30 +32,29 @@ namespace Engine
 		[[nodiscard]]
 		auto GetHandle() const -> HWND;
 
-		auto SetHandle(HWND windowHandle) -> void;
+		auto SetHandle(HWND handle) -> void;
 
+	private:
 		auto Start() -> void;
+
+		static auto PollEvents(MSG* message) -> void;
 
 		auto Update() -> void;
 
+		auto Render() -> void;
+		
 		auto Close() -> void;
+		
+		auto Create(Profile profile) -> HWND;
 
-	private:
-		virtual auto OnStart() -> void = 0;
-
-		virtual auto OnUpdate() -> void = 0;
-
-		virtual auto OnRender() -> void = 0;
-
-		virtual auto OnTerminate() -> void = 0;
-
-	protected:
 		HWND m_Handle;
 
 		bool m_IsRunning;
 
-		RectUint m_WindowRect;
+		Profile m_Profile;
 
-		std::wstring m_WindowName;
+		List<Layer*> m_Layers;
+
+		friend class Application;
 	};
 }

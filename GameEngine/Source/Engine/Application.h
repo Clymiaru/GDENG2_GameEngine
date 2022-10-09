@@ -1,40 +1,54 @@
 ﻿#pragma once
 #include "Window.h"
 
-#include "Utils/Math.h"
+
+
+#include "Utils/DataStructures.h"
 #include "Utils/Pointers.h"
 
 namespace Engine
 {
-	struct ApplicationDescription
-	{
-		std::wstring ApplicationName;
-		RectUint StartWindowRect;
-	};
-
-	class Application
+	class Layer;
+	class Application final
 	{
 	public:
-		explicit Application(ApplicationDescription description);
+		~Application();
 
-		virtual ~Application();
+		//For now until there is a preferable way
+		static auto Run(Window::Profile windowProfile) -> void;
+		
+		static auto Quit() -> void;
 
-		auto Initialize() -> void;
+		static auto RegisterLayer(Layer* layer) -> void;
 
-		auto Terminate() -> void;
+		static auto DeregisterLayer(Layer* layer) -> void;
 
-		auto Run() -> void;
+		static auto GetClientWindowRect() -> RECT;
 
 	private:
-		auto virtual InitializeSystems() -> void = 0;
+		explicit Application();
 
-		auto virtual TerminateSystems() -> void = 0;
+		//For now until there is a preferable way
+		auto Start(Window::Profile windowProfile) -> void;
+
+		auto Close() -> void;
+		
+		auto StartingSystems() -> void;
+
+		auto ClosingSystems() -> void;
+
+		auto Update() -> void;
+
+		auto PollEvents() -> void;
+
+		auto Render() -> void;
+
+		static Application m_Instance;
 
 		bool m_IsRunning;
 
-	protected:
-		ApplicationDescription m_Description;
-
 		UniquePtr<Window> m_Window;
+
+		List<Layer*> m_Layers;
 	};
 }

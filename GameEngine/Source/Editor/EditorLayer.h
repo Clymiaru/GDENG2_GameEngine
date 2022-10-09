@@ -1,33 +1,29 @@
 ﻿#pragma once
 #include "AnimatedQuad.h"
 
-#include "Engine/Window.h"
-#include "Engine/Graphics/ConstantBuffer.h"
-#include "Engine/Graphics/PixelShader.h"
-#include "Engine/Graphics/VertexShader.h"
+#include "Engine/Core/Layer.h"
 #include "Engine/Graphics/RenderObjects/Quad.h"
 #include "Engine/Utils/DataStructures.h"
 #include "Engine/Utils/Pointers.h"
 
 namespace Editor
 {
-	class EditorWindow final : public Engine::Window
+	class EditorLayer : public Engine::Layer
 	{
 	public:
-		EditorWindow(const std::wstring& windowName,
-		             const Engine::RectUint& windowRect);
+		explicit EditorLayer();
 
-		~EditorWindow() override;
+		~EditorLayer() override;
 
-	private:
-		auto OnStart() -> void override;
+		auto OnAttach() -> void override;
 
 		auto OnUpdate() -> void override;
 
 		auto OnRender() -> void override;
 
-		auto OnTerminate() -> void override;
+		auto OnDetach() -> void override;
 
+	private:
 		float m_Time = 0;
 		float m_MaxTime = 10.0f;
 

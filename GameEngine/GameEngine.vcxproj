@@ -191,15 +191,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Source\Editor\AnimatedQuad.h" />
-    <ClInclude Include="Source\Editor\EditorApplication.h" />
-    <ClInclude Include="Source\Editor\EditorWindow.h" />
+    <ClInclude Include="Source\Editor\AnimQuadLayer.h" />
+    <ClInclude Include="Source\Editor\EditorLayer.h" />
     <ClInclude Include="Source\Engine\Application.h" />
+    <ClInclude Include="Source\Engine\Core\ISystem.h" />
+    <ClInclude Include="Source\Engine\Core\Layer.h" />
     <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h" />
     <ClInclude Include="Source\Engine\Graphics\DeviceContext.h" />
     <ClInclude Include="Source\Engine\Graphics\IndexBuffer.h" />
     <ClInclude Include="Source\Engine\Graphics\PixelShader.h" />
-    <ClInclude Include="Source\Engine\Graphics\RenderObjects\RenderObject.h" />
     <ClInclude Include="Source\Engine\Graphics\RenderObjects\Quad.h" />
+    <ClInclude Include="Source\Engine\Graphics\RenderObjects\RenderObject.h" />
     <ClInclude Include="Source\Engine\Graphics\RenderSystem.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader.h" />
     <ClInclude Include="Source\Engine\Graphics\ShaderLibrary.h" />
@@ -214,17 +216,35 @@
     <ClInclude Include="Source\Engine\Utils\Pointers.h" />
     <ClInclude Include="Source\Engine\Window.h" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\Sandbox\SandboxGridLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Editor\AnimatedQuad.cpp" />
-    <ClCompile Include="Source\Editor\EditorApplication.cpp" />
-    <ClCompile Include="Source\Editor\EditorWindow.cpp" />
+    <ClCompile Include="Source\Editor\AnimQuadLayer.cpp" />
+    <ClCompile Include="Source\Editor\EditorLayer.cpp" />
     <ClCompile Include="Source\Engine\Application.cpp" />
+    <ClCompile Include="Source\Engine\Core\ISystem.cpp" />
+    <ClCompile Include="Source\Engine\Core\Layer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp" />
     <ClCompile Include="Source\Engine\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\RenderObjects\RenderObject.cpp">
+    <ClCompile Include="Source\Engine\Graphics\RenderObjects\Quad.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderObjects\RenderObject.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Shader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp" />
+    <ClCompile Include="Source\Engine\Time.cpp" />
+    <ClCompile Include="Source\Engine\Utils\Math.cpp" />
+    <ClCompile Include="Source\Engine\Window.cpp" />
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Sandbox\SandboxGridLayer.cpp">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -296,20 +316,6 @@
       <PreprocessorDefinitions>DEBUG;_UNICODE;UNICODE;</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Graphics\RenderObjects\Quad.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\Shader.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp" />
-    <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp" />
-    <ClCompile Include="Source\Engine\Time.cpp" />
-    <ClCompile Include="Source\Engine\Utils\Math.cpp" />
-    <ClCompile Include="Source\Engine\Window.cpp" />
-    <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

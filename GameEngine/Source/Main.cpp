@@ -1,18 +1,13 @@
 #include "pch.h"
 
-#include "Editor/EditorApplication.h"
-#include "Engine/Utils/Math.h"
+#include "Editor/EditorLayer.h"
+
+#include "Engine/Application.h"
 
 auto main() -> int
 {
-	const auto windowRect = Engine::RectUint({0, 0, 1280, 720});
-	auto editorApp        = Editor::EditorApplication(windowRect);
-
-	editorApp.Initialize();
-
-	editorApp.Run();
-
-	editorApp.Terminate();
-
+	Engine::Application::RegisterLayer(new Editor::EditorLayer());
+	Engine::Application::Run({L"Editor", 1280, 720});
+	PostQuitMessage(0);
 	return 0;
 }
