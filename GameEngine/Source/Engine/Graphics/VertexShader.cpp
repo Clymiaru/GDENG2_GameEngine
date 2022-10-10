@@ -14,9 +14,9 @@ namespace Engine
 		Shader(vertexShaderBlob)
 	{
 		const auto result = RenderSystem::GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
-		                                                                               m_Blob->GetBufferSize(),
-		                                                                               nullptr,
-		                                                                               &m_Data);
+		                                                                 m_Blob->GetBufferSize(),
+		                                                                 nullptr,
+		                                                                 &m_Data);
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 	}

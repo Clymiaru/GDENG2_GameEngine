@@ -49,7 +49,7 @@ auto Editor::AnimQuadLayer::OnAttach() -> void
 		                       static_cast<float>(b) / 255.0f,
 		                       1.0f);
 	};
-#define CHALLENGE 0
+#define CHALLENGE 1  
 
 #if CHALLENGE 1
 		m_AnimQuads.push_back(Engine::CreateUniquePtr<AnimatedQuad>(
@@ -78,14 +78,16 @@ auto Editor::AnimQuadLayer::OnAttach() -> void
 
 auto Editor::AnimQuadLayer::OnUpdate() -> void
 {
-	m_Time += static_cast<float>(Engine::Time::GetDeltaTime()) / 10.0f;
+	m_Time += static_cast<float>(Engine::Time::GetDeltaTime() / 1000.0f);
+	std::cout << m_Time << "\n";
 
 #if CHALLENGE 1
-	auto ratio = std::sin(m_Time * m_Time);
+	auto ratio = std::sin(m_Time);
 #else
-	auto ratio = std::sin(100.0f / ((m_Time * m_Time) + 1.0f));
+	auto ratio = std::sin(1.0f / ((m_Time * m_Time) + 1.0f));
 #endif
-	std::cout << ratio << "\n";
+	//std::cout << ratio << "\n";
+	
 	for (const auto& quad : m_AnimQuads)
 	{
 		quad->Update(ratio);

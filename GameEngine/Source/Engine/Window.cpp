@@ -11,15 +11,14 @@ namespace Engine
 {
 	Window::Window(Profile profile) :
 		m_Handle{nullptr},
-		m_IsRunning{false},
 		m_Profile{std::move(profile)}
 	{
 	}
 
-	auto CALLBACK WindowsProcedure(const HWND windowHandle,
-	                               const UINT message,
-	                               const WPARAM wParam,
-	                               const LPARAM lParam) -> LRESULT
+	LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
+	                                  const UINT message,
+	                                  const WPARAM wParam,
+	                                  const LPARAM lParam)
 	{
 		switch (message)
 		{
@@ -45,85 +44,48 @@ namespace Engine
 		return 0;
 	}
 
-	auto Window::Start() -> void
+	void Window::Start()
 	{
 		Create(m_Profile);
 
 		ShowWindow(m_Handle, SW_SHOW);
 
 		UpdateWindow(m_Handle);
-
-		m_IsRunning = true;
 	}
 
-	auto Window::Close() -> void
+	void Window::Close()
 	{
 		const auto result = DestroyWindow(m_Handle);
 		ENGINE_ASSERT(result, "Window cannot be destroyed!")
 	}
 
-	auto Window::Run(List<Layer*> layers) -> void
+	void Window::PollEvents()
 	{
-		MSG message;
-
-		Time::LogFrameStart();
-
-		PollEvents(&message);
-
-		Update();
-
-		for (auto* layer : layers)
+		while (PeekMessage(&m_Message, nullptr, 0, 0, PM_REMOVE) > 0)
 		{
-			layer->OnUpdate();
-		}
-
-		Render();
-
-		for (auto* layer : layers)
-		{
-			layer->OnRender();
-		}
-
-		Time::LogFrameEnd();
-
-		Sleep(1);
-	}
-
-	auto Window::PollEvents(MSG* message) -> void
-	{
-		while (PeekMessage(message, nullptr, 0, 0, PM_REMOVE) > 0)
-		{
-			TranslateMessage(message);
-			DispatchMessage(message);
+			TranslateMessage(&m_Message);
+			DispatchMessage(&m_Message);
 		}
 	}
 
-	auto Window::Update() -> void
-	{
-	}
-
-	auto Window::Render() -> void
-	{
-	}
-
-	auto Window::GetClientWindowRect() const -> RECT
+	RECT Window::GetClientWindowRect() const
 	{
 		RECT rc;
 		GetClientRect(m_Handle, &rc);
 		return rc;
 	}
 
-	auto Window::GetHandle() const -> HWND
+	HWND Window::GetHandle() const
 	{
 		return m_Handle;
 	}
 
-	auto Window::SetHandle(HWND handle) -> void
+	void Window::SetHandle(HWND handle)
 	{
 		m_Handle = handle;
 	}
 
-	auto Window::Create(const Profile profile) -> HWND
+	HWND Window::Create(const Profile profile)
 	{
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;

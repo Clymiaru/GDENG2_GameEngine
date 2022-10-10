@@ -19,20 +19,18 @@ namespace Engine
 
 		Time(const Time&) = delete;
 
-		static Time* m_Instance;
+		static void LogFrameStart();
+
+		static void LogFrameEnd();
+
+		static Time m_Instance;
 
 		double m_DeltaTime;
-
-		int m_FrameCount;
 
 		std::chrono::steady_clock::time_point m_StartFrameTime;
 
 		std::chrono::steady_clock::time_point m_EndFrameTime;
 
-		static void LogFrameStart();
-
-		static void LogFrameEnd();
-
-		friend class Window;
+		friend class Application;
 	};
 }

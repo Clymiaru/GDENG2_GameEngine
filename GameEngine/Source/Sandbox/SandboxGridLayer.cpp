@@ -19,7 +19,7 @@ Sandbox::SandboxGridLayer::~SandboxGridLayer()
 {
 }
 
-auto Sandbox::SandboxGridLayer::OnAttach() -> void
+void Sandbox::SandboxGridLayer::OnAttach()
 {
 	// Shader Resource Initialization
 	using namespace Engine;
@@ -28,8 +28,8 @@ auto Sandbox::SandboxGridLayer::OnAttach() -> void
 	                                                          "psmain");
 	// Object initialization
 
-	Vector3Float topLeftPosition = Vector3Float{-200.0f, 300.0f, 0.0f};
-	constexpr auto tileSize      = Vector2Float{100.f, 100.0f};
+	auto topLeftPosition    = Vector3Float{-200.0f, 300.0f, 0.0f};
+	constexpr auto tileSize = Vector2Float{100.f, 100.0f};
 
 	const auto colors = List<Color32>
 	{
@@ -38,10 +38,10 @@ auto Sandbox::SandboxGridLayer::OnAttach() -> void
 	};
 
 	auto colorCycleCounter = 0;
-	const auto maxXSize = 6;
-	const auto maxYSize = 6;
-	const auto spacing = 5.0f;
-	
+	const auto maxXSize    = 6;
+	const auto maxYSize    = 6;
+	const auto spacing     = 5.0f;
+
 	for (auto x = 0; x < maxXSize; x++)
 	{
 		for (auto y = 0; y < maxYSize; y++)
@@ -54,31 +54,21 @@ auto Sandbox::SandboxGridLayer::OnAttach() -> void
 			                                        tileSize,
 			                                        colors[colorCycleCounter % colors.size()],
 			                                        L"DefaultShader"));
-			
 		}
 		colorCycleCounter++;
 	}
 }
 
-auto Sandbox::SandboxGridLayer::OnUpdate() -> void
+void Sandbox::SandboxGridLayer::OnUpdate()
 {
-
-	if (m_ElapsedTime < 10.0f)
-	{
-		m_ElapsedTime += Engine::Time::GetDeltaTime();
-		m_Frames++;
-		std::cout << "Elapsed Time: " << m_ElapsedTime << " Frames: " << m_Frames << "\n";
-	}
-	
 	for (const auto& quad : m_Tiles)
 	{
 		quad->Update(0.0f);
 	}
-
-	//std::cout << Engine::ShaderLibrary::GetShaderRef<Engine::VertexShader>(L"DefaultShader").use_count() << "\n";
+	std::cout << Engine::Time::GetDeltaTime() << "\n";
 }
 
-auto Sandbox::SandboxGridLayer::OnRender() -> void
+void Sandbox::SandboxGridLayer::OnRender()
 {
 	Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
@@ -97,6 +87,7 @@ auto Sandbox::SandboxGridLayer::OnRender() -> void
 	Engine::RenderSystem::ShowFrame();
 }
 
-auto Sandbox::SandboxGridLayer::OnDetach() -> void
+void Sandbox::SandboxGridLayer::OnDetach()
 {
+	m_Tiles.clear();
 }

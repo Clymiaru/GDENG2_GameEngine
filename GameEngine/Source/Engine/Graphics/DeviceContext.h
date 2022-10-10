@@ -63,6 +63,7 @@ namespace Engine
 
 	private:
 		ID3D11DeviceContext* m_DeviceContext;
+
 		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
 
 		friend class ConstantBuffer;

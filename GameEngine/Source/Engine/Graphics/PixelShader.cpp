@@ -12,9 +12,9 @@ namespace Engine
 		Shader(blob)
 	{
 		const auto result = RenderSystem::GetDevice().CreatePixelShader(blob->GetBufferPointer(),
-		                                              blob->GetBufferSize(),
-		                                              nullptr,
-		                                              &m_Data);
+		                                                                blob->GetBufferSize(),
+		                                                                nullptr,
+		                                                                &m_Data);
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
 	}

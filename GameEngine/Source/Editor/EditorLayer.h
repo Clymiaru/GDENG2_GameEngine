@@ -25,10 +25,11 @@ namespace Editor
 
 	private:
 		float m_Time = 0;
+
 		float m_MaxTime = 10.0f;
 
 		float m_Offset = 0.0f;
-		
+
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Quads;
 
 		Engine::List<Engine::UniquePtr<AnimatedQuad>> m_AnimQuads;

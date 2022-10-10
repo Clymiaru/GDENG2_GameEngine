@@ -18,9 +18,9 @@ namespace Engine
 		     const Color32& color);
 
 		Quad(const Vector3Float& position,
-			 const Vector2Float& size,
-			 const Color32& color,
-			 const std::wstring& shaderName);
+		     const Vector2Float& size,
+		     const Color32& color,
+		     const std::wstring& shaderName);
 
 		~Quad() override;
 

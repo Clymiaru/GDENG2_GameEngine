@@ -58,8 +58,8 @@ namespace Engine
 		m_VertexData       = InitializeVertexData();
 		m_VertexLayoutData = InitializeVertexLayout();
 		m_IndexData        = InitializeIndexData();
-		m_VertexShader = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(shaderName);
-		m_PixelShader  = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(shaderName);
+		m_VertexShader     = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(shaderName);
+		m_PixelShader      = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(shaderName);
 		SetBuffers();
 	}
 

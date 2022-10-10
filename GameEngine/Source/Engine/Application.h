@@ -1,54 +1,64 @@
 ﻿#pragma once
 #include "Window.h"
 
-
-
 #include "Utils/DataStructures.h"
 #include "Utils/Pointers.h"
 
 namespace Engine
 {
 	class Layer;
+
 	class Application final
 	{
 	public:
+		struct Profile
+		{
+			std::wstring Name;
+			Uint Width;
+			Uint Height;
+		};
+		
 		~Application();
 
-		//For now until there is a preferable way
-		static auto Run(Window::Profile windowProfile) -> void;
+		static void Start(const Profile& profile);
+
+		static void Run();
+
+		static void Close();
 		
-		static auto Quit() -> void;
+		static void Quit();
 
-		static auto RegisterLayer(Layer* layer) -> void;
+		static void RegisterLayer(Layer* layer);
 
-		static auto DeregisterLayer(Layer* layer) -> void;
+		static void DeregisterLayer(Layer* layer);
 
-		static auto GetClientWindowRect() -> RECT;
+		static RECT GetClientWindowRect();
 
 	private:
 		explicit Application();
 
-		//For now until there is a preferable way
-		auto Start(Window::Profile windowProfile) -> void;
+		void StartingSystems();
 
-		auto Close() -> void;
-		
-		auto StartingSystems() -> void;
+		void ClosingSystems();
 
-		auto ClosingSystems() -> void;
+		//--------- APP LOOP
+		void Update();
 
-		auto Update() -> void;
+		void PollEvents();
 
-		auto PollEvents() -> void;
-
-		auto Render() -> void;
+		void Render();
+		//----------
 
 		static Application m_Instance;
+
+		UniquePtr<Profile> m_Profile;
 
 		bool m_IsRunning;
 
 		UniquePtr<Window> m_Window;
 
 		List<Layer*> m_Layers;
+
+		friend class Window;
 	};
 }

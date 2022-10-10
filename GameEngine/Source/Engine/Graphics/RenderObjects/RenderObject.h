@@ -61,8 +61,11 @@ namespace Engine
 
 	private:
 		virtual auto InitializeVertexData() -> VertexData = 0;
+
 		virtual auto InitializeVertexLayout() -> VertexLayoutData = 0;
+
 		virtual auto InitializeIndexData() -> IndexData = 0;
+
 		virtual auto InitializeShaderData() -> void = 0;
 	};
 }

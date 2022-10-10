@@ -1,48 +1,45 @@
 ﻿#include "pch.h"
 #include "Time.h"
 
-Engine::Time* Engine::Time::m_Instance = nullptr;
+Engine::Time Engine::Time::m_Instance = Time();
 
-void Engine::Time::Initialize()
+auto Engine::Time::Initialize() -> void
 {
-	m_Instance = new Time();
 }
 
-void Engine::Time::Terminate()
+auto Engine::Time::Terminate() -> void
 {
-	delete m_Instance;
 }
 
-double Engine::Time::GetDeltaTime()
+auto Engine::Time::GetDeltaTime() -> double
 {
-	return m_Instance->m_DeltaTime;
+	return m_Instance.m_DeltaTime;
 }
 
 Engine::Time::Time() :
 	m_DeltaTime{0.0},
 	m_StartFrameTime{},
-	m_EndFrameTime{},
-	m_FrameCount{0}
+	m_EndFrameTime{}
 {
 }
 
-Engine::Time::~Time()
-{
-}
+Engine::Time::~Time() = default;
 
-void Engine::Time::LogFrameStart()
+auto Engine::Time::LogFrameStart() -> void
 {
 	using namespace std::chrono;
-	m_Instance->m_StartFrameTime = steady_clock::now();
+	m_Instance.m_StartFrameTime = steady_clock::now();
 }
 
-void Engine::Time::LogFrameEnd()
+auto Engine::Time::LogFrameEnd() -> void
 {
 	using namespace std::chrono;
-	using namespace std::chrono_literals;
+	
+	m_Instance.m_EndFrameTime = steady_clock::now();
 
-	m_Instance->m_EndFrameTime = steady_clock::now();
-	const auto elapsedSeconds  = m_Instance->m_EndFrameTime - m_Instance->m_StartFrameTime;
+	const auto elapsed = m_Instance.m_EndFrameTime - m_Instance.m_StartFrameTime;
 
-	m_Instance->m_DeltaTime = elapsedSeconds.count() / 100000000.0f;
+	const auto duration = duration_cast<milliseconds>(elapsed).count();
+
+	m_Instance.m_DeltaTime = static_cast<double>(duration);
 }

@@ -11,7 +11,7 @@ namespace Editor
 	{
 	public:
 		AnimQuadLayer();
-		
+
 		~AnimQuadLayer() override;
 
 		auto OnAttach() -> void override;
@@ -24,6 +24,7 @@ namespace Editor
 
 	private:
 		float m_Time = 0;
+
 		float m_MaxTime = 10.0f;
 
 		Engine::List<Engine::UniquePtr<Editor::AnimatedQuad>> m_AnimQuads;

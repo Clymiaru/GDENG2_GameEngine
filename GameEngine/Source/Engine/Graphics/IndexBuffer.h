@@ -6,10 +6,12 @@
 namespace Engine
 {
 	class DeviceContext;
+
 	class IndexBuffer
 	{
 	public:
 		IndexBuffer();
+
 		~IndexBuffer();
 
 		[[nodiscard]]
@@ -24,9 +26,9 @@ namespace Engine
 
 	private:
 		ID3D11Buffer* m_Data;
-		Uint m_DataCount;
-		
-		friend class DeviceContext;
-	};	
-}
 
+		Uint m_DataCount;
+
+		friend class DeviceContext;
+	};
+}

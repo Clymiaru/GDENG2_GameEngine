@@ -32,7 +32,7 @@ namespace Editor
 		             const Engine::Color32& v3_color_start,
 		             const Engine::Color32& v3_color_end);
 
-		~AnimatedQuad();
+		~AnimatedQuad() override;
 
 		auto Update(float deltaTime) -> void;
 

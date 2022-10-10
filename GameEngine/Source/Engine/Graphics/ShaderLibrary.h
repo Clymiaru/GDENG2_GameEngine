@@ -114,7 +114,7 @@ namespace Engine
 		{
 			return;
 		}
-		
+
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
 		const auto result   = D3DCompileFromFile(fileName.c_str(),
@@ -142,8 +142,6 @@ namespace Engine
 
 		m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
 	}
-
-	
 
 	//---------- GET SHADER
 	template <typename T>

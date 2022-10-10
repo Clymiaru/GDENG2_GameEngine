@@ -17,18 +17,15 @@ namespace Sandbox
 
 		~SandboxGridLayer() override;
 
-		auto OnAttach() -> void override;
+		void OnAttach() override;
 
-		auto OnUpdate() -> void override;
+		void OnUpdate() override;
 
-		auto OnRender() -> void override;
+		void OnRender() override;
 
-		auto OnDetach() -> void override;
+		void OnDetach() override;
 
 	private:
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Tiles;
-
-		int m_Frames = 0;
-		float m_ElapsedTime = 0.0f;
 	};
 }

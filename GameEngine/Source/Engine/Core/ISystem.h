@@ -6,9 +6,11 @@ namespace Engine
 	{
 	public:
 		ISystem() = default;
+
 		virtual ~ISystem() = default;
 
-		virtual auto Start() -> void = 0;
-		virtual auto Close() -> void = 0;
+		virtual void Start() = 0;
+
+		virtual void Close() = 0;
 	};
 }

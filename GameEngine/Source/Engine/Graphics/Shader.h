@@ -12,10 +12,13 @@ namespace Engine
 		virtual ~Shader();
 
 		Shader(const Shader&) = delete;
-		Shader& operator=(const Shader&) = delete;
+
+		auto operator=(const Shader&) -> Shader& = delete;
+
 		Shader(const Shader&&) = delete;
-		Shader& operator=(const Shader&&) = delete;
-		
+
+		auto operator=(const Shader&&) -> Shader& = delete;
+
 		[[nodiscard]]
 		auto GetByteCodeData() const -> void*;
 
@@ -27,6 +30,7 @@ namespace Engine
 
 	protected:
 		T* m_Data;
+
 		ID3DBlob* m_Blob;
 	};
 

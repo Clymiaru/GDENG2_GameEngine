@@ -2,58 +2,50 @@
 #include <Windows.h>
 #include <string>
 
-#include "Core/Layer.h"
-
-#include "Utils/DataStructures.h"
 #include "Utils/Math.h"
 
 namespace Engine
 {
 	class Application;
-	class Window
+
+	class Window final
 	{
 	public:
 		struct Profile
 		{
 			std::wstring Name;
+
 			Uint Width;
+
 			Uint Height;
 		};
-		
+
 		Window(Profile profile);
 
-		virtual ~Window() = default;
-
-		auto Run(List<Layer*> layers) -> void;
+		~Window() = default;
 
 		[[nodiscard]]
-		auto GetClientWindowRect() const -> RECT;
+		RECT GetClientWindowRect() const;
 
 		[[nodiscard]]
-		auto GetHandle() const -> HWND;
+		HWND GetHandle() const;
 
-		auto SetHandle(HWND handle) -> void;
+		void SetHandle(HWND handle);
 
 	private:
-		auto Start() -> void;
+		void Start();
 
-		static auto PollEvents(MSG* message) -> void;
+		void PollEvents();
 
-		auto Update() -> void;
+		void Close();
 
-		auto Render() -> void;
-		
-		auto Close() -> void;
-		
-		auto Create(Profile profile) -> HWND;
+		HWND Create(Profile profile);
 
 		HWND m_Handle;
 
-		bool m_IsRunning;
-
 		Profile m_Profile;
 
-		List<Layer*> m_Layers;
+		MSG m_Message;
 
 		friend class Application;
 	};

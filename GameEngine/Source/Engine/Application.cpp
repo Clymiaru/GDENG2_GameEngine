@@ -16,38 +16,25 @@ namespace Engine
 	{
 	}
 
-	auto Application::Start(Window::Profile windowProfile) -> void
-	{
-		m_Window = CreateUniquePtr<Window>(windowProfile);
-
-		StartingSystems();
-
-		m_IsRunning = true;
-	}
-
-	auto Application::Close() -> void
-	{
-		// Layer* layer = nullptr;
-		// for (auto i = 0; i < m_Instance.m_Layers.size(); i++)
-		// {
-		// 	m_Instance.m_Layers[i]->OnDetach();
-		// 	layer = m_Instance.m_Layers[i];
-		// 	m_Instance.m_Layers[i] = nullptr;
-		// 	delete layer;
-		// }
-
-		Time::Terminate();
-		ShaderLibrary::GetInstance().Terminate();
-		RenderSystem::Terminate();
-		m_Instance.m_Window->Close();
-	}
-
 	Application::~Application() = default;
 
-	auto Application::Run(Window::Profile windowProfile) -> void
+	void Application::Start(const Profile& profile)
 	{
-		m_Instance.Start(windowProfile);
+		m_Instance.m_Profile = CreateUniquePtr<Profile>(profile);
+		
+		m_Instance.m_Window = CreateUniquePtr<Window>(Window::Profile{
+			m_Instance.m_Profile->Name,
+			m_Instance.m_Profile->Width,
+			m_Instance.m_Profile->Height
+		});
 
+		m_Instance.StartingSystems();
+
+		m_Instance.m_IsRunning = true;
+	}
+
+	void Application::Run()
+	{
 		// Start all layers (Later will be deffered to Update as later created
 		// layers will not start if utilizing this way)
 		for (auto* layer : m_Instance.m_Layers)
@@ -57,23 +44,34 @@ namespace Engine
 
 		while (m_Instance.m_IsRunning)
 		{
-			m_Instance.m_Window->Run(m_Instance.m_Layers);
+			Time::LogFrameStart();
+
+			m_Instance.PollEvents();
+			m_Instance.Update();
+			m_Instance.Render();
+
+			Time::LogFrameEnd();
+
+			Sleep(1);
 		}
 
 		for (auto* layer : m_Instance.m_Layers)
 		{
 			layer->OnDetach();
 		}
-
-		m_Instance.Close();
 	}
 
-	auto Application::Quit() -> void
+	void Application::Close()
+	{
+		m_Instance.ClosingSystems();
+	}
+
+	void Application::Quit()
 	{
 		m_Instance.m_IsRunning = false;
 	}
 
-	auto Application::RegisterLayer(Layer* layer) -> void
+	void Application::RegisterLayer(Layer* layer)
 	{
 		for (auto i = 0; i < m_Instance.m_Layers.size(); i++)
 		{
@@ -86,7 +84,7 @@ namespace Engine
 		m_Instance.m_Layers.push_back(layer);
 	}
 
-	auto Application::DeregisterLayer(Layer* layer) -> void
+	void Application::DeregisterLayer(Layer* layer)
 	{
 		for (auto i = 0; i < m_Instance.m_Layers.size(); i++)
 		{
@@ -98,12 +96,12 @@ namespace Engine
 		}
 	}
 
-	auto Application::GetClientWindowRect() -> RECT
+	RECT Application::GetClientWindowRect()
 	{
 		return m_Instance.m_Window->GetClientWindowRect();
 	}
 
-	auto Application::StartingSystems() -> void
+	void Application::StartingSystems()
 	{
 		Time::Initialize();
 
@@ -115,11 +113,15 @@ namespace Engine
 		                         {1280, 720});
 	}
 
-	auto Application::ClosingSystems() -> void
+	void Application::ClosingSystems()
 	{
+		Time::Terminate();
+		ShaderLibrary::GetInstance().Terminate();
+		RenderSystem::Terminate();
+		m_Instance.m_Window->Close();
 	}
 
-	auto Application::Update() -> void
+	void Application::Update()
 	{
 		for (auto layer : m_Layers)
 		{
@@ -127,11 +129,12 @@ namespace Engine
 		}
 	}
 
-	auto Application::PollEvents() -> void
+	void Application::PollEvents()
 	{
+		m_Instance.m_Window->PollEvents();
 	}
 
-	auto Application::Render() -> void
+	void Application::Render()
 	{
 		for (auto layer : m_Layers)
 		{

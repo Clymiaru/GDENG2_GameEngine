@@ -6,6 +6,7 @@
 namespace Engine
 {
 	class DeviceContext;
+
 	class VertexBuffer final
 	{
 	public:
@@ -29,8 +30,11 @@ namespace Engine
 
 	private:
 		ID3D11Buffer* m_Data;
+
 		ID3D11InputLayout* m_DataLayout;
+
 		UINT m_DataSize;
+
 		UINT m_DataCount;
 
 		friend class DeviceContext;

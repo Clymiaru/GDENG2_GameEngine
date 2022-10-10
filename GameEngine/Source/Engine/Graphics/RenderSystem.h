@@ -8,11 +8,11 @@
 namespace Engine
 {
 	class DeviceContext;
-	
+
 	class RenderObject;
-	
+
 	class SwapChain;
-	
+
 	class VertexBuffer;
 
 	class IndexBuffer;
