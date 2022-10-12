@@ -14,18 +14,18 @@ Engine::IndexBuffer::~IndexBuffer()
 	m_Data->Release();
 }
 
-auto Engine::IndexBuffer::GetCount() const -> Uint
+Engine::Uint Engine::IndexBuffer::GetCount() const
 {
 	return m_DataCount;
 }
 
-auto Engine::IndexBuffer::GetSize() const -> Uint
+Engine::Uint Engine::IndexBuffer::GetSize() const
 {
 	return sizeof(Uint) * m_DataCount;
 }
 
-auto Engine::IndexBuffer::Load(const Uint* indexList,
-                               const Uint indexListCount) -> bool
+bool Engine::IndexBuffer::Load(const Uint* indexList,
+                               const Uint indexListCount)
 {
 	if (m_Data)
 		m_Data->Release();

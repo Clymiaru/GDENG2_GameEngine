@@ -21,7 +21,7 @@ Editor::EditorLayer::~EditorLayer()
 {
 }
 
-auto Editor::EditorLayer::OnAttach() -> void
+void Editor::EditorLayer::OnAttach()
 {
 	// Shader Resource Initialization
 	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"DefaultShader.hlsl",
@@ -42,7 +42,7 @@ auto Editor::EditorLayer::OnAttach() -> void
 	                                                        Engine::Color32{0.21f, 0.21f, 0.78f, 1.0f}));
 }
 
-auto Editor::EditorLayer::OnUpdate() -> void
+void Editor::EditorLayer::OnUpdate()
 {
 	m_Time += Engine::Time::GetDeltaTime();
 	for (const auto& quad : m_Quads)
@@ -51,7 +51,7 @@ auto Editor::EditorLayer::OnUpdate() -> void
 	}
 }
 
-auto Editor::EditorLayer::OnRender() -> void
+void Editor::EditorLayer::OnRender()
 {
 	Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
@@ -70,6 +70,6 @@ auto Editor::EditorLayer::OnRender() -> void
 	Engine::RenderSystem::ShowFrame();
 }
 
-auto Editor::EditorLayer::OnDetach() -> void
+void Editor::EditorLayer::OnDetach()
 {
 }

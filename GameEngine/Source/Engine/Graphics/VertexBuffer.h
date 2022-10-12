@@ -15,18 +15,18 @@ namespace Engine
 		~VertexBuffer();
 
 		[[nodiscard]]
-		auto GetCount() const -> Uint;
+		Uint GetCount() const;
 
 		[[nodiscard]]
-		auto GetSize() const -> Uint;
+		Uint GetSize() const;
 
-		auto Load(const void* vertexList,
+		bool Load(const void* vertexList,
 		          Uint vertexDataSize,
 		          Uint vertexListCount,
 		          const void* shaderByteCode,
 		          Uint shaderByteCodeSize,
 		          const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-		          Uint indexLayoutSize) -> bool;
+		          Uint indexLayoutSize);
 
 	private:
 		ID3D11Buffer* m_Data;

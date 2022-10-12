@@ -15,14 +15,14 @@ namespace Engine
 		~IndexBuffer();
 
 		[[nodiscard]]
-		auto GetCount() const -> Uint;
+		Uint GetCount() const;
 
 		[[nodiscard]]
-		auto GetSize() const -> Uint;
+		Uint GetSize() const;
 
 		[[nodiscard]]
-		auto Load(const Uint* indexList,
-		          Uint indexListCount) -> bool;
+		bool Load(const Uint* indexList,
+		          Uint indexListCount);
 
 	private:
 		ID3D11Buffer* m_Data;

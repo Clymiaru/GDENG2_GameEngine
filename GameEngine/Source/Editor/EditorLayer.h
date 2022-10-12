@@ -15,13 +15,13 @@ namespace Editor
 
 		~EditorLayer() override;
 
-		auto OnAttach() -> void override;
+		void OnAttach() override;
 
-		auto OnUpdate() -> void override;
+		void OnUpdate() override;
 
-		auto OnRender() -> void override;
+		void OnRender() override;
 
-		auto OnDetach() -> void override;
+		void OnDetach() override;
 
 	private:
 		float m_Time = 0;

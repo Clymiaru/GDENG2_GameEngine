@@ -83,7 +83,7 @@ Editor::AnimatedQuad::~AnimatedQuad()
 	delete m_Constant;
 }
 
-auto Editor::AnimatedQuad::Update(float ratio) -> void
+void Editor::AnimatedQuad::Update(float ratio)
 {
 	using namespace DirectX;
 
@@ -103,7 +103,7 @@ auto Editor::AnimatedQuad::Update(float ratio) -> void
 	m_Constant->Projection = XMMatrixTranspose(m_Constant->Projection);
 }
 
-auto Editor::AnimatedQuad::Render() const -> void
+void Editor::AnimatedQuad::Render() const
 {
 	m_ConstantBuffer->Update(Engine::RenderSystem::GetDeviceContext(), m_Constant);
 	Engine::RenderSystem::GetDeviceContext().SetConstantBuffer<Engine::VertexShader>(*m_ConstantBuffer);
@@ -113,7 +113,7 @@ auto Editor::AnimatedQuad::Render() const -> void
 	Engine::RenderSystem::Draw(*m_VertexBuffer, *m_IndexBuffer);
 }
 
-auto Editor::AnimatedQuad::SetBuffers() -> void
+void Editor::AnimatedQuad::SetBuffers()
 {
 	m_VertexBuffer = Engine::CreateUniquePtr<Engine::VertexBuffer>();
 	bool result    = m_VertexBuffer->Load(m_VertexData.VertexList,
@@ -133,7 +133,7 @@ auto Editor::AnimatedQuad::SetBuffers() -> void
 	result           = m_ConstantBuffer->Load(m_Constant, sizeof(Engine::Constant));
 }
 
-auto Editor::AnimatedQuad::InitializeVertexData() -> VertexData
+Engine::RenderObject::VertexData Editor::AnimatedQuad::InitializeVertexData()
 {
 	auto* vertices = new Engine::Vertex[4]
 	{
@@ -169,7 +169,7 @@ auto Editor::AnimatedQuad::InitializeVertexData() -> VertexData
 	return {std::move(vertices), vertexSize};
 }
 
-auto Editor::AnimatedQuad::InitializeVertexLayout() -> VertexLayoutData
+Engine::RenderObject::VertexLayoutData Editor::AnimatedQuad::InitializeVertexLayout()
 {
 	auto* layout = new D3D11_INPUT_ELEMENT_DESC[4]
 	{
@@ -182,7 +182,7 @@ auto Editor::AnimatedQuad::InitializeVertexLayout() -> VertexLayoutData
 	return {std::move(layout), layoutSize};
 }
 
-auto Editor::AnimatedQuad::InitializeIndexData() -> IndexData
+Engine::RenderObject::IndexData Editor::AnimatedQuad::InitializeIndexData()
 {
 	auto* indices = new Engine::Uint[6]
 	{
@@ -197,7 +197,7 @@ auto Editor::AnimatedQuad::InitializeIndexData() -> IndexData
 	return {std::move(indices), indexSize};
 }
 
-auto Editor::AnimatedQuad::InitializeShaderData() -> void
+void Editor::AnimatedQuad::InitializeShaderData()
 {
 	m_VertexShader = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::VertexShader>(L"QuadAnimShader");
 	m_PixelShader  = Engine::ShaderLibrary::GetInstance().GetShaderRef<Engine::PixelShader>(L"QuadAnimShader");

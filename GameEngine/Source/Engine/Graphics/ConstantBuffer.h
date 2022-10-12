@@ -12,13 +12,13 @@ namespace Engine
 
 		~ConstantBuffer();
 
-		auto Load(const void* buffer,
-		          UINT bufferSize) -> bool;
+		bool Load(const void* buffer,
+		          UINT bufferSize);
 
-		auto Update(DeviceContext& deviceContext,
-		            void* buffer) -> void;
+		void Update(DeviceContext& deviceContext,
+		            void* buffer) const;
 
-		auto Release() -> bool;
+		bool Release() const;
 
 	private:
 		ID3D11Buffer* m_BufferData;

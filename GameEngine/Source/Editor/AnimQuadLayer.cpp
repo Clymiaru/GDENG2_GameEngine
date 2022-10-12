@@ -19,7 +19,7 @@ Editor::AnimQuadLayer::~AnimQuadLayer()
 {
 }
 
-auto Editor::AnimQuadLayer::OnAttach() -> void
+void Editor::AnimQuadLayer::OnAttach()
 {
 	// Shader Resource Initialization
 	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"QuadAnimShader.hlsl",
@@ -76,7 +76,7 @@ auto Editor::AnimQuadLayer::OnAttach() -> void
 #endif
 }
 
-auto Editor::AnimQuadLayer::OnUpdate() -> void
+void Editor::AnimQuadLayer::OnUpdate()
 {
 	m_Time += static_cast<float>(Engine::Time::GetDeltaTime() / 1000.0f);
 	std::cout << m_Time << "\n";
@@ -94,7 +94,7 @@ auto Editor::AnimQuadLayer::OnUpdate() -> void
 	}
 }
 
-auto Editor::AnimQuadLayer::OnRender() -> void
+void Editor::AnimQuadLayer::OnRender()
 {
 	Engine::RenderSystem::Clear({0.5f, 0.5f, 1.0f, 1.0f});
 
@@ -113,6 +113,6 @@ auto Editor::AnimQuadLayer::OnRender() -> void
 	Engine::RenderSystem::ShowFrame();
 }
 
-auto Editor::AnimQuadLayer::OnDetach() -> void
+void Editor::AnimQuadLayer::OnDetach()
 {
 }

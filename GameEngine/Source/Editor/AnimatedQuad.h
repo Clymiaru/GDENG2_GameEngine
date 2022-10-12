@@ -34,9 +34,9 @@ namespace Editor
 
 		~AnimatedQuad() override;
 
-		auto Update(float deltaTime) -> void;
+		void Update(float deltaTime);
 
-		auto Render() const -> void;
+		void Render() const;
 
 	private:
 		Engine::UniquePtr<Engine::ConstantBuffer> m_ConstantBuffer;
@@ -77,14 +77,14 @@ namespace Editor
 
 		Engine::Color32 m_V3ColorEnd;
 
-		auto SetBuffers() -> void;
+		void SetBuffers();
 
-		auto InitializeVertexData() -> VertexData override;
+		VertexData InitializeVertexData() override;
 
-		auto InitializeVertexLayout() -> VertexLayoutData override;
+		VertexLayoutData InitializeVertexLayout() override;
 
-		auto InitializeIndexData() -> IndexData override;
+		IndexData InitializeIndexData() override;
 
-		auto InitializeShaderData() -> void override;
+		void InitializeShaderData() override;
 	};
 }

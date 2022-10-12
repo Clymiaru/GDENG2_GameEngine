@@ -69,7 +69,7 @@ namespace Engine
 		delete m_Constant;
 	}
 
-	auto Quad::Update(const float deltaTime) -> void
+	void Quad::Update(const float deltaTime)
 	{
 		using namespace DirectX;
 
@@ -95,7 +95,7 @@ namespace Engine
 		m_Constant->Projection = XMMatrixTranspose(m_Constant->Projection);
 	}
 
-	auto Quad::Render() const -> void
+	void Quad::Render() const
 	{
 		m_ConstantBuffer->Update(RenderSystem::GetDeviceContext(), m_Constant);
 		RenderSystem::GetDeviceContext().SetConstantBuffer<VertexShader>(*m_ConstantBuffer);
@@ -105,7 +105,7 @@ namespace Engine
 		RenderSystem::Draw(*m_VertexBuffer, *m_IndexBuffer);
 	}
 
-	auto Quad::SetBuffers() -> void
+	void Quad::SetBuffers()
 	{
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>();
 		bool result    = m_VertexBuffer->Load(m_VertexData.VertexList,
@@ -128,7 +128,7 @@ namespace Engine
 		ENGINE_ASSERT(result, "Constant Buffer can't be loaded!")
 	}
 
-	auto Quad::InitializeVertexData() -> VertexData
+	RenderObject::VertexData Quad::InitializeVertexData()
 	{
 		auto* vertices = new Vertex[4]
 		{
@@ -156,7 +156,7 @@ namespace Engine
 		return {std::move(vertices), vertexSize};
 	}
 
-	auto Quad::InitializeVertexLayout() -> VertexLayoutData
+	RenderObject::VertexLayoutData Quad::InitializeVertexLayout()
 	{
 		auto* layout = new D3D11_INPUT_ELEMENT_DESC[2]
 		{
@@ -167,7 +167,7 @@ namespace Engine
 		return {std::move(layout), layoutSize};
 	}
 
-	auto Quad::InitializeIndexData() -> IndexData
+	RenderObject::IndexData Quad::InitializeIndexData()
 	{
 		auto* indices = new Uint[6]
 		{
@@ -182,7 +182,7 @@ namespace Engine
 		return {std::move(indices), indexSize};
 	}
 
-	auto Quad::InitializeShaderData() -> void
+	void Quad::InitializeShaderData()
 	{
 		m_VertexShader = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(L"SinTimeAnimShader");
 		m_PixelShader  = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(L"SinTimeAnimShader");

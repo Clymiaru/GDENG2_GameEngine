@@ -1,25 +1,25 @@
 ﻿#include "pch.h"
 #include "ShaderLibrary.h"
 
-auto Engine::ShaderLibrary::GetInstance() -> ShaderLibrary&
+Engine::ShaderLibrary& Engine::ShaderLibrary::GetInstance()
 {
 	static ShaderLibrary instance;
 	return instance;
 }
 
-auto Engine::ShaderLibrary::Initialize() -> void
+void Engine::ShaderLibrary::Initialize()
 {
 }
 
-auto Engine::ShaderLibrary::Terminate() -> void
+void Engine::ShaderLibrary::Terminate()
 {
 	m_VertexShaderMap.clear();
 	m_PixelShaderMap.clear();
 }
 
-auto Engine::ShaderLibrary::RegisterVertexAndPixelShader(const std::wstring& fileName,
+void Engine::ShaderLibrary::RegisterVertexAndPixelShader(const std::wstring& fileName,
                                                          const std::string& vertexShaderEntryPointName,
-                                                         const std::string& pixelShaderEntryPointName) -> void
+                                                         const std::string& pixelShaderEntryPointName)
 {
 	Register<VertexShader>(fileName, vertexShaderEntryPointName);
 	Register<PixelShader>(fileName, pixelShaderEntryPointName);

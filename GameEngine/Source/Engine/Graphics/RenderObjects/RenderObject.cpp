@@ -16,12 +16,12 @@ namespace Engine
 
 	RenderObject::~RenderObject() = default;
 
-	auto RenderObject::GetVertexBuffer() const -> VertexBuffer&
+	VertexBuffer& RenderObject::GetVertexBuffer() const
 	{
 		return *m_VertexBuffer;
 	}
 
-	auto RenderObject::GetIndexBuffer() const -> IndexBuffer&
+	IndexBuffer& RenderObject::GetIndexBuffer() const
 	{
 		return *m_IndexBuffer;
 	}

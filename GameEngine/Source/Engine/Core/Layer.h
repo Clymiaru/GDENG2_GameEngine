@@ -18,19 +18,19 @@ namespace Engine
 		virtual ~Layer();
 
 		// Executes when this layer is created
-		virtual auto OnAttach() -> void = 0;
+		virtual void OnAttach() = 0;
 
 		// Executes per frame
-		virtual auto OnUpdate() -> void = 0;
+		virtual void OnUpdate() = 0;
 
 		// Executes per frame
-		virtual auto OnRender() -> void = 0;
+		virtual void OnRender() = 0;
 
 		// Executes when this layer is destroyed
-		virtual auto OnDetach() -> void = 0;
+		virtual void OnDetach() = 0;
 
 		[[nodiscard]]
-		auto GetName() const -> const std::string&;
+		const std::string& GetName() const;
 
 	private:
 		std::string m_Name;

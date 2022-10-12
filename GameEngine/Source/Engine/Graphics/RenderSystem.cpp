@@ -26,8 +26,8 @@ namespace Engine
 		D3D_FEATURE_LEVEL_11_0
 	};
 
-	auto RenderSystem::Initialize(const HWND windowHandle,
-	                              const Vector2Int windowSize) -> void
+	void RenderSystem::Initialize(const HWND windowHandle,
+	                              const Vector2Int windowSize)
 	{
 		HRESULT result = 0;
 
@@ -69,7 +69,7 @@ namespace Engine
 		                                   m_Instance.m_DxgiFactory);
 	}
 
-	auto RenderSystem::Terminate() -> void
+	void RenderSystem::Terminate()
 	{
 		m_Instance.m_SwapChain->Terminate();
 		m_Instance.m_DxgiDevice->Release();
@@ -79,23 +79,23 @@ namespace Engine
 		m_Instance.m_Device->Release();
 	}
 
-	auto RenderSystem::GetDevice() -> ID3D11Device&
+	ID3D11Device& RenderSystem::GetDevice()
 	{
 		return *m_Instance.m_Device;
 	}
 
-	auto RenderSystem::GetDeviceContext() -> DeviceContext&
+	DeviceContext& RenderSystem::GetDeviceContext()
 	{
 		return *m_Instance.m_DeviceContext;
 	}
 
-	auto RenderSystem::Clear(const Color32 fillColor) -> void
+	void RenderSystem::Clear(const Color32 fillColor)
 	{
 		m_Instance.m_DeviceContext->Clear(*m_Instance.m_SwapChain, fillColor);
 	}
 
-	auto RenderSystem::Draw(const VertexBuffer& vertexBuffer,
-	                        const IndexBuffer& indexBuffer) -> void
+	void RenderSystem::Draw(const VertexBuffer& vertexBuffer,
+	                        const IndexBuffer& indexBuffer)
 	{
 		m_Instance.m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
 		m_Instance.m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
@@ -104,12 +104,12 @@ namespace Engine
 		                                 0);
 	}
 
-	auto RenderSystem::ShowFrame() -> void
+	void RenderSystem::ShowFrame()
 	{
 		m_Instance.m_SwapChain->Present(true);
 	}
 
-	auto RenderSystem::SetViewportSize(Vector2Uint viewportSize) -> void
+	void RenderSystem::SetViewportSize(Vector2Uint viewportSize)
 	{
 		m_Instance.m_DeviceContext->SetViewportSize(viewportSize);
 	}

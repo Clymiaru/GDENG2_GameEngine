@@ -20,13 +20,13 @@ namespace Engine
 		auto operator=(const Shader&&) -> Shader& = delete;
 
 		[[nodiscard]]
-		auto GetByteCodeData() const -> void*;
+		void* GetByteCodeData() const;
 
 		[[nodiscard]]
-		auto GetByteCodeSizeData() const -> size_t;
+		size_t GetByteCodeSizeData() const;
 
 		[[nodiscard]]
-		auto GetData() -> T&;
+		T& GetData();
 
 	protected:
 		T* m_Data;
@@ -47,19 +47,19 @@ namespace Engine
 	}
 
 	template <typename T>
-	auto Shader<T>::GetByteCodeData() const -> void*
+	void* Shader<T>::GetByteCodeData() const
 	{
 		return m_Blob->GetBufferPointer();
 	}
 
 	template <typename T>
-	auto Shader<T>::GetByteCodeSizeData() const -> size_t
+	size_t Shader<T>::GetByteCodeSizeData() const
 	{
 		return m_Blob->GetBufferSize();
 	}
 
 	template <typename T>
-	auto Shader<T>::GetData() -> T&
+	T& Shader<T>::GetData()
 	{
 		return *m_Data;
 	}

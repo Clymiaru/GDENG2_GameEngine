@@ -4,11 +4,7 @@
 
 #include "ShaderLibrary.h"
 
-#include "Engine/Graphics/ConstantBuffer.h"
-#include "Engine/Graphics/IndexBuffer.h"
-#include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/SwapChain.h"
-#include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Graphics/VertexShader.h"
 
 namespace Engine
@@ -20,17 +16,17 @@ namespace Engine
 
 	DeviceContext::~DeviceContext() = default;
 
-	auto DeviceContext::Initialize() -> void
+	void DeviceContext::Initialize()
 	{
 	}
 
-	auto DeviceContext::Terminate() -> void
+	void DeviceContext::Terminate() const
 	{
 		m_DeviceContext->Release();
 	}
 
-	auto DeviceContext::Clear(const SwapChain& swapChain,
-	                          const Color32 color) const -> void
+	void DeviceContext::Clear(const SwapChain& swapChain,
+	                          const Color32 color) const
 	{
 		const float clearColor[] = {color.Red, color.Green, color.Blue, color.Alpha};
 		m_DeviceContext->ClearRenderTargetView(&swapChain.GetRenderTargetView(),
@@ -44,7 +40,7 @@ namespace Engine
 		                                    nullptr);
 	}
 
-	auto DeviceContext::SetViewportSize(const Vector2Uint size) const -> void
+	void DeviceContext::SetViewportSize(const Vector2Uint size) const
 	{
 		D3D11_VIEWPORT viewport = {};
 		viewport.Width          = static_cast<float>(size.X);
@@ -54,14 +50,14 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	auto DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) -> void
+	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
 	{
 		m_Topology = topology;
 		m_DeviceContext->IASetPrimitiveTopology(m_Topology);
 	}
 
-	auto DeviceContext::Draw(const Uint indexCount,
-	                         const Uint startingIndex) const -> void
+	void DeviceContext::Draw(const Uint indexCount,
+	                         const Uint startingIndex) const
 	{
 		ENGINE_ASSERT(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!")
 		m_DeviceContext->DrawIndexed(indexCount,

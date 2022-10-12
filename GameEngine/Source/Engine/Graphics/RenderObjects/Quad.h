@@ -24,9 +24,9 @@ namespace Engine
 
 		~Quad() override;
 
-		auto Update(float deltaTime) -> void;
+		void Update(float deltaTime);
 
-		auto Render() const -> void;
+		void Render() const;
 
 	private:
 		Vector3Float m_Position;
@@ -41,14 +41,14 @@ namespace Engine
 
 		Constant* m_Constant;
 
-		auto SetBuffers() -> void;
+		void SetBuffers();
 
-		auto InitializeVertexData() -> VertexData override;
+		VertexData InitializeVertexData() override;
 
-		auto InitializeVertexLayout() -> VertexLayoutData override;
+		VertexLayoutData InitializeVertexLayout() override;
 
-		auto InitializeIndexData() -> IndexData override;
+		IndexData InitializeIndexData() override;
 
-		auto InitializeShaderData() -> void override;
+		void InitializeShaderData() override;
 	};
 }

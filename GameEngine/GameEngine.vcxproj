@@ -40,7 +40,7 @@
         <Keyword>Win32Proj</Keyword>
         <RootNamespace>GameEngine</RootNamespace>
     </PropertyGroup>
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
         <ConfigurationType>Application</ConfigurationType>
         <UseDebugLibraries>true</UseDebugLibraries>
@@ -65,22 +65,22 @@
         <CharacterSet>Unicode</CharacterSet>
         <PlatformToolset>v143</PlatformToolset>
     </PropertyGroup>
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
     <ImportGroup Label="ExtensionSettings">
     </ImportGroup>
     <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     </ImportGroup>
     <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug Win64|x64'">
-        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     </ImportGroup>
     <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     </ImportGroup>
     <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
-        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     </ImportGroup>
-    <PropertyGroup Label="UserMacros"/>
+    <PropertyGroup Label="UserMacros" />
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
         <LinkIncremental>true</LinkIncremental>
         <OutDir>..\bin\Debug-windows-x86\GameEngine\</OutDir>
@@ -190,57 +190,55 @@
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
-        <ClInclude Include="Source\Editor\AnimatedQuad.h"/>
-        <ClInclude Include="Source\Editor\AnimQuadLayer.h"/>
-        <ClInclude Include="Source\Editor\EditorLayer.h"/>
-        <ClInclude Include="Source\Engine\Application.h"/>
-        <ClInclude Include="Source\Engine\Core\ISystem.h"/>
-        <ClInclude Include="Source\Engine\Core\Layer.h"/>
-        <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h"/>
-        <ClInclude Include="Source\Engine\Graphics\DeviceContext.h"/>
-        <ClInclude Include="Source\Engine\Graphics\IndexBuffer.h"/>
-        <ClInclude Include="Source\Engine\Graphics\PixelShader.h"/>
-        <ClInclude Include="Source\Engine\Graphics\RenderObjects\Quad.h"/>
-        <ClInclude Include="Source\Engine\Graphics\RenderObjects\RenderObject.h"/>
-        <ClInclude Include="Source\Engine\Graphics\RenderSystem.h"/>
-        <ClInclude Include="Source\Engine\Graphics\Shader.h"/>
-        <ClInclude Include="Source\Engine\Graphics\ShaderLibrary.h"/>
-        <ClInclude Include="Source\Engine\Graphics\SwapChain.h"/>
-        <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h"/>
-        <ClInclude Include="Source\Engine\Graphics\VertexShader.h"/>
-        <ClInclude Include="Source\Engine\Time.h"/>
-        <ClInclude Include="Source\Engine\Utils\Color32.h"/>
-        <ClInclude Include="Source\Engine\Utils\DataStructures.h"/>
-        <ClInclude Include="Source\Engine\Utils\Debug.h"/>
-        <ClInclude Include="Source\Engine\Utils\Math.h"/>
-        <ClInclude Include="Source\Engine\Utils\Pointers.h"/>
-        <ClInclude Include="Source\Engine\Window.h"/>
-        <ClInclude Include="Source\pch.h"/>
-        <ClInclude Include="Source\Sandbox\SandboxGridLayer.h"/>
+        <ClInclude Include="Source\Editor\AnimatedQuad.h" />
+        <ClInclude Include="Source\Editor\AnimQuadLayer.h" />
+        <ClInclude Include="Source\Editor\EditorLayer.h" />
+        <ClInclude Include="Source\Engine\Application.h" />
+        <ClInclude Include="Source\Engine\Core\Layer.h" />
+        <ClInclude Include="Source\Engine\Graphics\ConstantBuffer.h" />
+        <ClInclude Include="Source\Engine\Graphics\DeviceContext.h" />
+        <ClInclude Include="Source\Engine\Graphics\IndexBuffer.h" />
+        <ClInclude Include="Source\Engine\Graphics\PixelShader.h" />
+        <ClInclude Include="Source\Engine\Graphics\RenderObjects\Quad.h" />
+        <ClInclude Include="Source\Engine\Graphics\RenderObjects\RenderObject.h" />
+        <ClInclude Include="Source\Engine\Graphics\RenderSystem.h" />
+        <ClInclude Include="Source\Engine\Graphics\Shader.h" />
+        <ClInclude Include="Source\Engine\Graphics\ShaderLibrary.h" />
+        <ClInclude Include="Source\Engine\Graphics\SwapChain.h" />
+        <ClInclude Include="Source\Engine\Graphics\VertexBuffer.h" />
+        <ClInclude Include="Source\Engine\Graphics\VertexShader.h" />
+        <ClInclude Include="Source\Engine\Time.h" />
+        <ClInclude Include="Source\Engine\Utils\Color32.h" />
+        <ClInclude Include="Source\Engine\Utils\DataStructures.h" />
+        <ClInclude Include="Source\Engine\Utils\Debug.h" />
+        <ClInclude Include="Source\Engine\Utils\Math.h" />
+        <ClInclude Include="Source\Engine\Utils\Pointers.h" />
+        <ClInclude Include="Source\Engine\Window.h" />
+        <ClInclude Include="Source\pch.h" />
+        <ClInclude Include="Source\Sandbox\SandboxGridLayer.h" />
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="Source\Editor\AnimatedQuad.cpp"/>
-        <ClCompile Include="Source\Editor\AnimQuadLayer.cpp"/>
-        <ClCompile Include="Source\Editor\EditorLayer.cpp"/>
-        <ClCompile Include="Source\Engine\Application.cpp"/>
-        <ClCompile Include="Source\Engine\Core\ISystem.cpp"/>
-        <ClCompile Include="Source\Engine\Core\Layer.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\IndexBuffer.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\RenderObjects\Quad.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\RenderObjects\RenderObject.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\Shader.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp"/>
-        <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp"/>
-        <ClCompile Include="Source\Engine\Time.cpp"/>
-        <ClCompile Include="Source\Engine\Utils\Math.cpp"/>
-        <ClCompile Include="Source\Engine\Window.cpp"/>
-        <ClCompile Include="Source\Main.cpp"/>
+        <ClCompile Include="Source\Editor\AnimatedQuad.cpp" />
+        <ClCompile Include="Source\Editor\AnimQuadLayer.cpp" />
+        <ClCompile Include="Source\Editor\EditorLayer.cpp" />
+        <ClCompile Include="Source\Engine\Application.cpp" />
+        <ClCompile Include="Source\Engine\Core\Layer.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\ConstantBuffer.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\DeviceContext.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\IndexBuffer.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\PixelShader.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\RenderObjects\Quad.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\RenderObjects\RenderObject.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\RenderSystem.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\Shader.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\ShaderLibrary.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\SwapChain.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\VertexBuffer.cpp" />
+        <ClCompile Include="Source\Engine\Graphics\VertexShader.cpp" />
+        <ClCompile Include="Source\Engine\Time.cpp" />
+        <ClCompile Include="Source\Engine\Utils\Math.cpp" />
+        <ClCompile Include="Source\Engine\Window.cpp" />
+        <ClCompile Include="Source\Main.cpp" />
         <ClCompile Include="Source\pch.cpp">
             <PrecompiledHeader>Create</PrecompiledHeader>
         </ClCompile>
@@ -318,7 +316,7 @@
             <LinkCompiled>true</LinkCompiled>
         </ClCompile>
     </ItemGroup>
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
     <ImportGroup Label="ExtensionTargets">
     </ImportGroup>
 </Project>

@@ -39,10 +39,10 @@ namespace Engine
 		virtual ~RenderObject();
 
 		[[nodiscard]]
-		auto GetVertexBuffer() const -> VertexBuffer&;
+		VertexBuffer& GetVertexBuffer() const;
 
 		[[nodiscard]]
-		auto GetIndexBuffer() const -> IndexBuffer&;
+		IndexBuffer& GetIndexBuffer() const;
 
 	protected:
 		VertexData m_VertexData;
@@ -60,12 +60,12 @@ namespace Engine
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
 	private:
-		virtual auto InitializeVertexData() -> VertexData = 0;
+		virtual VertexData InitializeVertexData() = 0;
 
-		virtual auto InitializeVertexLayout() -> VertexLayoutData = 0;
+		virtual VertexLayoutData InitializeVertexLayout() = 0;
 
-		virtual auto InitializeIndexData() -> IndexData = 0;
+		virtual IndexData InitializeIndexData() = 0;
 
-		virtual auto InitializeShaderData() -> void = 0;
+		virtual void InitializeShaderData() = 0;
 	};
 }

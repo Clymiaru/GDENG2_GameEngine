@@ -8,7 +8,7 @@ Engine::Layer::Layer(const std::string& name) :
 
 Engine::Layer::~Layer() = default;
 
-auto Engine::Layer::GetName() const -> const std::string&
+const std::string& Engine::Layer::GetName() const
 {
 	return m_Name;
 }

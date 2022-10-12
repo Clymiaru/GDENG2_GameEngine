@@ -13,17 +13,17 @@ namespace Engine
 
 		~SwapChain() = default;
 
-		auto Initialize(HWND windowHandle,
+		void Initialize(HWND windowHandle,
 		                const Vector2Int& windowSize,
 		                ID3D11Device* device,
-		                IDXGIFactory* factory) -> bool;
+		                IDXGIFactory* factory);
 
-		auto Terminate() const -> void;
+		void Terminate() const;
 
-		auto Present(bool vsync) const -> void;
+		void Present(bool vsync) const;
 
 		[[nodiscard]]
-		auto GetRenderTargetView() const -> ID3D11RenderTargetView&;
+		ID3D11RenderTargetView& GetRenderTargetView() const;
 
 	private:
 		IDXGISwapChain* m_SwapChain;

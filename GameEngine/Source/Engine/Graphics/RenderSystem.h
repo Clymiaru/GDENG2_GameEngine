@@ -22,26 +22,26 @@ namespace Engine
 	public:
 		RenderSystem(const RenderSystem&) = delete;
 
-		static auto Initialize(HWND windowHandle,
-		                       Vector2Int windowSize) -> void;
+		static void Initialize(HWND windowHandle,
+		                       Vector2Int windowSize);
 
-		static auto Terminate() -> void;
-
-		[[nodiscard]]
-		static auto GetDevice() -> ID3D11Device&;
+		static void Terminate();
 
 		[[nodiscard]]
-		static auto GetDeviceContext() -> DeviceContext&;
+		static ID3D11Device& GetDevice();
+
+		[[nodiscard]]
+		static DeviceContext& GetDeviceContext();
 
 		//---------- RENDER COMMANDS
-		static auto Clear(Color32 fillColor) -> void;
+		static void Clear(Color32 fillColor);
 
-		static auto Draw(const VertexBuffer& vertexBuffer,
-		                 const IndexBuffer& indexBuffer) -> void;
+		static void Draw(const VertexBuffer& vertexBuffer,
+		                 const IndexBuffer& indexBuffer);
 
-		static auto ShowFrame() -> void;
+		static void ShowFrame();
 
-		static auto SetViewportSize(Vector2Uint viewportSize) -> void;
+		static void SetViewportSize(Vector2Uint viewportSize);
 
 	private:
 		RenderSystem();

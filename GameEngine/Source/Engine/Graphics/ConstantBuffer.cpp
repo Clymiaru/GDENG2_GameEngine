@@ -13,8 +13,8 @@ Engine::ConstantBuffer::ConstantBuffer() :
 
 Engine::ConstantBuffer::~ConstantBuffer() = default;
 
-auto Engine::ConstantBuffer::Load(const void* buffer,
-                                  const UINT bufferSize) -> bool
+bool Engine::ConstantBuffer::Load(const void* buffer,
+                                  const UINT bufferSize)
 {
 	if (m_BufferData != nullptr)
 		m_BufferData->Release();
@@ -38,8 +38,8 @@ auto Engine::ConstantBuffer::Load(const void* buffer,
 	return true;
 }
 
-auto Engine::ConstantBuffer::Update(DeviceContext& deviceContext,
-                                    void* buffer) -> void
+void Engine::ConstantBuffer::Update(DeviceContext& deviceContext,
+                                    void* buffer) const
 {
 	deviceContext.m_DeviceContext->UpdateSubresource(m_BufferData,
 	                                                 NULL,
@@ -49,7 +49,7 @@ auto Engine::ConstantBuffer::Update(DeviceContext& deviceContext,
 	                                                 NULL);
 }
 
-auto Engine::ConstantBuffer::Release() -> bool
+bool Engine::ConstantBuffer::Release() const
 {
 	if (m_BufferData)
 		m_BufferData->Release();
