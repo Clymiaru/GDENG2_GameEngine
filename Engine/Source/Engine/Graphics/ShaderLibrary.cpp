@@ -28,6 +28,10 @@ namespace Engine
 		{
 			finalBackslashPos = 0ULL;
 		}
+		else
+		{
+			finalBackslashPos += 1;
+		}
 		const size_t startOfExtensionPos = fileName.find(L'.');
 		std::wstring shaderName = fileName.substr(finalBackslashPos, startOfExtensionPos - finalBackslashPos);
 		return shaderName;

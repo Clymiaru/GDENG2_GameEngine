@@ -23,10 +23,10 @@ void Sandbox::SandboxGridLayer::OnAttach()
 {
 	// Shader Resource Initialization
 	using namespace Engine;
-	ShaderLibrary::Register<VertexShader>(L"DefaultShader.hlsl",
+	ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
 	                                      "vsmain");
 
-	ShaderLibrary::Register<PixelShader>(L"DefaultShader.hlsl",
+	ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
 	                                     "psmain");
 	
 	// Object initialization
