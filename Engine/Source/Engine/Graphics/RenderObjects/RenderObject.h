@@ -36,6 +36,7 @@ namespace Engine
 
 		RenderObject();
 
+
 		virtual ~RenderObject();
 
 		[[nodiscard]]
@@ -45,11 +46,19 @@ namespace Engine
 		IndexBuffer& GetIndexBuffer() const;
 
 	protected:
-		VertexData m_VertexData;
 
-		VertexLayoutData m_VertexLayoutData;
+		void InitializeImpl(VertexData vertexData,
+						VertexLayoutData vertexLayoutData,
+						IndexData indexLayoutData,
+						std::wstring shaderName);
 
-		IndexData m_IndexData;
+		void TerminateImpl() const;
+
+		VertexData* m_VertexData;
+
+		VertexLayoutData* m_VertexLayoutData;
+
+		IndexData* m_IndexData;
 
 		SharedPtr<VertexShader> m_VertexShader;
 
@@ -60,12 +69,6 @@ namespace Engine
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
 	private:
-		virtual VertexData InitializeVertexData() = 0;
-
-		virtual VertexLayoutData InitializeVertexLayout() = 0;
-
-		virtual IndexData InitializeIndexData() = 0;
-
-		virtual void InitializeShaderData() = 0;
+		virtual void InitializeBuffers() = 0;
 	};
 }

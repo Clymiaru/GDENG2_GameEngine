@@ -15,10 +15,6 @@ namespace Engine
 	public:
 		Quad(const Vector3Float& position,
 		     const Vector2Float& size,
-		     const Color32& color);
-
-		Quad(const Vector3Float& position,
-		     const Vector2Float& size,
 		     const Color32& color,
 		     const std::wstring& shaderName);
 
@@ -35,20 +31,14 @@ namespace Engine
 
 		Color32 m_Color;
 
-		UniquePtr<ConstantBuffer> m_ConstantBuffer;
+		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
 
 		DirectX::XMMATRIX m_TransformMatrix;
 
 		Constant* m_Constant;
 
-		void SetBuffers();
+		void InitializeBuffers() override;
 
-		VertexData InitializeVertexData() override;
-
-		VertexLayoutData InitializeVertexLayout() override;
-
-		IndexData InitializeIndexData() override;
-
-		void InitializeShaderData() override;
+		void UpdateConstantBuffer(float time);
 	};
 }

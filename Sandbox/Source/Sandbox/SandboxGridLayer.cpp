@@ -28,8 +28,8 @@ void Sandbox::SandboxGridLayer::OnAttach()
 
 	ShaderLibrary::Register<PixelShader>(L"DefaultShader.hlsl",
 	                                     "psmain");
+	
 	// Object initialization
-
 	auto topLeftPosition    = Vector3Float{-200.0f, 300.0f, 0.0f};
 	constexpr auto tileSize = Vector2Float{100.f, 100.0f};
 
