@@ -127,14 +127,14 @@ namespace Engine
 	template <>
 	inline void DeviceContext::SetShader<VertexShader>(const std::wstring& shaderName) const
 	{
-		auto& vertexShader = ShaderLibrary::GetInstance().GetShader<VertexShader>(shaderName);
+		auto& vertexShader = ShaderLibrary::GetShader<VertexShader>(shaderName);
 		m_DeviceContext->VSSetShader(&vertexShader.GetData(), nullptr, 0);
 	}
 
 	template <>
 	inline void DeviceContext::SetShader<PixelShader>(const std::wstring& shaderName) const
 	{
-		auto& pixelShader = ShaderLibrary::GetInstance().GetShader<PixelShader>(shaderName);
+		auto& pixelShader = ShaderLibrary::GetShader<PixelShader>(shaderName);
 		m_DeviceContext->PSSetShader(&pixelShader.GetData(), nullptr, 0);
 	}
 

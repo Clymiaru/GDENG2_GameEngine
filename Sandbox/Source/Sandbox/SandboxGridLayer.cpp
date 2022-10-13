@@ -23,9 +23,11 @@ void Sandbox::SandboxGridLayer::OnAttach()
 {
 	// Shader Resource Initialization
 	using namespace Engine;
-	ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"DefaultShader.hlsl",
-	                                                          "vsmain",
-	                                                          "psmain");
+	ShaderLibrary::Register<VertexShader>(L"DefaultShader.hlsl",
+	                                      "vsmain");
+
+	ShaderLibrary::Register<PixelShader>(L"DefaultShader.hlsl",
+	                                     "psmain");
 	// Object initialization
 
 	auto topLeftPosition    = Vector3Float{-200.0f, 300.0f, 0.0f};

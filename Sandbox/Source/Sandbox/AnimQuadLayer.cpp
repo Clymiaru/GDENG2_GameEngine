@@ -22,9 +22,11 @@ Editor::AnimQuadLayer::~AnimQuadLayer()
 void Editor::AnimQuadLayer::OnAttach()
 {
 	// Shader Resource Initialization
-	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"QuadAnimShader.hlsl",
-	                                                                  "vsmain",
-	                                                                  "psmain");
+	Engine::ShaderLibrary::Register<Engine::VertexShader>(L"QuadAnimShader.hlsl",
+	                                                      "vsmain");
+
+	Engine::ShaderLibrary::Register<Engine::PixelShader>(L"QuadAnimShader.hlsl",
+	                                                     "psmain");
 
 	const auto [left, top, right, bottom] = Engine::Application::GetClientWindowRect();
 
@@ -49,18 +51,18 @@ void Editor::AnimQuadLayer::OnAttach()
 		                       static_cast<float>(b) / 255.0f,
 		                       1.0f);
 	};
-#define CHALLENGE 1  
+#define CHALLENGE 1
 
 #if CHALLENGE 1
-		m_AnimQuads.push_back(Engine::CreateUniquePtr<AnimatedQuad>(
-			Engine::Vector3Float{-100.0f, -107.0f, 0.0f}, Engine::Vector3Float{-400.0f, -212.0f, 0.0f},
-			Engine::Vector3Float{88-100.0f, 241.0f, 0.0f}, Engine::Vector3Float{-425.0f, 200.0f, 0.0f},
-			Engine::Vector3Float{532-100.0f, 237.0f, 0.0f}, Engine::Vector3Float{335.0f, 200.0f, 0.0f},
-			Engine::Vector3Float{487-100.0f, -237.0f, 0.0f}, Engine::Vector3Float{350.0f, -151.0f, 0.0f},
-			Engine::Color32{colorInt(0, 138, 0)}, Engine::Color32{colorInt(58, 57, 0)},
-			Engine::Color32{colorInt(254, 236, 0)}, Engine::Color32{colorInt(248, 239, 0)},
-			Engine::Color32{colorInt(87, 101, 249)}, Engine::Color32{colorInt(255, 255, 255)},
-			Engine::Color32{colorInt(177, 26, 101)}, Engine::Color32{colorInt(0, 0, 254)}));
+	m_AnimQuads.push_back(Engine::CreateUniquePtr<AnimatedQuad>(
+		Engine::Vector3Float{-100.0f, -107.0f, 0.0f}, Engine::Vector3Float{-400.0f, -212.0f, 0.0f},
+		Engine::Vector3Float{88 - 100.0f, 241.0f, 0.0f}, Engine::Vector3Float{-425.0f, 200.0f, 0.0f},
+		Engine::Vector3Float{532 - 100.0f, 237.0f, 0.0f}, Engine::Vector3Float{335.0f, 200.0f, 0.0f},
+		Engine::Vector3Float{487 - 100.0f, -237.0f, 0.0f}, Engine::Vector3Float{350.0f, -151.0f, 0.0f},
+		Engine::Color32{colorInt(0, 138, 0)}, Engine::Color32{colorInt(58, 57, 0)},
+		Engine::Color32{colorInt(254, 236, 0)}, Engine::Color32{colorInt(248, 239, 0)},
+		Engine::Color32{colorInt(87, 101, 249)}, Engine::Color32{colorInt(255, 255, 255)},
+		Engine::Color32{colorInt(177, 26, 101)}, Engine::Color32{colorInt(0, 0, 254)}));
 
 #else
 	m_AnimQuads.push_back(Engine::CreateUniquePtr<AnimatedQuad>(
@@ -87,7 +89,7 @@ void Editor::AnimQuadLayer::OnUpdate()
 	auto ratio = std::sin(1.0f / ((m_Time * m_Time) + 1.0f));
 #endif
 	//std::cout << ratio << "\n";
-	
+
 	for (const auto& quad : m_AnimQuads)
 	{
 		quad->Update(ratio);

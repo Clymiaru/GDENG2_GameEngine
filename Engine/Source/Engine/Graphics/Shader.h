@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <d3dcommon.h>
-
+#include "Engine/Utils/Pointers.h"
 namespace Engine
 {
 	template <typename T>
@@ -63,4 +63,9 @@ namespace Engine
 	{
 		return *m_Data;
 	}
+
+	//---------- USING DECLARATIONS
+	template <class ShaderType>
+	using ShaderRef = SharedPtr<ShaderType>; 
+	
 }

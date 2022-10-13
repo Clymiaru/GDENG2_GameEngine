@@ -58,8 +58,8 @@ namespace Engine
 		m_VertexData       = InitializeVertexData();
 		m_VertexLayoutData = InitializeVertexLayout();
 		m_IndexData        = InitializeIndexData();
-		m_VertexShader     = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(shaderName);
-		m_PixelShader      = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(shaderName);
+		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
+		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
 		SetBuffers();
 	}
 
@@ -184,7 +184,7 @@ namespace Engine
 
 	void Quad::InitializeShaderData()
 	{
-		m_VertexShader = ShaderLibrary::GetInstance().GetShaderRef<VertexShader>(L"SinTimeAnimShader");
-		m_PixelShader  = ShaderLibrary::GetInstance().GetShaderRef<PixelShader>(L"SinTimeAnimShader");
+		m_VertexShader = ShaderLibrary::GetShaderRef<VertexShader>(L"SinTimeAnimShader");
+		m_PixelShader  = ShaderLibrary::GetShaderRef<PixelShader>(L"SinTimeAnimShader");
 	}
 }

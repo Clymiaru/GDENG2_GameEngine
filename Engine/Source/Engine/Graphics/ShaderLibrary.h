@@ -1,51 +1,47 @@
 ﻿#pragma once
 #include <d3dcompiler.h>
-#include <unordered_map>
 
 #include "PixelShader.h"
 #include "VertexShader.h"
 
+#include "Engine/Utils/DataStructures.h"
 #include "Engine/Utils/Debug.h"
 #include "Engine/Utils/Pointers.h"
 
 namespace Engine
 {
-	class ShaderLibrary final
+	class ShaderLibrary final // NOLINT(cppcoreguidelines-special-member-functions)
 	{
 	public:
-		ShaderLibrary(const ShaderLibrary&) = delete;	
+		static void Initialize(const size_t expectedShaderCountOfAllShaders);
 
-		static ShaderLibrary& GetInstance();
-
-		void Initialize();
-
-		void Terminate();
+		static void Terminate();
 
 		template <typename T>
-		void Register(const std::wstring& fileName,
-		              const std::string& entryPointName);
-
-		void RegisterVertexAndPixelShader(const std::wstring& fileName,
-		                                  const std::string& vsEntryPointName,
-		                                  const std::string& psEntryPointName);
+		static void Register(const std::wstring& fileName,
+		                     const std::string& entryPointName);
 
 		template <typename T>
-		bool IsShaderRegistered(const std::wstring& name);
+		static bool IsShaderRegistered(const std::wstring& name);
 
 		template <typename T>
-		T& GetShader(const std::wstring& name);
+		static T& GetShader(const std::wstring& name);
 
 		template <typename T>
-		SharedPtr<T> GetShaderRef(const std::wstring& name);
+		static ShaderRef<T> GetShaderRef(const std::wstring& name);
 
 	private:
 		ShaderLibrary();
 
 		~ShaderLibrary();
 
-		std::unordered_map<std::wstring, SharedPtr<VertexShader>> m_VertexShaderMap;
+		static std::wstring GetShaderNameFromFilename(const std::wstring& fileName);
 
-		std::unordered_map<std::wstring, SharedPtr<PixelShader>> m_PixelShaderMap;
+		static ShaderLibrary s_Instance;
+
+		HashMap<std::wstring, ShaderRef<VertexShader>> m_VertexShaderMap;
+
+		HashMap<std::wstring, ShaderRef<PixelShader>> m_PixelShaderMap;
 	};
 
 	//---------- IS SHADER REGISTERED
@@ -58,13 +54,13 @@ namespace Engine
 	template <>
 	inline bool ShaderLibrary::IsShaderRegistered<VertexShader>(const std::wstring& name)
 	{
-		return m_VertexShaderMap.contains(name);
+		return s_Instance.m_VertexShaderMap.contains(name);
 	}
 
 	template <>
 	inline bool ShaderLibrary::IsShaderRegistered<PixelShader>(const std::wstring& name)
 	{
-		return m_PixelShaderMap.contains(name);
+		return s_Instance.m_PixelShaderMap.contains(name);
 	}
 
 	//---------- REGISTER SHADER
@@ -78,17 +74,19 @@ namespace Engine
 	inline void ShaderLibrary::Register<VertexShader>(const std::wstring& fileName,
 	                                                  const std::string& entryPointName)
 	{
-		auto shaderName = fileName.substr(0, fileName.find(L"."));
+		const std::wstring& shaderName = GetShaderNameFromFilename(fileName);
 
 		if (IsShaderRegistered<VertexShader>(shaderName))
 		{
 			return;
 		}
+
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
-		const auto result   = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr,
-		                                         entryPointName.c_str(), "vs_5_0", 0, 0,
-		                                         &blob, &errorBlob);
+		// ReSharper disable once CppTooWideScopeInitStatement
+		const HRESULT result = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr,
+		                                          entryPointName.c_str(), "vs_5_0", 0, 0,
+		                                          &blob, &errorBlob);
 		if (!SUCCEEDED(result))
 		{
 			if (errorBlob)
@@ -101,14 +99,14 @@ namespace Engine
 			}
 		}
 
-		m_VertexShaderMap[shaderName] = CreateSharedPtr<VertexShader>(std::move(blob));
+		s_Instance.m_VertexShaderMap[shaderName] = CreateSharedPtr<VertexShader>(std::move(blob));
 	}
 
 	template <>
 	inline void ShaderLibrary::Register<PixelShader>(const std::wstring& fileName,
 	                                                 const std::string& entryPointName)
 	{
-		auto shaderName = fileName.substr(0, fileName.find(L"."));
+		const std::wstring& shaderName = GetShaderNameFromFilename(fileName);
 
 		if (IsShaderRegistered<PixelShader>(shaderName))
 		{
@@ -117,16 +115,17 @@ namespace Engine
 
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
-		const auto result   = D3DCompileFromFile(fileName.c_str(),
-		                                         nullptr,
+		// ReSharper disable once CppTooWideScopeInitStatement
+		const HRESULT result = D3DCompileFromFile(fileName.c_str(),
+		                                          nullptr,
 
-		                                         nullptr,
-		                                         entryPointName.c_str(),
-		                                         "ps_5_0",
-		                                         0,
-		                                         0,
-		                                         &blob,
-		                                         &errorBlob);
+		                                          nullptr,
+		                                          entryPointName.c_str(),
+		                                          "ps_5_0",
+		                                          0,
+		                                          0,
+		                                          &blob,
+		                                          &errorBlob);
 
 		if (!SUCCEEDED(result))
 		{
@@ -140,7 +139,7 @@ namespace Engine
 			}
 		}
 
-		m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
+		s_Instance.m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
 	}
 
 	//---------- GET SHADER
@@ -153,39 +152,39 @@ namespace Engine
 	template <>
 	inline VertexShader& ShaderLibrary::GetShader<VertexShader>(const std::wstring& name)
 	{
-		bool isFound = IsShaderRegistered<VertexShader>(name);
+		const bool isFound = IsShaderRegistered<VertexShader>(name);
 		ENGINE_ASSERT(isFound, "Vertex Shader is not registered!")
-		return *m_VertexShaderMap[name];
+		return *s_Instance.m_VertexShaderMap[name];
 	}
 
 	template <>
 	inline PixelShader& ShaderLibrary::GetShader<PixelShader>(const std::wstring& name)
 	{
-		bool isFound = IsShaderRegistered<PixelShader>(name);
+		const bool isFound = IsShaderRegistered<PixelShader>(name);
 		ENGINE_ASSERT(isFound, "Pixel Shader is not registered!")
-		return *m_PixelShaderMap[name];
+		return *s_Instance.m_PixelShaderMap[name];
 	}
 
 	//---------- GET SHADER REF
 	template <typename T>
-	inline SharedPtr<T> ShaderLibrary::GetShaderRef(const std::wstring& name)
+	inline ShaderRef<T> ShaderLibrary::GetShaderRef(const std::wstring& name)
 	{
 		return nullptr;
 	}
 
 	template <>
-	inline SharedPtr<VertexShader> ShaderLibrary::GetShaderRef<VertexShader>(const std::wstring& name)
+	inline ShaderRef<VertexShader> ShaderLibrary::GetShaderRef<VertexShader>(const std::wstring& name)
 	{
-		bool isFound = IsShaderRegistered<VertexShader>(name);
+		const bool isFound = IsShaderRegistered<VertexShader>(name);
 		ENGINE_ASSERT(isFound, "Vertex Shader is not registered!")
-		return m_VertexShaderMap[name];
+		return s_Instance.m_VertexShaderMap[name];
 	}
 
 	template <>
-	inline SharedPtr<PixelShader> ShaderLibrary::GetShaderRef<PixelShader>(const std::wstring& name)
+	inline ShaderRef<PixelShader> ShaderLibrary::GetShaderRef<PixelShader>(const std::wstring& name)
 	{
-		bool isFound = IsShaderRegistered<PixelShader>(name);
+		const bool isFound = IsShaderRegistered<PixelShader>(name);
 		ENGINE_ASSERT(isFound, "Pixel Shader is not registered!")
-		return m_PixelShaderMap[name];
+		return s_Instance.m_PixelShaderMap[name];
 	}
 }

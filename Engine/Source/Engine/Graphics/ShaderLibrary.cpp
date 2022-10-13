@@ -1,34 +1,35 @@
 ﻿#include "pch.h"
 #include "ShaderLibrary.h"
 
-Engine::ShaderLibrary& Engine::ShaderLibrary::GetInstance()
+namespace Engine
 {
-	static ShaderLibrary instance;
-	return instance;
-}
+	ShaderLibrary ShaderLibrary::s_Instance = ShaderLibrary();
 
-void Engine::ShaderLibrary::Initialize()
-{
-}
+	void ShaderLibrary::Initialize(const size_t expectedShaderCountOfAllShaders)
+	{
+		s_Instance.m_VertexShaderMap.reserve(expectedShaderCountOfAllShaders);
+		s_Instance.m_PixelShaderMap.reserve(expectedShaderCountOfAllShaders);
+	}
 
-void Engine::ShaderLibrary::Terminate()
-{
-	m_VertexShaderMap.clear();
-	m_PixelShaderMap.clear();
-}
+	void ShaderLibrary::Terminate()
+	{
+		s_Instance.m_VertexShaderMap.clear();
+		s_Instance.m_PixelShaderMap.clear();
+	}
 
-void Engine::ShaderLibrary::RegisterVertexAndPixelShader(const std::wstring& fileName,
-                                                         const std::string& vertexShaderEntryPointName,
-                                                         const std::string& pixelShaderEntryPointName)
-{
-	Register<VertexShader>(fileName, vertexShaderEntryPointName);
-	Register<PixelShader>(fileName, pixelShaderEntryPointName);
-}
+	ShaderLibrary::ShaderLibrary() = default;
 
-Engine::ShaderLibrary::ShaderLibrary() :
-	m_VertexShaderMap{},
-	m_PixelShaderMap{}
-{
-}
+	ShaderLibrary::~ShaderLibrary() = default;
 
-Engine::ShaderLibrary::~ShaderLibrary() = default;
+	std::wstring ShaderLibrary::GetShaderNameFromFilename(const std::wstring& fileName)
+	{
+		size_t finalBackslashPos   = fileName.find_last_of(L'/');
+		if (finalBackslashPos == std::wstring::npos)
+		{
+			finalBackslashPos = 0ULL;
+		}
+		const size_t startOfExtensionPos = fileName.find(L'.');
+		std::wstring shaderName = fileName.substr(finalBackslashPos, startOfExtensionPos - finalBackslashPos);
+		return shaderName;
+	}
+}

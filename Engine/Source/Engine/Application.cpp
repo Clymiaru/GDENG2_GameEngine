@@ -107,7 +107,7 @@ namespace Engine
 
 		m_Window->Start();
 
-		ShaderLibrary::GetInstance().Initialize();
+		ShaderLibrary::Initialize(4);
 
 		RenderSystem::Initialize(m_Window->GetHandle(),
 		                         {1280, 720});
@@ -116,7 +116,7 @@ namespace Engine
 	void Application::ClosingSystems()
 	{
 		Time::Terminate();
-		ShaderLibrary::GetInstance().Terminate();
+		ShaderLibrary::Terminate();
 		RenderSystem::Terminate();
 		m_Instance.m_Window->Close();
 	}

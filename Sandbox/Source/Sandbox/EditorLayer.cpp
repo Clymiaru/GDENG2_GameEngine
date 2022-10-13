@@ -24,9 +24,11 @@ Editor::EditorLayer::~EditorLayer()
 void Editor::EditorLayer::OnAttach()
 {
 	// Shader Resource Initialization
-	Engine::ShaderLibrary::GetInstance().RegisterVertexAndPixelShader(L"DefaultShader.hlsl",
-	                                                                  "vsmain",
-	                                                                  "psmain");
+	Engine::ShaderLibrary::Register<Engine::VertexShader>(L"DefaultShader.hlsl",
+	                                                      "vsmain");
+
+	Engine::ShaderLibrary::Register<Engine::PixelShader>(L"DefaultShader.hlsl",
+	                                                     "psmain");
 
 	// Object initialization
 	m_Quads.push_back(Engine::CreateUniquePtr<Engine::Quad>(Engine::Vector3Float{-300.0f, 100.0f, 0.0f},
