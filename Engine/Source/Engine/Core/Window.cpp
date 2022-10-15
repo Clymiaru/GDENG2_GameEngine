@@ -2,18 +2,16 @@
 #include "Window.h"
 
 #include "Application.h"
-
-#include "Utils/Debug.h"
-
-#include "Engine/Time.h"
-
+#include "Debug.h"
 namespace Engine
 {
-	Window::Window(Profile profile) :
+	Window::Window() :
 		m_Handle{nullptr},
-		m_Profile{std::move(profile)}
+		m_Message{}
 	{
 	}
+
+	Window::~Window() = default;
 
 	LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
 	                                  const UINT message,
@@ -26,7 +24,7 @@ namespace Engine
 			{
 				auto* window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
 				SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
-				window->SetHandle(windowHandle);
+				window->m_Handle = windowHandle;
 				break;
 			}
 			case WM_CLOSE:
@@ -44,10 +42,8 @@ namespace Engine
 		return 0;
 	}
 
-	void Window::Start()
+	void Window::Start() const
 	{
-		Create(m_Profile);
-
 		ShowWindow(m_Handle, SW_SHOW);
 
 		UpdateWindow(m_Handle);
@@ -57,6 +53,7 @@ namespace Engine
 	{
 		const auto result = DestroyWindow(m_Handle);
 		ENGINE_ASSERT(result, "Window cannot be destroyed!")
+		delete this;
 	}
 
 	void Window::PollEvents()
@@ -68,25 +65,10 @@ namespace Engine
 		}
 	}
 
-	RECT Window::GetClientWindowRect() const
+	Window* Window::Create(const Profile& profile)
 	{
-		RECT rc;
-		GetClientRect(m_Handle, &rc);
-		return rc;
-	}
-
-	HWND Window::GetHandle() const
-	{
-		return m_Handle;
-	}
-
-	void Window::SetHandle(HWND handle)
-	{
-		m_Handle = handle;
-	}
-
-	HWND Window::Create(const Profile profile)
-	{
+		Window* window = new Window();
+		
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);
@@ -101,7 +83,8 @@ namespace Engine
 		windowClass.style         = NULL;
 		windowClass.lpfnWndProc   = &WindowsProcedure;
 
-		ENGINE_ASSERT(RegisterClassEx(&windowClass), "Window cannot be registered!")
+		HRESULT registerResult = RegisterClassEx(&windowClass);
+		ENGINE_ASSERT(registerResult, "Window cannot be registered!")
 
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
 		                                   profile.Name.c_str(),
@@ -114,10 +97,10 @@ namespace Engine
 		                                   nullptr,
 		                                   nullptr,
 		                                   nullptr,
-		                                   this);
+		                                   window);
 
 		ENGINE_ASSERT(handle, "Handle cannot be retrieved!")
 
-		return handle;
+		return window;
 	}
 }

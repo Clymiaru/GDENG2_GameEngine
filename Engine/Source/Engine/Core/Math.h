@@ -1,11 +1,10 @@
 #pragma once
-
 #include <DirectXMath.h>
+
+#include "Core.h"
 
 namespace Engine
 {
-	using Uint = unsigned int;
-
 	template <typename T>
 	struct Vector2
 	{
@@ -62,22 +61,4 @@ namespace Engine
 	};
 
 	using RectUint = Rect<Uint>;
-
-	class Mat4
-	{
-	public:
-		Mat4();
-
-		~Mat4();
-
-		auto Translate(const Vector3Float& amount) -> void;
-
-		auto SetOrthographicProjection(float width,
-		                               float height,
-		                               float nearPlane,
-		                               float farPlane) -> void;
-
-	private:
-		DirectX::XMMATRIX m_Data;
-	};
 }

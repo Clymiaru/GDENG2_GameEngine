@@ -1,20 +1,22 @@
 #include "pch.h"
 
-#include "Engine/Application.h"
+#include "Engine/Engine.h"
 
-#include "Sandbox/SandboxGridLayer.h"
-
-auto main() -> int
+int main()
 {
 	using namespace Engine;
-	
-	Application::Start(Application::Profile{L"Editor", 1280, 720});
 
-	Application::RegisterLayer(new Sandbox::SandboxGridLayer());
+	Application::SetProfile(Application::Profile{
+		L"Sandbox",
+		1280,
+		720
+	});
+
+	Application::Start();
 
 	Application::Run();
 
-	Application::Close();
+	Application::End();
 
 	return 0;
 }
