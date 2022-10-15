@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Application.h"
 
-#include <Engine/Time.h>
+#include "Time.h"
 
 namespace Engine
 {
@@ -38,8 +38,7 @@ namespace Engine
 
 	void Application::StartingSystems()
 	{
-		// Time::Initialize();
-		
+		Instance().m_Time = Time();
 		Instance().m_Window->Start();
 		
 		// ShaderLibrary::Initialize(4);
@@ -52,13 +51,13 @@ namespace Engine
 	{
 		while (Instance().m_IsRunning)
 		{
-			// Time::LogFrameStart();
+			Instance().m_Time.Start();
 
 			Instance().PollEvents();
 			Instance().Update();
 			Instance().Render();
-
-			// Time::LogFrameEnd();
+			
+			Instance().m_Time.End();
 
 			Sleep(1);
 		}
@@ -82,12 +81,19 @@ namespace Engine
 		Instance().m_IsRunning = false;
 	}
 
+	double Application::DeltaTime()
+	{
+		return Instance().m_Time.DeltaTime();
+	}
+
 	void Application::Update()
 	{
 		// for (auto layer : m_Layers)
 		// {
 		// 	layer->OnUpdate();
 		// }
+
+		Debug::Log("Time (sec): {0}", DeltaTime());
 	}
 
 	void Application::PollEvents()

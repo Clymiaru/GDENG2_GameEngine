@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Core.h"
+#include "Time.h"
 #include "Window.h"
 
 namespace Engine
@@ -27,6 +28,8 @@ namespace Engine
 		
 		static void Quit();
 
+		static double DeltaTime();
+
 	private:
 		Application();
 
@@ -51,6 +54,8 @@ namespace Engine
 		bool m_IsRunning;
 
 		Window* m_Window;
+
+		Time m_Time;
 
 		friend class Window;
 	};
