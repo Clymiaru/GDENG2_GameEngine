@@ -92,8 +92,6 @@ namespace Engine
 		// {
 		// 	layer->OnUpdate();
 		// }
-
-		Debug::Log("Time (sec): {0}", DeltaTime());
 	}
 
 	void Application::PollEvents()
