@@ -1,8 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 
-#include "Core.h"
-
+// Code Reference: https://github.com/microsoft/DirectXTK
 namespace Engine
 {
 	class Vector2 final
