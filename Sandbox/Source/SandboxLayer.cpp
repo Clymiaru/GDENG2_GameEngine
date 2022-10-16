@@ -1,5 +1,7 @@
 ﻿#include "SandboxLayer.h"
 
+#include <Utils/Random.h>
+
 #include "Engine/Engine.h"
 
 #include "Engine/Graphics/RenderObjects/Cube.h"
@@ -54,10 +56,8 @@ void Sandbox::SandboxLayer::OnAttach()
 	}
 
 	m_Cube = CreateUniquePtr<Cube>(Vector3(0, 0, 0),
-	                               Vector3(100, 100, 100),
+	                               Vector3(Random::Range(100, 200), Random::Range(100, 200), Random::Range(100, 200)),
 	                               L"DefaultShader");
-
-	
 }
 
 void Sandbox::SandboxLayer::OnUpdate()
