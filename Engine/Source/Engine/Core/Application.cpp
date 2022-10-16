@@ -122,8 +122,10 @@ namespace Engine
 
 	void Application::Render()
 	{
-		RenderSystem::GetDeviceContext().SetViewportSize(m_Window->GetSize());
+		RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
 
+		RenderSystem::GetDeviceContext().SetViewportSize(m_Window->GetSize());
+		
 		m_LayerSystem.Render();
 
 		RenderSystem::ShowFrame();

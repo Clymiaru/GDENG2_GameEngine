@@ -1,7 +1,8 @@
+#include "Engine/Engine.h"
 
 #include "SandboxLayer.h"
 
-#include "Engine/Engine.h"
+
 int main()
 {
 	using namespace Engine;
