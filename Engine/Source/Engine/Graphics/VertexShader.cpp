@@ -1,24 +1,21 @@
 ﻿#include "pch.h"
-
 #include "VertexShader.h"
 
-#include <iostream>
+#include "Engine/Core/Debug.h"
 
 #include "RenderSystem.h"
-
-#include "Engine/Utils/Debug.h"
 
 namespace Engine
 {
 	VertexShader::VertexShader(ID3DBlob* vertexShaderBlob) :
 		Shader(vertexShaderBlob)
 	{
-		const auto result = RenderSystem::GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
-		                                                                 m_Blob->GetBufferSize(),
-		                                                                 nullptr,
-		                                                                 &m_Data);
+		const HRESULT result = RenderSystem::GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
+		                                                                    m_Blob->GetBufferSize(),
+		                                                                    nullptr,
+		                                                                    &m_Data);
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
+		ENGINE_ASSERT(SUCCEEDED(result), "Vertex shader cannot be created and initialized!")
 	}
 
 	VertexShader::~VertexShader()

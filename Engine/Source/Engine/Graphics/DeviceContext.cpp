@@ -10,27 +10,23 @@
 namespace Engine
 {
 	DeviceContext::DeviceContext(ID3D11DeviceContext* deviceContext) :
-		m_DeviceContext(std::move(deviceContext))
+		m_DeviceContext(std::move(deviceContext)),
+		m_Topology{}
 	{
 	}
 
 	DeviceContext::~DeviceContext() = default;
 
-	void DeviceContext::Initialize()
-	{
-	}
-
-	void DeviceContext::Terminate() const
+	void DeviceContext::Release() const
 	{
 		m_DeviceContext->Release();
 	}
 
 	void DeviceContext::Clear(const SwapChain& swapChain,
-	                          const Color32 color) const
+	                          const Color color) const
 	{
-		const float clearColor[] = {color.Red, color.Green, color.Blue, color.Alpha};
 		m_DeviceContext->ClearRenderTargetView(&swapChain.GetRenderTargetView(),
-		                                       clearColor);
+		                                       color);
 
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
@@ -40,11 +36,11 @@ namespace Engine
 		                                    nullptr);
 	}
 
-	void DeviceContext::SetViewportSize(const Vector2Uint size) const
+	void DeviceContext::SetViewportSize(const Vector2 size) const
 	{
 		D3D11_VIEWPORT viewport = {};
-		viewport.Width          = static_cast<float>(size.X);
-		viewport.Height         = static_cast<float>(size.Y);
+		viewport.Width          = size.X();
+		viewport.Height         = size.Y();
 		viewport.MinDepth       = 0.0f;
 		viewport.MaxDepth       = 1.0f;
 		m_DeviceContext->RSSetViewports(1, &viewport);

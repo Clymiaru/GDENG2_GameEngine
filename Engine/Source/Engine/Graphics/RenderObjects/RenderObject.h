@@ -6,7 +6,7 @@
 #include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Graphics/VertexShader.h"
 
-#include "Engine/Utils/Pointers.h"
+#include "Engine/Core/Core.h"
 
 namespace Engine
 {

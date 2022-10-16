@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "Window.h"
 
-#include "Application.h"
 #include "Debug.h"
+
+#include "Application.h"
+
 namespace Engine
 {
 	Window::Window() :
@@ -25,6 +27,7 @@ namespace Engine
 				auto* window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
 				SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
 				window->m_Handle = windowHandle;
+				window->UpdateClientSize();
 				break;
 			}
 			case WM_CLOSE:
@@ -42,8 +45,10 @@ namespace Engine
 		return 0;
 	}
 
-	void Window::Start() const
+	void Window::Start()
 	{
+		UpdateClientSize();
+
 		ShowWindow(m_Handle, SW_SHOW);
 
 		UpdateWindow(m_Handle);
@@ -54,6 +59,24 @@ namespace Engine
 		const auto result = DestroyWindow(m_Handle);
 		ENGINE_ASSERT(result, "Window cannot be destroyed!")
 		delete this;
+	}
+
+	Vector2 Window::GetSize()
+	{
+		return m_ClientSize;
+	}
+
+	void Window::UpdateClientSize()
+	{
+		RECT rect = {};
+		GetClientRect(m_Handle, &rect);
+		m_ClientSize.X(static_cast<float>(rect.right - rect.left));
+		m_ClientSize.Y(static_cast<float>(rect.bottom - rect.top));
+	}
+
+	HWND& Window::GetHandle()
+	{
+		return m_Handle;
 	}
 
 	void Window::PollEvents()
@@ -68,7 +91,7 @@ namespace Engine
 	Window* Window::Create(const Profile& profile)
 	{
 		Window* window = new Window();
-		
+
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);

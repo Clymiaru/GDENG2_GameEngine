@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "VertexBuffer.h"
+
 #include "RenderSystem.h"
 
 namespace Engine
@@ -18,23 +19,23 @@ namespace Engine
 		m_Data->Release();
 	}
 
-	auto VertexBuffer::GetCount() const -> Uint
+	Uint VertexBuffer::GetCount() const
 	{
 		return m_DataCount;
 	}
 
-	auto VertexBuffer::GetSize() const -> Uint
+	Uint VertexBuffer::GetSize() const
 	{
 		return m_DataSize * m_DataCount;
 	}
 
-	auto VertexBuffer::Load(const void* vertexList,
+	bool VertexBuffer::Load(const void* vertexList,
 	                        const Uint vertexDataSize,
 	                        const Uint vertexListCount,
 	                        const void* shaderByteCode,
 	                        const Uint shaderByteCodeSize,
 	                        const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-	                        const Uint indexLayoutSize) -> bool
+	                        const Uint indexLayoutSize)
 	{
 		if (m_Data)
 			m_Data->Release();

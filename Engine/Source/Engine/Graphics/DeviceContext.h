@@ -4,28 +4,14 @@
 #include "ConstantBuffer.h"
 #include "IndexBuffer.h"
 #include "PixelShader.h"
-#include "ShaderLibrary.h"
+#include "SwapChain.h"
 #include "VertexBuffer.h"
 #include "VertexShader.h"
-
-#include "Engine/Utils/Color32.h"
-#include "Engine/Utils/Math.h"
-#include "Engine/Utils/Pointers.h"
+#include "Engine/Core/Core.h"
+#include "Engine/Core/Math.h"
 
 namespace Engine
 {
-	class SwapChain;
-
-	class VertexBuffer;
-
-	class IndexBuffer;
-
-	class ConstantBuffer;
-
-	class VertexShader;
-
-	class PixelShader;
-
 	class DeviceContext final
 	{
 	public:
@@ -33,15 +19,9 @@ namespace Engine
 
 		~DeviceContext();
 
-		static void Initialize();
+		void Release() const;
 
-		void Terminate() const;
-
-		void Clear(const SwapChain& swapChain,
-		           Color32 color) const;
-
-		void SetViewportSize(Vector2Uint size) const;
-
+		// Buffers
 		template <typename T>
 		void SetBuffer(const T& buffer) const;
 
@@ -50,9 +30,6 @@ namespace Engine
 
 		// Shaders
 		template <typename T>
-		void SetShader(const std::wstring& shaderName) const;
-
-		template <typename T>
 		void SetShader(T& shader) const;
 
 		// Draw
@@ -60,6 +37,11 @@ namespace Engine
 
 		void Draw(Uint indexCount,
 		          Uint startingIndex) const;
+
+		void Clear(const SwapChain& swapChain,
+		   Color color) const;
+
+		void SetViewportSize(Vector2 size) const;
 
 	private:
 		ID3D11DeviceContext* m_DeviceContext;
@@ -104,49 +86,38 @@ namespace Engine
 	template <>
 	inline void DeviceContext::SetConstantBuffer<VertexShader>(const ConstantBuffer& constantBuffer) const
 	{
-		m_DeviceContext->VSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
+		m_DeviceContext->VSSetConstantBuffers(0,
+		                                      1,
+		                                      &constantBuffer.m_BufferData);
 	}
 
 	template <>
 	inline void DeviceContext::SetConstantBuffer<PixelShader>(const ConstantBuffer& constantBuffer) const
 	{
-		m_DeviceContext->PSSetConstantBuffers(0, 1, &constantBuffer.m_BufferData);
+		m_DeviceContext->PSSetConstantBuffers(0,
+		                                      1,
+		                                      &constantBuffer.m_BufferData);
 	}
 
 	//---------- SET SHADER
-	template <typename T>
-	void DeviceContext::SetShader(const std::wstring& shaderName) const
-	{
-	}
-
 	template <typename T>
 	void DeviceContext::SetShader(T& shader) const
 	{
 	}
 
 	template <>
-	inline void DeviceContext::SetShader<VertexShader>(const std::wstring& shaderName) const
-	{
-		auto& vertexShader = ShaderLibrary::GetShader<VertexShader>(shaderName);
-		m_DeviceContext->VSSetShader(&vertexShader.GetData(), nullptr, 0);
-	}
-
-	template <>
-	inline void DeviceContext::SetShader<PixelShader>(const std::wstring& shaderName) const
-	{
-		auto& pixelShader = ShaderLibrary::GetShader<PixelShader>(shaderName);
-		m_DeviceContext->PSSetShader(&pixelShader.GetData(), nullptr, 0);
-	}
-
-	template <>
 	inline void DeviceContext::SetShader<VertexShader>(VertexShader& shader) const
 	{
-		m_DeviceContext->VSSetShader(&shader.GetData(), nullptr, 0);
+		m_DeviceContext->VSSetShader(&shader.GetData(),
+		                             nullptr,
+		                             0);
 	}
 
 	template <>
 	inline void DeviceContext::SetShader<PixelShader>(PixelShader& shader) const
 	{
-		m_DeviceContext->PSSetShader(&shader.GetData(), nullptr, 0);
+		m_DeviceContext->PSSetShader(&shader.GetData(),
+		                             nullptr,
+		                             0);
 	}
 }

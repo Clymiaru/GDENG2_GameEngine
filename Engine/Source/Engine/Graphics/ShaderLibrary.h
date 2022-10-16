@@ -1,15 +1,20 @@
 ﻿#pragma once
 #include <d3dcompiler.h>
 
-#include "PixelShader.h"
+#include "Engine/Core/Debug.h"
+
+#include "Shader.h"
+
 #include "VertexShader.h"
 
-#include "Engine/Utils/DataStructures.h"
-#include "Engine/Utils/Debug.h"
-#include "Engine/Utils/Pointers.h"
+#include "PixelShader.h"
 
 namespace Engine
 {
+	class PixelShader;
+
+	class VertexShader;
+
 	class ShaderLibrary final // NOLINT(cppcoreguidelines-special-member-functions)
 	{
 	public:

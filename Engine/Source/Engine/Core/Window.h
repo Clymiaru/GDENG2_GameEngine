@@ -1,8 +1,6 @@
 #pragma once
 #include <Windows.h>
 
-#include "Core.h"
-
 namespace Engine
 {
 	class Window final
@@ -41,14 +39,22 @@ namespace Engine
 
 		void PollEvents();
 
-		void Start() const;
+		void Start();
 
 		void Close();
 
+		HWND& GetHandle();
+
+		Vector2 GetSize();
+
 	private:
+		void UpdateClientSize();
+
 		HWND m_Handle;
 
 		MSG m_Message;
+
+		Vector2 m_ClientSize;
 
 		friend LRESULT WindowsProcedure(HWND windowHandle,
 		                                UINT message,

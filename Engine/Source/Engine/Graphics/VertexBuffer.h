@@ -1,8 +1,6 @@
 #pragma once
 #include <d3d11.h>
 
-#include "Engine/Utils/Math.h"
-
 namespace Engine
 {
 	class DeviceContext;
@@ -33,9 +31,9 @@ namespace Engine
 
 		ID3D11InputLayout* m_DataLayout;
 
-		UINT m_DataSize;
+		Uint m_DataSize;
 
-		UINT m_DataCount;
+		Uint m_DataCount;
 
 		friend class DeviceContext;
 	};

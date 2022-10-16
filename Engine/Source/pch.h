@@ -8,6 +8,6 @@
 
 #include "Engine/Core/Core.h"
 
-#include "Engine/Core/Application.h"
-
 #include "Engine/Core/Debug.h"
+
+#include "Engine/Core/Math.h"

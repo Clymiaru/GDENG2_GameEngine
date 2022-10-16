@@ -1,9 +1,6 @@
 ﻿#pragma once
 #include <d3d11.h>
-
-#include "Engine/Utils/Color32.h"
-#include "Engine/Utils/Math.h"
-#include "Engine/Utils/Pointers.h"
+#include <d3dcompiler.h>
 
 namespace Engine
 {
@@ -17,15 +14,16 @@ namespace Engine
 
 	class IndexBuffer;
 
+	class Window;
+
 	class RenderSystem final
 	{
 	public:
 		RenderSystem(const RenderSystem&) = delete;
 
-		static void Initialize(HWND windowHandle,
-		                       Vector2Int windowSize);
+		static void Start(Window& window);
 
-		static void Terminate();
+		static void End();
 
 		[[nodiscard]]
 		static ID3D11Device& GetDevice();
@@ -34,14 +32,14 @@ namespace Engine
 		static DeviceContext& GetDeviceContext();
 
 		//---------- RENDER COMMANDS
-		static void Clear(Color32 fillColor);
+		static void Clear(Color fillColor);
 
 		static void Draw(const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer);
 
 		static void ShowFrame();
 
-		static void SetViewportSize(Vector2Uint viewportSize);
+		static void SetViewportSize(Vector2 viewportSize);
 
 	private:
 		RenderSystem();

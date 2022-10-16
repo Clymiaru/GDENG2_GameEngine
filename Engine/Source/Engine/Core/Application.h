@@ -1,13 +1,13 @@
 ﻿#pragma once
+#include "Time.h"
 
 #include "Core.h"
-#include "Time.h"
-#include "Window.h"
+#include "LayerSystem.h"
 
 namespace Engine
 {
+	class Window;
 	class Layer;
-	
 	class Application final
 	{
 	public:
@@ -20,6 +20,8 @@ namespace Engine
 
 		static void SetProfile(const Profile& profile);
 
+		static void SetInitialLayers(List<Layer*> initialLayers);
+
 		static void Start();
 
 		static void Run();
@@ -29,6 +31,8 @@ namespace Engine
 		static void Quit();
 
 		static double DeltaTime();
+
+		static Window& WindowRef();
 
 	private:
 		Application();
@@ -56,6 +60,8 @@ namespace Engine
 		Window* m_Window;
 
 		Time m_Time;
+
+		LayerSystem m_LayerSystem;
 
 		friend class Window;
 	};

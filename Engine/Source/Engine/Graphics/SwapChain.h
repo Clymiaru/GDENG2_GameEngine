@@ -1,24 +1,19 @@
 #pragma once
 #include <d3d11.h>
-#include "Engine/Utils/Math.h"
 
 namespace Engine
 {
-	class DeviceContext;
-
+	class Window;
 	class SwapChain final
 	{
 	public:
-		SwapChain();
+		SwapChain(Window& window,
+		          ID3D11Device* device,
+		          IDXGIFactory* factory);
 
-		~SwapChain() = default;
+		~SwapChain();
 
-		void Initialize(HWND windowHandle,
-		                const Vector2Int& windowSize,
-		                ID3D11Device* device,
-		                IDXGIFactory* factory);
-
-		void Terminate() const;
+		void Release() const;
 
 		void Present(bool vsync) const;
 
@@ -26,6 +21,12 @@ namespace Engine
 		ID3D11RenderTargetView& GetRenderTargetView() const;
 
 	private:
+		void CreateSwapChain(Window& window,
+		                     ID3D11Device* device,
+		                     IDXGIFactory* factory);
+
+		void CreateRenderTargetView(ID3D11Device* device);
+
 		IDXGISwapChain* m_SwapChain;
 
 		ID3D11RenderTargetView* m_RenderTargetView;

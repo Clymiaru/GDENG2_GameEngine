@@ -55,6 +55,16 @@ namespace Engine
 		[[nodiscard]]
 		Vector2 Normalize() const noexcept;
 
+		[[nodiscard]]
+		float X() const noexcept;
+
+		void X(float x) noexcept;
+
+		[[nodiscard]]
+		float Y() const noexcept;
+
+		void Y(float y) noexcept;
+
 		//----------CONSTANTS
 		static const Vector2 Zero;
 
@@ -68,26 +78,26 @@ namespace Engine
 		DirectX::XMFLOAT2 m_Data;
 	};
 
-	Vector2 operator+(const Vector2& vector1,
-	                  const Vector2& vector2) noexcept;
+	// Vector2 operator+(const Vector2& vector1,
+	//                   const Vector2& vector2) noexcept;
+	//
+	// Vector2 operator-(const Vector2& vector1,
+	//                   const Vector2& vector2) noexcept;
+	//
+	// Vector2 operator*(const Vector2& vector,
+	//                   float scalar) noexcept;
+	//
+	// Vector2 operator/(const Vector2& vector,
+	//                   float scalar) noexcept;
 
-	Vector2 operator-(const Vector2& vector1,
-	                  const Vector2& vector2) noexcept;
-
-	Vector2 operator*(const Vector2& vector,
-	                  float scalar) noexcept;
-
-	Vector2 operator/(const Vector2& vector,
-	                  float scalar) noexcept;
-
-	class Vector3 final
+	class Vector3 final : DirectX::XMFLOAT3
 	{
 	public:
 		Vector3() noexcept;
 
 		constexpr explicit Vector3(const float x,
-		                           const float y,
-		                           const float z) noexcept;
+								   const float y,
+								   const float z) noexcept;
 
 		Vector3(const Vector3&) = default;
 
@@ -132,6 +142,21 @@ namespace Engine
 		[[nodiscard]]
 		Vector3 Normalize() const noexcept;
 
+		[[nodiscard]]
+		float X() const noexcept;
+
+		void X(float x) noexcept;
+
+		[[nodiscard]]
+		float Y() const noexcept;
+
+		void Y(float y) noexcept;
+
+		[[nodiscard]]
+		float Z() const noexcept;
+
+		void Z(float z) noexcept;
+
 		//----------CONSTANTS
 		static const Vector3 Zero;
 
@@ -154,41 +179,212 @@ namespace Engine
 		static const Vector3 Forward;
 
 		static const Vector3 Backward;
-
-	private:
-		DirectX::XMFLOAT3 m_Data;
 	};
 
-	Vector3 operator+(const Vector3& vector1,
-	                  const Vector3& vector2) noexcept;
+	// class Vector3 final
+	// {
+	// public:
+	// 	Vector3() noexcept;
+	//
+	// 	constexpr explicit Vector3(const float x,
+	// 	                           const float y,
+	// 	                           const float z) noexcept;
+	//
+	// 	Vector3(const Vector3&) = default;
+	//
+	// 	Vector3& operator=(const Vector3&) = default;
+	//
+	// 	Vector3(Vector3&&) = default;
+	//
+	// 	Vector3& operator=(Vector3&&) = default;
+	//
+	// 	operator DirectX::XMVECTOR() const noexcept;
+	//
+	// 	bool operator ==(const Vector3& other) const noexcept;
+	//
+	// 	bool operator !=(const Vector3& other) const noexcept;
+	//
+	// 	Vector3& operator+=(const Vector3& other) noexcept;
+	//
+	// 	Vector3& operator-=(const Vector3& other) noexcept;
+	//
+	// 	Vector3& operator*=(float scalar) noexcept;
+	//
+	// 	Vector3& operator/=(float scalar) noexcept;
+	//
+	// 	Vector3 operator+() const noexcept;
+	//
+	// 	Vector3 operator-() const noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float Length() const noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float LengthSquared() const noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float Dot(const Vector3& other) const noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	Vector3 Cross(const Vector3& other) const noexcept;
+	//
+	// 	void Normalize() noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	Vector3 Normalize() const noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float X() const noexcept;
+	//
+	// 	void X(float x) noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float Y() const noexcept;
+	//
+	// 	void Y(float y) noexcept;
+	//
+	// 	[[nodiscard]]
+	// 	float Z() const noexcept;
+	//
+	// 	void Z(float z) noexcept;
+	//
+	// 	//----------CONSTANTS
+	// 	static const Vector3 Zero;
+	//
+	// 	static const Vector3 One;
+	//
+	// 	static const Vector3 UnitX;
+	//
+	// 	static const Vector3 UnitY;
+	//
+	// 	static const Vector3 UnitZ;
+	//
+	// 	static const Vector3 Up;
+	//
+	// 	static const Vector3 Down;
+	//
+	// 	static const Vector3 Right;
+	//
+	// 	static const Vector3 Left;
+	//
+	// 	static const Vector3 Forward;
+	//
+	// 	static const Vector3 Backward;
+	//
+	// private:
+	// 	DirectX::XMFLOAT3 m_Data;
+	// };
 
-	Vector3 operator-(const Vector3& vector1,
-	                  const Vector3& vector2) noexcept;
-
-	Vector3 operator*(const Vector3& vector,
-	                  float scalar) noexcept;
-
-	Vector3 operator/(const Vector3& vector,
-	                  float scalar) noexcept;
+	// Vector3 operator+(const Vector3& vector1,
+	//                   const Vector3& vector2) noexcept;
+	//
+	// Vector3 operator-(const Vector3& vector1,
+	//                   const Vector3& vector2) noexcept;
+	//
+	// Vector3 operator*(const Vector3& vector,
+	//                   float scalar) noexcept;
+	//
+	// Vector3 operator/(const Vector3& vector,
+	//                   float scalar) noexcept;
 
 	// Not sure yet
 	// class Quaternion;
 
-	class Matrix4x4;
+	//class Matrix4x4;
 
-	class Color
+	// class Color final
+	// {
+	// public:
+	// 	explicit Color() noexcept;
+	//
+	// 	constexpr Color(const float red,
+	// 	                const float green,
+	// 	                const float blue) noexcept :
+	// 		m_Data{red, green, blue, 1.0f}
+	// 	{
+	// 	}
+	//
+	// 	constexpr Color(const float red,
+	// 	                const float green,
+	// 	                const float blue,
+	// 	                const float alpha) noexcept :
+	// 		m_Data{red, green, blue, alpha}
+	// 	{
+	// 	};
+	//
+	// 	Color(const Color&) = default;
+	//
+	// 	Color& operator=(const Color&) = default;
+	//
+	// 	Color(Color&&) = default;
+	//
+	// 	Color& operator=(Color&&) = default;
+	//
+	// 	operator DirectX::XMVECTOR() const noexcept;
+	//
+	// 	bool operator ==(const Color& color) const noexcept;
+	//
+	// 	bool operator !=(const Color& color) const noexcept;
+	//
+	// 	Color& operator+=(const Color& color) noexcept;
+	//
+	// 	Color& operator-=(const Color& color) noexcept;
+	//
+	// 	Color& operator*=(const Color& color) noexcept;
+	//
+	// 	Color& operator*=(float scalar) noexcept;
+	//
+	// 	Color& operator/=(const Color& color) noexcept;
+	//
+	// 	Color operator+() const noexcept;
+	//
+	// 	Color operator-() const noexcept;
+	//
+	// 	operator const float*() const noexcept;
+	//
+	// 	float Red() const noexcept;
+	//
+	// 	void Red(float red) noexcept;
+	//
+	// 	float Green() const noexcept;
+	//
+	// 	void Green(float green) noexcept;
+	//
+	// 	float Blue() const noexcept;
+	//
+	// 	void Blue(float blue) noexcept;
+	//
+	// 	float Alpha() const noexcept;
+	//
+	// 	void Alpha(float alpha) noexcept;
+	//
+	// 	static Color Lerp(const Color& color1,
+	// 	                  const Color& color2,
+	// 	                  float ratio) noexcept;
+	//
+	// private:
+	// 	DirectX::XMFLOAT4 m_Data;
+	// };
+
+	class Color final : public DirectX::XMFLOAT4
 	{
 	public:
 		explicit Color() noexcept;
 
-		constexpr explicit Color(float red,
-		                         float green,
-		                         float blue) noexcept;
+		constexpr Color(const float red,
+						const float green,
+						const float blue) noexcept :
+			XMFLOAT4{red, green, blue, 1.0f}
+		{
+		}
 
-		constexpr explicit Color(float red,
-		                         float green,
-		                         float blue,
-		                         float alpha) noexcept;
+		constexpr Color(const float red,
+						const float green,
+						const float blue,
+						const float alpha) noexcept :
+			XMFLOAT4{red, green, blue, alpha}
+		{
+		};
 
 		Color(const Color&) = default;
 
@@ -218,44 +414,43 @@ namespace Engine
 
 		Color operator-() const noexcept;
 
-		float R() const noexcept;
+		operator const float*() const noexcept;
 
-		void R(float red) noexcept;
+		float Red() const noexcept;
 
-		float G() const noexcept;
+		void Red(float red) noexcept;
 
-		void G(float green) noexcept;
+		float Green() const noexcept;
 
-		float B() const noexcept;
+		void Green(float green) noexcept;
 
-		void B(float blue) noexcept;
+		float Blue() const noexcept;
 
-		float A() const noexcept;
+		void Blue(float blue) noexcept;
 
-		void A(float alpha) noexcept;
+		float Alpha() const noexcept;
+
+		void Alpha(float alpha) noexcept;
 
 		static Color Lerp(const Color& color1,
-		                  const Color& color2,
-		                  float ratio) noexcept;
-
-	private:
-		DirectX::XMFLOAT4 m_Data;
+						  const Color& color2,
+						  float ratio) noexcept;
 	};
 
-	Color operator+(const Color& color1,
-	                const Color& color2) noexcept;
-
-	Color operator-(const Color& color1,
-	                const Color& color2) noexcept;
-
-	Color operator*(const Color& color1,
-	                const Color& color2) noexcept;
-
-	Color operator*(const Color& color,
-	                float scalar) noexcept;
-
-	Color operator/(const Color& color1,
-	                const Color& color2) noexcept;
+	// Color operator+(const Color& color1,
+	//                 const Color& color2) noexcept;
+	//
+	// Color operator-(const Color& color1,
+	//                 const Color& color2) noexcept;
+	//
+	// Color operator*(const Color& color1,
+	//                 const Color& color2) noexcept;
+	//
+	// Color operator*(const Color& color,
+	//                 float scalar) noexcept;
+	//
+	// Color operator/(const Color& color1,
+	//                 const Color& color2) noexcept;
 
 	class Viewport final
 	{

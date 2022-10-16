@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include <d3d11.h>
 
-#include "Engine/Utils/Math.h"
+#include "Engine/Core/Core.h"
+#include "Engine/Core/Math.h"
 
 namespace Engine
 {

@@ -1,13 +1,6 @@
 ﻿#pragma once
 
-// Game Loop
-
-// All OnCreate executes (Executes once)
-
-// All OnUpdate executes
-
-// All OnDestroy executes (Executes once)
-
+#include "Engine/Core/Core.h"
 namespace Engine
 {
 	class Layer

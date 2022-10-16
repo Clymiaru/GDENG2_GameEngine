@@ -4,7 +4,7 @@
 
 #include "RenderSystem.h"
 
-#include "Engine/Utils/Debug.h"
+#include "Engine/Core/Debug.h"
 
 namespace Engine
 {

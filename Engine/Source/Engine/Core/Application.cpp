@@ -1,13 +1,16 @@
 ﻿#include "pch.h"
 #include "Application.h"
 
-#include "Time.h"
+#include "Window.h"
+#include "Engine/Graphics/RenderSystem.h"
+#include "Engine/Graphics/ShaderLibrary.h"
 
 namespace Engine
 {
 	Application::Application() :
 		m_IsRunning{false},
-		m_Window{nullptr}
+		m_Window{nullptr},
+		m_LayerSystem{5}
 	{
 	}
 
@@ -22,6 +25,14 @@ namespace Engine
 	void Application::SetProfile(const Profile& profile)
 	{
 		Instance().m_Profile = profile;
+	}
+
+	void Application::SetInitialLayers(List<Layer*> initialLayers)
+	{
+		for (int i = 0; i < initialLayers.size(); i++)
+		{
+			Instance().m_LayerSystem.Add(initialLayers[i]);
+		}
 	}
 
 	void Application::Start()
@@ -40,11 +51,11 @@ namespace Engine
 	{
 		Instance().m_Time = Time();
 		Instance().m_Window->Start();
-		
-		// ShaderLibrary::Initialize(4);
-		//
-		// RenderSystem::Initialize(m_Window->GetHandle(),
-		//                          {1280, 720});
+		RenderSystem::Start(*m_Window);
+
+		ShaderLibrary::Initialize(4);
+
+		Instance().m_LayerSystem.Start();
 	}
 
 	void Application::Run()
@@ -56,7 +67,7 @@ namespace Engine
 			Instance().PollEvents();
 			Instance().Update();
 			Instance().Render();
-			
+
 			Instance().m_Time.End();
 
 			Sleep(1);
@@ -71,8 +82,9 @@ namespace Engine
 	void Application::EndingSystems()
 	{
 		// Time::Terminate();
-		// ShaderLibrary::Terminate();
-		// RenderSystem::Terminate();
+		ShaderLibrary::Terminate();
+		Instance().m_LayerSystem.End();
+		RenderSystem::End();
 		Instance().m_Window->Close();
 	}
 
@@ -86,12 +98,19 @@ namespace Engine
 		return Instance().m_Time.DeltaTime();
 	}
 
+	Window& Application::WindowRef()
+	{
+		return *Instance().m_Window;
+	}
+
 	void Application::Update()
 	{
 		// for (auto layer : m_Layers)
 		// {
 		// 	layer->OnUpdate();
 		// }
+
+		m_LayerSystem.Update();
 	}
 
 	void Application::PollEvents()
@@ -101,9 +120,7 @@ namespace Engine
 
 	void Application::Render()
 	{
-		// for (auto layer : m_Layers)
-		// {
-		// 	layer->OnRender();
-		// }
+		m_LayerSystem.Render();
+
 	}
 }

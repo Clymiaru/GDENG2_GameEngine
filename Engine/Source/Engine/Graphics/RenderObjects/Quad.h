@@ -1,10 +1,10 @@
 ﻿#pragma once
+#include "Engine/Core/Core.h"
+#include "Engine/Core/Debug.h"
+#include "Engine/Core/Math.h"
 
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/RenderObjects/RenderObject.h"
-#include "Engine/Utils/Color32.h"
-#include "Engine/Utils/Math.h"
-#include "Engine/Utils/Pointers.h"
 
 namespace Engine
 {
@@ -13,9 +13,9 @@ namespace Engine
 	class Quad final : public RenderObject
 	{
 	public:
-		Quad(const Vector3Float& position,
-		     const Vector2Float& size,
-		     const Color32& color,
+		Quad(const Vector3& position,
+		     const Vector2& size,
+		     const Color& color,
 		     const std::wstring& shaderName);
 
 		~Quad() override;
@@ -25,11 +25,11 @@ namespace Engine
 		void Render() const;
 
 	private:
-		Vector3Float m_Position;
+		Vector3 m_Position;
 
-		Vector2Float m_Size;
+		Vector2 m_Size;
 
-		Color32 m_Color;
+		Color m_Color;
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
 

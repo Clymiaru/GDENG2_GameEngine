@@ -1,5 +1,7 @@
 ﻿#pragma once
 
-#include "Engine/Core/Application.h"
-#include "Engine/Core/Debug.h"
-#include "Engine/Core/EntryPoint.h"
+#include "Core/Core.h"
+
+#include "Core/Math.h"
+
+#include "Core/Application.h"

@@ -1,14 +1,12 @@
 ﻿#include "pch.h"
 #include "RenderSystem.h"
 
-#include <d3dcompiler.h>
+#include "Engine/Core/Debug.h"
+
+#include "DeviceContext.h"
 
 #include "SwapChain.h"
 
-#include "Engine/Graphics/DeviceContext.h"
-#include "Engine/Graphics/IndexBuffer.h"
-#include "Engine/Graphics/VertexBuffer.h"
-#include "Engine/Utils/Debug.h"
 
 namespace Engine
 {
@@ -26,8 +24,7 @@ namespace Engine
 		D3D_FEATURE_LEVEL_11_0
 	};
 
-	void RenderSystem::Initialize(const HWND windowHandle,
-	                              const Vector2Int windowSize)
+	void RenderSystem::Start(Window& window)
 	{
 		HRESULT result = 0;
 
@@ -51,8 +48,6 @@ namespace Engine
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!")
 
-		m_Instance.m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
-
 		m_Instance.m_Device->QueryInterface(__uuidof(IDXGIDevice),
 		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiDevice));
 
@@ -62,20 +57,22 @@ namespace Engine
 		m_Instance.m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
 		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiFactory));
 
-		m_Instance.m_SwapChain = CreateUniquePtr<SwapChain>();
-		m_Instance.m_SwapChain->Initialize(windowHandle,
-		                                   windowSize,
-		                                   m_Instance.m_Device,
-		                                   m_Instance.m_DxgiFactory);
+		m_Instance.m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
+		m_Instance.m_SwapChain     = CreateUniquePtr<SwapChain>(window,
+																m_Instance.m_Device,
+																m_Instance.m_DxgiFactory);
 	}
 
-	void RenderSystem::Terminate()
+	void RenderSystem::End()
 	{
-		m_Instance.m_SwapChain->Terminate();
+		m_Instance.m_SwapChain->Release();
+
 		m_Instance.m_DxgiDevice->Release();
 		m_Instance.m_DxgiAdapter->Release();
 		m_Instance.m_DxgiFactory->Release();
-		m_Instance.m_DeviceContext->Terminate();
+
+		m_Instance.m_DeviceContext->Release();
+
 		m_Instance.m_Device->Release();
 	}
 
@@ -89,7 +86,7 @@ namespace Engine
 		return *m_Instance.m_DeviceContext;
 	}
 
-	void RenderSystem::Clear(const Color32 fillColor)
+	void RenderSystem::Clear(const Color fillColor)
 	{
 		m_Instance.m_DeviceContext->Clear(*m_Instance.m_SwapChain, fillColor);
 	}
@@ -109,7 +106,7 @@ namespace Engine
 		m_Instance.m_SwapChain->Present(true);
 	}
 
-	void RenderSystem::SetViewportSize(Vector2Uint viewportSize)
+	void RenderSystem::SetViewportSize(Vector2 viewportSize)
 	{
 		m_Instance.m_DeviceContext->SetViewportSize(viewportSize);
 	}

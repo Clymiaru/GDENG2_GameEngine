@@ -1,18 +1,19 @@
 ﻿#include "pch.h"
 #include "Quad.h"
 
+#include "Engine/Core/Debug.h"
+
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
-#include "Engine/Utils/Debug.h"
 
 namespace Engine
 {
 	struct Vertex
 	{
-		Vector3Float Position;
+		Vector3 Position;
 
-		Color32 Color{};
+		Color Color{};
 	};
 
 	__declspec(align(16))
@@ -27,28 +28,28 @@ namespace Engine
 		float Time;
 	};
 
-	constexpr std::tuple<Vertex*, size_t> GetQuadVertices(Color32 color)
+	constexpr std::tuple<Vertex*, size_t> GetQuadVertices(Color color)
 	{
 		Vertex* vertices = new Vertex[4]
 		{
 			{
-				Vector3Float{-0.5f, -0.5f, 0.0f},
-				Color32{color.Red, color.Green, color.Blue, color.Alpha}
+				Vector3{-0.5f, -0.5f, 0.0f},
+				Color{color.Red(), color.Green(), color.Blue(), color.Alpha()}
 			},
 
 			{
-				Vector3Float{-0.5f, 0.5f, 0.0f},
-				Color32{color.Red, color.Green, color.Blue, color.Alpha}
+				Vector3{-0.5f, 0.5f, 0.0f},
+				Color{color.Red(), color.Green(), color.Blue(), color.Alpha()}
 			},
 
 			{
-				Vector3Float{0.5f, 0.5f, 0.0f},
-				Color32{color.Red, color.Green, color.Blue, color.Alpha}
+				Vector3{0.5f, 0.5f, 0.0f},
+				Color{color.Red(), color.Green(), color.Blue(), color.Alpha()}
 			},
 
 			{
-				Vector3Float{0.5f, -0.5f, 0.0f},
-				Color32{color.Red, color.Green, color.Blue, color.Alpha},
+				Vector3{0.5f, -0.5f, 0.0f},
+				Color{color.Red(), color.Green(), color.Blue(), color.Alpha()},
 			},
 		};
 		size_t vertexSize = sizeof vertices;
@@ -84,9 +85,9 @@ namespace Engine
 		return {indices, indexSize};
 	}
 
-	Quad::Quad(const Vector3Float& position,
-	           const Vector2Float& size,
-	           const Color32& color,
+	Quad::Quad(const Vector3& position,
+	           const Vector2& size,
+	           const Color& color,
 	           const std::wstring& shaderName) :
 		RenderObject{},
 		m_Position{position},
@@ -162,12 +163,12 @@ namespace Engine
 		m_Constant->Time = time;
 
 		m_TransformMatrix = XMMatrixIdentity();
-		m_TransformMatrix *= XMMatrixScaling(m_Size.X,
-											 m_Size.Y,
+		m_TransformMatrix *= XMMatrixScaling(m_Size.X(),
+											 m_Size.Y(),
 											 1.0f);
-		m_TransformMatrix *= XMMatrixTranslation(m_Position.X,
-												 m_Position.Y,
-												 m_Position.Z);
+		m_TransformMatrix *= XMMatrixTranslation(m_Position.X(),
+												 m_Position.Y(),
+												 m_Position.Z());
 		m_Constant->Model = XMMatrixTranspose(m_TransformMatrix);
 
 		// To be transferred to camera later

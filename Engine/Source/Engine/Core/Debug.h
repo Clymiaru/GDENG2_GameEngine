@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <format>
+#include<format>
+#include<iostream>
 
 namespace Engine
 {
@@ -16,7 +17,7 @@ namespace Engine
 	                Args&&... args)
 	{
 #ifdef DEBUG
-		std::cerr << std::vformat(message, std::make_format_args(args...)) << "\n";
+		std::cout << std::vformat(message, std::make_format_args(args...)) << "\n";
 #endif
 	}
 
