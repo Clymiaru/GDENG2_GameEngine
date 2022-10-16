@@ -31,6 +31,7 @@ namespace Engine
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
 
+
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    renderTargetViews.data(),
 		                                    nullptr);

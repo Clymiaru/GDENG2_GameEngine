@@ -27,6 +27,8 @@ namespace Engine
 
 		void CreateRenderTargetView(ID3D11Device* device);
 
+		void CreateDepthStencilView(ID3D11Device* device);
+
 		IDXGISwapChain* m_SwapChain;
 
 		ID3D11RenderTargetView* m_RenderTargetView;

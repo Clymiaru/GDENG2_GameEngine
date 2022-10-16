@@ -88,4 +88,24 @@ namespace Engine
 		buffer->Release();
 		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create RenderTargetView!")
 	}
+
+	// TODO:
+	void SwapChain::CreateDepthStencilView(ID3D11Device* device)
+	{
+		ID3D11Texture2D* buffer = nullptr;
+
+		D3D11_TEXTURE2D_DESC textureDesc = {};
+
+		HRESULT result = m_SwapChain->GetBuffer(0,
+												__uuidof(ID3D11Texture2D),
+												reinterpret_cast<void**>(&buffer));
+
+		ENGINE_ASSERT(SUCCEEDED(result), "Failed to get buffer!")
+
+		result = device->CreateRenderTargetView(buffer,
+												nullptr,
+												&m_RenderTargetView);
+		buffer->Release();
+		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create RenderTargetView!")
+	}
 }
