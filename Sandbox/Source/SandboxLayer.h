@@ -4,6 +4,7 @@
 namespace Engine
 {
 	class Quad;
+	class Cube;
 }
 
 namespace Sandbox
@@ -28,5 +29,7 @@ namespace Sandbox
 		float m_MaxTime;
 
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Tiles;
+
+		Engine::UniquePtr<Engine::Cube> m_Cube;
 	};
 }

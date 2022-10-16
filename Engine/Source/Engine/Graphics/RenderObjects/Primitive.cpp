@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
-#include "RenderObject.h"
+#include "Primitive.h"
 
 #include "Engine/Graphics/ShaderLibrary.h"
 
 namespace Engine
 {
-	void RenderObject::InitializeImpl(VertexData vertexData,
-	                              VertexLayoutData vertexLayoutData,
-	                              IndexData indexLayoutData,
-	                              const std::wstring shaderName)
+	void Primitive::InitializeImpl(VertexData vertexData,
+	                               VertexLayoutData vertexLayoutData,
+	                               IndexData indexLayoutData,
+	                               const std::wstring shaderName)
 	{
 		m_VertexData       = std::move(&vertexData);
 		m_VertexLayoutData = std::move(&vertexLayoutData);
@@ -18,31 +18,32 @@ namespace Engine
 		InitializeBuffers();
 	}
 
-	void RenderObject::TerminateImpl() const
+	void Primitive::TerminateImpl() const
 	{
 		m_VertexBuffer->Release();
 		m_IndexBuffer->Release();
 	}
 
-	RenderObject::RenderObject() :
+	Primitive::Primitive() :
 		m_VertexData{nullptr},
 		m_VertexLayoutData{nullptr},
 		m_IndexData{nullptr},
 		m_VertexShader{nullptr},
 		m_PixelShader{nullptr},
 		m_VertexBuffer{nullptr},
-		m_IndexBuffer{nullptr}
+		m_IndexBuffer{nullptr},
+		m_ConstantBuffer{nullptr}
 	{
 	}
 
-	RenderObject::~RenderObject() = default;
+	Primitive::~Primitive() = default;
 
-	VertexBuffer& RenderObject::GetVertexBuffer() const
+	VertexBuffer& Primitive::GetVertexBuffer() const
 	{
 		return *m_VertexBuffer;
 	}
 
-	IndexBuffer& RenderObject::GetIndexBuffer() const
+	IndexBuffer& Primitive::GetIndexBuffer() const
 	{
 		return *m_IndexBuffer;
 	}

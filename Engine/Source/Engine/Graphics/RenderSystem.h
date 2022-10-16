@@ -12,7 +12,7 @@ namespace Engine
 
 	class DeviceContext;
 
-	class RenderObject;
+	class Primitive;
 
 	class SwapChain;
 

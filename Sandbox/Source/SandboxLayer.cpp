@@ -2,6 +2,8 @@
 
 #include "Engine/Engine.h"
 
+#include "Engine/Graphics/RenderObjects/Cube.h"
+
 Sandbox::SandboxLayer::SandboxLayer() :
 	Layer{"SandboxLayer"},
 	m_CurrentTime{0.0f},
@@ -21,8 +23,8 @@ void Sandbox::SandboxLayer::OnAttach()
 	                                     "psmain");
 
 	// Object initialization
-	auto topLeftPosition    = Vector3(-200.0f, 300.0f, 0.0f);
-	auto tileSize = Vector2(100.f, 100.0f);
+	auto topLeftPosition = Vector3(-200.0f, 300.0f, 0.0f);
+	auto tileSize        = Vector2(100.f, 100.0f);
 
 	const auto colors = List<Color>
 	{
@@ -50,6 +52,12 @@ void Sandbox::SandboxLayer::OnAttach()
 		}
 		colorCycleCounter++;
 	}
+
+	m_Cube = CreateUniquePtr<Cube>(Vector3(0, 0, 0),
+	                               Vector3(100, 100, 100),
+	                               L"DefaultShader");
+
+	
 }
 
 void Sandbox::SandboxLayer::OnUpdate()
@@ -58,6 +66,8 @@ void Sandbox::SandboxLayer::OnUpdate()
 	{
 		quad->Update(m_CurrentTime);
 	}
+
+	m_Cube->Update(m_CurrentTime);
 }
 
 void Sandbox::SandboxLayer::OnRender()
@@ -66,6 +76,7 @@ void Sandbox::SandboxLayer::OnRender()
 	{
 		quad->Render();
 	}
+	m_Cube->Render();
 }
 
 void Sandbox::SandboxLayer::OnDetach()

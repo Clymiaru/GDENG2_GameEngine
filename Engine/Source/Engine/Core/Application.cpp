@@ -29,9 +29,9 @@ namespace Engine
 		Instance().m_Profile = profile;
 	}
 
-	void Application::SetInitialLayers(List<Layer*> initialLayers)
+	void Application::SetInitialLayers(const List<Layer*> initialLayers)
 	{
-		for (int i = 0; i < initialLayers.size(); i++)
+		for (size_t i = 0; i < initialLayers.size(); i++)
 		{
 			Instance().m_LayerSystem.Add(initialLayers[i]);
 		}

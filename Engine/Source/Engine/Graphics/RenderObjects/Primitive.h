@@ -1,16 +1,19 @@
 ﻿#pragma once
 #include <d3d11.h>
 
+#include "Engine/Core/Core.h"
+
+#include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/IndexBuffer.h"
 #include "Engine/Graphics/PixelShader.h"
 #include "Engine/Graphics/VertexBuffer.h"
 #include "Engine/Graphics/VertexShader.h"
 
-#include "Engine/Core/Core.h"
-
 namespace Engine
 {
-	class RenderObject
+	struct Vertex;
+
+	class Primitive
 	{
 	public:
 		struct VertexData
@@ -34,10 +37,9 @@ namespace Engine
 			size_t IndexListCount;
 		};
 
-		RenderObject();
+		Primitive();
 
-
-		virtual ~RenderObject();
+		virtual ~Primitive();
 
 		[[nodiscard]]
 		VertexBuffer& GetVertexBuffer() const;
@@ -46,11 +48,10 @@ namespace Engine
 		IndexBuffer& GetIndexBuffer() const;
 
 	protected:
-
 		void InitializeImpl(VertexData vertexData,
-						VertexLayoutData vertexLayoutData,
-						IndexData indexLayoutData,
-						std::wstring shaderName);
+		                    VertexLayoutData vertexLayoutData,
+		                    IndexData indexLayoutData,
+		                    std::wstring shaderName);
 
 		void TerminateImpl() const;
 
@@ -68,7 +69,15 @@ namespace Engine
 
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
+		UniquePtr<ConstantBuffer> m_ConstantBuffer;
+
 	private:
 		virtual void InitializeBuffers() = 0;
+
+		virtual std::pair<Vertex*, size_t> CreateVertices() = 0;
+
+		virtual std::pair<D3D11_INPUT_ELEMENT_DESC*, size_t> CreateVertexLayout() = 0;
+
+		virtual std::pair<Uint*, size_t> CreateIndices() = 0;
 	};
 }

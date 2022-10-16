@@ -63,7 +63,7 @@ namespace Engine
 	template <>
 	inline void DeviceContext::SetBuffer<VertexBuffer>(const VertexBuffer& buffer) const
 	{
-		const Uint stride     = buffer.DataTypeSize();
+		const Uint stride     = static_cast<Uint>(buffer.DataTypeSize());
 		constexpr Uint offset = 0;
 		m_DeviceContext->IASetVertexBuffers(0,
 		                                    1,
