@@ -67,29 +67,18 @@ void Sandbox::SandboxLayer::OnUpdate()
 
 	for (const auto& quad : m_Tiles)
 	{
-		quad->Update(m_CurrentTime);
+		quad->Update(0.0f);
 	}
 }
 
 void Sandbox::SandboxLayer::OnRender()
 {
-	// if (m_CurrentTime > m_MaxTime)
-	// {
-	// 	m_CurrentTime = 0.0f;
-	// 	Engine::Debug::Log("Time Render {0}", m_CurrentTime);
-	// }
-
 	Engine::RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
-
-	// Engine::Vector2 size = Engine::Application::WindowRef().GetSize();
-	// Engine::RenderSystem::GetDeviceContext().SetViewportSize(size);
 	
 	for (const auto& quad : m_Tiles)
 	{
 		quad->Render();
 	}
-
-	Engine::RenderSystem::ShowFrame();
 }
 
 void Sandbox::SandboxLayer::OnDetach()
