@@ -1,14 +1,6 @@
 ﻿#include "SandboxLayer.h"
 
-#include <Engine/Core/Application.h>
-#include <Engine/Core/Debug.h>
-#include <Engine/Core/Math.h>
-#include <Engine/Core/Window.h>
-#include <Engine/Graphics/DeviceContext.h>
-#include <Engine/Graphics/RenderSystem.h>
-#include <Engine/Graphics/ShaderLibrary.h>
-
-#include <Engine/Graphics/RenderObjects/Quad.h>
+#include "Engine/Engine.h"
 
 Sandbox::SandboxLayer::SandboxLayer() :
 	Layer{"SandboxLayer"},
@@ -62,9 +54,6 @@ void Sandbox::SandboxLayer::OnAttach()
 
 void Sandbox::SandboxLayer::OnUpdate()
 {
-	m_CurrentTime += static_cast<float>(Engine::Application::DeltaTime());
-	//Engine::Debug::Log("Time {0}", m_CurrentTime);
-
 	for (const auto& quad : m_Tiles)
 	{
 		quad->Update(m_CurrentTime);
@@ -73,23 +62,10 @@ void Sandbox::SandboxLayer::OnUpdate()
 
 void Sandbox::SandboxLayer::OnRender()
 {
-	// if (m_CurrentTime > m_MaxTime)
-	// {
-	// 	m_CurrentTime = 0.0f;
-	// 	Engine::Debug::Log("Time Render {0}", m_CurrentTime);
-	// }
-
-	Engine::RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
-
-	// Engine::Vector2 size = Engine::Application::WindowRef().GetSize();
-	// Engine::RenderSystem::GetDeviceContext().SetViewportSize(size);
-	
 	for (const auto& quad : m_Tiles)
 	{
 		quad->Render();
 	}
-
-	Engine::RenderSystem::ShowFrame();
 }
 
 void Sandbox::SandboxLayer::OnDetach()

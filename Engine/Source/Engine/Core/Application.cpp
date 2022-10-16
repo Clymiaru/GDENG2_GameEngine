@@ -2,6 +2,8 @@
 #include "Application.h"
 
 #include "Window.h"
+
+#include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 
@@ -120,7 +122,12 @@ namespace Engine
 
 	void Application::Render()
 	{
+		RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
+
+		RenderSystem::GetDeviceContext().SetViewportSize(m_Window->GetSize());
+		
 		m_LayerSystem.Render();
 
+		RenderSystem::ShowFrame();
 	}
 }

@@ -190,202 +190,65 @@ namespace Engine
 	// }
 
 	//----------VECTOR3
-	Vector3::Vector3() noexcept:
-		XMFLOAT3{0.0f, 0.0f, 0.0f}
-	{
-	}
-
-	constexpr Vector3::Vector3(const float x,
-	                           const float y,
-	                           const float z) noexcept:
-		XMFLOAT3{x, y, z}
-	{
-	}
-
-	Vector3::operator DirectX::XMVECTOR() const noexcept
-	{
-		return XMLoadFloat3(this);
-	}
-
-	bool Vector3::operator==(const Vector3& other) const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1 = XMLoadFloat3(this);
-		const XMVECTOR v2 = XMLoadFloat3(&other);
-		return XMVector3Equal(v1, v2);
-	}
-
-	bool Vector3::operator!=(const Vector3& other) const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1 = XMLoadFloat3(this);
-		const XMVECTOR v2 = XMLoadFloat3(&other);
-		return XMVector3NotEqual(v1, v2);
-	}
-
-	Vector3& Vector3::operator+=(const Vector3& other) noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1  = XMLoadFloat3(this);
-		const XMVECTOR v2  = XMLoadFloat3(&other);
-		const XMVECTOR sum = XMVectorAdd(v1, v2);
-		XMStoreFloat3(this, sum);
-		return *this;
-	}
-
-	Vector3& Vector3::operator-=(const Vector3& other) noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1         = XMLoadFloat3(this);
-		const XMVECTOR v2         = XMLoadFloat3(&other);
-		const XMVECTOR difference = XMVectorSubtract(v1, v2);
-		XMStoreFloat3(this, difference);
-		return *this;
-	}
-
-	Vector3& Vector3::operator*=(float scalar) noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1     = XMLoadFloat3(this);
-		const XMVECTOR scaled = XMVectorScale(v1, scalar);
-		XMStoreFloat3(this, scaled);
-		return *this;
-	}
-
-	Vector3& Vector3::operator/=(float scalar) noexcept
-	{
-		using namespace DirectX;
-		ENGINE_ASSERT(scalar != 0.0f, "Cannot divide Vector3 by 0.");
-		const XMVECTOR v1     = XMLoadFloat3(this);
-		const XMVECTOR scaled = XMVectorScale(v1, 1.0f / scalar);
-		XMStoreFloat3(this, scaled);
-		return *this;
-	}
-
-	Vector3 Vector3::operator+() const noexcept
-	{
-		return *this;
-	}
-
-	Vector3 Vector3::operator-() const noexcept
-	{
-		return Vector3(-x, -y, -z);
-	}
-
-	float Vector3::Length() const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1     = XMLoadFloat3(this);
-		const XMVECTOR length = XMVector3Length(v1);
-		return XMVectorGetX(length);
-	}
-
-	float Vector3::LengthSquared() const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1       = XMLoadFloat3(this);
-		const XMVECTOR lengthSq = XMVector3LengthSq(v1);
-		return XMVectorGetX(lengthSq);
-	}
-
-	float Vector3::Dot(const Vector3& other) const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1  = XMLoadFloat3(this);
-		const XMVECTOR v2  = XMLoadFloat3(&other);
-		const XMVECTOR dot = XMVector3Dot(v1, v2);
-		return XMVectorGetX(dot);
-	}
-
-	Vector3 Vector3::Cross(const Vector3& other) const noexcept
-	{
-		using namespace DirectX;
-		Vector3 result       = Vector3();
-		const XMVECTOR v1    = XMLoadFloat3(this);
-		const XMVECTOR v2    = XMLoadFloat3(&other);
-		const XMVECTOR cross = XMVector3Cross(v1, v2);
-		XMStoreFloat3(&result, cross);
-		return result;
-	}
-
-	void Vector3::Normalize() noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1 = XMLoadFloat3(this);
-		const XMVECTOR X  = XMVector3Normalize(v1);
-		XMStoreFloat3(this, X);
-	}
-
-	Vector3 Vector3::Normalize() const noexcept
-	{
-		using namespace DirectX;
-		const XMVECTOR v1 = XMLoadFloat3(this);
-		const XMVECTOR X  = XMVector3Normalize(v1);
-
-		Vector3 result = Vector3();
-		XMStoreFloat3(&result, X);
-		return result;
-	}
-	
 	// Vector3::Vector3() noexcept:
-	// 	m_Data{0.0f, 0.0f, 0.0f}
+	// 	XMFLOAT3{0.0f, 0.0f, 0.0f}
 	// {
 	// }
 	//
 	// constexpr Vector3::Vector3(const float x,
 	//                            const float y,
 	//                            const float z) noexcept:
-	// 	m_Data{x, y, z}
+	// 	XMFLOAT3{x, y, z}
 	// {
 	// }
 	//
 	// Vector3::operator DirectX::XMVECTOR() const noexcept
 	// {
-	// 	return XMLoadFloat3(&m_Data);
+	// 	return XMLoadFloat3(this);
 	// }
 	//
 	// bool Vector3::operator==(const Vector3& other) const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1 = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2 = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1 = XMLoadFloat3(this);
+	// 	const XMVECTOR v2 = XMLoadFloat3(&other);
 	// 	return XMVector3Equal(v1, v2);
 	// }
 	//
 	// bool Vector3::operator!=(const Vector3& other) const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1 = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2 = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1 = XMLoadFloat3(this);
+	// 	const XMVECTOR v2 = XMLoadFloat3(&other);
 	// 	return XMVector3NotEqual(v1, v2);
 	// }
 	//
 	// Vector3& Vector3::operator+=(const Vector3& other) noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1  = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2  = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1  = XMLoadFloat3(this);
+	// 	const XMVECTOR v2  = XMLoadFloat3(&other);
 	// 	const XMVECTOR sum = XMVectorAdd(v1, v2);
-	// 	XMStoreFloat3(&m_Data, sum);
+	// 	XMStoreFloat3(this, sum);
 	// 	return *this;
 	// }
 	//
 	// Vector3& Vector3::operator-=(const Vector3& other) noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1         = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2         = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1         = XMLoadFloat3(this);
+	// 	const XMVECTOR v2         = XMLoadFloat3(&other);
 	// 	const XMVECTOR difference = XMVectorSubtract(v1, v2);
-	// 	XMStoreFloat3(&m_Data, difference);
+	// 	XMStoreFloat3(this, difference);
 	// 	return *this;
 	// }
 	//
 	// Vector3& Vector3::operator*=(float scalar) noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1     = XMLoadFloat3(this);
 	// 	const XMVECTOR scaled = XMVectorScale(v1, scalar);
-	// 	XMStoreFloat3(&m_Data, scaled);
+	// 	XMStoreFloat3(this, scaled);
 	// 	return *this;
 	// }
 	//
@@ -393,9 +256,9 @@ namespace Engine
 	// {
 	// 	using namespace DirectX;
 	// 	ENGINE_ASSERT(scalar != 0.0f, "Cannot divide Vector3 by 0.");
-	// 	const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1     = XMLoadFloat3(this);
 	// 	const XMVECTOR scaled = XMVectorScale(v1, 1.0f / scalar);
-	// 	XMStoreFloat3(&m_Data, scaled);
+	// 	XMStoreFloat3(this, scaled);
 	// 	return *this;
 	// }
 	//
@@ -406,13 +269,13 @@ namespace Engine
 	//
 	// Vector3 Vector3::operator-() const noexcept
 	// {
-	// 	return Vector3(-m_Data.x, -m_Data.y, -m_Data.z);
+	// 	return Vector3(-x, -y, -z);
 	// }
 	//
 	// float Vector3::Length() const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1     = XMLoadFloat3(this);
 	// 	const XMVECTOR length = XMVector3Length(v1);
 	// 	return XMVectorGetX(length);
 	// }
@@ -420,7 +283,7 @@ namespace Engine
 	// float Vector3::LengthSquared() const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1       = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1       = XMLoadFloat3(this);
 	// 	const XMVECTOR lengthSq = XMVector3LengthSq(v1);
 	// 	return XMVectorGetX(lengthSq);
 	// }
@@ -428,8 +291,8 @@ namespace Engine
 	// float Vector3::Dot(const Vector3& other) const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1  = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2  = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1  = XMLoadFloat3(this);
+	// 	const XMVECTOR v2  = XMLoadFloat3(&other);
 	// 	const XMVECTOR dot = XMVector3Dot(v1, v2);
 	// 	return XMVectorGetX(dot);
 	// }
@@ -438,60 +301,197 @@ namespace Engine
 	// {
 	// 	using namespace DirectX;
 	// 	Vector3 result       = Vector3();
-	// 	const XMVECTOR v1    = XMLoadFloat3(&m_Data);
-	// 	const XMVECTOR v2    = XMLoadFloat3(&other.m_Data);
+	// 	const XMVECTOR v1    = XMLoadFloat3(this);
+	// 	const XMVECTOR v2    = XMLoadFloat3(&other);
 	// 	const XMVECTOR cross = XMVector3Cross(v1, v2);
-	// 	XMStoreFloat3(&result.m_Data, cross);
+	// 	XMStoreFloat3(&result, cross);
 	// 	return result;
 	// }
 	//
 	// void Vector3::Normalize() noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1 = XMLoadFloat3(this);
 	// 	const XMVECTOR X  = XMVector3Normalize(v1);
-	// 	XMStoreFloat3(&m_Data, X);
+	// 	XMStoreFloat3(this, X);
 	// }
 	//
 	// Vector3 Vector3::Normalize() const noexcept
 	// {
 	// 	using namespace DirectX;
-	// 	const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+	// 	const XMVECTOR v1 = XMLoadFloat3(this);
 	// 	const XMVECTOR X  = XMVector3Normalize(v1);
 	//
 	// 	Vector3 result = Vector3();
-	// 	XMStoreFloat3(&result.m_Data, X);
+	// 	XMStoreFloat3(&result, X);
 	// 	return result;
 	// }
+	
+	Vector3::Vector3() noexcept:
+		m_Data{0.0f, 0.0f, 0.0f}
+	{
+	}
+	
+	constexpr Vector3::Vector3(const float x,
+	                           const float y,
+	                           const float z) noexcept:
+		m_Data{x, y, z}
+	{
+	}
+	
+	Vector3::operator DirectX::XMVECTOR() const noexcept
+	{
+		return XMLoadFloat3(&m_Data);
+	}
+	
+	bool Vector3::operator==(const Vector3& other) const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2 = XMLoadFloat3(&other.m_Data);
+		return XMVector3Equal(v1, v2);
+	}
+	
+	bool Vector3::operator!=(const Vector3& other) const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2 = XMLoadFloat3(&other.m_Data);
+		return XMVector3NotEqual(v1, v2);
+	}
+	
+	Vector3& Vector3::operator+=(const Vector3& other) noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1  = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2  = XMLoadFloat3(&other.m_Data);
+		const XMVECTOR sum = XMVectorAdd(v1, v2);
+		XMStoreFloat3(&m_Data, sum);
+		return *this;
+	}
+	
+	Vector3& Vector3::operator-=(const Vector3& other) noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1         = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2         = XMLoadFloat3(&other.m_Data);
+		const XMVECTOR difference = XMVectorSubtract(v1, v2);
+		XMStoreFloat3(&m_Data, difference);
+		return *this;
+	}
+	
+	Vector3& Vector3::operator*=(float scalar) noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+		const XMVECTOR scaled = XMVectorScale(v1, scalar);
+		XMStoreFloat3(&m_Data, scaled);
+		return *this;
+	}
+	
+	Vector3& Vector3::operator/=(float scalar) noexcept
+	{
+		using namespace DirectX;
+		ENGINE_ASSERT(scalar != 0.0f, "Cannot divide Vector3 by 0.");
+		const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+		const XMVECTOR scaled = XMVectorScale(v1, 1.0f / scalar);
+		XMStoreFloat3(&m_Data, scaled);
+		return *this;
+	}
+	
+	Vector3 Vector3::operator+() const noexcept
+	{
+		return *this;
+	}
+	
+	Vector3 Vector3::operator-() const noexcept
+	{
+		return Vector3(-m_Data.x, -m_Data.y, -m_Data.z);
+	}
+	
+	float Vector3::Length() const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1     = XMLoadFloat3(&m_Data);
+		const XMVECTOR length = XMVector3Length(v1);
+		return XMVectorGetX(length);
+	}
+	
+	float Vector3::LengthSquared() const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1       = XMLoadFloat3(&m_Data);
+		const XMVECTOR lengthSq = XMVector3LengthSq(v1);
+		return XMVectorGetX(lengthSq);
+	}
+	
+	float Vector3::Dot(const Vector3& other) const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1  = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2  = XMLoadFloat3(&other.m_Data);
+		const XMVECTOR dot = XMVector3Dot(v1, v2);
+		return XMVectorGetX(dot);
+	}
+	
+	Vector3 Vector3::Cross(const Vector3& other) const noexcept
+	{
+		using namespace DirectX;
+		Vector3 result       = Vector3();
+		const XMVECTOR v1    = XMLoadFloat3(&m_Data);
+		const XMVECTOR v2    = XMLoadFloat3(&other.m_Data);
+		const XMVECTOR cross = XMVector3Cross(v1, v2);
+		XMStoreFloat3(&result.m_Data, cross);
+		return result;
+	}
+	
+	void Vector3::Normalize() noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+		const XMVECTOR X  = XMVector3Normalize(v1);
+		XMStoreFloat3(&m_Data, X);
+	}
+	
+	Vector3 Vector3::Normalize() const noexcept
+	{
+		using namespace DirectX;
+		const XMVECTOR v1 = XMLoadFloat3(&m_Data);
+		const XMVECTOR X  = XMVector3Normalize(v1);
+	
+		Vector3 result = Vector3();
+		XMStoreFloat3(&result.m_Data, X);
+		return result;
+	}
 
 	float Vector3::X() const noexcept
 	{
-		return x;
+		return m_Data.x;
 	}
 
 	void Vector3::X(const float x) noexcept
 	{
-		this->x = x;
+		m_Data.x = x;
 	}
 
 	float Vector3::Y() const noexcept
 	{
-		return y;
+		return m_Data.y;
 	}
 
 	void Vector3::Y(const float y) noexcept
 	{
-		this->y = y;
+		m_Data.y = y;
 	}
 
 	float Vector3::Z() const noexcept
 	{
-		return z;
+		return m_Data.z;
 	}
 
 	void Vector3::Z(const float z) noexcept
 	{
-		this->z = z;
+		m_Data.z = z;
 	}
 
 	// Vector3 operator+(const Vector3& vector1,
@@ -523,214 +523,73 @@ namespace Engine
 	// }
 
 	//----------COLOR
-	// Color::Color() noexcept :
-	// 	m_Data{1.0f, 1.0f, 1.0f, 1.0f}
-	// {
-	// }
-	//
-	// Color::operator DirectX::XMVECTOR() const noexcept
-	// {
-	// 	return XMLoadFloat4(&m_Data);
-	// }
-	//
-	// bool Color::operator==(const Color& color) const noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	return XMColorEqual(c1, c2);
-	// }
-	//
-	// bool Color::operator!=(const Color& color) const noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	return XMColorNotEqual(c1, c2);
-	// }
-	//
-	// Color& Color::operator+=(const Color& color) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	XMStoreFloat4(&m_Data, XMVectorAdd(c1, c2));
-	// 	return *this;
-	// }
-	//
-	// Color& Color::operator-=(const Color& color) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	XMStoreFloat4(&m_Data, XMVectorSubtract(c1, c2));
-	// 	return *this;
-	// }
-	//
-	// Color& Color::operator*=(const Color& color) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	XMStoreFloat4(&m_Data, XMVectorMultiply(c1, c2));
-	// 	return *this;
-	// }
-	//
-	// Color& Color::operator*=(float scalar) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c = XMLoadFloat4(&m_Data);
-	// 	XMStoreFloat4(&m_Data, XMVectorScale(c, scalar));
-	// 	return *this;
-	// }
-	//
-	// Color& Color::operator/=(const Color& color) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c1 = XMLoadFloat4(&m_Data);
-	// 	const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
-	// 	XMStoreFloat4(&m_Data, XMVectorDivide(c1, c2));
-	// 	return *this;
-	// }
-	//
-	// Color Color::operator+() const noexcept
-	// {
-	// 	return *this;
-	// }
-	//
-	// Color Color::operator-() const noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c = XMLoadFloat4(&m_Data);
-	// 	Color result;
-	// 	XMStoreFloat4(&result.m_Data, XMVectorNegate(c));
-	// 	return result;
-	// }
-	//
-	// Color::operator const float*() const noexcept
-	// {
-	// 	return reinterpret_cast<const float*>(&m_Data);
-	// }
-	//
-	// float Color::Red() const noexcept
-	// {
-	// 	return m_Data.x;
-	// }
-	//
-	// void Color::Red(const float red) noexcept
-	// {
-	// 	m_Data.x = red;
-	// }
-	//
-	// float Color::Green() const noexcept
-	// {
-	// 	return m_Data.y;
-	// }
-	//
-	// void Color::Green(const float green) noexcept
-	// {
-	// 	m_Data.y = green;
-	// }
-	//
-	// float Color::Blue() const noexcept
-	// {
-	// 	return m_Data.z;
-	// }
-	//
-	// void Color::Blue(const float blue) noexcept
-	// {
-	// 	m_Data.z = blue;
-	// }
-	//
-	// float Color::Alpha() const noexcept
-	// {
-	// 	return m_Data.w;
-	// }
-	//
-	// void Color::Alpha(const float alpha) noexcept
-	// {
-	// 	m_Data.w = alpha;
-	// }
-	//
-	// Color Color::Lerp(const Color& color1,
-	//                   const Color& color2,
-	//                   float ratio) noexcept
-	// {
-	// 	using namespace DirectX;
-	// 	const XMVECTOR c0 = XMLoadFloat4(&color1.m_Data);
-	// 	const XMVECTOR c1 = XMLoadFloat4(&color2.m_Data);
-	// 	Color result      = Color();
-	// 	XMStoreFloat4(&result.m_Data, XMVectorLerp(c0, c1, ratio));
-	// 	return result;
-	// }
-
 	Color::Color() noexcept :
-		XMFLOAT4{1.0f, 1.0f, 1.0f, 1.0f}
+		m_Data{1.0f, 1.0f, 1.0f, 1.0f}
 	{
 	}
 	
 	Color::operator DirectX::XMVECTOR() const noexcept
 	{
-		return XMLoadFloat4(this);
+		return XMLoadFloat4(&m_Data);
 	}
 	
 	bool Color::operator==(const Color& color) const noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
 		return XMColorEqual(c1, c2);
 	}
 	
 	bool Color::operator!=(const Color& color) const noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
 		return XMColorNotEqual(c1, c2);
 	}
 	
 	Color& Color::operator+=(const Color& color) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
-		XMStoreFloat4(this, XMVectorAdd(c1, c2));
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
+		XMStoreFloat4(&m_Data, XMVectorAdd(c1, c2));
 		return *this;
 	}
 	
 	Color& Color::operator-=(const Color& color) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
-		XMStoreFloat4(this, XMVectorSubtract(c1, c2));
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
+		XMStoreFloat4(&m_Data, XMVectorSubtract(c1, c2));
 		return *this;
 	}
 	
 	Color& Color::operator*=(const Color& color) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
-		XMStoreFloat4(this, XMVectorMultiply(c1, c2));
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
+		XMStoreFloat4(&m_Data, XMVectorMultiply(c1, c2));
 		return *this;
 	}
 	
 	Color& Color::operator*=(float scalar) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c = XMLoadFloat4(this);
-		XMStoreFloat4(this, XMVectorScale(c, scalar));
+		const XMVECTOR c = XMLoadFloat4(&m_Data);
+		XMStoreFloat4(&m_Data, XMVectorScale(c, scalar));
 		return *this;
 	}
 	
 	Color& Color::operator/=(const Color& color) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c1 = XMLoadFloat4(this);
-		const XMVECTOR c2 = XMLoadFloat4(&color);
-		XMStoreFloat4(this, XMVectorDivide(c1, c2));
+		const XMVECTOR c1 = XMLoadFloat4(&m_Data);
+		const XMVECTOR c2 = XMLoadFloat4(&color.m_Data);
+		XMStoreFloat4(&m_Data, XMVectorDivide(c1, c2));
 		return *this;
 	}
 	
@@ -742,55 +601,55 @@ namespace Engine
 	Color Color::operator-() const noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c = XMLoadFloat4(this);
+		const XMVECTOR c = XMLoadFloat4(&m_Data);
 		Color result;
-		XMStoreFloat4(&result, XMVectorNegate(c));
+		XMStoreFloat4(&result.m_Data, XMVectorNegate(c));
 		return result;
 	}
 	
 	Color::operator const float*() const noexcept
 	{
-		return reinterpret_cast<const float*>(this);
+		return reinterpret_cast<const float*>(&m_Data);
 	}
 	
 	float Color::Red() const noexcept
 	{
-		return x;
+		return m_Data.x;
 	}
 	
 	void Color::Red(const float red) noexcept
 	{
-		this->x = red;
+		m_Data.x = red;
 	}
 	
 	float Color::Green() const noexcept
 	{
-		return y;
+		return m_Data.y;
 	}
 	
 	void Color::Green(const float green) noexcept
 	{
-		this->y = green;
+		m_Data.y = green;
 	}
 	
 	float Color::Blue() const noexcept
 	{
-		return z;
+		return m_Data.z;
 	}
 	
 	void Color::Blue(const float blue) noexcept
 	{
-		this->z = blue;
+		m_Data.z = blue;
 	}
 	
 	float Color::Alpha() const noexcept
 	{
-		return w;
+		return m_Data.w;
 	}
 	
 	void Color::Alpha(const float alpha) noexcept
 	{
-		this->w = alpha;
+		m_Data.w = alpha;
 	}
 	
 	Color Color::Lerp(const Color& color1,
@@ -798,10 +657,10 @@ namespace Engine
 	                  float ratio) noexcept
 	{
 		using namespace DirectX;
-		const XMVECTOR c0 = XMLoadFloat4(&color1);
-		const XMVECTOR c1 = XMLoadFloat4(&color2);
+		const XMVECTOR c0 = XMLoadFloat4(&color1.m_Data);
+		const XMVECTOR c1 = XMLoadFloat4(&color2.m_Data);
 		Color result      = Color();
-		XMStoreFloat4(&result, XMVectorLerp(c0, c1, ratio));
+		XMStoreFloat4(&result.m_Data, XMVectorLerp(c0, c1, ratio));
 		return result;
 	}
 
