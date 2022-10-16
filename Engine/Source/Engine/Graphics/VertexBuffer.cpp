@@ -5,49 +5,24 @@
 
 namespace Engine
 {
-	VertexBuffer::VertexBuffer() :
-		m_Data(nullptr),
-		m_DataLayout(nullptr),
-		m_DataSize{0},
-		m_DataCount{0}
-	{
-	}
-
-	VertexBuffer::~VertexBuffer()
-	{
-		m_DataLayout->Release();
-		m_Data->Release();
-	}
-
-	Uint VertexBuffer::GetCount() const
-	{
-		return m_DataCount;
-	}
-
-	Uint VertexBuffer::GetSize() const
-	{
-		return m_DataSize * m_DataCount;
-	}
-
-	bool VertexBuffer::Load(const void* vertexList,
-	                        const Uint vertexDataSize,
-	                        const Uint vertexListCount,
-	                        const void* shaderByteCode,
-	                        const Uint shaderByteCodeSize,
-	                        const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-	                        const Uint indexLayoutSize)
+	VertexBuffer::VertexBuffer(const void* vertexList,
+	                           size_t vertexDataSize,
+	                           Uint vertexListCount,
+	                           const void* shaderByteCode,
+	                           size_t shaderByteCodeSize,
+	                           const D3D11_INPUT_ELEMENT_DESC* indexLayout,
+	                           size_t indexLayoutSize) :
+		Buffer(vertexListCount, vertexDataSize),
+		m_DataLayout{nullptr}
 	{
 		if (m_Data)
 			m_Data->Release();
 		if (m_DataLayout)
 			m_DataLayout->Release();
 
-		m_DataCount = vertexListCount;
-		m_DataSize  = vertexDataSize;
-
 		D3D11_BUFFER_DESC bufferDesc = {};
 		bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-		bufferDesc.ByteWidth         = GetSize();
+		bufferDesc.ByteWidth         = ByteSize();
 		bufferDesc.BindFlags         = D3D11_BIND_VERTEX_BUFFER;
 		bufferDesc.CPUAccessFlags    = 0;
 		bufferDesc.MiscFlags         = 0;
@@ -56,10 +31,8 @@ namespace Engine
 		initData.pSysMem                = vertexList;
 
 		const auto result = RenderSystem::GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data);
-		if (FAILED(result))
-		{
-			return false;
-		}
+
+		ENGINE_ASSERT(SUCCEEDED(result), "Vertex buffer cannot be created!")
 
 		const auto layoutResult =
 				RenderSystem::GetDevice().CreateInputLayout(
@@ -69,10 +42,16 @@ namespace Engine
 					shaderByteCodeSize,
 					&m_DataLayout);
 
-		if (FAILED(layoutResult))
-		{
-			return false;
-		}
-		return true;
+		ENGINE_ASSERT(SUCCEEDED(layoutResult), "Vertex layout cannot be created!")
+	}
+
+	VertexBuffer::~VertexBuffer()
+	{
+	}
+
+	void VertexBuffer::Release()
+	{
+		m_DataLayout->Release();
+		m_Data->Release();
 	}
 }

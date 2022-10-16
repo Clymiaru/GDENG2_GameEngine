@@ -56,7 +56,7 @@ namespace Engine
 
 		Vector2 m_ClientSize;
 
-		friend LRESULT WindowsProcedure(HWND windowHandle,
+		friend LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
 		                                UINT message,
 		                                WPARAM wParam,
 		                                LPARAM lParam);

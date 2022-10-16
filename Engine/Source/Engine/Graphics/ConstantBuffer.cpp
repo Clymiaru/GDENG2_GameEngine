@@ -6,18 +6,12 @@
 
 #include "Engine/Graphics/DeviceContext.h"
 
-Engine::ConstantBuffer::ConstantBuffer() :
-	m_BufferData{nullptr}
+Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
+                                       const size_t bufferSize) :
+	Buffer(1, bufferSize)
 {
-}
-
-Engine::ConstantBuffer::~ConstantBuffer() = default;
-
-bool Engine::ConstantBuffer::Load(const void* buffer,
-                                  const UINT bufferSize)
-{
-	if (m_BufferData != nullptr)
-		m_BufferData->Release();
+	if (m_Data != nullptr)
+		m_Data->Release();
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
@@ -29,29 +23,17 @@ bool Engine::ConstantBuffer::Load(const void* buffer,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = buffer;
 
-	if (FAILED(RenderSystem::GetDevice().CreateBuffer(&bufferDesc,
-		&initData,
-		&m_BufferData)))
-	{
-		return false;
-	}
-	return true;
+	auto result = RenderSystem::GetDevice().CreateBuffer(&bufferDesc,
+	                                                     &initData,
+	                                                     &m_Data);
+
+	ENGINE_ASSERT(SUCCEEDED(result), "Constant Buffer cannot be created!")
 }
 
-void Engine::ConstantBuffer::Update(DeviceContext& deviceContext,
-                                    void* buffer) const
-{
-	deviceContext.m_DeviceContext->UpdateSubresource(m_BufferData,
-	                                                 NULL,
-	                                                 nullptr,
-	                                                 buffer,
-	                                                 NULL,
-	                                                 NULL);
-}
+Engine::ConstantBuffer::~ConstantBuffer() = default;
 
-bool Engine::ConstantBuffer::Release() const
+void Engine::ConstantBuffer::Release()
 {
-	if (m_BufferData)
-		m_BufferData->Release();
-	return true;
+	if (m_Data != nullptr)
+		m_Data->Release();
 }

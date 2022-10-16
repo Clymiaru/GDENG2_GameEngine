@@ -3,38 +3,16 @@
 
 #include "RenderSystem.h"
 
-Engine::IndexBuffer::IndexBuffer():
-	m_Data{nullptr},
-	m_DataCount{0}
-{
-}
-
-Engine::IndexBuffer::~IndexBuffer()
-{
-	m_Data->Release();
-}
-
-Engine::Uint Engine::IndexBuffer::GetCount() const
-{
-	return m_DataCount;
-}
-
-Engine::Uint Engine::IndexBuffer::GetSize() const
-{
-	return sizeof(Uint) * m_DataCount;
-}
-
-bool Engine::IndexBuffer::Load(const Uint* indexList,
-                               const Uint indexListCount)
+Engine::IndexBuffer::IndexBuffer(const Uint* indexList,
+                                 const Uint indexListCount):
+	Buffer(indexListCount, sizeof(Uint))
 {
 	if (m_Data)
 		m_Data->Release();
 
-	m_DataCount = indexListCount;
-
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth         = GetSize();
+	bufferDesc.ByteWidth         = ByteSize();
 	bufferDesc.BindFlags         = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags    = 0;
 	bufferDesc.MiscFlags         = 0;
@@ -42,10 +20,16 @@ bool Engine::IndexBuffer::Load(const Uint* indexList,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = indexList;
 
-	if (FAILED(RenderSystem::GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data)))
-	{
-		return false;
-	}
+	const HRESULT result = RenderSystem::GetDevice().CreateBuffer(&bufferDesc, &initData, &m_Data);
 
-	return true;
+	ENGINE_ASSERT(SUCCEEDED(result), "Index buffer cannot be created!")
+}
+
+Engine::IndexBuffer::~IndexBuffer()
+{
+}
+
+void Engine::IndexBuffer::Release()
+{
+	m_Data->Release();
 }

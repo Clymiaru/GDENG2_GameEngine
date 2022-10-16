@@ -20,9 +20,8 @@ namespace Engine
 
 	void RenderObject::TerminateImpl() const
 	{
-		// delete m_VertexData;
-		// delete m_VertexLayoutData;
-		// delete m_IndexData;
+		m_VertexBuffer->Release();
+		m_IndexBuffer->Release();
 	}
 
 	RenderObject::RenderObject() :

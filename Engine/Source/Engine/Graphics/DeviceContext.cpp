@@ -46,14 +46,25 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
+	void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+	                                         const void* updatedBufferData)
+	{
+		m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
+		                                   NULL,
+		                                   nullptr,
+		                                   updatedBufferData,
+		                                   NULL,
+		                                   NULL);
+	}
+
 	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
 	{
 		m_Topology = topology;
 		m_DeviceContext->IASetPrimitiveTopology(m_Topology);
 	}
 
-	void DeviceContext::Draw(const Uint indexCount,
-	                         const Uint startingIndex) const
+	void DeviceContext::DrawIndexed(const Uint indexCount,
+	                                const Uint startingIndex) const
 	{
 		ENGINE_ASSERT(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!")
 		m_DeviceContext->DrawIndexed(indexCount,

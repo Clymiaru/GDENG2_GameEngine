@@ -2,8 +2,14 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
+#include "DeviceContext.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+
 namespace Engine
 {
+	class VertexShader;
+
 	class DeviceContext;
 
 	class RenderObject;
@@ -34,6 +40,12 @@ namespace Engine
 		//---------- RENDER COMMANDS
 		static void Clear(Color fillColor);
 
+		template <typename ShaderType>
+		static void SetShader(ShaderType& shader);
+
+		template <typename ShaderType>
+		static void SetConstantBuffer(const ConstantBuffer& constantBuffer);
+
 		static void Draw(const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer);
 
@@ -62,4 +74,38 @@ namespace Engine
 
 		IDXGIFactory* m_DxgiFactory;
 	};
+
+	template <typename ShaderType>
+	void RenderSystem::SetShader(ShaderType& shader)
+	{
+	}
+
+	template <>
+	inline void RenderSystem::SetShader<VertexShader>(VertexShader& shader)
+	{
+		m_Instance.m_DeviceContext->SetShader(shader);
+	}
+
+	template <>
+	inline void RenderSystem::SetShader<PixelShader>(PixelShader& shader)
+	{
+		m_Instance.m_DeviceContext->SetShader(shader);
+	}
+
+	template <typename ShaderType>
+	void RenderSystem::SetConstantBuffer(const ConstantBuffer& constantBuffer)
+	{
+	}
+
+	template <>
+	inline void RenderSystem::SetConstantBuffer<VertexShader>(const ConstantBuffer& constantBuffer)
+	{
+		m_Instance.m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
+	}
+
+	template <>
+	inline void RenderSystem::SetConstantBuffer<PixelShader>(const ConstantBuffer& constantBuffer)
+	{
+		m_Instance.m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
+	}
 }

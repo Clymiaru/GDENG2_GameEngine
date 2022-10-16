@@ -7,7 +7,7 @@
 
 namespace Engine
 {
-	using Uint = uint32_t;
+	using Uint = unsigned int;
 
 	using String = std::string;
 	using WString = std::wstring;

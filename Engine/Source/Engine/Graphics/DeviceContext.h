@@ -28,6 +28,9 @@ namespace Engine
 		template <typename T>
 		void SetConstantBuffer(const ConstantBuffer& constantBuffer) const;
 
+		void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+		                          const void* updatedBufferData);
+
 		// Shaders
 		template <typename T>
 		void SetShader(T& shader) const;
@@ -35,7 +38,7 @@ namespace Engine
 		// Draw
 		void SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology);
 
-		void Draw(Uint indexCount,
+		void DrawIndexed(Uint indexCount,
 		          Uint startingIndex) const;
 
 		void Clear(const SwapChain& swapChain,
@@ -60,8 +63,8 @@ namespace Engine
 	template <>
 	inline void DeviceContext::SetBuffer<VertexBuffer>(const VertexBuffer& buffer) const
 	{
-		const UINT stride     = buffer.m_DataSize;
-		constexpr UINT offset = 0;
+		const Uint stride     = buffer.DataTypeSize();
+		constexpr Uint offset = 0;
 		m_DeviceContext->IASetVertexBuffers(0,
 		                                    1,
 		                                    &buffer.m_Data,
@@ -88,7 +91,7 @@ namespace Engine
 	{
 		m_DeviceContext->VSSetConstantBuffers(0,
 		                                      1,
-		                                      &constantBuffer.m_BufferData);
+		                                      &constantBuffer.m_Data);
 	}
 
 	template <>
@@ -96,7 +99,7 @@ namespace Engine
 	{
 		m_DeviceContext->PSSetConstantBuffers(0,
 		                                      1,
-		                                      &constantBuffer.m_BufferData);
+		                                      &constantBuffer.m_Data);
 	}
 
 	//---------- SET SHADER

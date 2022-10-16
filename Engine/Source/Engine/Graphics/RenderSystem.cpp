@@ -97,8 +97,7 @@ namespace Engine
 		m_Instance.m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
 		m_Instance.m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
 		m_Instance.m_DeviceContext->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_Instance.m_DeviceContext->Draw(indexBuffer.GetCount(),
-		                                 0);
+		m_Instance.m_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
 	}
 
 	void RenderSystem::ShowFrame()

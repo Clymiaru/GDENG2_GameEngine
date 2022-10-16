@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <d3d11.h>
 
+#include "Buffer.h"
+
 #include "Engine/Core/Core.h"
 #include "Engine/Core/Math.h"
 
@@ -8,28 +10,17 @@ namespace Engine
 {
 	class DeviceContext;
 
-	class IndexBuffer
+	class IndexBuffer final : public Buffer
 	{
 	public:
-		IndexBuffer();
+		IndexBuffer(const Uint* indexList,
+		            Uint indexListCount);
 
-		~IndexBuffer();
+		~IndexBuffer() override;
 
-		[[nodiscard]]
-		Uint GetCount() const;
-
-		[[nodiscard]]
-		Uint GetSize() const;
-
-		[[nodiscard]]
-		bool Load(const Uint* indexList,
-		          Uint indexListCount);
+		void Release() override;
 
 	private:
-		ID3D11Buffer* m_Data;
-
-		Uint m_DataCount;
-
 		friend class DeviceContext;
 	};
 }

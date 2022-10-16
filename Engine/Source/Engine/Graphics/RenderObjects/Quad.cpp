@@ -123,37 +123,53 @@ namespace Engine
 
 	void Quad::Render() const
 	{
-		m_ConstantBuffer->Update(RenderSystem::GetDeviceContext(), m_Constant);
-		RenderSystem::GetDeviceContext().SetConstantBuffer<VertexShader>(*m_ConstantBuffer);
-		RenderSystem::GetDeviceContext().SetConstantBuffer<PixelShader>(*m_ConstantBuffer);
+		// Create geometry
+		// Create Vertex buffer
+		// Create index buffer
+		// Create Constant Buffer
+		//==========
 
-		RenderSystem::GetDeviceContext().SetShader<VertexShader>(*m_VertexShader);
-		RenderSystem::GetDeviceContext().SetShader<PixelShader>(*m_PixelShader);
+		// Clear Render Target and Depth and Stencil Views
+		
+		//===========
+		// Set Shaders that will be used
 
+		RenderSystem::SetShader<VertexShader>(*m_VertexShader);
+		RenderSystem::SetShader<PixelShader>(*m_PixelShader);
+
+		// Update and Set Constant Buffers that will be used by the shaders
+		RenderSystem::GetDeviceContext().UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
+		
+		RenderSystem::SetConstantBuffer<VertexShader>(*m_ConstantBuffer);
+		RenderSystem::SetConstantBuffer<PixelShader>(*m_ConstantBuffer);
+		
+
+		// Set Vertex and Index Buffer
+
+		// Set Topology of the rendering
+
+		// DrawIndexed
+
+		
 		RenderSystem::Draw(*m_VertexBuffer, *m_IndexBuffer);
 	}
 
 	void Quad::InitializeBuffers()
 	{
-		m_VertexBuffer = CreateUniquePtr<VertexBuffer>();
-		bool result    = m_VertexBuffer->Load(m_VertexData->VertexList,
-		                                      sizeof(Vertex),
-		                                      m_VertexData->VertexListCount,
-		                                      m_VertexShader->GetByteCodeData(),
-		                                      static_cast<Uint>(m_VertexShader->GetByteCodeSizeData()),
-		                                      m_VertexLayoutData->VertexLayout,
-		                                      m_VertexLayoutData->VertexLayoutCount);
-		ENGINE_ASSERT(result, "Vertex Buffer can't be loaded!")
+		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
+											  sizeof(Vertex),
+											  m_VertexData->VertexListCount,
+											  m_VertexShader->GetByteCodeData(),
+											  static_cast<Uint>(m_VertexShader->GetByteCodeSizeData()),
+											  m_VertexLayoutData->VertexLayout,
+											  m_VertexLayoutData->VertexLayoutCount);
 
-		m_IndexBuffer = CreateUniquePtr<IndexBuffer>();
-		result        = m_IndexBuffer->Load(m_IndexData->IndexList,
-		                                    m_IndexData->IndexListCount);
-		ENGINE_ASSERT(result, "Index Buffer can't be loaded!")
+		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
+											m_IndexData->IndexListCount);
 
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>();
 		m_Constant       = new Constant({});
-		result           = m_ConstantBuffer->Load(m_Constant, sizeof(Constant));
-		ENGINE_ASSERT(result, "Constant Buffer can't be loaded!")
+		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(m_Constant, sizeof(Constant));
+		
 	}
 
 	void Quad::UpdateConstantBuffer(float time)

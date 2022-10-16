@@ -1,28 +1,23 @@
 ﻿#pragma once
 #include <d3d11.h>
 
+#include "Buffer.h"
+
 namespace Engine
 {
 	class DeviceContext;
 
-	class ConstantBuffer final
+	class ConstantBuffer final : public Buffer
 	{
 	public:
-		ConstantBuffer();
+		ConstantBuffer(const void* buffer,
+		               size_t bufferSize);
 
-		~ConstantBuffer();
+		~ConstantBuffer() override;
 
-		bool Load(const void* buffer,
-		          UINT bufferSize);
-
-		void Update(DeviceContext& deviceContext,
-		            void* buffer) const;
-
-		bool Release() const;
+		void Release() override;
 
 	private:
-		ID3D11Buffer* m_BufferData;
-
 		friend class DeviceContext;
 	};
 }
