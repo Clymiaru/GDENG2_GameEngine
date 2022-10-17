@@ -5,6 +5,7 @@
 #include "DeviceContext.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "RenderCommand.h"
 
 namespace Engine
 {
@@ -48,6 +49,8 @@ namespace Engine
 
 		static void Draw(const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer);
+
+		static void Draw(const RenderData& data);
 
 		static void ShowFrame();
 

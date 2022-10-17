@@ -2,7 +2,7 @@
 #include "Random.h"
 
 Engine::Random::Random() :
-	m_RandomEngine{}
+	m_RandomEngine{time(0)}
 {
 }
 

@@ -100,6 +100,10 @@ namespace Engine
 		m_Instance.m_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
 	}
 
+	void RenderSystem::Draw(const RenderData& data)
+	{
+	}
+
 	void RenderSystem::ShowFrame()
 	{
 		m_Instance.m_SwapChain->Present(true);

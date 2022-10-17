@@ -55,9 +55,18 @@ void Sandbox::SandboxLayer::OnAttach()
 		colorCycleCounter++;
 	}
 
-	m_Cube = CreateUniquePtr<Cube>(Vector3(0, 0, 0),
-	                               Vector3(Random::Range(100, 200), Random::Range(100, 200), Random::Range(100, 200)),
-	                               L"DefaultShader");
+	for (size_t i = 0; i < Random::Range<int>(1000, 2000); i++)
+	{
+		m_Cubes.push_back(CreateUniquePtr<Cube>(Vector3(Random::Range<float>(-500.0f, 500.0f),
+			Random::Range<float>(-300.0f, 300.0f),
+			Random::Range<float>(-0.0f, 0.0f)),
+			Vector3(Random::Range<float>(100, 200),
+				Random::Range<float>(100, 200),
+				Random::Range<float>(100, 200)),
+			L"DefaultShader"));
+	}
+	Debug::Log("Cubes: {0}", m_Cubes.size());
+
 }
 
 void Sandbox::SandboxLayer::OnUpdate()
@@ -67,7 +76,10 @@ void Sandbox::SandboxLayer::OnUpdate()
 		quad->Update(m_CurrentTime);
 	}
 
-	m_Cube->Update(m_CurrentTime);
+	for (const auto& cube : m_Cubes)
+	{
+		cube->Update(m_CurrentTime);
+	}
 }
 
 void Sandbox::SandboxLayer::OnRender()
@@ -76,7 +88,10 @@ void Sandbox::SandboxLayer::OnRender()
 	{
 		quad->Render();
 	}
-	m_Cube->Render();
+	for (const auto& cube : m_Cubes)
+	{
+		cube->Render();
+	}
 }
 
 void Sandbox::SandboxLayer::OnDetach()

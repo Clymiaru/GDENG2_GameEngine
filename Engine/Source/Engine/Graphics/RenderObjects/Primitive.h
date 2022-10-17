@@ -51,7 +51,7 @@ namespace Engine
 		void InitializeImpl(VertexData vertexData,
 		                    VertexLayoutData vertexLayoutData,
 		                    IndexData indexLayoutData,
-		                    std::wstring shaderName);
+		                    WString shaderName);
 
 		void TerminateImpl() const;
 

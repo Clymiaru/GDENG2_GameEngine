@@ -30,6 +30,6 @@ namespace Sandbox
 
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Tiles;
 
-		Engine::UniquePtr<Engine::Cube> m_Cube;
+		Engine::List< Engine::UniquePtr<Engine::Cube>> m_Cubes;
 	};
 }

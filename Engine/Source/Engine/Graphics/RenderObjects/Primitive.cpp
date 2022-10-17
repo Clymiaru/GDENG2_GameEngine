@@ -8,7 +8,7 @@ namespace Engine
 	void Primitive::InitializeImpl(VertexData vertexData,
 	                               VertexLayoutData vertexLayoutData,
 	                               IndexData indexLayoutData,
-	                               const std::wstring shaderName)
+	                               const WString shaderName)
 	{
 		m_VertexData       = std::move(&vertexData);
 		m_VertexLayoutData = std::move(&vertexLayoutData);

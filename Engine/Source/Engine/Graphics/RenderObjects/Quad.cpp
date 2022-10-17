@@ -76,6 +76,7 @@ namespace Engine
 		//===========
 		// Set Shaders that will be used
 
+
 		RenderSystem::SetShader<VertexShader>(*m_VertexShader);
 		RenderSystem::SetShader<PixelShader>(*m_PixelShader);
 
@@ -84,6 +85,10 @@ namespace Engine
 
 		RenderSystem::SetConstantBuffer<VertexShader>(*m_ConstantBuffer);
 		RenderSystem::SetConstantBuffer<PixelShader>(*m_ConstantBuffer);
+
+		// IDEA
+		// RenderData data = {};
+		// RenderSystem::Draw(data);
 
 		// Set Vertex and Index Buffer
 
