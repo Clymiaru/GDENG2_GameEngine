@@ -21,8 +21,9 @@ cbuffer Constant: register(b0)
 VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output;
+	output.position = input.position;
 	
-	output.position = mul(input.position, Model);
+	output.position = mul(output.position, Model);
 	output.position = mul(output.position, View);
 	output.position = mul(output.position, Projection);
 	

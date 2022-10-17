@@ -31,5 +31,10 @@ namespace Sandbox
 		Engine::List<Engine::UniquePtr<Engine::Quad>> m_Tiles;
 
 		Engine::List< Engine::UniquePtr<Engine::Cube>> m_Cubes;
+
+		Engine::UniquePtr<Engine::Cube> m_TestCube;
+
+		float m_TestPosition[3] = {0.0f, 0.0f, 0.0f};
+		float m_TestRotation[3] = {0.0f, 0.0f, 0.0f};
 	};
 }

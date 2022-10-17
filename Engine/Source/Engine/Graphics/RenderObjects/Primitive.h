@@ -41,20 +41,26 @@ namespace Engine
 
 		virtual ~Primitive();
 
+		void Initialize(VertexData vertexData,
+		                VertexLayoutData vertexLayoutData,
+		                IndexData indexLayoutData,
+		                WString shaderName);
+
+		void InitializeBuffers(size_t vertexSize,
+		                       void* constantBufferData,
+		                       size_t constantBufferDataSize);
+
+		void Draw(void* newConstantData);
+
+		void Terminate() const;
+
 		[[nodiscard]]
 		VertexBuffer& GetVertexBuffer() const;
 
 		[[nodiscard]]
 		IndexBuffer& GetIndexBuffer() const;
 
-	protected:
-		void InitializeImpl(VertexData vertexData,
-		                    VertexLayoutData vertexLayoutData,
-		                    IndexData indexLayoutData,
-		                    WString shaderName);
-
-		void TerminateImpl() const;
-
+	private:
 		VertexData* m_VertexData;
 
 		VertexLayoutData* m_VertexLayoutData;
@@ -70,14 +76,5 @@ namespace Engine
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer;
-
-	private:
-		virtual void InitializeBuffers() = 0;
-
-		virtual std::pair<Vertex*, size_t> CreateVertices() = 0;
-
-		virtual std::pair<D3D11_INPUT_ELEMENT_DESC*, size_t> CreateVertexLayout() = 0;
-
-		virtual std::pair<Uint*, size_t> CreateIndices() = 0;
 	};
 }

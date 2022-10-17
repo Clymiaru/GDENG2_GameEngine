@@ -1,14 +1,16 @@
 ﻿#pragma once
+#include "Primitive.h"
+
+#include "Engine/Core/AEntity.h"
 #include "Engine/Core/Core.h"
 #include "Engine/Core/Math.h"
 
-#include "Engine/Graphics/RenderObjects/Primitive.h"
 
 namespace Engine
 {
 	struct Constant;
 
-	class Quad final : public Primitive
+	class Quad final : public AEntity
 	{
 	public:
 		Quad(const Vector3& position,
@@ -18,29 +20,15 @@ namespace Engine
 
 		~Quad() override;
 
-		void Update(float deltaTime);
+		void Update(float deltaTime) override;
 
-		void Render() const;
+		void Draw() override;
 
 	private:
-		void InitializeBuffers() override;
-
-		void UpdateConstantBuffer(float time);
-
-		std::pair<Vertex*, size_t> CreateVertices() override;
-
-		std::pair<D3D11_INPUT_ELEMENT_DESC*, size_t> CreateVertexLayout() override;
-
-		std::pair<Uint*, size_t> CreateIndices() override;
-		
-		Vector3 m_Position;
-
-		Vector2 m_Scale;
-
 		Color m_Color;
 
-		DirectX::XMMATRIX m_TransformMatrix;
-
 		Constant* m_Constant;
+
+		Primitive* m_Primitive;
 	};
 }
