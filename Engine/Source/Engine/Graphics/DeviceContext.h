@@ -52,6 +52,8 @@ namespace Engine
 		D3D11_PRIMITIVE_TOPOLOGY m_Topology;
 
 		friend class ConstantBuffer;
+		friend class RenderSystem;
+
 	};
 
 	//---------- SET BUFFER

@@ -15,6 +15,8 @@ project ("Engine")
     {
         "Source/**.h",
         "Source/**.cpp",
+        "Dependencies/ImGui/**.h",
+        "Dependencies/ImGui/**.cpp"
     }
 
     includedirs {

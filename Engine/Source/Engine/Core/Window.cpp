@@ -5,6 +5,10 @@
 
 #include "Application.h"
 
+#include "../../../Dependencies/ImGui/imgui_impl_win32.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace Engine
 {
 	Window::Window() :
@@ -20,6 +24,11 @@ namespace Engine
 	                                  const WPARAM wParam,
 	                                  const LPARAM lParam)
 	{
+		if (ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam) )
+		{
+			return true;
+		}
+		
 		switch (message)
 		{
 			case WM_CREATE:
@@ -50,6 +59,8 @@ namespace Engine
 		UpdateClientSize();
 
 		ShowWindow(m_Handle, SW_SHOW);
+
+		ImGui_ImplWin32_Init(m_Handle);
 
 		UpdateWindow(m_Handle);
 	}

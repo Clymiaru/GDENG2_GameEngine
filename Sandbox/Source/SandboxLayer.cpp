@@ -2,6 +2,10 @@
 
 #include <Utils/Random.h>
 
+#include "../../Engine/Dependencies/ImGui/imgui.h"
+#include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
+#include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
+
 #include "Engine/Engine.h"
 
 #include "Engine/Graphics/RenderObjects/Cube.h"
@@ -17,6 +21,8 @@ Sandbox::SandboxLayer::~SandboxLayer() = default;
 
 void Sandbox::SandboxLayer::OnAttach()
 {
+	
+	
 	using namespace Engine;
 	ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
 	                                      "vsmain");
@@ -55,7 +61,7 @@ void Sandbox::SandboxLayer::OnAttach()
 		colorCycleCounter++;
 	}
 
-	for (size_t i = 0; i < Random::Range<int>(1000, 2000); i++)
+	for (size_t i = 0; i < Random::Range<int>(100, 200); i++)
 	{
 		m_Cubes.push_back(CreateUniquePtr<Cube>(Vector3(Random::Range<float>(-500.0f, 500.0f),
 			Random::Range<float>(-300.0f, 300.0f),
@@ -92,6 +98,20 @@ void Sandbox::SandboxLayer::OnRender()
 	{
 		cube->Render();
 	}
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	static bool showDemoWindow = true;
+
+	if (showDemoWindow)
+	{
+		ImGui::ShowDemoWindow(&showDemoWindow);
+	}
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	ImGui::EndFrame();
 }
 
 void Sandbox::SandboxLayer::OnDetach()

@@ -7,6 +7,10 @@
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 
+#include "../../Engine/Dependencies/ImGui/imgui.h"
+#include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
+#include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
+
 namespace Engine
 {
 	Application::Application() :
@@ -39,6 +43,11 @@ namespace Engine
 
 	void Application::Start()
 	{
+		IMGUI_CHECKVERSION();
+		static auto* ctx = ImGui::CreateContext();
+		ImGui::StyleColorsDark();
+		ImGui::SetCurrentContext(ctx);
+		
 		Instance().m_Window = Window::Create(Window::Profile{
 			Instance().m_Profile.Name,
 			Instance().m_Profile.Width,
@@ -54,6 +63,8 @@ namespace Engine
 		Instance().m_Time = Time();
 		Instance().m_Window->Start();
 		RenderSystem::Start(*m_Window);
+
+		
 
 		ShaderLibrary::Initialize(4);
 
@@ -83,11 +94,16 @@ namespace Engine
 
 	void Application::EndingSystems()
 	{
-		// Time::Terminate();
 		ShaderLibrary::Terminate();
 		Instance().m_LayerSystem.End();
+
 		RenderSystem::End();
+
 		Instance().m_Window->Close();
+		
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 	void Application::Quit()
@@ -124,8 +140,8 @@ namespace Engine
 	{
 		RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
 
-		RenderSystem::GetDeviceContext().SetViewportSize(m_Window->GetSize());
 		
+
 		m_LayerSystem.Render();
 
 		RenderSystem::ShowFrame();

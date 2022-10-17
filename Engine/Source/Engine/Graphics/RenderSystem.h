@@ -3,9 +3,9 @@
 #include <d3dcompiler.h>
 
 #include "DeviceContext.h"
-#include "VertexShader.h"
 #include "PixelShader.h"
 #include "RenderCommand.h"
+#include "VertexShader.h"
 
 namespace Engine
 {
@@ -76,6 +76,7 @@ namespace Engine
 		IDXGIAdapter* m_DxgiAdapter;
 
 		IDXGIFactory* m_DxgiFactory;
+
 	};
 
 	template <typename ShaderType>

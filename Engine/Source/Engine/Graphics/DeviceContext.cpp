@@ -4,6 +4,7 @@
 
 #include "ShaderLibrary.h"
 
+
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Graphics/VertexShader.h"
 
@@ -45,6 +46,7 @@ namespace Engine
 		viewport.MinDepth       = 0.0f;
 		viewport.MaxDepth       = 1.0f;
 		m_DeviceContext->RSSetViewports(1, &viewport);
+
 	}
 
 	void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,

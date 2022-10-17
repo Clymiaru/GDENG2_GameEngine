@@ -6,7 +6,9 @@
 #include "DeviceContext.h"
 
 #include "SwapChain.h"
+#include "../../../Dependencies/ImGui/imgui_impl_dx11.h"
 
+#include "Engine/Core/Window.h"
 
 namespace Engine
 {
@@ -61,6 +63,9 @@ namespace Engine
 		m_Instance.m_SwapChain     = CreateUniquePtr<SwapChain>(window,
 																m_Instance.m_Device,
 																m_Instance.m_DxgiFactory);
+		
+		GetDeviceContext().SetViewportSize(window.GetSize());
+		ImGui_ImplDX11_Init(m_Instance.m_Device, m_Instance.m_DeviceContext->m_DeviceContext);
 	}
 
 	void RenderSystem::End()
