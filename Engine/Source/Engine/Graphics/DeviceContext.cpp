@@ -32,10 +32,13 @@ namespace Engine
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
 
+		m_DeviceContext->ClearDepthStencilView(&swapChain.GetDepthStencilView(),
+											   D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+
 
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    renderTargetViews.data(),
-		                                    nullptr);
+		                                    &swapChain.GetDepthStencilView());
 	}
 
 	void DeviceContext::SetViewportSize(const Vector2 size) const

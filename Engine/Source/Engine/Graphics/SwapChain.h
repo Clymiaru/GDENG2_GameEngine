@@ -20,6 +20,8 @@ namespace Engine
 		[[nodiscard]]
 		ID3D11RenderTargetView& GetRenderTargetView() const;
 
+		ID3D11DepthStencilView& GetDepthStencilView() const;
+
 	private:
 		void CreateSwapChain(Window& window,
 		                     ID3D11Device* device,

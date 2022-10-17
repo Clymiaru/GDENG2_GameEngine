@@ -45,6 +45,11 @@ namespace Engine
 		return *m_RenderTargetView;
 	}
 
+	ID3D11DepthStencilView& SwapChain::GetDepthStencilView() const
+	{
+		return *m_DepthStencilView;
+	}
+
 	void SwapChain::CreateSwapChain(Window& window,
 	                                ID3D11Device* device,
 	                                IDXGIFactory* factory)
@@ -87,25 +92,27 @@ namespace Engine
 		                                        &m_RenderTargetView);
 		buffer->Release();
 		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create RenderTargetView!")
+
+		D3D11_TEXTURE2D_DESC textureDesc = {};
+		textureDesc.Width = 1280;
+		textureDesc.Height = 720;
+		textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		textureDesc.MipLevels = 1;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.MiscFlags = 0;
+		textureDesc.ArraySize = 1;
+		textureDesc.CPUAccessFlags = 0;
+
+		device->CreateTexture2D(&textureDesc, NULL, &buffer);
+		device->CreateDepthStencilView(buffer, NULL, &m_DepthStencilView);
+		buffer->Release();
 	}
 
 	// TODO:
 	void SwapChain::CreateDepthStencilView(ID3D11Device* device)
 	{
-		ID3D11Texture2D* buffer = nullptr;
-
-		D3D11_TEXTURE2D_DESC textureDesc = {};
-
-		HRESULT result = m_SwapChain->GetBuffer(0,
-												__uuidof(ID3D11Texture2D),
-												reinterpret_cast<void**>(&buffer));
-
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to get buffer!")
-
-		result = device->CreateRenderTargetView(buffer,
-												nullptr,
-												&m_RenderTargetView);
-		buffer->Release();
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create RenderTargetView!")
 	}
 }
