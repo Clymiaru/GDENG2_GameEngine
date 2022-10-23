@@ -2,6 +2,7 @@
 #include "Quad.h"
 
 #include "Engine/Core/Debug.h"
+#include "Engine/Graphics/Camera.h"
 
 #include "Engine/Graphics/DeviceContext.h"
 #include "Engine/Graphics/RenderSystem.h"
@@ -109,12 +110,9 @@ namespace Engine
 		m_Constant->Model = Transform();
 
 		// To be transferred to camera later
-		m_Constant->View = XMMatrixIdentity();
-		m_Constant->View = XMMatrixTranspose(m_Constant->View);
+		m_Constant->View = Camera::Instance().ViewProjMatrix();
 
 		m_Constant->Projection = XMMatrixIdentity();
-		m_Constant->Projection *= XMMatrixOrthographicLH(1280.0f, 720.0f, -1000.0f, 1000.0f);
-		m_Constant->Projection = XMMatrixTranspose(m_Constant->Projection);
 	}
 
 	void Quad::Draw()

@@ -1,5 +1,7 @@
 ﻿#include "SandboxLayer.h"
 
+#include <Engine/Graphics/Camera.h>
+
 #include <Utils/Random.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
@@ -38,7 +40,6 @@ void Sandbox::SandboxLayer::OnAttach()
 	                                           50,
 	                                           50),
 	                                   L"DefaultShader");
-	Debug::Log("Cubes: {0}", m_Cubes.size());
 
 	InputSystem::Instance().AddListener(this);
 }
@@ -57,6 +58,8 @@ void Sandbox::SandboxLayer::OnUpdate()
 	m_TestCube->Scale(Engine::Vector3{m_TestScale2[0], m_TestScale2[1], m_TestScale2[2]});
 	m_TestCube->Rotation(Engine::Vector3{m_TestRotation2[0], m_TestRotation2[1], m_TestRotation2[2]});
 	m_TestCube->Update(m_CurrentTime);
+
+	Engine::Camera::Instance().Translate(Engine::Vector3(m_CameraPosition[0], m_CameraPosition[1], m_CameraPosition[2]));
 
 	Engine::InputSystem::Instance().Update();
 
@@ -87,6 +90,22 @@ void Sandbox::SandboxLayer::OnRender()
 	
 	ImGui::End();
 
+	ImGui::Begin("Camera Controls");
+	
+	ImGui::DragFloat3("Position", m_CameraPosition);
+	// ImGui::DragFloat3("Scale", m_TestScale2);
+	// ImGui::DragFloat3("Rotation", m_TestRotation2);
+	
+
+	if (ImGui::Button("Reset##Camera"))
+	{
+		m_CameraPosition[0] = 0;
+		m_CameraPosition[1] = 0;
+		m_CameraPosition[2] = 0;
+	}
+	
+	ImGui::End();
+
 	
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -97,30 +116,56 @@ void Sandbox::SandboxLayer::OnRender()
 void Sandbox::SandboxLayer::OnDetach()
 {
 	Engine::InputSystem::Instance().RemoveListener(this);
-	m_Tiles.clear();
 }
 
 void Sandbox::SandboxLayer::OnKeyDown(int keyCode)
 {
-	if (keyCode == 'W')
-	{
-		m_TestRotation[0] += Engine::Application::DeltaTime() * 3.14 * 0.1f;
-	}
-	else if (keyCode == 'S')
-	{
-		m_TestRotation[0] -= Engine::Application::DeltaTime() * 3.14 * 0.1f;
-	}
-	else if (keyCode == 'A')
-	{
-		m_TestRotation[1] += Engine::Application::DeltaTime() * 3.14 * 0.1f;
-	}
-	else if (keyCode == 'D')
-	{
-		m_TestRotation[1] -= Engine::Application::DeltaTime() * 3.14 * 0.1f;
-	}
-	Engine::Debug::Log("Moving!");
+	// if (keyCode == 'W')
+	// {
+	// 	m_CameraPosition[0] = 0;
+	// 	m_CameraPosition[1] = 0;
+	// 	m_CameraPosition[2] = 0;
+	// 	m_CameraPosition.Y(m_CameraPosition.Y() + Engine::Application::DeltaTime() * 0.1f);
+	// }
+	// else if (keyCode == 'S')
+	// {
+	// 	
+	// 	m_CameraPosition.Y(m_CameraPosition.Y() - Engine::Application::DeltaTime() * 0.1f);
+	// }
+	// else if (keyCode == 'A')
+	// {
+	// 	m_CameraPosition.X(m_CameraPosition.X() - Engine::Application::DeltaTime() * 0.1f);
+	// }
+	// else if (keyCode == 'D')
+	// {
+	// 	m_CameraPosition.X(m_CameraPosition.X() + Engine::Application::DeltaTime() * 0.1f);
+	// }
+	// Engine::Debug::Log("Camera Position: {0}, {1}, {2}!", m_CameraPosition.X(),
+	// 	m_CameraPosition.Y(), m_CameraPosition.Z());
 }
 
 void Sandbox::SandboxLayer::OnKeyUp(int keyCode)
+{
+}
+
+void Sandbox::SandboxLayer::OnMouseMove(const Engine::Vector2& deltaMousePosition)
+{
+	// m_TestPosition[0] += deltaMousePosition.X();
+	// m_TestPosition[1] += deltaMousePosition.Y();
+}
+
+void Sandbox::SandboxLayer::OnLeftMouseButtonDown(const Engine::Vector2& mousePosition)
+{
+}
+
+void Sandbox::SandboxLayer::OnLeftMouseButtonUp(const Engine::Vector2& mousePosition)
+{
+}
+
+void Sandbox::SandboxLayer::OnRightMouseButtonDown(const Engine::Vector2& mousePosition)
+{
+}
+
+void Sandbox::SandboxLayer::OnRightMouseButtonUp(const Engine::Vector2& mousePosition)
 {
 }

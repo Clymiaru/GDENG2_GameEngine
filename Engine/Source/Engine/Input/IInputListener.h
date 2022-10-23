@@ -25,8 +25,11 @@ namespace Engine
 		virtual void OnKeyDown(int keyCode) = 0;
 		virtual void OnKeyUp(int keyCode) = 0;
 
-		virtual void OnMouseMove(const Vector2& deltaMousePos) = 0;
-		virtual void OnMouseButtonDown();
-		virtual void OnMouseButtonUp();
+		virtual void OnMouseMove(const Vector2& deltaMousePosition) = 0;
+		virtual void OnLeftMouseButtonDown(const Vector2& mousePosition) = 0;
+		virtual void OnLeftMouseButtonUp(const Vector2& mousePosition) = 0;
+
+		virtual void OnRightMouseButtonDown(const Vector2& mousePosition) = 0;
+		virtual void OnRightMouseButtonUp(const Vector2& mousePosition) = 0;
 	};
 }

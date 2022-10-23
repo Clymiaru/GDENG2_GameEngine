@@ -26,5 +26,8 @@ namespace Engine
 
 		unsigned char m_KeyState[256] = {};
 		unsigned char m_PrevKeyState[256] = {};
+
+		Vector2 m_PrevMousePosition;
+		bool m_IsFirstTime = true;
 	};
 }
