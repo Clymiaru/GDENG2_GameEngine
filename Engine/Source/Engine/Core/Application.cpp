@@ -11,6 +11,8 @@
 #include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
 #include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
 
+#include "Engine/Input/InputSystem.h"
+
 namespace Engine
 {
 	Application::Application() :
@@ -127,7 +129,6 @@ namespace Engine
 		// {
 		// 	layer->OnUpdate();
 		// }
-
 		m_LayerSystem.Update();
 	}
 

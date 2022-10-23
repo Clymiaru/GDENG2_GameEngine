@@ -12,6 +12,16 @@
 
 namespace Engine
 {
+	IDXGIDevice* g_DxgiDevice = nullptr;
+
+	IDXGIAdapter* g_DxgiAdapter = nullptr;
+
+	IDXGIFactory* g_DxgiFactory = nullptr;
+
+	D3D_FEATURE_LEVEL g_FeatureLevel;
+
+	ID3D11Device* g_Device = nullptr;
+
 	RenderSystem RenderSystem::m_Instance = RenderSystem();
 
 	const std::vector<D3D_DRIVER_TYPE> DRIVER_TYPES_SUPPORTED
@@ -41,8 +51,8 @@ namespace Engine
 			                           FEATURE_LEVELS_SUPPORTED.data(),
 			                           static_cast<UINT>(FEATURE_LEVELS_SUPPORTED.size()),
 			                           D3D11_SDK_VERSION,
-			                           &m_Instance.m_Device,
-			                           &m_Instance.m_FeatureLevel,
+			                           &g_Device,
+			                           &g_FeatureLevel,
 			                           &deviceContext);
 			if (SUCCEEDED(result))
 				break;
@@ -50,42 +60,42 @@ namespace Engine
 
 		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!")
 
-		m_Instance.m_Device->QueryInterface(__uuidof(IDXGIDevice),
-		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiDevice));
+		g_Device->QueryInterface(__uuidof(IDXGIDevice),
+		                         reinterpret_cast<void**>(&g_DxgiDevice));
 
-		m_Instance.m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
-		                                   reinterpret_cast<void**>(&m_Instance.m_DxgiAdapter));
+		g_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
+		                        reinterpret_cast<void**>(&g_DxgiAdapter));
 
-		m_Instance.m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
-		                                    reinterpret_cast<void**>(&m_Instance.m_DxgiFactory));
+		g_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
+		                         reinterpret_cast<void**>(&g_DxgiFactory));
 
 		m_Instance.m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
 		m_Instance.m_SwapChain     = CreateUniquePtr<SwapChain>(window,
-																m_Instance.m_Device,
-																m_Instance.m_DxgiFactory);
-		
+		                                                        g_Device,
+		                                                        g_DxgiFactory);
+
 		GetDeviceContext().SetViewportSize(window.GetSize());
-		ImGui_ImplDX11_Init(m_Instance.m_Device, m_Instance.m_DeviceContext->m_DeviceContext);
+		ImGui_ImplDX11_Init(g_Device, m_Instance.m_DeviceContext->m_DeviceContext);
 	}
 
 	void RenderSystem::End()
 	{
 		m_Instance.m_SwapChain->Release();
 
-		m_Instance.m_DxgiDevice->Release();
-		m_Instance.m_DxgiAdapter->Release();
-		m_Instance.m_DxgiFactory->Release();
+		g_DxgiDevice->Release();
+		g_DxgiAdapter->Release();
+		g_DxgiFactory->Release();
 
 		m_Instance.m_DeviceContext->Release();
 
-		m_Instance.m_Device->Release();
+		g_Device->Release();
 	}
 
 	ID3D11Device& RenderSystem::GetDevice()
 	{
-		return *m_Instance.m_Device;
+		return *g_Device;
 	}
-
+	
 	DeviceContext& RenderSystem::GetDeviceContext()
 	{
 		return *m_Instance.m_DeviceContext;
@@ -105,8 +115,24 @@ namespace Engine
 		m_Instance.m_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
 	}
 
-	void RenderSystem::Draw(const RenderData& data)
+	void RenderSystem::Draw(VertexShader& vertexShader,
+	PixelShader& pixelShader,
+	                        const VertexBuffer& vertexBuffer,
+	                        const IndexBuffer& indexBuffer,
+	                        const ConstantBuffer& constantBuffer,
+	                        const void* updatedConstantBuffer,
+	                        D3D11_PRIMITIVE_TOPOLOGY topology)
 	{
+		m_Instance.m_DeviceContext->SetShader<VertexShader>(vertexShader);
+		m_Instance.m_DeviceContext->SetShader<PixelShader>(pixelShader);
+		
+		m_Instance.m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
+		m_Instance.m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
+		
+		m_Instance.m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
+		m_Instance.m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
+		m_Instance.m_DeviceContext->SetTopology(topology);
+		m_Instance.m_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
 	}
 
 	void RenderSystem::ShowFrame()
@@ -121,12 +147,7 @@ namespace Engine
 
 	RenderSystem::RenderSystem() :
 		m_SwapChain{nullptr},
-		m_DeviceContext{nullptr},
-		m_Device{nullptr},
-		m_FeatureLevel{},
-		m_DxgiDevice{nullptr},
-		m_DxgiAdapter{nullptr},
-		m_DxgiFactory{nullptr}
+		m_DeviceContext{nullptr}
 	{
 	}
 

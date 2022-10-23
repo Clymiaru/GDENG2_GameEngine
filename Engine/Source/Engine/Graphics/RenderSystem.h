@@ -1,10 +1,8 @@
 ﻿#pragma once
 #include <d3d11.h>
-#include <d3dcompiler.h>
 
 #include "DeviceContext.h"
 #include "PixelShader.h"
-#include "RenderCommand.h"
 #include "VertexShader.h"
 
 namespace Engine
@@ -34,7 +32,7 @@ namespace Engine
 
 		[[nodiscard]]
 		static ID3D11Device& GetDevice();
-
+		
 		[[nodiscard]]
 		static DeviceContext& GetDeviceContext();
 
@@ -50,7 +48,14 @@ namespace Engine
 		static void Draw(const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer);
 
-		static void Draw(const RenderData& data);
+		// Submit(VertexShader, PixelShader, ConstantBuffer, VertexBuffer, IndexBuffer, Topology)
+		static void Draw(VertexShader& vertexShader,
+		                 PixelShader& pixelShader,
+		                 const VertexBuffer& vertexBuffer,
+		                 const IndexBuffer& indexBuffer,
+		                 const ConstantBuffer& constantBuffer,
+		                 const void* updatedConstantBuffer,
+		                 D3D11_PRIMITIVE_TOPOLOGY topology);
 
 		static void ShowFrame();
 
@@ -66,17 +71,6 @@ namespace Engine
 		UniquePtr<SwapChain> m_SwapChain;
 
 		UniquePtr<DeviceContext> m_DeviceContext;
-
-		ID3D11Device* m_Device;
-
-		D3D_FEATURE_LEVEL m_FeatureLevel;
-
-		IDXGIDevice* m_DxgiDevice;
-
-		IDXGIAdapter* m_DxgiAdapter;
-
-		IDXGIFactory* m_DxgiFactory;
-
 	};
 
 	template <typename ShaderType>

@@ -51,6 +51,8 @@ namespace Engine
 		void PollEvents();
 
 		void Render();
+
+	private:
 		//----------
 
 		Profile m_Profile;

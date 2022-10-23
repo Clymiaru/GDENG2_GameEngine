@@ -50,7 +50,7 @@ namespace Engine
 		                       void* constantBufferData,
 		                       size_t constantBufferDataSize);
 
-		void Draw(void* newConstantData);
+		void Draw(const void* newConstantData);
 
 		void Terminate() const;
 
