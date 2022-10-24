@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include "Engine/Core/Math.h"
-
 #include <random>
 
 namespace Engine
@@ -17,14 +15,14 @@ namespace Engine
 
 		static Random& Instance();
 
-		std::mt19937 m_RandomEngine;
+		std::mt19937 m_RandomEngine{};
 	};
 
 	template <>
 	inline int Random::Range(const int& min,
 	                         const int& max)
 	{
-		std::uniform_int_distribution<int> distribution(min, max+1);
+		const std::uniform_int_distribution<int> distribution(min, max + 1);
 		return distribution(Instance().m_RandomEngine);
 	}
 
@@ -32,7 +30,7 @@ namespace Engine
 	inline float Random::Range(const float& min,
 	                           const float& max)
 	{
-		std::uniform_real_distribution<float> distribution(min, max+1.0f);
+		const std::uniform_real_distribution<float> distribution(min, max + 1.0f);
 		return distribution(Instance().m_RandomEngine);
 	}
 }

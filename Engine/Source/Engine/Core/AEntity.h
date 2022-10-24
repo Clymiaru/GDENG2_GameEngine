@@ -6,7 +6,6 @@ namespace Engine
 	{
 	public:
 		explicit AEntity(const String& name);
-
 		virtual ~AEntity();
 
 		virtual void Update(float deltaTime);

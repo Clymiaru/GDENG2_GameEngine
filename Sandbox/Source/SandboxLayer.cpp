@@ -93,9 +93,6 @@ void Sandbox::SandboxLayer::OnRender()
 	ImGui::Begin("Camera Controls");
 	
 	ImGui::DragFloat3("Position", m_CameraPosition, 0.01f);
-	// ImGui::DragFloat3("Scale", m_TestScale2);
-	// ImGui::DragFloat3("Rotation", m_TestRotation2);
-	
 
 	if (ImGui::Button("Reset##Camera"))
 	{

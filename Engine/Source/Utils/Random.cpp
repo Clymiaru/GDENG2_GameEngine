@@ -1,13 +1,18 @@
 ﻿#include "pch.h"
 #include "Random.h"
 
-Engine::Random::Random() :
-	m_RandomEngine{time(0)}
+namespace Engine
 {
-}
+	std::mt19937 g_RandomEngine;
 
-Engine::Random& Engine::Random::Instance()
-{
-	static Random instance;
-	return instance;
+	Random::Random()
+	{
+		m_RandomEngine.seed(std::random_device()());
+	}
+
+	Random& Random::Instance()
+	{
+		static Random instance;
+		return instance;
+	}
 }
