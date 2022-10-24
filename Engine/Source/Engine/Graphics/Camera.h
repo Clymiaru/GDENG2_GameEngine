@@ -9,6 +9,7 @@ namespace Engine
 		static Camera& Instance();
 
 		void Translate(const Vector3& amount);
+		void Position(const Vector3& position);
 
 		DirectX::XMMATRIX ViewProjMatrix();
 		

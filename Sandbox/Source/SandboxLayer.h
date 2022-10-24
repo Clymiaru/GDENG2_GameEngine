@@ -61,7 +61,7 @@ namespace Sandbox
 
 		float m_TestPosition2[3] = {0.0f, 0.0f, 0.0f};
 
-		float m_TestScale2[3] = {10.0f, 10.0f, 10.0f};
+		float m_TestScale2[3] = { 200.0f, 200.0f, 200.0f };
 
 		float m_TestRotation2[3] = {0.0f, 0.0f, 0.0f};
 

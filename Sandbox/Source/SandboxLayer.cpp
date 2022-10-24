@@ -59,7 +59,7 @@ void Sandbox::SandboxLayer::OnUpdate()
 	m_TestCube->Rotation(Engine::Vector3{m_TestRotation2[0], m_TestRotation2[1], m_TestRotation2[2]});
 	m_TestCube->Update(m_CurrentTime);
 
-	Engine::Camera::Instance().Translate(Engine::Vector3(m_CameraPosition[0], m_CameraPosition[1], m_CameraPosition[2]));
+	Engine::Camera::Instance().Position(Engine::Vector3(m_CameraPosition[0], m_CameraPosition[1], m_CameraPosition[2]));
 
 	Engine::InputSystem::Instance().Update();
 
@@ -92,7 +92,7 @@ void Sandbox::SandboxLayer::OnRender()
 
 	ImGui::Begin("Camera Controls");
 	
-	ImGui::DragFloat3("Position", m_CameraPosition);
+	ImGui::DragFloat3("Position", m_CameraPosition, 0.01f);
 	// ImGui::DragFloat3("Scale", m_TestScale2);
 	// ImGui::DragFloat3("Rotation", m_TestRotation2);
 	
@@ -106,6 +106,14 @@ void Sandbox::SandboxLayer::OnRender()
 	
 	ImGui::End();
 
+	// FOR TEST RENDERING SYSTEM
+
+	// Scene Showcase
+	// Input System and Camera (Scene can be traversed using keyboard and mouse)
+	// Primitives (Cube, Capsules, Cylinder, Spheres, Planes)
+	// Object Transforms
+	// Basic SHaders
+	// Depth Buffer and Perspective View
 	
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -120,28 +128,28 @@ void Sandbox::SandboxLayer::OnDetach()
 
 void Sandbox::SandboxLayer::OnKeyDown(int keyCode)
 {
-	// if (keyCode == 'W')
-	// {
-	// 	m_CameraPosition[0] = 0;
-	// 	m_CameraPosition[1] = 0;
-	// 	m_CameraPosition[2] = 0;
-	// 	m_CameraPosition.Y(m_CameraPosition.Y() + Engine::Application::DeltaTime() * 0.1f);
-	// }
-	// else if (keyCode == 'S')
-	// {
-	// 	
-	// 	m_CameraPosition.Y(m_CameraPosition.Y() - Engine::Application::DeltaTime() * 0.1f);
-	// }
-	// else if (keyCode == 'A')
-	// {
-	// 	m_CameraPosition.X(m_CameraPosition.X() - Engine::Application::DeltaTime() * 0.1f);
-	// }
-	// else if (keyCode == 'D')
-	// {
-	// 	m_CameraPosition.X(m_CameraPosition.X() + Engine::Application::DeltaTime() * 0.1f);
-	// }
-	// Engine::Debug::Log("Camera Position: {0}, {1}, {2}!", m_CameraPosition.X(),
-	// 	m_CameraPosition.Y(), m_CameraPosition.Z());
+	 if (keyCode == 'W')
+	 {
+	 	m_CameraPosition[2] += Engine::Application::DeltaTime() * 0.1f;
+	 }
+	 else if (keyCode == 'S')
+	 {
+	 	
+		 m_CameraPosition[2] -= Engine::Application::DeltaTime() * 0.1f;
+	 }
+	 else if (keyCode == 'A')
+	 {
+		 m_CameraPosition[0] -= Engine::Application::DeltaTime() * 0.1f;
+	 }
+	 else if (keyCode == 'D')
+	 {
+		 m_CameraPosition[0] += Engine::Application::DeltaTime() * 0.1f;
+	 }
+
+	 Engine::Debug::Log("Camera Position: {0}, {1}, {2}!", 
+		 m_CameraPosition[0],
+		 m_CameraPosition[1],
+		 m_CameraPosition[2]);
 }
 
 void Sandbox::SandboxLayer::OnKeyUp(int keyCode)
