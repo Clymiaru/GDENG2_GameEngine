@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include "Core.h"
+
+#include "Engine/Math/Matrix4.h"
+#include "Engine/Math/Vector3.h"
 namespace Engine
 {
 	class AEntity
@@ -20,13 +24,13 @@ namespace Engine
 		void Rotation(const Vector3& newRotation);
 		Vector3& Rotation();
 
-		DirectX::XMMATRIX& Transform();
+		Matrix4& Transform();
 	private:
 		String m_Name;
 		Vector3 m_Position;
 		Vector3 m_Scale;
 		Vector3 m_Rotation;
-		DirectX::XMMATRIX m_Transform;
+		Matrix4 m_Transform;
 	};
 
 }

@@ -6,6 +6,7 @@ namespace Engine
 	class Buffer
 	{
 	public:
+		RECT
 		Buffer(Uint elementCount,
 		       size_t dataTypeSize);
 

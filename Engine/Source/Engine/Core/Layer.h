@@ -1,12 +1,13 @@
 ﻿#pragma once
 
 #include "Engine/Core/Core.h"
+
 namespace Engine
 {
 	class Layer
 	{
 	public:
-		Layer(const std::string& name);
+		explicit Layer(const std::string& name);
 
 		virtual ~Layer();
 
@@ -24,6 +25,16 @@ namespace Engine
 
 		[[nodiscard]]
 		const std::string& GetName() const;
+
+		// Delete Move and Copy functionality for now until we decide on
+		// what happens when layers are copied
+		Layer(const Layer&) = delete;
+	
+		Layer& operator=(const Layer& v) = delete;
+	
+		Layer(Layer&&) noexcept = delete;
+	
+		Layer& operator=(Layer&&) noexcept = delete;
 
 	private:
 		std::string m_Name;

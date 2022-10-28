@@ -7,14 +7,13 @@
 #include "Engine/Graphics/RenderSystem.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 
-#include "../../Engine/Dependencies/ImGui/imgui.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
-
+#include "Engine/ImGui/ImGuiSystem.h"
 #include "Engine/Input/InputSystem.h"
 
 namespace Engine
 {
+	Application Application::m_Instance;
+
 	Application::Application() :
 		m_IsRunning{false},
 		m_Window{nullptr},
@@ -26,8 +25,7 @@ namespace Engine
 
 	Application& Application::Instance()
 	{
-		static Application instance;
-		return instance;
+		return m_Instance;
 	}
 
 	void Application::SetProfile(const Profile& profile)
@@ -45,10 +43,7 @@ namespace Engine
 
 	void Application::Start()
 	{
-		IMGUI_CHECKVERSION();
-		static auto* ctx = ImGui::CreateContext();
-		ImGui::StyleColorsDark();
-		ImGui::SetCurrentContext(ctx);
+		ImGuiSystem::Instance().Start();
 		
 		Instance().m_Window = Window::Create(Window::Profile{
 			Instance().m_Profile.Name,
@@ -56,11 +51,11 @@ namespace Engine
 			Instance().m_Profile.Height
 		});
 
-		Instance().StartingSystems();
+		Instance().StartSystems();
 		Instance().m_IsRunning = true;
 	}
 
-	void Application::StartingSystems()
+	void Application::StartSystems()
 	{
 		Instance().m_Time = Time();
 		Instance().m_Window->Start();
@@ -91,10 +86,10 @@ namespace Engine
 
 	void Application::End()
 	{
-		Instance().EndingSystems();
+		Instance().EndSystems();
 	}
 
-	void Application::EndingSystems()
+	void Application::EndSystems()
 	{
 		ShaderLibrary::Terminate();
 		Instance().m_LayerSystem.End();
@@ -102,10 +97,8 @@ namespace Engine
 		RenderSystem::End();
 
 		Instance().m_Window->Close();
-		
-		ImGui_ImplDX11_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
+
+		ImGuiSystem::Instance().End();
 	}
 
 	void Application::Quit()
@@ -140,8 +133,6 @@ namespace Engine
 	void Application::Render()
 	{
 		RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
-
-		
 
 		m_LayerSystem.Render();
 

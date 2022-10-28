@@ -22,8 +22,8 @@ namespace Engine
 			}
 
 			Profile(const WString name,
-			        const Uint& width,
-			        const Uint& height) :
+					const Uint& width,
+					const Uint& height) :
 				Name{name},
 				Width{width},
 				Height{height}
@@ -57,8 +57,8 @@ namespace Engine
 		Vector2 m_ClientSize;
 
 		friend LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
-		                                UINT message,
-		                                WPARAM wParam,
-		                                LPARAM lParam);
+										UINT message,
+										WPARAM wParam,
+										LPARAM lParam);
 	};
 }

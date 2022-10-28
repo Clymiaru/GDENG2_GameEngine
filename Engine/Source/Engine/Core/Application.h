@@ -13,7 +13,7 @@ namespace Engine
 	public:
 		struct Profile
 		{
-			WString Name;
+			String Name;
 			Uint Width{};
 			Uint Height{};
 		};
@@ -34,6 +34,14 @@ namespace Engine
 
 		static Window& WindowRef();
 
+		Application(const Application&) = delete;
+	
+		Application& operator=(const Application& v) = delete;
+	
+		Application(Application&&) noexcept = delete;
+	
+		Application& operator=(Application&&) noexcept = delete;
+
 	private:
 		Application();
 
@@ -41,9 +49,9 @@ namespace Engine
 
 		static Application& Instance();
 
-		void StartingSystems();
+		void StartSystems();
 
-		void EndingSystems();
+		void EndSystems();
 
 		//--------- APP LOOP
 		void Update();
@@ -51,19 +59,22 @@ namespace Engine
 		void PollEvents();
 
 		void Render();
-
-	private:
 		//----------
 
 		Profile m_Profile;
 
 		bool m_IsRunning;
 
+		// Make RenderSystem not a singleton
+		// Make TimeSystem not a singleton
+
 		Window* m_Window;
 
 		Time m_Time;
 
 		LayerSystem m_LayerSystem;
+
+		static Application m_Instance;
 
 		friend class Window;
 	};

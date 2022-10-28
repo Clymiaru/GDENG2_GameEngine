@@ -9,11 +9,9 @@ namespace Engine
 {
 	using Uint = unsigned int;
 
-	using String = std::string;
-	using WString = std::wstring;
+	using String = std::wstring;
 
-	using StringView = std::string_view;
-	using WStringView = std::wstring_view;
+	using StringView = std::wstring_view;
 	
 	template <typename T>
 	using List = std::vector<T>;

@@ -24,9 +24,10 @@ namespace Engine
 	                                  const WPARAM wParam,
 	                                  const LPARAM lParam)
 	{
-		if (ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam) )
+		LRESULT result = ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam);
+		if (result)
 		{
-			return true;
+			return result;
 		}
 		
 		switch (message)
