@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
 #include "Layer.h"
 
-Engine::Layer::Layer(const std::string& name) :
+Engine::Layer::Layer(const String& name) :
 	m_Name{name}
 {
 }
 
 Engine::Layer::~Layer() = default;
 
-const std::string& Engine::Layer::GetName() const
+const Engine::String& Engine::Layer::GetName() const
 {
 	return m_Name;
 }

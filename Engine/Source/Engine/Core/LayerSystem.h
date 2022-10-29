@@ -17,8 +17,10 @@ namespace Engine
 		void Add(Layer* layer);
 		// void Remove(Layer* layer);
 
+		void PollInput(InputHandler* inputHandlerRef) const;
 		void Update() const;
-		void Render() const;
+		void Render(Renderer* rendererRef) const;
+		void ImGuiRender() const;
 	private:
 		List<Layer*> m_Layers{};
 	};

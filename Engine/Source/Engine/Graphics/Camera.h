@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "Engine/Math/Matrix4.h"
+#include "Engine/Math/Vector3.h"
 
 namespace Engine
 {
@@ -8,15 +10,15 @@ namespace Engine
 		~Camera() = default;
 		static Camera& Instance();
 
-		void Translate(const Vector3& amount);
-		void Position(const Vector3& position);
+		void Translate(const Vector3Float& amount);
+		void Position(const Vector3Float& position);
 
-		DirectX::XMMATRIX ViewProjMatrix();
+		Matrix4 ViewProjMatrix();
 		
 	private:
 		Camera() = default;
-		DirectX::XMMATRIX m_ViewMatrix;
-		DirectX::XMMATRIX m_ProjMatrix;
-		Vector3 m_Position = Vector3::Zero;
+		Matrix4 m_ViewMatrix;
+		Matrix4 m_ProjMatrix;
+		Vector3Float m_Position = Vector3Float{0.0f, 0.0f, 0.0f};
 	};
 }

@@ -32,7 +32,7 @@ namespace Engine
 
 		struct IndexData
 		{
-			Uint* IndexList;
+			uint32_t* IndexList;
 
 			size_t IndexListCount;
 		};
@@ -44,7 +44,7 @@ namespace Engine
 		void Initialize(VertexData vertexData,
 		                VertexLayoutData vertexLayoutData,
 		                IndexData indexLayoutData,
-		                WString shaderName);
+		                String shaderName);
 
 		void InitializeBuffers(size_t vertexSize,
 		                       void* constantBufferData,
@@ -54,11 +54,11 @@ namespace Engine
 
 		void Terminate() const;
 
-		[[nodiscard]]
-		VertexBuffer& GetVertexBuffer() const;
-
-		[[nodiscard]]
-		IndexBuffer& GetIndexBuffer() const;
+		// [[nodiscard]]
+		// VertexBuffer& GetVertexBuffer() const;
+		//
+		// [[nodiscard]]
+		// IndexBuffer& GetIndexBuffer() const;
 
 	private:
 		VertexData* m_VertexData;

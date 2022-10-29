@@ -12,4 +12,3 @@
 
 #include "Graphics/ShaderLibrary.h"
 
-#include "Graphics/RenderObjects/Quad.h"

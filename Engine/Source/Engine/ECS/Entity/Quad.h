@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Primitive.h"
 
-#include "Engine/Core/AEntity.h"
 #include "Engine/Core/Core.h"
-#include "Engine/Core/Math.h"
-
+#include "Engine/ECS/Entity/AEntity.h"
+#include "Engine/Math/Color.h"
+#include "Engine/Math/Vector2.h"
 
 namespace Engine
 {
@@ -13,8 +13,8 @@ namespace Engine
 	class Quad final : public AEntity
 	{
 	public:
-		Quad(const Vector3& position,
-		     const Vector2& size,
+		Quad(const Vector3Float& position,
+		     const Vector2Float& size,
 		     const Color& color,
 		     const std::wstring& shaderName);
 

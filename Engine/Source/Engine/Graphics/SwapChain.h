@@ -15,7 +15,7 @@ namespace Engine
 
 		void Release() const;
 
-		void Present(bool vsync) const;
+		void Present(uint32_t vsync) const;
 
 		[[nodiscard]]
 		ID3D11RenderTargetView& GetRenderTargetView() const;

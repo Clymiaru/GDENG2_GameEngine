@@ -9,6 +9,7 @@
 #include "../../../Dependencies/ImGui/imgui_impl_dx11.h"
 
 #include "Engine/Core/Window.h"
+#include "Engine/Math/Vector3.h"
 
 namespace Engine
 {
@@ -58,7 +59,7 @@ namespace Engine
 				break;
 		}
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create device!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Failed to create device!")
 
 		g_Device->QueryInterface(__uuidof(IDXGIDevice),
 		                         reinterpret_cast<void**>(&g_DxgiDevice));
@@ -73,8 +74,8 @@ namespace Engine
 		m_Instance.m_SwapChain     = CreateUniquePtr<SwapChain>(window,
 		                                                        g_Device,
 		                                                        g_DxgiFactory);
-
-		GetDeviceContext().SetViewportSize(window.GetSize());
+		Vector2Float winSize = Vector2Float{(float)window.WindowRect().x, (float)window.WindowRect().y};
+		GetDeviceContext().SetViewportSize(winSize);
 		ImGui_ImplDX11_Init(g_Device, m_Instance.m_DeviceContext->m_DeviceContext);
 	}
 
@@ -95,7 +96,7 @@ namespace Engine
 	{
 		return *g_Device;
 	}
-	
+
 	DeviceContext& RenderSystem::GetDeviceContext()
 	{
 		return *m_Instance.m_DeviceContext;
@@ -116,7 +117,7 @@ namespace Engine
 	}
 
 	void RenderSystem::Draw(VertexShader& vertexShader,
-	PixelShader& pixelShader,
+	                        PixelShader& pixelShader,
 	                        const VertexBuffer& vertexBuffer,
 	                        const IndexBuffer& indexBuffer,
 	                        const ConstantBuffer& constantBuffer,
@@ -125,10 +126,10 @@ namespace Engine
 	{
 		m_Instance.m_DeviceContext->SetShader<VertexShader>(vertexShader);
 		m_Instance.m_DeviceContext->SetShader<PixelShader>(pixelShader);
-		
+
 		m_Instance.m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
 		m_Instance.m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
-		
+
 		m_Instance.m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
 		m_Instance.m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
 		m_Instance.m_DeviceContext->SetTopology(topology);
@@ -140,7 +141,7 @@ namespace Engine
 		m_Instance.m_SwapChain->Present(true);
 	}
 
-	void RenderSystem::SetViewportSize(Vector2 viewportSize)
+	void RenderSystem::SetViewportSize(Vector2Int viewportSize)
 	{
 		m_Instance.m_DeviceContext->SetViewportSize(viewportSize);
 	}

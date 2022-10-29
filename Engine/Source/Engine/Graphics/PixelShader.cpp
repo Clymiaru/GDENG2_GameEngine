@@ -16,7 +16,7 @@ namespace Engine
 		                                                                nullptr,
 		                                                                &m_Data);
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Shader cannot be created and initialized!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Shader cannot be created and initialized!")
 	}
 
 	PixelShader::~PixelShader()

@@ -4,6 +4,7 @@
 
 #include "RenderSystem.h"
 
+#include "Engine/Core/Debug.h"
 #include "Engine/Graphics/DeviceContext.h"
 
 Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
@@ -15,7 +16,7 @@ Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth         = static_cast<Uint>(ByteSize());
+	bufferDesc.ByteWidth         = (UINT)ByteSize();
 	bufferDesc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.CPUAccessFlags    = 0;
 	bufferDesc.MiscFlags         = 0;
@@ -27,7 +28,7 @@ Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
 	                                                     &initData,
 	                                                     &m_Data);
 
-	ENGINE_ASSERT(SUCCEEDED(result), "Constant Buffer cannot be created!")
+	ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Constant Buffer cannot be created!")
 }
 
 Engine::ConstantBuffer::~ConstantBuffer() = default;

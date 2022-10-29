@@ -7,7 +7,10 @@
 
 #include "../../../Dependencies/ImGui/imgui_impl_win32.h"
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
+                                                             UINT msg,
+                                                             WPARAM wParam,
+                                                             LPARAM lParam);
 
 namespace Engine
 {
@@ -29,7 +32,7 @@ namespace Engine
 		{
 			return result;
 		}
-		
+
 		switch (message)
 		{
 			case WM_CREATE:
@@ -55,55 +58,8 @@ namespace Engine
 		return 0;
 	}
 
-	void Window::Start()
+	void Window::Start(const Profile& profile)
 	{
-		UpdateClientSize();
-
-		ShowWindow(m_Handle, SW_SHOW);
-
-		ImGui_ImplWin32_Init(m_Handle);
-
-		UpdateWindow(m_Handle);
-	}
-
-	void Window::Close()
-	{
-		const auto result = DestroyWindow(m_Handle);
-		ENGINE_ASSERT(result, "Window cannot be destroyed!")
-		delete this;
-	}
-
-	Vector2 Window::GetSize()
-	{
-		return m_ClientSize;
-	}
-
-	void Window::UpdateClientSize()
-	{
-		RECT rect = {};
-		GetClientRect(m_Handle, &rect);
-		m_ClientSize.X(static_cast<float>(rect.right - rect.left));
-		m_ClientSize.Y(static_cast<float>(rect.bottom - rect.top));
-	}
-
-	HWND& Window::GetHandle()
-	{
-		return m_Handle;
-	}
-
-	void Window::PollEvents()
-	{
-		while (PeekMessage(&m_Message, nullptr, 0, 0, PM_REMOVE) > 0)
-		{
-			TranslateMessage(&m_Message);
-			DispatchMessage(&m_Message);
-		}
-	}
-
-	Window* Window::Create(const Profile& profile)
-	{
-		Window* window = new Window();
-
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);
@@ -118,8 +74,8 @@ namespace Engine
 		windowClass.style         = NULL;
 		windowClass.lpfnWndProc   = &WindowsProcedure;
 
-		HRESULT registerResult = RegisterClassEx(&windowClass);
-		ENGINE_ASSERT(registerResult, "Window cannot be registered!")
+		const HRESULT registerResult = RegisterClassEx(&windowClass);
+		ENGINE_ASSERT_TRUE(registerResult, L"Window cannot be registered!")
 
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
 		                                   profile.Name.c_str(),
@@ -132,10 +88,49 @@ namespace Engine
 		                                   nullptr,
 		                                   nullptr,
 		                                   nullptr,
-		                                   window);
+		                                   this);
 
-		ENGINE_ASSERT(handle, "Handle cannot be retrieved!")
+		ENGINE_ASSERT_TRUE(handle, L"Handle cannot be retrieved!")
 
-		return window;
+		UpdateClientSize();
+
+		ShowWindow(m_Handle, SW_SHOW);
+
+		ImGui_ImplWin32_Init(m_Handle);
+
+		UpdateWindow(m_Handle);
+	}
+
+	void Window::Close()
+	{
+		const auto result = DestroyWindow(m_Handle);
+		ENGINE_ASSERT_TRUE(result, L"Window cannot be destroyed!")
+		delete this;
+	}
+
+	Rect<uint32_t>& Window::WindowRect()
+	{
+		return m_ClientRect;
+	}
+
+	void Window::UpdateClientSize()
+	{
+		RECT rect = {};
+		::GetClientRect(m_Handle, &rect);
+		m_ClientRect = Rect<uint32_t>(0, 0, rect.right - rect.left, rect.bottom - rect.top);
+	}
+
+	HWND& Window::GetHandle()
+	{
+		return m_Handle;
+	}
+
+	void Window::PollEvents()
+	{
+		while (PeekMessage(&m_Message, nullptr, 0, 0, PM_REMOVE) > 0)
+		{
+			TranslateMessage(&m_Message);
+			DispatchMessage(&m_Message);
+		}
 	}
 }

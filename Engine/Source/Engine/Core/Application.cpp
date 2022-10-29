@@ -3,12 +3,14 @@
 
 #include "Window.h"
 
-#include "Engine/Graphics/DeviceContext.h"
-#include "Engine/Graphics/RenderSystem.h"
-#include "Engine/Graphics/ShaderLibrary.h"
-
+#include "Engine/Graphics/Renderer.h"
 #include "Engine/ImGui/ImGuiSystem.h"
-#include "Engine/Input/InputSystem.h"
+#include "Engine/Input/InputHandler.h"
+
+//#include "Engine/Graphics/DeviceContext.h"
+//#include "Engine/Graphics/ShaderLibrary.h"
+
+//#include "Engine/Input/InputSystem.h"
 
 namespace Engine
 {
@@ -44,12 +46,6 @@ namespace Engine
 	void Application::Start()
 	{
 		ImGuiSystem::Instance().Start();
-		
-		Instance().m_Window = Window::Create(Window::Profile{
-			Instance().m_Profile.Name,
-			Instance().m_Profile.Width,
-			Instance().m_Profile.Height
-		});
 
 		Instance().StartSystems();
 		Instance().m_IsRunning = true;
@@ -58,12 +54,22 @@ namespace Engine
 	void Application::StartSystems()
 	{
 		Instance().m_Time = Time();
-		Instance().m_Window->Start();
-		RenderSystem::Start(*m_Window);
 
-		
+		m_Window = new Window();
+		m_Renderer = new Renderer();
+		m_InputHandler = new InputHandler();
 
-		ShaderLibrary::Initialize(4);
+		m_Window->Start(Window::Profile{
+			                Instance().m_Profile.Name,
+			                Instance().m_Profile.Width,
+			                Instance().m_Profile.Height
+		                });
+
+		m_Renderer->Start(*m_Window);
+		m_InputHandler->Start();
+
+
+		//ShaderLibrary::Initialize(4);
 
 		Instance().m_LayerSystem.Start();
 	}
@@ -91,12 +97,13 @@ namespace Engine
 
 	void Application::EndSystems()
 	{
-		ShaderLibrary::Terminate();
-		Instance().m_LayerSystem.End();
+		//ShaderLibrary::Terminate();
+		m_LayerSystem.End();
+		
+		m_Renderer->End();
+		delete m_Renderer;
 
-		RenderSystem::End();
-
-		Instance().m_Window->Close();
+		m_Window->Close();
 
 		ImGuiSystem::Instance().End();
 	}
@@ -118,24 +125,27 @@ namespace Engine
 
 	void Application::Update()
 	{
-		// for (auto layer : m_Layers)
-		// {
-		// 	layer->OnUpdate();
-		// }
 		m_LayerSystem.Update();
 	}
 
 	void Application::PollEvents()
 	{
-		Instance().m_Window->PollEvents();
+		// Retrieve all input events that have been triggered this frame;
+		// Pass the active input list to the layers.
+		m_InputHandler->PollInputEvents();
+		m_Window->PollEvents();
+
+		m_LayerSystem.PollInput(m_InputHandler);
 	}
 
 	void Application::Render()
 	{
-		RenderSystem::Clear({0.0f, 0.5f, 1.0f, 1.0f});
+		m_Renderer->Clear(Color{0.0f, 0.5f, 1.0f, 1.0f});
 
-		m_LayerSystem.Render();
+		m_LayerSystem.Render(m_Renderer);
 
-		RenderSystem::ShowFrame();
+		m_LayerSystem.ImGuiRender();
+
+		m_Renderer->ShowFrame();
 	}
 }

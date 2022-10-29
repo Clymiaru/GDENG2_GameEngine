@@ -151,7 +151,7 @@ namespace Engine
 	Matrix4& Matrix4::operator/=(const float s) noexcept
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.f, "Attempting to divide by 0!");
+		ENGINE_ASSERT_TRUE(s != 0.f, L"Attempting to divide by 0!");
 		XMVECTOR x1 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_11));
 		XMVECTOR x2 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_21));
 		XMVECTOR x3 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_31));
@@ -301,6 +301,39 @@ namespace Engine
 		return result;
 	}
 
+	Matrix4 Matrix4::CreatePerspectiveFieldOfView(float fov,
+	                                              float aspectRatio,
+	                                              float nearPlane,
+	                                              float farPlane) noexcept
+	{
+		using namespace DirectX;
+		Matrix4 result;
+		XMStoreFloat4x4(&result, XMMatrixPerspectiveFovRH(fov, aspectRatio, nearPlane, farPlane));
+		return result;
+	}
+
+	Matrix4 Matrix4::CreatePerspective(float width,
+	                                   float height,
+	                                   float nearPlane,
+	                                   float farPlane) noexcept
+	{
+		using namespace DirectX;
+		Matrix4 result;
+		XMStoreFloat4x4(&result, XMMatrixPerspectiveRH(width, height, nearPlane, farPlane));
+		return result;
+	}
+
+	Matrix4 Matrix4::CreateOrthographic(float width,
+	                                    float height,
+	                                    float zNearPlane,
+	                                    float zFarPlane) noexcept
+	{
+		using namespace DirectX;
+		Matrix4 result;
+		XMStoreFloat4x4(&result, XMMatrixOrthographicRH(width, height, zNearPlane, zFarPlane));
+		return result;
+	}
+
 	Matrix4 Engine::operator+(const Matrix4& m1,
 	                          const Matrix4& m2) noexcept
 	{
@@ -394,7 +427,7 @@ namespace Engine
 	                          float s) noexcept
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, "Attempting to divide by 0!");
+		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
 
 		XMVECTOR x1 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&m._11));
 		XMVECTOR x2 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&m._21));

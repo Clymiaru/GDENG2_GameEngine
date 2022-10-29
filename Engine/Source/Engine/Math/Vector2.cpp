@@ -661,11 +661,6 @@ namespace Engine
 		return *this;
 	}
 
-	Vector2Uint Vector2Uint::operator-() const
-	{
-		return Vector2Uint(-x, -y);
-	}
-
 	Vector2Uint operator+(const Vector2Uint& v1,
 	                      const Vector2Uint& v2)
 	{

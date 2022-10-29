@@ -23,11 +23,16 @@ namespace Engine
 		m_DeviceContext->Release();
 	}
 
+	ID3D11DeviceContext& DeviceContext::Context() const
+	{
+		return *m_DeviceContext;
+	}
+
 	void DeviceContext::Clear(const SwapChain& swapChain,
 	                          const Color color) const
 	{
 		m_DeviceContext->ClearRenderTargetView(&swapChain.GetRenderTargetView(),
-		                                       color);
+		                                       (const float*)color);
 
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
@@ -41,27 +46,37 @@ namespace Engine
 		                                    &swapChain.GetDepthStencilView());
 	}
 
-	void DeviceContext::SetViewportSize(const Vector2 size) const
+	void DeviceContext::SetViewportSize(const Vector2Float& size) const
 	{
 		D3D11_VIEWPORT viewport = {};
-		viewport.Width          = size.X();
-		viewport.Height         = size.Y();
+		viewport.Width          = size.x;
+		viewport.Height         = size.y;
 		viewport.MinDepth       = 0.0f;
 		viewport.MaxDepth       = 1.0f;
 		m_DeviceContext->RSSetViewports(1, &viewport);
 
 	}
 
-	void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-	                                         const void* updatedBufferData)
+	void DeviceContext::SetViewportSize(const Vector2Int& size) const
 	{
-		m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
-		                                   NULL,
-		                                   nullptr,
-		                                   updatedBufferData,
-		                                   NULL,
-		                                   NULL);
+		D3D11_VIEWPORT viewport = {};
+		viewport.Width          = (FLOAT)size.x;
+		viewport.Height         = (FLOAT)size.y;
+		viewport.MinDepth       = 0.0f;
+		viewport.MaxDepth       = 1.0f;
+		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
+
+	// void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+	//                                          const void* updatedBufferData)
+	// {
+	// 	m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
+	// 	                                   NULL,
+	// 	                                   nullptr,
+	// 	                                   updatedBufferData,
+	// 	                                   NULL,
+	// 	                                   NULL);
+	// }
 
 	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
 	{
@@ -69,10 +84,10 @@ namespace Engine
 		m_DeviceContext->IASetPrimitiveTopology(m_Topology);
 	}
 
-	void DeviceContext::DrawIndexed(const Uint indexCount,
-	                                const Uint startingIndex) const
+	void DeviceContext::DrawIndexed(const uint32_t indexCount,
+	                                const uint32_t startingIndex) const
 	{
-		ENGINE_ASSERT(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!")
+		ENGINE_ASSERT_TRUE(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, L"Please set Topology before drawing!")
 		m_DeviceContext->DrawIndexed(indexCount,
 		                             startingIndex,
 		                             0);

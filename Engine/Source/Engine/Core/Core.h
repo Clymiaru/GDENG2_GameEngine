@@ -7,8 +7,6 @@
 
 namespace Engine
 {
-	using Uint = unsigned int;
-
 	using String = std::wstring;
 
 	using StringView = std::wstring_view;

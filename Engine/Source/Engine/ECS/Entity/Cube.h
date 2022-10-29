@@ -1,7 +1,6 @@
 ﻿#pragma once
-#include "Primitive.h"
 
-#include "Engine/Core/AEntity.h"
+#include "Engine/ECS/Entity/AEntity.h"
 
 namespace Engine
 {
@@ -10,8 +9,8 @@ namespace Engine
 	class Cube : public AEntity
 	{
 	public:
-		Cube(const Vector3& position,
-		     const Vector3& size,
+		Cube(const Vector3Float& position,
+		     const Vector3Float& size,
 		     const std::wstring& shaderName);
 
 		~Cube() override;
@@ -23,6 +22,7 @@ namespace Engine
 	private:
 		Constant* m_Constant;
 
+		
 		Primitive* m_Primitive;
 	};
 }

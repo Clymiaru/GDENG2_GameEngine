@@ -6,8 +6,7 @@ namespace Engine
 	class Buffer
 	{
 	public:
-		RECT
-		Buffer(Uint elementCount,
+		Buffer(uint32_t elementCount,
 		       size_t dataTypeSize);
 
 		virtual ~Buffer();
@@ -15,7 +14,7 @@ namespace Engine
 		virtual void Release() = 0;
 
 		[[nodiscard]]
-		Uint ElementCount() const;
+		uint32_t ElementCount() const;
 
 		[[nodiscard]]
 		size_t DataTypeSize() const;
@@ -30,6 +29,6 @@ namespace Engine
 
 		size_t m_BufferSize;
 
-		Uint m_ElementCount;
+		uint32_t m_ElementCount;
 	};
 }

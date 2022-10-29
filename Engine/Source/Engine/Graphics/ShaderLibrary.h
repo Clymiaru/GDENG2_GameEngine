@@ -9,6 +9,8 @@
 
 #include "PixelShader.h"
 
+#include "Engine/Core/Core.h"
+
 namespace Engine
 {
 	class PixelShader;
@@ -96,10 +98,10 @@ namespace Engine
 		{
 			if (errorBlob)
 			{
-				std::string errorString = "Vertex shader cannot be compiled! (";
-				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
-				errorString += ")\n";
-				ENGINE_ASSERT(errorBlob != nullptr, errorString)
+				// std::wstring errorString = L"Vertex shader cannot be compiled! (";
+				// errorString += static_cast<wchar_t*>(errorBlob->GetBufferPointer());
+				// errorString += L")\n";
+				// ENGINE_ASSERT_TRUE(errorBlob != nullptr, errorString)
 				errorBlob->Release();
 			}
 		}
@@ -136,10 +138,10 @@ namespace Engine
 		{
 			if (errorBlob)
 			{
-				std::string errorString = "Pixel shader cannot be compiled! (";
-				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
-				errorString += ")\n";
-				ENGINE_ASSERT(errorBlob != nullptr, errorString)
+				// std::wstring errorString = L"Pixel shader cannot be compiled! (";
+				// errorString += static_cast<wchar_t*>(errorBlob->GetBufferPointer());
+				// errorString += L")\n";
+				// ENGINE_ASSERT_TRUE(errorBlob != nullptr, errorString)
 				errorBlob->Release();
 			}
 		}
@@ -158,7 +160,7 @@ namespace Engine
 	inline VertexShader& ShaderLibrary::GetShader<VertexShader>(const std::wstring& name)
 	{
 		const bool isFound = IsShaderRegistered<VertexShader>(name);
-		ENGINE_ASSERT(isFound, "Vertex Shader is not registered!")
+		ENGINE_ASSERT_TRUE(isFound, L"Vertex Shader is not registered!")
 		return *s_Instance.m_VertexShaderMap[name];
 	}
 
@@ -166,7 +168,7 @@ namespace Engine
 	inline PixelShader& ShaderLibrary::GetShader<PixelShader>(const std::wstring& name)
 	{
 		const bool isFound = IsShaderRegistered<PixelShader>(name);
-		ENGINE_ASSERT(isFound, "Pixel Shader is not registered!")
+		ENGINE_ASSERT_TRUE(isFound, L"Pixel Shader is not registered!")
 		return *s_Instance.m_PixelShaderMap[name];
 	}
 
@@ -181,7 +183,7 @@ namespace Engine
 	inline ShaderRef<VertexShader> ShaderLibrary::GetShaderRef<VertexShader>(const std::wstring& name)
 	{
 		const bool isFound = IsShaderRegistered<VertexShader>(name);
-		ENGINE_ASSERT(isFound, "Vertex Shader is not registered!")
+		ENGINE_ASSERT_TRUE(isFound, L"Vertex Shader is not registered!")
 		return s_Instance.m_VertexShaderMap[name];
 	}
 
@@ -189,7 +191,7 @@ namespace Engine
 	inline ShaderRef<PixelShader> ShaderLibrary::GetShaderRef<PixelShader>(const std::wstring& name)
 	{
 		const bool isFound = IsShaderRegistered<PixelShader>(name);
-		ENGINE_ASSERT(isFound, "Pixel Shader is not registered!")
+		ENGINE_ASSERT_TRUE(isFound, L"Pixel Shader is not registered!")
 		return s_Instance.m_PixelShaderMap[name];
 	}
 }

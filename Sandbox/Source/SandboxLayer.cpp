@@ -1,176 +1,116 @@
 ﻿#include "SandboxLayer.h"
 
-#include <Engine/Graphics/Camera.h>
+#include <Engine/ECS/Component/TransformComponent.h>
+#include <Engine/Input/InputHandler.h>
 
-#include <Utils/Random.h>
-
+#include "Engine/ECS/Entity/Entity.h"
 #include "../../Engine/Dependencies/ImGui/imgui.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
 
-#include "Engine/Graphics/RenderObjects/Cube.h"
+// TODO: Rendering System
+// TODO: Camera
+// TODO: Goal: Render 3 Cubes with Camera Movement
 
-
-Sandbox::SandboxLayer::SandboxLayer() :
-	Layer{"SandboxLayer"},
-	IInputListener{},
-	m_CurrentTime{0.0f},
-	m_MaxTime{5.0f}
+namespace Sandbox
 {
-}
-
-Sandbox::SandboxLayer::~SandboxLayer() = default;
-
-void Sandbox::SandboxLayer::OnAttach()
-{
-	using namespace Engine;
-	ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
-	                                      "vsmain");
-
-	ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
-	                                     "psmain");
-
-	// Object initialization
-	m_Plane = CreateUniquePtr<Plane>(Vector3(0,0,0), Vector3(500, 500.0f, 500), L"DefaultShader");
-
-	m_TestCube = CreateUniquePtr<Cube>(Vector3(0,
-	                                           0,
-	                                           0),
-	                                   Vector3(50,
-	                                           50,
-	                                           50),
-	                                   L"DefaultShader");
-
-	InputSystem::Instance().AddListener(this);
-}
-
-void Sandbox::SandboxLayer::OnUpdate()
-{
-	m_CurrentTime = Engine::Application::DeltaTime();
-
-	m_Plane->Update(m_CurrentTime);
-
-	m_Plane->Position(Engine::Vector3{m_TestPosition[0], m_TestPosition[1], m_TestPosition[2]});
-	m_Plane->Scale(Engine::Vector3{m_TestScale[0], m_TestScale[1], m_TestScale[2]});
-	m_Plane->Rotation(Engine::Vector3{m_TestRotation[0], m_TestRotation[1], m_TestRotation[2]});
-
-	m_TestCube->Position(Engine::Vector3{m_TestPosition2[0], m_TestPosition2[1], m_TestPosition2[2]});
-	m_TestCube->Scale(Engine::Vector3{m_TestScale2[0], m_TestScale2[1], m_TestScale2[2]});
-	m_TestCube->Rotation(Engine::Vector3{m_TestRotation2[0], m_TestRotation2[1], m_TestRotation2[2]});
-	m_TestCube->Update(m_CurrentTime);
-
-	Engine::Camera::Instance().Position(Engine::Vector3(m_CameraPosition[0], m_CameraPosition[1], m_CameraPosition[2]));
-
-	Engine::InputSystem::Instance().Update();
-
-}
-
-void Sandbox::SandboxLayer::OnRender()
-{
-	m_TestCube->Draw();
-	m_Plane->Draw();
-
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::Begin("Plane Controls");
-
-	ImGui::DragFloat3("Position", m_TestPosition);
-	ImGui::DragFloat3("Scale", m_TestScale);
-	ImGui::DragFloat3("Rotation", m_TestRotation);
-	
-	ImGui::End();
-
-	ImGui::Begin("Cube Controls");
-
-	ImGui::DragFloat3("Position", m_TestPosition2);
-	ImGui::DragFloat3("Scale", m_TestScale2);
-	ImGui::DragFloat3("Rotation", m_TestRotation2);
-	
-	ImGui::End();
-
-	ImGui::Begin("Camera Controls");
-	
-	ImGui::DragFloat3("Position", m_CameraPosition, 0.01f);
-
-	if (ImGui::Button("Reset##Camera"))
+	SandboxLayer::SandboxLayer() :
+		Layer{L"SandboxLayer"},
+		m_EntityList{Engine::List<Engine::Entity*>()},
+		m_ActiveMouseEvent{new Engine::MouseEvent()},
+		m_ActiveKeyEvent(new Engine::KeyEvent())
 	{
-		m_CameraPosition[0] = 0;
-		m_CameraPosition[1] = 0;
-		m_CameraPosition[2] = 0;
 	}
-	
-	ImGui::End();
 
-	// FOR TEST RENDERING SYSTEM
+	SandboxLayer::~SandboxLayer() = default;
 
-	// Scene Showcase
-	// Input System and Camera (Scene can be traversed using keyboard and mouse)
-	// Primitives (Cube, Capsules, Cylinder, Spheres, Planes)
-	// Object Transforms
-	// Basic SHaders
-	// Depth Buffer and Perspective View
-	
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	void SandboxLayer::OnAttach()
+	{
+		Engine::Entity* cubeEntity = new Engine::Entity(L"Testing Entity");
+		m_EntityList.emplace_back(cubeEntity);
 
-	ImGui::EndFrame();
-}
+		Engine::Entity* cubeEntity2 = new Engine::Entity(L"Testing Entity 2");
+		m_EntityList.emplace_back(cubeEntity2);
 
-void Sandbox::SandboxLayer::OnDetach()
-{
-	Engine::InputSystem::Instance().RemoveListener(this);
-}
+		// using namespace Engine;
+		// ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
+		//                                       "vsmain");
+		//
+		// ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
+		//                                      "psmain");
+		//
+		// // Object initialization
+		// m_Plane = CreateUniquePtr<Plane>(Vector3Float(0,0,0), Vector3Float(500, 500.0f, 500), L"DefaultShader");
+		//
+		// m_TestCube = CreateUniquePtr<Cube>(Vector3Float(0,
+		//                                            0,
+		//                                            0),
+		//                                    Vector3Float(50,
+		//                                            50,
+		//                                            50),
+		//                                    L"DefaultShader");
+		//
+	}
 
-void Sandbox::SandboxLayer::OnKeyDown(int keyCode)
-{
-	 if (keyCode == 'W')
-	 {
-	 	m_CameraPosition[2] += Engine::Application::DeltaTime() * 0.1f;
-	 }
-	 else if (keyCode == 'S')
-	 {
-	 	
-		 m_CameraPosition[2] -= Engine::Application::DeltaTime() * 0.1f;
-	 }
-	 else if (keyCode == 'A')
-	 {
-		 m_CameraPosition[0] -= Engine::Application::DeltaTime() * 0.1f;
-	 }
-	 else if (keyCode == 'D')
-	 {
-		 m_CameraPosition[0] += Engine::Application::DeltaTime() * 0.1f;
-	 }
+	void SandboxLayer::OnUpdate()
+	{
+	}
 
-	 Engine::Debug::Log("Camera Position: {0}, {1}, {2}!", 
-		 m_CameraPosition[0],
-		 m_CameraPosition[1],
-		 m_CameraPosition[2]);
-}
+	void SandboxLayer::OnRender(Engine::Renderer* rendererRef)
+	{
+		// FOR TEST RENDERING SYSTEM
 
-void Sandbox::SandboxLayer::OnKeyUp(int keyCode)
-{
-}
+		// Scene Showcase
+		// Input System and Camera (Scene can be traversed using keyboard and mouse)
+		// Primitives (Cube, Capsules, Cylinder, Spheres, Planes)
+		// Object Transforms
+		// Basic SHaders
+		// Depth Buffer and Perspective View
+	}
 
-void Sandbox::SandboxLayer::OnMouseMove(const Engine::Vector2& deltaMousePosition)
-{
-	// m_TestPosition[0] += deltaMousePosition.X();
-	// m_TestPosition[1] += deltaMousePosition.Y();
-}
+	void SandboxLayer::OnImGuiRender()
+	{
+		ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
 
-void Sandbox::SandboxLayer::OnLeftMouseButtonDown(const Engine::Vector2& mousePosition)
-{
-}
+		ImGui::Begin("Viewport");
 
-void Sandbox::SandboxLayer::OnLeftMouseButtonUp(const Engine::Vector2& mousePosition)
-{
-}
+		ImGui::Text("Testing debug");
 
-void Sandbox::SandboxLayer::OnRightMouseButtonDown(const Engine::Vector2& mousePosition)
-{
-}
+		for (auto* entity : m_EntityList)
+		{
+			std::basic_string toString = entity->Name();
+			ImGui::Text("%ws", toString.c_str());
+			ImGui::DragFloat3("Position", (float*)entity->Transform().Position());
+		}
 
-void Sandbox::SandboxLayer::OnRightMouseButtonUp(const Engine::Vector2& mousePosition)
-{
+		ImGui::Text("Key Event Status");
+		ImGui::Text("Key Pressed: %c", (char)m_ActiveKeyEvent->KeyCode);
+		ImGui::Text("Key State: %s", KeyStateToString(m_ActiveKeyEvent->KeyState).c_str());
+		ImGui::Spacing();
+		ImGui::Text("Mouse Event Status");
+		ImGui::Text("Mouse Position: %i, %i", m_ActiveMouseEvent->MousePosition.x, m_ActiveMouseEvent->MousePosition.y);
+		ImGui::Text("Mouse Button: %s", MouseButtonToString(m_ActiveMouseEvent->Button).c_str());
+		ImGui::Text("Mouse State: %s", MouseStateToString(m_ActiveMouseEvent->State).c_str());
+		ImGui::Text("Delta Mouse Position: %i, %i", m_ActiveMouseEvent->DeltaMousePosition.x,
+		            m_ActiveMouseEvent->DeltaMousePosition.y);
+		ImGui::End();
+	}
+
+	void SandboxLayer::OnPollInput(Engine::InputHandler* inputHandlerRef)
+	{
+		m_ActiveKeyEvent   = &inputHandlerRef->ActiveKeyInput();
+		m_ActiveMouseEvent = &inputHandlerRef->ActiveMouseInput();
+	}
+
+	void SandboxLayer::OnDetach()
+	{
+		for (auto i = 0; i < m_EntityList.size(); i++)
+		{
+			delete m_EntityList[i];
+			m_EntityList[i] = nullptr;
+		}
+
+		m_EntityList.clear();
+
+		delete m_ActiveMouseEvent;
+		delete m_ActiveKeyEvent;
+	}
 }

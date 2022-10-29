@@ -9,7 +9,7 @@ namespace Engine
 	void Primitive::Initialize(VertexData vertexData,
 	                           VertexLayoutData vertexLayoutData,
 	                           IndexData indexLayoutData,
-	                           const WString shaderName)
+	                           const String shaderName)
 	{
 		m_VertexData       = std::move(&vertexData);
 		m_VertexLayoutData = std::move(&vertexLayoutData);
@@ -26,7 +26,7 @@ namespace Engine
 		                                               vertexSize,
 		                                               m_VertexData->VertexListCount,
 		                                               m_VertexShader->GetByteCodeData(),
-		                                               static_cast<Uint>(m_VertexShader->GetByteCodeSizeData()),
+		                                               static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),
 		                                               m_VertexLayoutData->VertexLayout,
 		                                               m_VertexLayoutData->VertexLayoutCount);
 

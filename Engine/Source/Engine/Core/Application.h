@@ -6,6 +6,8 @@
 
 namespace Engine
 {
+	class InputHandler;
+	class Renderer;
 	class Window;
 	class Layer;
 	class Application final
@@ -14,8 +16,8 @@ namespace Engine
 		struct Profile
 		{
 			String Name;
-			Uint Width{};
-			Uint Height{};
+			uint32_t Width;
+			uint32_t Height;
 		};
 
 		static void SetProfile(const Profile& profile);
@@ -65,10 +67,11 @@ namespace Engine
 
 		bool m_IsRunning;
 
-		// Make RenderSystem not a singleton
-		// Make TimeSystem not a singleton
-
 		Window* m_Window;
+
+		Renderer* m_Renderer;
+
+		InputHandler* m_InputHandler;
 
 		Time m_Time;
 

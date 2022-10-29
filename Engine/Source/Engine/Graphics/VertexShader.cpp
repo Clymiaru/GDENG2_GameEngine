@@ -15,7 +15,7 @@ namespace Engine
 		                                                                    nullptr,
 		                                                                    &m_Data);
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Vertex shader cannot be created and initialized!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Vertex shader cannot be created and initialized!")
 	}
 
 	VertexShader::~VertexShader()

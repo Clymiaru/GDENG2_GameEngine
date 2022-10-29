@@ -29,6 +29,8 @@ namespace Engine
 
 		explicit operator DirectX::XMVECTOR() const;
 
+		explicit operator float*() const { return (float*)(this); }
+
 		bool operator ==(const Vector3Float& v) const;
 
 		bool operator !=(const Vector3Float& v) const;
@@ -238,8 +240,6 @@ namespace Engine
 		Vector3Uint& operator/=(float s);
 
 		Vector3Uint operator+() const;
-
-		Vector3Uint operator-() const;
 
 		[[nodiscard]]
 		float Length() const;

@@ -663,11 +663,6 @@ namespace Engine
 		return *this;
 	}
 
-	Vector3Uint Vector3Uint::operator-() const
-	{
-		return Vector3Uint(-x, -y, -z);
-	}
-
 	Vector3Uint operator+(const Vector3Uint& v1,
 	                      const Vector3Uint& v2)
 	{

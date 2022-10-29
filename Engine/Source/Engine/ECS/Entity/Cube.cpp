@@ -9,7 +9,7 @@ namespace Engine
 {
 	struct Vertex
 	{
-		Vector3 Position;
+		Vector3Float Position;
 
 		Color Color;
 	};
@@ -26,10 +26,10 @@ namespace Engine
 		float Time;
 	};
 
-	Cube::Cube(const Vector3& position,
-	           const Vector3& size,
+	Cube::Cube(const Vector3Float& position,
+	           const Vector3Float& size,
 	           const std::wstring& shaderName) :
-		AEntity{"Cube"},
+		AEntity{L"Cube"},
 		m_Constant{nullptr},
 		m_Primitive{new Primitive()}
 	{
@@ -39,42 +39,42 @@ namespace Engine
 		Vertex* vertices = new Vertex[8]
 		{
 			{
-				Vector3{-0.5f,-0.5f,-0.5f},
+				Vector3Float{-0.5f,-0.5f,-0.5f},
 				Color{0.8f, 0, 0}
 			},
 
 			{
-				Vector3{-0.5f,0.5f,-0.5f},
+				Vector3Float{-0.5f,0.5f,-0.5f},
 				Color{0.8f, 0.8f, 0}
 			},
 
 			{
-				Vector3{0.5f,0.5f,-0.5f},
+				Vector3Float{0.5f,0.5f,-0.5f},
 				Color{0.8f, 0.8f, 0}
 			},
 
 			{
-				Vector3{0.5f,-0.5f,-0.5f},
-				{0.8f, 0, 0},
+				Vector3Float{0.5f,-0.5f,-0.5f},
+				Color{0.8f, 0, 0},
 			},
 
 			{
-				Vector3{0.5f,-0.5f,0.5f},
+				Vector3Float{0.5f,-0.5f,0.5f},
 				Color{0, 0.8f, 0}
 			},
 
 			{
-				Vector3{0.5f,0.5f,0.5f},
+				Vector3Float{0.5f,0.5f,0.5f},
 				Color{0, 0.8f, 0.8f}
 			},
 
 			{
-				Vector3{-0.5f,0.5f,0.5f},
+				Vector3Float{-0.5f,0.5f,0.5f},
 				Color{0, 0.8f, 0.8f}
 			},
 
 			{
-				Vector3{-0.5f,-0.5f,0.5f},
+				Vector3Float{-0.5f,-0.5f,0.5f},
 				Color{0, 0.8f, 0},
 			}
 		};
@@ -88,7 +88,7 @@ namespace Engine
 		};
 		size_t layoutSize = 2U; //INFO: Is there a way to automate this (to automate layoutSize calculation).
 
-		Uint* indices = new Uint[36]
+		uint32_t* indices = new uint32_t[36]
 		{
 			//FRONT SIDE
 			0,1,2,  //FIRST TRIANGLE

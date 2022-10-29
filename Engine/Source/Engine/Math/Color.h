@@ -18,7 +18,7 @@ namespace Engine
 		               float blue,
 		               float alpha);
 
-		explicit explicit Color(const Vector3Float& rgbColor);
+		explicit Color(const Vector3Float& rgbColor);
 
 		explicit Color(const XMFLOAT4& rgbaColor);
 
@@ -31,6 +31,8 @@ namespace Engine
 		Color& operator=(Color&&) = default;
 
 		explicit operator DirectX::XMVECTOR() const;
+
+		explicit operator const float*() const noexcept { return reinterpret_cast<const float*>(this); }
 
 		bool operator ==(const Color& c) const;
 

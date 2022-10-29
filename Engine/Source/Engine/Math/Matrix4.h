@@ -54,10 +54,11 @@ namespace Engine
 		static Matrix4 CreateRotationY(float radians) noexcept;
 		static Matrix4 CreateRotationZ(float radians) noexcept;
 
-		// static Matrix CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane) noexcept;
-		// static Matrix CreatePerspective(float width, float height, float nearPlane, float farPlane) noexcept;
+		
+		static Matrix4 CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane) noexcept;
+		static Matrix4 CreatePerspective(float width, float height, float nearPlane, float farPlane) noexcept;
 		// static Matrix CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane) noexcept;
-		// static Matrix CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane) noexcept;
+		static Matrix4 CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane) noexcept;
 		// static Matrix CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane) noexcept;
 	};
 

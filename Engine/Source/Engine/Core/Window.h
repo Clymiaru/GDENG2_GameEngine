@@ -1,6 +1,11 @@
 #pragma once
 #include <Windows.h>
 
+#include "Core.h"
+
+#include "Engine/Math/Rect.h"
+#include "Engine/Math/Vector2.h"
+
 namespace Engine
 {
 	class Window final
@@ -8,22 +13,22 @@ namespace Engine
 	public:
 		struct Profile
 		{
-			WString Name;
+			String Name;
 
-			Uint Width;
+			uint32_t Width;
 
-			Uint Height;
+			uint32_t Height;
 
 			Profile() :
-				Name{TEXT("Unnamed")},
+				Name{L"Unnamed"},
 				Width{640},
 				Height{480}
 			{
 			}
 
-			Profile(const WString name,
-					const Uint& width,
-					const Uint& height) :
+			Profile(const StringView name,
+					const uint32_t& width,
+					const uint32_t& height) :
 				Name{name},
 				Width{width},
 				Height{height}
@@ -35,17 +40,15 @@ namespace Engine
 
 		~Window();
 
-		static Window* Create(const Profile& profile);
-
 		void PollEvents();
 
-		void Start();
+		void Start(const Profile& profile);
 
 		void Close();
 
 		HWND& GetHandle();
 
-		Vector2 GetSize();
+		Rect<uint32_t>& WindowRect();
 
 	private:
 		void UpdateClientSize();
@@ -54,7 +57,7 @@ namespace Engine
 
 		MSG m_Message;
 
-		Vector2 m_ClientSize;
+		Rect<uint32_t> m_ClientRect;
 
 		friend LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
 										UINT message,

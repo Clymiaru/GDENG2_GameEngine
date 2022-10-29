@@ -35,7 +35,7 @@ namespace Engine
 			m_DepthStencilView->Release();
 	}
 
-	void SwapChain::Present(bool vsync) const
+	void SwapChain::Present(const uint32_t vsync) const
 	{
 		m_SwapChain->Present(vsync, NULL);
 	}
@@ -54,12 +54,13 @@ namespace Engine
 	                                ID3D11Device* device,
 	                                IDXGIFactory* factory)
 	{
-		const Vector2 windowSize = window.GetSize();
+		const Vector2Int windowSize = Vector2Int(window.WindowRect().Width, window.WindowRect().Height);
+		
 		DXGI_SWAP_CHAIN_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 		desc.BufferCount       = 1;
-		desc.BufferDesc.Width  = static_cast<Uint>(windowSize.X());
-		desc.BufferDesc.Height = static_cast<Uint>(windowSize.Y());
+		desc.BufferDesc.Width  = static_cast<uint32_t>(windowSize.x);
+		desc.BufferDesc.Height = static_cast<uint32_t>(windowSize.y);
 
 		desc.BufferDesc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM;
 		desc.BufferDesc.RefreshRate.Numerator   = 60;
@@ -74,7 +75,7 @@ namespace Engine
 		                                       &desc,
 		                                       &m_SwapChain);
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create swap chain!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to create swap chain!")
 	}
 
 	void SwapChain::CreateRenderTargetView(ID3D11Device* device)
@@ -85,13 +86,13 @@ namespace Engine
 		                                        __uuidof(ID3D11Texture2D),
 		                                        reinterpret_cast<void**>(&buffer));
 
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to get buffer!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to get buffer!")
 
 		result = device->CreateRenderTargetView(buffer,
 		                                        nullptr,
 		                                        &m_RenderTargetView);
 		buffer->Release();
-		ENGINE_ASSERT(SUCCEEDED(result), "Failed to create RenderTargetView!")
+		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to create RenderTargetView!")
 
 		D3D11_TEXTURE2D_DESC textureDesc = {};
 		textureDesc.Width = 1280;

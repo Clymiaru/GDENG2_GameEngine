@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <d3dcommon.h>
 
+#include "Engine/Core/Core.h"
+
 namespace Engine
 {
 	template <typename T>

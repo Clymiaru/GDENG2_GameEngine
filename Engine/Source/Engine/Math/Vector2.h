@@ -236,8 +236,6 @@ namespace Engine
 
 		Vector2Uint operator+() const;
 
-		Vector2Uint operator-() const;
-
 		[[nodiscard]]
 		float Length() const;
 

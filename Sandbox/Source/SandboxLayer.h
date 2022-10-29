@@ -1,21 +1,18 @@
 ﻿#pragma once
-#include <Engine/Graphics/RenderObjects/Plane.h>
+
+#include <Engine/Event/Event.h>
 
 #include "Engine/Engine.h"
 
-#include "Engine/Input/InputSystem.h"
-
 namespace Engine
 {
-	class Quad;
-
-	class Cube;
+	class Entity;
+	struct KeyEvent;
 }
 
 namespace Sandbox
 {
-	class SandboxLayer final : public Engine::Layer,
-	                           public Engine::IInputListener
+	class SandboxLayer final : public Engine::Layer
 	{
 	public:
 		SandboxLayer();
@@ -26,45 +23,20 @@ namespace Sandbox
 
 		void OnUpdate() override;
 
-		void OnRender() override;
+		void OnRender(Engine::Renderer* rendererRef) override;
 
 		void OnDetach() override;
 
-		void OnKeyDown(int keyCode) override;
+		void OnImGuiRender() override;
 
-		void OnKeyUp(int keyCode) override;
-
-		void OnMouseMove(const Engine::Vector2& deltaMousePosition) override;
-
-		void OnLeftMouseButtonDown(const Engine::Vector2& mousePosition) override;
-
-		void OnLeftMouseButtonUp(const Engine::Vector2& mousePosition) override;
-
-		void OnRightMouseButtonDown(const Engine::Vector2& mousePosition) override;
-
-		void OnRightMouseButtonUp(const Engine::Vector2& mousePosition) override;
+		void OnPollInput(Engine::InputHandler* inputHandlerRef) override;
 
 	private:
-		float m_CurrentTime;
+		Engine::List<Engine::Entity*> m_EntityList;
 
-		float m_MaxTime;
+		Engine::MouseEvent* m_ActiveMouseEvent;
+		Engine::KeyEvent* m_ActiveKeyEvent;
 
-		Engine::UniquePtr<Engine::Cube> m_TestCube;
-
-		Engine::UniquePtr<Engine::Plane> m_Plane;
-
-		float m_TestPosition[3] = {0.0f, 0.0f, 0.0f};
-
-		float m_TestScale[3] = {100.0f, 100.0f, 100.0f};
-
-		float m_TestRotation[3] = {0.0f, 0.0f, 0.0f};
-
-		float m_TestPosition2[3] = {0.0f, 0.0f, 0.0f};
-
-		float m_TestScale2[3] = { 200.0f, 200.0f, 200.0f };
-
-		float m_TestRotation2[3] = {0.0f, 0.0f, 0.0f};
-
-		float m_CameraPosition[3] = {0.0f, 0.0f, 0.0f};
+		bool m_IsDemoWindowOpen = true;
 	};
 }

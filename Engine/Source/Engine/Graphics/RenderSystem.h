@@ -39,11 +39,11 @@ namespace Engine
 		//---------- RENDER COMMANDS
 		static void Clear(Color fillColor);
 
-		template <typename ShaderType>
-		static void SetShader(ShaderType& shader);
-
-		template <typename ShaderType>
-		static void SetConstantBuffer(const ConstantBuffer& constantBuffer);
+		// template <typename ShaderType>
+		// static void SetShader(ShaderType& shader);
+		//
+		// template <typename ShaderType>
+		// static void SetConstantBuffer(const ConstantBuffer& constantBuffer);
 
 		static void Draw(const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer);
@@ -59,7 +59,7 @@ namespace Engine
 
 		static void ShowFrame();
 
-		static void SetViewportSize(Vector2 viewportSize);
+		static void SetViewportSize(Vector2Int viewportSize);
 
 	private:
 		RenderSystem();
@@ -73,37 +73,37 @@ namespace Engine
 		UniquePtr<DeviceContext> m_DeviceContext;
 	};
 
-	template <typename ShaderType>
-	void RenderSystem::SetShader(ShaderType& shader)
-	{
-	}
-
-	template <>
-	inline void RenderSystem::SetShader<VertexShader>(VertexShader& shader)
-	{
-		m_Instance.m_DeviceContext->SetShader(shader);
-	}
-
-	template <>
-	inline void RenderSystem::SetShader<PixelShader>(PixelShader& shader)
-	{
-		m_Instance.m_DeviceContext->SetShader(shader);
-	}
-
-	template <typename ShaderType>
-	void RenderSystem::SetConstantBuffer(const ConstantBuffer& constantBuffer)
-	{
-	}
-
-	template <>
-	inline void RenderSystem::SetConstantBuffer<VertexShader>(const ConstantBuffer& constantBuffer)
-	{
-		m_Instance.m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
-	}
-
-	template <>
-	inline void RenderSystem::SetConstantBuffer<PixelShader>(const ConstantBuffer& constantBuffer)
-	{
-		m_Instance.m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
-	}
+	// template <typename ShaderType>
+	// void RenderSystem::SetShader(ShaderType& shader)
+	// {
+	// }
+	//
+	// template <>
+	// inline void RenderSystem::SetShader<VertexShader>(VertexShader& shader)
+	// {
+	// 	m_Instance.m_DeviceContext->SetShader(shader);
+	// }
+	//
+	// template <>
+	// inline void RenderSystem::SetShader<PixelShader>(PixelShader& shader)
+	// {
+	// 	m_Instance.m_DeviceContext->SetShader(shader);
+	// }
+	//
+	// template <typename ShaderType>
+	// void RenderSystem::SetConstantBuffer(const ConstantBuffer& constantBuffer)
+	// {
+	// }
+	//
+	// template <>
+	// inline void RenderSystem::SetConstantBuffer<VertexShader>(const ConstantBuffer& constantBuffer)
+	// {
+	// 	m_Instance.m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
+	// }
+	//
+	// template <>
+	// inline void RenderSystem::SetConstantBuffer<PixelShader>(const ConstantBuffer& constantBuffer)
+	// {
+	// 	m_Instance.m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
+	// }
 }

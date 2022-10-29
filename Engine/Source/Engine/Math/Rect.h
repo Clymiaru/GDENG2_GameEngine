@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <windef.h>
-
 namespace Engine
 {
 	template <typename T>
@@ -27,14 +25,6 @@ namespace Engine
 			Y(y),
 			Width(width),
 			Height(height)
-		{
-		}
-
-		explicit Rect(const RECT& rect) :
-			X((T)rect.left),
-			Y((T)rect.top),
-			Width((T)(rect.right - rect.left)),
-			Height((T)(rect.bottom - rect.top))
 		{
 		}
 
