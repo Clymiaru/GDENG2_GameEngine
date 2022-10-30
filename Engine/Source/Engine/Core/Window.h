@@ -36,19 +36,23 @@ namespace Engine
 			}
 		};
 
-		Window();
+		explicit Window(const Profile& profile);
 
 		~Window();
 
 		void PollEvents();
 
-		void Start(const Profile& profile);
-
-		void Close();
-
 		HWND& GetHandle();
 
 		Rect<uint32_t>& WindowRect();
+
+		Window(const Window&) = delete;
+	
+		Window& operator=(const Window&) = delete;
+	
+		Window(Window&&) noexcept = delete;
+	
+		Window& operator=(Window&&) noexcept = delete;
 
 	private:
 		void UpdateClientSize();

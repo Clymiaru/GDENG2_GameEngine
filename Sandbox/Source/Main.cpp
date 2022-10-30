@@ -8,15 +8,13 @@ int main()
 {
 	using namespace Engine;
 	
-	Application::SetProfile(Application::Profile(
+	Application::SetLayers({new Sandbox::SandboxLayer()});
+	
+	Application::Start(Application::Profile(
 		L"Sandbox",
 		1280,
 		720
 	));
-	
-	Application::SetInitialLayers({new Sandbox::SandboxLayer()});
-	
-	Application::Start();
 	
 	Application::Run();
 	

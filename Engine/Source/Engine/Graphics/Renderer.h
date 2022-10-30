@@ -2,21 +2,16 @@
 #include "DeviceContext.h"
 #include "SwapChain.h"
 
-//Consider Builder Design
-// Since VertexBuffers and the like rely on the renderer/Rendering Device,
-// Renderer will handle the construction of it to include the Renderer
 namespace Engine
 {
 	class Renderer final
 	{
 	public:
-		Renderer();
+		Renderer(Window& window);
 
 		~Renderer();
 
-		void Start(Window& window);
-
-		void End();
+		// void End();
 
 		void Clear(const Color& clearColor) const;
 
@@ -43,15 +38,25 @@ namespace Engine
 
 		HRESULT CreateVertexShader(const void* shaderByteCode,
 		                           size_t bytecodeLength,
-		                           ID3D11VertexShader** vertexShader);
+		                           ID3D11VertexShader** vertexShader) const;
 
 		HRESULT CreatePixelShader(const void* shaderByteCode,
 								   size_t bytecodeLength,
-								   ID3D11PixelShader** pixelShader);
+								   ID3D11PixelShader** pixelShader) const;
 
 		void ShowFrame() const;
 
+		Renderer(const Renderer&) = delete;
+	
+		Renderer& operator=(const Renderer& v) = delete;
+	
+		Renderer(Renderer&&) noexcept = delete;
+	
+		Renderer& operator=(Renderer&&) noexcept = delete;
+
 	private:
+		void CreateDeviceAndContext();
+		
 		UniquePtr<SwapChain> m_SwapChain;
 
 		UniquePtr<DeviceContext> m_DeviceContext;

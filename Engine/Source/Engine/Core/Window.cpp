@@ -14,18 +14,10 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
 
 namespace Engine
 {
-	Window::Window() :
-		m_Handle{nullptr},
-		m_Message{}
-	{
-	}
-
-	Window::~Window() = default;
-
 	LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
-	                                  const UINT message,
-	                                  const WPARAM wParam,
-	                                  const LPARAM lParam)
+									  const UINT message,
+									  const WPARAM wParam,
+									  const LPARAM lParam)
 	{
 		LRESULT result = ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam);
 		if (result)
@@ -57,8 +49,10 @@ namespace Engine
 		}
 		return 0;
 	}
-
-	void Window::Start(const Profile& profile)
+	
+	Window::Window(const Profile& profile) :
+		m_Handle{nullptr},
+		m_Message{}
 	{
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
@@ -78,17 +72,17 @@ namespace Engine
 		ENGINE_ASSERT_TRUE(registerResult, L"Window cannot be registered!")
 
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-		                                   profile.Name.c_str(),
-		                                   profile.Name.c_str(),
-		                                   WS_OVERLAPPEDWINDOW,
-		                                   CW_USEDEFAULT,
-		                                   CW_USEDEFAULT,
-		                                   static_cast<int>(profile.Width),
-		                                   static_cast<int>(profile.Height),
-		                                   nullptr,
-		                                   nullptr,
-		                                   nullptr,
-		                                   this);
+										   profile.Name.c_str(),
+										   profile.Name.c_str(),
+										   WS_OVERLAPPEDWINDOW,
+										   CW_USEDEFAULT,
+										   CW_USEDEFAULT,
+										   static_cast<int>(profile.Width),
+										   static_cast<int>(profile.Height),
+										   nullptr,
+										   nullptr,
+										   nullptr,
+										   this);
 
 		ENGINE_ASSERT_TRUE(handle, L"Handle cannot be retrieved!")
 
@@ -101,11 +95,10 @@ namespace Engine
 		UpdateWindow(m_Handle);
 	}
 
-	void Window::Close()
+	Window::~Window()
 	{
 		const auto result = DestroyWindow(m_Handle);
 		ENGINE_ASSERT_TRUE(result, L"Window cannot be destroyed!")
-		delete this;
 	}
 
 	Rect<uint32_t>& Window::WindowRect()
@@ -116,7 +109,7 @@ namespace Engine
 	void Window::UpdateClientSize()
 	{
 		RECT rect = {};
-		::GetClientRect(m_Handle, &rect);
+		GetClientRect(m_Handle, &rect);
 		m_ClientRect = Rect<uint32_t>(0, 0, rect.right - rect.left, rect.bottom - rect.top);
 	}
 

@@ -15,16 +15,14 @@ namespace Engine
 	public:
 		struct Profile
 		{
-			String Name;
-			uint32_t Width;
-			uint32_t Height;
+			String Name = L"Untitled";
+			uint32_t Width = 0;
+			uint32_t Height = 0;
 		};
 
-		static void SetProfile(const Profile& profile);
+		static void SetLayers(List<Layer*> initialLayers);
 
-		static void SetInitialLayers(List<Layer*> initialLayers);
-
-		static void Start();
+		static void Start(const Profile& profile);
 
 		static void Run();
 
@@ -69,7 +67,7 @@ namespace Engine
 
 		Window* m_Window;
 
-		Renderer* m_Renderer;
+		SharedPtr<Renderer> m_Renderer;
 
 		InputHandler* m_InputHandler;
 

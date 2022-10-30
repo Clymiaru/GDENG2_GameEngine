@@ -8,11 +8,6 @@
 #include "Engine/ImGui/ImGuiSystem.h"
 #include "Engine/Input/InputHandler.h"
 
-//#include "Engine/Graphics/DeviceContext.h"
-//#include "Engine/Graphics/ShaderLibrary.h"
-
-//#include "Engine/Input/InputSystem.h"
-
 namespace Engine
 {
 	Application Application::m_Instance;
@@ -31,12 +26,7 @@ namespace Engine
 		return m_Instance;
 	}
 
-	void Application::SetProfile(const Profile& profile)
-	{
-		Instance().m_Profile = profile;
-	}
-
-	void Application::SetInitialLayers(const List<Layer*> initialLayers)
+	void Application::SetLayers(const List<Layer*> initialLayers)
 	{
 		for (size_t i = 0; i < initialLayers.size(); i++)
 		{
@@ -44,9 +34,15 @@ namespace Engine
 		}
 	}
 
-	void Application::Start()
+	void Application::Start(const Profile& profile)
 	{
 		ImGuiSystem::Instance().Start();
+
+		Instance().m_Window = new Window(Window::Profile{
+									   profile.Name,
+									   profile.Width,
+									   profile.Height
+								   });
 
 		Instance().StartSystems();
 		Instance().m_IsRunning = true;
@@ -56,27 +52,20 @@ namespace Engine
 	{
 		Instance().m_Time = Time();
 
-		m_Window = new Window();
-		m_Renderer = new Renderer();
+		m_Renderer = CreateSharedPtr<Renderer>(*m_Window);
+
+		ShaderLibrary::Initialize(4, &*m_Renderer);
+
 		m_InputHandler = new InputHandler();
-
-		m_Window->Start(Window::Profile{
-			                Instance().m_Profile.Name,
-			                Instance().m_Profile.Width,
-			                Instance().m_Profile.Height
-		                });
-
-		m_Renderer->Start(*m_Window);
 		m_InputHandler->Start();
-
-
-		ShaderLibrary::Initialize(4, m_Renderer);
 
 		Instance().m_LayerSystem.Start();
 	}
 
 	void Application::Run()
 	{
+		// Attach Loaded Layers
+
 		while (Instance().m_IsRunning)
 		{
 			Instance().m_Time.Start();
@@ -89,6 +78,8 @@ namespace Engine
 
 			Sleep(1);
 		}
+
+		// Detach Loaded Layers
 	}
 
 	void Application::End()
@@ -98,14 +89,14 @@ namespace Engine
 
 	void Application::EndSystems()
 	{
-		ShaderLibrary::Terminate();
-		
 		m_LayerSystem.End();
-		
-		m_Renderer->End();
-		delete m_Renderer;
 
-		m_Window->Close();
+		ShaderLibrary::Terminate();
+
+		// m_Renderer->End();
+		m_Renderer.reset();
+
+		delete m_Window;
 
 		ImGuiSystem::Instance().End();
 	}
@@ -144,7 +135,7 @@ namespace Engine
 	{
 		m_Renderer->Clear(Color{0.0f, 0.5f, 1.0f, 1.0f});
 
-		m_LayerSystem.Render(m_Renderer);
+		m_LayerSystem.Render(&*m_Renderer);
 
 		m_LayerSystem.ImGuiRender();
 
