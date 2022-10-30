@@ -17,10 +17,11 @@ namespace Engine
 
 	class VertexShader;
 
-	class ShaderLibrary final // NOLINT(cppcoreguidelines-special-member-functions)
+	class ShaderLibrary final
 	{
 	public:
-		static void Initialize(const size_t expectedShaderCountOfAllShaders);
+		static void Initialize(const size_t expectedShaderCountOfAllShaders,
+			Renderer* renderer);
 
 		static void Terminate();
 
@@ -49,6 +50,8 @@ namespace Engine
 		HashMap<std::wstring, ShaderRef<VertexShader>> m_VertexShaderMap;
 
 		HashMap<std::wstring, ShaderRef<PixelShader>> m_PixelShaderMap;
+
+		Renderer* m_Renderer;
 	};
 
 	//---------- IS SHADER REGISTERED
@@ -106,7 +109,7 @@ namespace Engine
 			}
 		}
 
-		s_Instance.m_VertexShaderMap[shaderName] = CreateSharedPtr<VertexShader>(std::move(blob));
+		s_Instance.m_VertexShaderMap[shaderName] = CreateSharedPtr<VertexShader>(std::move(blob), s_Instance.m_Renderer);
 	}
 
 	template <>
@@ -122,7 +125,7 @@ namespace Engine
 
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
-		// ReSharper disable once CppTooWideScopeInitStatement
+		
 		const HRESULT result = D3DCompileFromFile(fileName.c_str(),
 		                                          nullptr,
 
@@ -146,7 +149,7 @@ namespace Engine
 			}
 		}
 
-		s_Instance.m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob));
+		s_Instance.m_PixelShaderMap[shaderName] = CreateSharedPtr<PixelShader>(std::move(blob), s_Instance.m_Renderer);
 	}
 
 	//---------- GET SHADER

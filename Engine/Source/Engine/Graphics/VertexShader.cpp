@@ -3,17 +3,17 @@
 
 #include "Engine/Core/Debug.h"
 
-#include "RenderSystem.h"
+#include "Renderer.h"
 
 namespace Engine
 {
-	VertexShader::VertexShader(ID3DBlob* vertexShaderBlob) :
-		Shader(vertexShaderBlob)
+	VertexShader::VertexShader(ID3DBlob* vertexShaderBlob,
+	                           Renderer* renderer) :
+		Shader(vertexShaderBlob, renderer)
 	{
-		const HRESULT result = RenderSystem::GetDevice().CreateVertexShader(m_Blob->GetBufferPointer(),
-		                                                                    m_Blob->GetBufferSize(),
-		                                                                    nullptr,
-		                                                                    &m_Data);
+		const HRESULT result = renderer->CreateVertexShader(m_Blob->GetBufferPointer(),
+		                                                    m_Blob->GetBufferSize(),
+		                                                    &m_Data);
 
 		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Vertex shader cannot be created and initialized!")
 	}

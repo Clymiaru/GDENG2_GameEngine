@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
 #include "Buffer.h"
 
-Engine::Buffer::Buffer(const Uint elementCount,
-                       const size_t dataTypeSize) :
+Engine::Buffer::Buffer(const uint32_t elementCount,
+                       const size_t dataTypeSize,
+                       Renderer* renderer) :
 	m_Data{nullptr},
 	m_DataTypeSize{dataTypeSize},
 	m_BufferSize{elementCount * dataTypeSize},
@@ -14,7 +15,7 @@ Engine::Buffer::~Buffer()
 {
 }
 
-Engine::Uint Engine::Buffer::ElementCount() const
+uint32_t Engine::Buffer::ElementCount() const
 {
 	return m_ElementCount;
 }

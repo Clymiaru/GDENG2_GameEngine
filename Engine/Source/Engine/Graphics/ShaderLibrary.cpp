@@ -5,16 +5,18 @@ namespace Engine
 {
 	ShaderLibrary ShaderLibrary::s_Instance = ShaderLibrary();
 
-	void ShaderLibrary::Initialize(const size_t expectedShaderCountOfAllShaders)
+	void ShaderLibrary::Initialize(const size_t expectedShaderCountOfAllShaders, Renderer* renderer)
 	{
 		s_Instance.m_VertexShaderMap.reserve(expectedShaderCountOfAllShaders);
 		s_Instance.m_PixelShaderMap.reserve(expectedShaderCountOfAllShaders);
+		s_Instance.m_Renderer = renderer;
 	}
 
 	void ShaderLibrary::Terminate()
 	{
 		s_Instance.m_VertexShaderMap.clear();
 		s_Instance.m_PixelShaderMap.clear();
+		s_Instance.m_Renderer = nullptr;
 	}
 
 	ShaderLibrary::ShaderLibrary() = default;

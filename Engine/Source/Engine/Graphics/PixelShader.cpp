@@ -3,18 +3,19 @@
 #include "PixelShader.h"
 
 #include "RenderSystem.h"
+#include "Renderer.h"
 
 #include "Engine/Core/Debug.h"
 
 namespace Engine
 {
-	PixelShader::PixelShader(ID3DBlob* blob) :
-		Shader(blob)
+	PixelShader::PixelShader(ID3DBlob* blob,
+	                         Renderer* renderer) :
+		Shader(blob, renderer)
 	{
-		const auto result = RenderSystem::GetDevice().CreatePixelShader(blob->GetBufferPointer(),
-		                                                                blob->GetBufferSize(),
-		                                                                nullptr,
-		                                                                &m_Data);
+		const auto result = renderer->CreatePixelShader(blob->GetBufferPointer(),
+		                                                blob->GetBufferSize(),
+		                                                &m_Data);
 
 		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Shader cannot be created and initialized!")
 	}

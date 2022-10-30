@@ -3,11 +3,14 @@
 
 namespace Engine
 {
+	class Renderer;
+
 	class Buffer
 	{
 	public:
 		Buffer(uint32_t elementCount,
-		       size_t dataTypeSize);
+		       size_t dataTypeSize,
+		       Renderer* renderer);
 
 		virtual ~Buffer();
 

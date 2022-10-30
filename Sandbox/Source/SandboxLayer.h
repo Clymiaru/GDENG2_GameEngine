@@ -21,15 +21,15 @@ namespace Sandbox
 
 		void OnAttach() override;
 
+		void OnPollInput(Engine::InputHandler* inputHandlerRef) override;
+
 		void OnUpdate() override;
 
 		void OnRender(Engine::Renderer* rendererRef) override;
 
-		void OnDetach() override;
-
 		void OnImGuiRender() override;
 
-		void OnPollInput(Engine::InputHandler* inputHandlerRef) override;
+		void OnDetach() override;
 
 	private:
 		Engine::List<Engine::Entity*> m_EntityList;

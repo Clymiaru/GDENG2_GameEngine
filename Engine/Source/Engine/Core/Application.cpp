@@ -4,6 +4,7 @@
 #include "Window.h"
 
 #include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/ShaderLibrary.h"
 #include "Engine/ImGui/ImGuiSystem.h"
 #include "Engine/Input/InputHandler.h"
 
@@ -69,7 +70,7 @@ namespace Engine
 		m_InputHandler->Start();
 
 
-		//ShaderLibrary::Initialize(4);
+		ShaderLibrary::Initialize(4, m_Renderer);
 
 		Instance().m_LayerSystem.Start();
 	}
@@ -97,7 +98,8 @@ namespace Engine
 
 	void Application::EndSystems()
 	{
-		//ShaderLibrary::Terminate();
+		ShaderLibrary::Terminate();
+		
 		m_LayerSystem.End();
 		
 		m_Renderer->End();

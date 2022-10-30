@@ -7,7 +7,7 @@ namespace Engine
 	class VertexShader final : public Shader<ID3D11VertexShader>
 	{
 	public:
-		explicit VertexShader(ID3DBlob* vertexShaderBlob);
+		explicit VertexShader(ID3DBlob* vertexShaderBlob, Renderer* renderer);
 
 		~VertexShader() override;
 	};

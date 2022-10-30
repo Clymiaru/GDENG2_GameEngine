@@ -11,7 +11,8 @@ namespace Engine
 	{
 	public:
 		ConstantBuffer(const void* buffer,
-		               size_t bufferSize);
+		               size_t bufferSize,
+		               Renderer* renderer);
 
 		~ConstantBuffer() override;
 

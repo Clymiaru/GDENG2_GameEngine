@@ -3,13 +3,15 @@
 #include "Engine/Graphics/ConstantBuffer.h"
 
 #include "RenderSystem.h"
+#include "Renderer.h"
 
 #include "Engine/Core/Debug.h"
 #include "Engine/Graphics/DeviceContext.h"
 
 Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
-                                       const size_t bufferSize) :
-	Buffer(1, bufferSize)
+                                       const size_t bufferSize,
+                                       Renderer* renderer) :
+	Buffer(1, bufferSize, renderer)
 {
 	if (m_Data != nullptr)
 		m_Data->Release();
@@ -24,9 +26,9 @@ Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem                = buffer;
 
-	auto result = RenderSystem::GetDevice().CreateBuffer(&bufferDesc,
-	                                                     &initData,
-	                                                     &m_Data);
+	auto result = renderer->CreateBuffer(&bufferDesc,
+	                                     &initData,
+	                                     &m_Data);
 
 	ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Constant Buffer cannot be created!")
 }

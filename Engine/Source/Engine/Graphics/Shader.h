@@ -5,11 +5,14 @@
 
 namespace Engine
 {
+	class Renderer;
+
 	template <typename T>
 	class Shader
 	{
 	public:
-		explicit Shader(ID3DBlob* blob);
+		explicit Shader(ID3DBlob* blob,
+		                Renderer* renderer);
 
 		virtual ~Shader();
 
@@ -37,7 +40,8 @@ namespace Engine
 	};
 
 	template <typename T>
-	Shader<T>::Shader(ID3DBlob* blob) :
+	Shader<T>::Shader(ID3DBlob* blob,
+	                  Renderer* renderer) :
 		m_Data{nullptr},
 		m_Blob{blob}
 	{
@@ -68,6 +72,5 @@ namespace Engine
 
 	//---------- USING DECLARATIONS
 	template <class ShaderType>
-	using ShaderRef = SharedPtr<ShaderType>; 
-	
+	using ShaderRef = SharedPtr<ShaderType>;
 }

@@ -19,7 +19,7 @@ namespace Engine
 	{
 		D3D_FEATURE_LEVEL_11_0
 	};
-	
+
 	Renderer::Renderer()
 	{
 	}
@@ -37,15 +37,15 @@ namespace Engine
 		for (const auto& driverType : DRIVER_TYPES_SUPPORTED)
 		{
 			result = D3D11CreateDevice(nullptr,
-									   driverType,
-									   nullptr,
-									   NULL,
-									   FEATURE_LEVELS_SUPPORTED.data(),
-									   static_cast<UINT>(FEATURE_LEVELS_SUPPORTED.size()),
-									   D3D11_SDK_VERSION,
-									   &m_Device,
-									   &m_FeatureLevel,
-									   &deviceContext);
+			                           driverType,
+			                           nullptr,
+			                           NULL,
+			                           FEATURE_LEVELS_SUPPORTED.data(),
+			                           static_cast<UINT>(FEATURE_LEVELS_SUPPORTED.size()),
+			                           D3D11_SDK_VERSION,
+			                           &m_Device,
+			                           &m_FeatureLevel,
+			                           &deviceContext);
 			if (SUCCEEDED(result))
 				break;
 		}
@@ -53,13 +53,13 @@ namespace Engine
 		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to create device!")
 
 		m_Device->QueryInterface(__uuidof(IDXGIDevice),
-								 reinterpret_cast<void**>(&m_DxgiDevice));
+		                         reinterpret_cast<void**>(&m_DxgiDevice));
 
 		m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
-								reinterpret_cast<void**>(&m_DxgiAdapter));
+		                        reinterpret_cast<void**>(&m_DxgiAdapter));
 
 		m_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
-								 reinterpret_cast<void**>(&m_DxgiFactory));
+		                         reinterpret_cast<void**>(&m_DxgiFactory));
 
 		m_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
 		m_SwapChain     = CreateUniquePtr<SwapChain>(window, m_Device, m_DxgiFactory);
@@ -67,7 +67,7 @@ namespace Engine
 		const Vector2Int winSize = Vector2Int(window.WindowRect().Width, window.WindowRect().Height);
 
 		m_DeviceContext->SetViewportSize(winSize);
-		
+
 		ImGui_ImplDX11_Init(m_Device, &m_DeviceContext->Context());
 	}
 
@@ -87,9 +87,39 @@ namespace Engine
 	}
 
 	void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-		const void* updatedBufferData)
+	                                    const void* updatedBufferData)
 	{
 		//m_DeviceContext->UpdateConstantBuffer(constantBuffer, updatedBufferData);
+	}
+
+	HRESULT Renderer::CreateBuffer(D3D11_BUFFER_DESC* desc,
+	                               D3D11_SUBRESOURCE_DATA* resource,
+	                               ID3D11Buffer** buffer)
+	{
+		return m_Device->CreateBuffer(desc, resource, buffer);
+	}
+
+	HRESULT Renderer::CreateLayout(const D3D11_INPUT_ELEMENT_DESC* desc,
+	                               uint32_t elementCount,
+	                               const void* shaderByteCode,
+	                               uint32_t shaderByteCodeSize,
+	                               ID3D11InputLayout** layout)
+	{
+		return m_Device->CreateInputLayout(desc, elementCount, shaderByteCode, shaderByteCodeSize, layout);
+	}
+
+	HRESULT Renderer::CreateVertexShader(const void* shaderByteCode,
+	                                     size_t bytecodeLength,
+	                                     ID3D11VertexShader** vertexShader)
+	{
+		return m_Device->CreateVertexShader(shaderByteCode, bytecodeLength, nullptr, vertexShader);
+	}
+
+	HRESULT Renderer::CreatePixelShader(const void* shaderByteCode,
+	                                    size_t bytecodeLength,
+	                                    ID3D11PixelShader** pixelShader)
+	{
+		return m_Device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 	}
 
 	// void Renderer::Draw(VertexShader& vertexShader,

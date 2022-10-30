@@ -8,7 +8,7 @@ namespace Engine
 	class PixelShader final : public Shader<ID3D11PixelShader>
 	{
 	public:
-		explicit PixelShader(ID3DBlob* blob);
+		explicit PixelShader(ID3DBlob* blob, Renderer* renderer);
 
 		~PixelShader() override;
 	};
