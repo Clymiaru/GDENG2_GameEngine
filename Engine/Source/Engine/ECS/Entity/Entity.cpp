@@ -9,10 +9,12 @@ Engine::Entity::Entity(const String& name) :
 	m_Transform{new TransformComponent(this)},
 	m_RenderComponent{new RenderComponent(this)}
 {
+	m_RenderComponent->Initialize();
 }
 
 Engine::Entity::~Entity()
 {
+	m_RenderComponent->Terminate();
 	delete m_Transform;
 }
 

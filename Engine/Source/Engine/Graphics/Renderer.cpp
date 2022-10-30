@@ -55,7 +55,7 @@ namespace Engine
 			if (SUCCEEDED(result))
 				break;
 		}
-
+ 
 		Debug::Assert(SUCCEEDED(result), "Failed to create device!");
 
 		s_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
@@ -94,11 +94,11 @@ namespace Engine
 		s_DeviceContext->Clear(*s_SwapChain, clearColor);
 	}
 
-	// void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-	//                                     const void* updatedBufferData)
-	// {
-	// 	//m_DeviceContext->UpdateConstantBuffer(constantBuffer, updatedBufferData);
-	// }
+	void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+	                                    const void* updatedBufferData)
+	{
+		s_DeviceContext->UpdateConstantBuffer(constantBuffer, updatedBufferData);
+	}
 
 	HRESULT Renderer::CreateBuffer(D3D11_BUFFER_DESC* desc,
 	                               D3D11_SUBRESOURCE_DATA* resource,
@@ -130,25 +130,25 @@ namespace Engine
 		return s_Device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 	}
 
-	// void Renderer::Draw(VertexShader& vertexShader,
-	//                     PixelShader& pixelShader,
-	//                     const VertexBuffer& vertexBuffer,
-	//                     const IndexBuffer& indexBuffer,
-	//                     const ConstantBuffer& constantBuffer,
-	//                     const void* updatedConstantBuffer,
-	//                     D3D11_PRIMITIVE_TOPOLOGY topology)
-	// {
-	// 	// m_DeviceContext->SetShader<VertexShader>(vertexShader);
-	// 	// m_DeviceContext->SetShader<PixelShader>(pixelShader);
-	// 	//
-	// 	// m_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
-	// 	// m_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
-	// 	//
-	// 	// m_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
-	// 	// m_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
-	// 	// m_DeviceContext->SetTopology(topology);
-	// 	// m_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
-	// }
+	void Renderer::Draw(VertexShader& vertexShader,
+	                    PixelShader& pixelShader,
+	                    const VertexBuffer& vertexBuffer,
+	                    const IndexBuffer& indexBuffer,
+	                    const ConstantBuffer& constantBuffer,
+	                    const void* updatedConstantBuffer,
+	                    D3D11_PRIMITIVE_TOPOLOGY topology)
+	{
+		s_DeviceContext->SetShader<VertexShader>(vertexShader);
+		s_DeviceContext->SetShader<PixelShader>(pixelShader);
+		
+		s_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
+		s_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
+		
+		s_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
+		s_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
+		s_DeviceContext->SetTopology(topology);
+		s_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
+	}
 
 	void Renderer::ShowFrame()
 	{

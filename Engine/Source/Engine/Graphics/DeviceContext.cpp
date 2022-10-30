@@ -67,16 +67,16 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	// void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-	//                                          const void* updatedBufferData)
-	// {
-	// 	m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
-	// 	                                   NULL,
-	// 	                                   nullptr,
-	// 	                                   updatedBufferData,
-	// 	                                   NULL,
-	// 	                                   NULL);
-	// }
+	void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+	                                         const void* updatedBufferData)
+	{
+		m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
+		                                   NULL,
+		                                   nullptr,
+		                                   updatedBufferData,
+		                                   NULL,
+		                                   NULL);
+	}
 
 	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
 	{

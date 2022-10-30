@@ -4,7 +4,6 @@
 
 namespace Engine
 {
-	// Make this a static class
 	class Renderer final
 	{
 	public:
@@ -16,16 +15,16 @@ namespace Engine
 
 		static void ShowFrame();
 
-		// void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-		//                           const void* updatedBufferData);
+		static void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+		                                 const void* updatedBufferData);
 
-		// void Draw(VertexShader& vertexShader,
-		// 				 PixelShader& pixelShader,
-		// 				 const VertexBuffer& vertexBuffer,
-		// 				 const IndexBuffer& indexBuffer,
-		// 				 const ConstantBuffer& constantBuffer,
-		// 				 const void* updatedConstantBuffer,
-		// 				 D3D11_PRIMITIVE_TOPOLOGY topology);
+		static void Draw(VertexShader& vertexShader,
+		                 PixelShader& pixelShader,
+		                 const VertexBuffer& vertexBuffer,
+		                 const IndexBuffer& indexBuffer,
+		                 const ConstantBuffer& constantBuffer,
+		                 const void* updatedConstantBuffer,
+		                 D3D11_PRIMITIVE_TOPOLOGY topology);
 
 		static HRESULT CreateBuffer(D3D11_BUFFER_DESC* desc,
 		                            D3D11_SUBRESOURCE_DATA* resource,

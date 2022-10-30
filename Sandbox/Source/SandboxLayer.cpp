@@ -1,5 +1,6 @@
 ﻿#include "SandboxLayer.h"
 
+#include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/Input/InputHandler.h>
 
@@ -24,18 +25,18 @@ namespace Sandbox
 
 	void SandboxLayer::OnAttach()
 	{
-		Engine::Entity* cubeEntity = new Engine::Entity(L"Testing Entity");
+		using namespace Engine;
+		ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
+											  "vsmain");
+		
+		ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
+											 "psmain");
+
+		Entity* cubeEntity = new Entity(L"Testing Entity");
+		cubeEntity->Transform().Scale(Vector3Float(100.0f, 100.0f, 100.0f));
 		m_EntityList.emplace_back(cubeEntity);
 
-		Engine::Entity* cubeEntity2 = new Engine::Entity(L"Testing Entity 2");
-		m_EntityList.emplace_back(cubeEntity2);
-
-		// using namespace Engine;
-		// ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
-		//                                       "vsmain");
-		//
-		// ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
-		//                                      "psmain");
+		
 		//
 		// // Object initialization
 		// m_Plane = CreateUniquePtr<Plane>(Vector3Float(0,0,0), Vector3Float(500, 500.0f, 500), L"DefaultShader");
@@ -58,6 +59,11 @@ namespace Sandbox
 	{
 		// FOR TEST RENDERING SYSTEM
 
+		for (auto* entity : m_EntityList)
+		{
+			entity->Render().Draw();
+		}
+
 		// Scene Showcase
 		// Input System and Camera (Scene can be traversed using keyboard and mouse)
 		// Primitives (Cube, Capsules, Cylinder, Spheres, Planes)
@@ -78,7 +84,17 @@ namespace Sandbox
 		{
 			std::basic_string toString = entity->Name();
 			ImGui::Text("%ws", toString.c_str());
-			ImGui::DragFloat3("Position", (float*)entity->Transform().Position());
+
+			auto entityPosition = (float*)entity->Transform().Position();
+			
+			ImGui::DragFloat3("Position", entityPosition);
+
+			entity->Transform().Position(Engine::Vector3Float(entityPosition[0], entityPosition[1], entityPosition[2]));
+
+			auto entityScale = (float*)entity->Transform().Scale();
+			ImGui::DragFloat3("Scale", entityScale);
+
+			entity->Transform().Scale(Engine::Vector3Float(entityScale[0], entityScale[1], entityScale[2]));
 		}
 
 		ImGui::Text("Delta Time: %f", Engine::Application::DeltaTime());

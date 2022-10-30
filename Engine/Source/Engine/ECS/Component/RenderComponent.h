@@ -13,6 +13,8 @@
 #include "Engine/Graphics/VertexShader.h"
 #include "Engine/Math/Matrix4.h"
 
+struct Constant;
+
 namespace Engine
 {
 	class Renderer;
@@ -44,17 +46,20 @@ namespace Engine
 		RenderComponent(Entity* owner);
 		~RenderComponent() override;
 
-		void Initialize(
-			VertexData vertexData,
-			VertexLayoutData vertexLayoutData,
-			IndexData indexLayoutData,
-			const String shaderName,
-			void* constantBufferData,
-			size_t constantBufferDataSize);
+		// void Initialize(
+		// 	VertexData vertexData,
+		// 	VertexLayoutData vertexLayoutData,
+		// 	IndexData indexLayoutData,
+		// 	const String shaderName,
+		// 	void* constantBufferData,
+		// 	size_t constantBufferDataSize);
+		
+		void Initialize();
 
 		void Terminate();
 
-		void Draw(Renderer* rendererRef); // Draw(Renderer* renderer);
+		void Update();
+		void Draw();
 		
 
 	private:
@@ -83,6 +88,6 @@ namespace Engine
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer;
 		
-		void* m_Constant;
+		Constant* m_Constant;
 	};
 }

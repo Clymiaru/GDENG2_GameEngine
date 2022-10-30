@@ -7,7 +7,11 @@ namespace Engine::Debug
 {
 	template <typename... Args>
 	void Log(const std::string_view message,
-	         Args&&... args)
+	         Args&&... args);
+
+	template <typename... Args>
+	void Log(const std::string_view message,
+			 Args&&... args)
 	{
 #ifdef DEBUG
 		std::cout << std::vformat(message, std::make_format_args(args...)) << "\n";
