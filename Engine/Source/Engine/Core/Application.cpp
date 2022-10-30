@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Application.h"
 
+#include "LayerHandler.h"
 #include "Window.h"
 
 #include "Engine/Graphics/Renderer.h"
@@ -15,8 +16,9 @@ namespace Engine
 	Application::Application() :
 		m_IsRunning{false},
 		m_Window{nullptr},
-		m_LayerSystem{5}
+		m_InputHandler{nullptr}
 	{
+		m_LayerHandler = CreateUniquePtr<LayerHandler>(5);
 	}
 
 	Application::~Application() = default;
@@ -30,7 +32,7 @@ namespace Engine
 	{
 		for (size_t i = 0; i < initialLayers.size(); i++)
 		{
-			Instance().m_LayerSystem.Add(initialLayers[i]);
+			Instance().m_LayerHandler->Add(initialLayers[i]);
 		}
 	}
 
@@ -38,11 +40,11 @@ namespace Engine
 	{
 		ImGuiSystem::Instance().Start();
 
-		Instance().m_Window = new Window(Window::Profile{
-									   profile.Name,
-									   profile.Width,
-									   profile.Height
-								   });
+		Instance().m_Window = CreateUniquePtr<Window>(Window::Profile{
+			                                              profile.Name,
+			                                              profile.Width,
+			                                              profile.Height
+		                                              });
 
 		Instance().StartSystems();
 		Instance().m_IsRunning = true;
@@ -52,19 +54,17 @@ namespace Engine
 	{
 		Instance().m_Time = Time();
 
-		m_Renderer = CreateSharedPtr<Renderer>(*m_Window);
+		Renderer::Start(*m_Window);;
 
-		ShaderLibrary::Initialize(4, &*m_Renderer);
+		ShaderLibrary::Initialize(4);
 
 		m_InputHandler = new InputHandler();
 		m_InputHandler->Start();
-
-		Instance().m_LayerSystem.Start();
 	}
 
 	void Application::Run()
 	{
-		// Attach Loaded Layers
+		Instance().m_LayerHandler->StartLayers();
 
 		while (Instance().m_IsRunning)
 		{
@@ -79,7 +79,7 @@ namespace Engine
 			Sleep(1);
 		}
 
-		// Detach Loaded Layers
+		Instance().m_LayerHandler->EndLayers();
 	}
 
 	void Application::End()
@@ -89,14 +89,13 @@ namespace Engine
 
 	void Application::EndSystems()
 	{
-		m_LayerSystem.End();
+		m_LayerHandler.reset();
 
 		ShaderLibrary::Terminate();
 
-		// m_Renderer->End();
-		m_Renderer.reset();
+		Renderer::End();
 
-		delete m_Window;
+		m_Window.reset();
 
 		ImGuiSystem::Instance().End();
 	}
@@ -111,34 +110,29 @@ namespace Engine
 		return Instance().m_Time.DeltaTime();
 	}
 
-	Window& Application::WindowRef()
+	void Application::Update() const
 	{
-		return *Instance().m_Window;
+		m_LayerHandler->Update();
 	}
 
-	void Application::Update()
-	{
-		m_LayerSystem.Update();
-	}
-
-	void Application::PollEvents()
+	void Application::PollEvents() const
 	{
 		// Retrieve all input events that have been triggered this frame;
 		// Pass the active input list to the layers.
 		m_InputHandler->PollInputEvents();
 		m_Window->PollEvents();
 
-		m_LayerSystem.PollInput(m_InputHandler);
+		m_LayerHandler->PollInput(m_InputHandler);
 	}
 
-	void Application::Render()
+	void Application::Render() const
 	{
-		m_Renderer->Clear(Color{0.0f, 0.5f, 1.0f, 1.0f});
+		Renderer::Clear(Color{0.0f, 0.5f, 1.0f, 1.0f});
 
-		m_LayerSystem.Render(&*m_Renderer);
+		m_LayerHandler->Render();
 
-		m_LayerSystem.ImGuiRender();
+		m_LayerHandler->ImGuiRender();
 
-		m_Renderer->ShowFrame();
+		Renderer::ShowFrame();
 	}
 }

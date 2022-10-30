@@ -54,7 +54,7 @@ namespace Sandbox
 	{
 	}
 
-	void SandboxLayer::OnRender(Engine::Renderer* rendererRef)
+	void SandboxLayer::OnRender()
 	{
 		// FOR TEST RENDERING SYSTEM
 
@@ -81,6 +81,7 @@ namespace Sandbox
 			ImGui::DragFloat3("Position", (float*)entity->Transform().Position());
 		}
 
+		ImGui::Text("Delta Time: %f", Engine::Application::DeltaTime());
 		ImGui::Text("Key Event Status");
 		ImGui::Text("Key Pressed: %c", (char)m_ActiveKeyEvent->KeyCode);
 		ImGui::Text("Key State: %s", KeyStateToString(m_ActiveKeyEvent->KeyState).c_str());

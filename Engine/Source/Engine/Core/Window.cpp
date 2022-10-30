@@ -69,7 +69,7 @@ namespace Engine
 		windowClass.lpfnWndProc   = &WindowsProcedure;
 
 		const HRESULT registerResult = RegisterClassEx(&windowClass);
-		ENGINE_ASSERT_TRUE(registerResult, L"Window cannot be registered!")
+		Debug::Assert(registerResult, "Window cannot be registered!");
 
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
 										   profile.Name.c_str(),
@@ -84,7 +84,7 @@ namespace Engine
 										   nullptr,
 										   this);
 
-		ENGINE_ASSERT_TRUE(handle, L"Handle cannot be retrieved!")
+		Debug::Assert(handle, "Handle cannot be retrieved!");
 
 		UpdateClientSize();
 
@@ -98,7 +98,7 @@ namespace Engine
 	Window::~Window()
 	{
 		const auto result = DestroyWindow(m_Handle);
-		ENGINE_ASSERT_TRUE(result, L"Window cannot be destroyed!")
+		Debug::Assert(result, "Window cannot be destroyed!");
 	}
 
 	Rect<uint32_t>& Window::WindowRect()

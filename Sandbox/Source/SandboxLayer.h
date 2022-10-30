@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <Engine/Core/Layer.h>
 #include <Engine/Event/Event.h>
 
 #include "Engine/Engine.h"
@@ -25,7 +26,7 @@ namespace Sandbox
 
 		void OnUpdate() override;
 
-		void OnRender(Engine::Renderer* rendererRef) override;
+		void OnRender() override;
 
 		void OnImGuiRender() override;
 

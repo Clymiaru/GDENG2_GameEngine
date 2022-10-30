@@ -9,12 +9,9 @@ namespace Engine
 	{
 	public:
 		Buffer(uint32_t elementCount,
-		       size_t dataTypeSize,
-		       Renderer* renderer);
+		       size_t dataTypeSize);
 
 		virtual ~Buffer();
-
-		virtual void Release() = 0;
 
 		[[nodiscard]]
 		uint32_t ElementCount() const;

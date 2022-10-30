@@ -87,7 +87,7 @@ namespace Engine
 	void DeviceContext::DrawIndexed(const uint32_t indexCount,
 	                                const uint32_t startingIndex) const
 	{
-		ENGINE_ASSERT_TRUE(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, L"Please set Topology before drawing!")
+		Debug::Assert(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!");
 		m_DeviceContext->DrawIndexed(indexCount,
 		                             startingIndex,
 		                             0);

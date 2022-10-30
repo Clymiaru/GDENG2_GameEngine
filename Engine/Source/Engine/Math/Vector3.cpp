@@ -90,7 +90,7 @@ namespace Engine
 	Vector3Float& Vector3Float::operator/=(const float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1     = XMLoadFloat3(this);
 		const XMVECTOR result = XMVectorScale(v1, 1.0f / s);
 		XMStoreFloat3(this, result);
@@ -170,7 +170,7 @@ namespace Engine
 	                       const float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1         = XMLoadFloat3(&v);
 		const XMVECTOR tempResult = XMVectorScale(v1, 1.0f / s);
 		Vector3Float result;
@@ -370,7 +370,7 @@ namespace Engine
 	Vector3Int& Vector3Int::operator/=(const float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1     = XMLoadSInt3(this);
 		const XMVECTOR result = XMVectorScale(v1, 1.0f / s);
 		XMStoreSInt3(this, result);
@@ -450,7 +450,7 @@ namespace Engine
 	                     float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1         = XMLoadSInt3(&v);
 		const XMVECTOR tempResult = XMVectorScale(v1, 1.0f / s);
 		Vector3Int result;
@@ -651,7 +651,7 @@ namespace Engine
 	Vector3Uint& Vector3Uint::operator/=(const float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1     = XMLoadUInt3(this);
 		const XMVECTOR result = XMVectorScale(v1, 1.0f / s);
 		XMStoreUInt3(this, result);
@@ -726,7 +726,7 @@ namespace Engine
 	                      float s)
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 		const XMVECTOR v1         = XMLoadUInt3(&v);
 		const XMVECTOR tempResult = XMVectorScale(v1, 1.0f / s);
 		Vector3Uint result;

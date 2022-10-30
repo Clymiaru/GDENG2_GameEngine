@@ -2,8 +2,7 @@
 #include "Buffer.h"
 
 Engine::Buffer::Buffer(const uint32_t elementCount,
-                       const size_t dataTypeSize,
-                       Renderer* renderer) :
+                       const size_t dataTypeSize) :
 	m_Data{nullptr},
 	m_DataTypeSize{dataTypeSize},
 	m_BufferSize{elementCount * dataTypeSize},

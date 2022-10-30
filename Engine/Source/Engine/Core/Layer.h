@@ -22,10 +22,11 @@ namespace Engine
 		virtual void OnUpdate() = 0;
 
 		// Executes per frame
-		virtual void OnRender(Renderer* rendererRef) = 0;
-		
-		virtual void OnImGuiRender() = 0;
+		virtual void OnRender() = 0;
 
+		// Executes per frame
+		virtual void OnImGuiRender() = 0;
+		
 		// Executes when this layer is destroyed
 		virtual void OnDetach() = 0;
 

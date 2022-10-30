@@ -11,8 +11,7 @@ namespace Engine
 	class Shader
 	{
 	public:
-		explicit Shader(ID3DBlob* blob,
-		                Renderer* renderer);
+		explicit Shader(ID3DBlob* blob);
 
 		virtual ~Shader();
 
@@ -40,8 +39,7 @@ namespace Engine
 	};
 
 	template <typename T>
-	Shader<T>::Shader(ID3DBlob* blob,
-	                  Renderer* renderer) :
+	Shader<T>::Shader(ID3DBlob* blob) :
 		m_Data{nullptr},
 		m_Blob{blob}
 	{

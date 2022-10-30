@@ -12,17 +12,14 @@ namespace Engine
 	{
 	public:
 		VertexBuffer(const void* vertexList,
-		             size_t vertexDataSize,
+		             size_t vertexSize,
 		             uint32_t vertexListCount,
 		             const void* shaderByteCode,
 		             size_t shaderByteCodeSize,
 		             const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-		             size_t indexLayoutSize,
-		             Renderer* renderer);
+		             size_t indexLayoutSize);
 
 		~VertexBuffer() override;
-
-		void Release() override;
 
 	private:
 		ID3D11InputLayout* m_DataLayout;

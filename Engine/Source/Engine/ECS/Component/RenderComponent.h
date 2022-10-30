@@ -67,22 +67,22 @@ namespace Engine
 		//	VertexBuffer
 		//	IndexBuffer
 		//
-		// VertexData* m_VertexData;
-		//
-		// VertexLayoutData* m_VertexLayoutData;
-		//
-		// IndexData* m_IndexData;
-		//
-		// SharedPtr<VertexShader> m_VertexShader;
-		//
-		// SharedPtr<PixelShader> m_PixelShader;
-		//
-		// UniquePtr<VertexBuffer> m_VertexBuffer;
-		//
-		// UniquePtr<IndexBuffer> m_IndexBuffer;
+		VertexData* m_VertexData;
+		
+		VertexLayoutData* m_VertexLayoutData;
+		
+		IndexData* m_IndexData;
+		
+		SharedPtr<VertexShader> m_VertexShader;
+		
+		SharedPtr<PixelShader> m_PixelShader;
+		
+		UniquePtr<VertexBuffer> m_VertexBuffer;
+		
+		UniquePtr<IndexBuffer> m_IndexBuffer;
 
-		// UniquePtr<ConstantBuffer> m_ConstantBuffer;
-		//
-		// void* m_Constant;
+		UniquePtr<ConstantBuffer> m_ConstantBuffer;
+		
+		void* m_Constant;
 	};
 }

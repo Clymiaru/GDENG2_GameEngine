@@ -75,7 +75,7 @@ namespace Engine
 		                                       &desc,
 		                                       &m_SwapChain);
 
-		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to create swap chain!")
+		Debug::Assert(SUCCEEDED(result), "Failed to create swap chain!");
 	}
 
 	void SwapChain::CreateRenderTargetView(ID3D11Device* device)
@@ -86,13 +86,13 @@ namespace Engine
 		                                        __uuidof(ID3D11Texture2D),
 		                                        reinterpret_cast<void**>(&buffer));
 
-		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to get buffer!")
+		Debug::Assert(SUCCEEDED(result), "Failed to get buffer!");
 
 		result = device->CreateRenderTargetView(buffer,
 		                                        nullptr,
 		                                        &m_RenderTargetView);
 		buffer->Release();
-		ENGINE_ASSERT_TRUE(SUCCEEDED(result), L"Failed to create RenderTargetView!")
+		Debug::Assert(SUCCEEDED(result), "Failed to create RenderTargetView!");
 
 		D3D11_TEXTURE2D_DESC textureDesc = {};
 		textureDesc.Width = 1280;

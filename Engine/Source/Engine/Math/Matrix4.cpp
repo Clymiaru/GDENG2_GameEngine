@@ -151,7 +151,7 @@ namespace Engine
 	Matrix4& Matrix4::operator/=(const float s) noexcept
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.f, "Attempting to divide by 0!");
 		XMVECTOR x1 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_11));
 		XMVECTOR x2 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_21));
 		XMVECTOR x3 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&_31));
@@ -427,7 +427,7 @@ namespace Engine
 	                          float s) noexcept
 	{
 		using namespace DirectX;
-		ENGINE_ASSERT_TRUE(s != 0.0f, L"Attempting to divide by 0!");
+		Debug::Assert(s != 0.0f, "Attempting to divide by 0!");
 
 		XMVECTOR x1 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&m._11));
 		XMVECTOR x2 = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&m._21));

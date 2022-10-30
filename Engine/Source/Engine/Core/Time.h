@@ -17,9 +17,15 @@ namespace Engine
 		[[nodiscard]]
 		double DeltaTime() const;
 
+		Time(const Time&) = default;
+	
+		Time& operator=(const Time&) = default;
+	
+		Time(Time&&) noexcept = default;
+	
+		Time& operator=(Time&&) noexcept = default;
+		
 	private:
-		Time(const Time&) = delete;
-
 		double m_DeltaTime;
 
 		std::chrono::steady_clock::time_point m_StartFrameTime;

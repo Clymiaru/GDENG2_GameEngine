@@ -15,12 +15,9 @@ namespace Engine
  	{
  	public:
  		IndexBuffer(const uint32_t* indexList,
- 		            uint32_t indexListCount,
- 		            Renderer* renderer);
+ 		            uint32_t indexListCount);
 
  		~IndexBuffer() override;
-
- 		void Release() override;
 
  	private:
  		friend class DeviceContext;

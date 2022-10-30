@@ -8,35 +8,32 @@
 #include "Engine/Core/Debug.h"
 #include "Engine/Graphics/DeviceContext.h"
 
-Engine::ConstantBuffer::ConstantBuffer(const void* buffer,
-                                       const size_t bufferSize,
-                                       Renderer* renderer) :
-	Buffer(1, bufferSize, renderer)
+namespace Engine
 {
-	if (m_Data != nullptr)
-		m_Data->Release();
+	ConstantBuffer::ConstantBuffer(const void* buffer,
+	                               const size_t bufferSize) :
+		Buffer(1, bufferSize)
+	{
+		D3D11_BUFFER_DESC bufferDesc = {};
+		bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
+		bufferDesc.ByteWidth         = ByteSize();
+		bufferDesc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
+		bufferDesc.CPUAccessFlags    = 0;
+		bufferDesc.MiscFlags         = 0;
 
-	D3D11_BUFFER_DESC bufferDesc = {};
-	bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth         = (UINT)ByteSize();
-	bufferDesc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
-	bufferDesc.CPUAccessFlags    = 0;
-	bufferDesc.MiscFlags         = 0;
+		D3D11_SUBRESOURCE_DATA initData = {};
+		initData.pSysMem                = buffer;
 
-	D3D11_SUBRESOURCE_DATA initData = {};
-	initData.pSysMem                = buffer;
+		auto result = Renderer::CreateBuffer(&bufferDesc,
+		                                     &initData,
+		                                     &m_Data);
 
-	auto result = renderer->CreateBuffer(&bufferDesc,
-	                                     &initData,
-	                                     &m_Data);
+		Debug::Assert(SUCCEEDED(result), "Constant Buffer cannot be created!");
+	}
 
-	ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Constant Buffer cannot be created!")
-}
-
-Engine::ConstantBuffer::~ConstantBuffer() = default;
-
-void Engine::ConstantBuffer::Release()
-{
-	if (m_Data != nullptr)
-		m_Data->Release();
+	ConstantBuffer::~ConstantBuffer()
+	{
+		if (m_Data != nullptr)
+			m_Data->Release();
+	}
 }

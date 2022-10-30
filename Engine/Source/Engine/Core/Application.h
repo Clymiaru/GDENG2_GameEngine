@@ -2,7 +2,6 @@
 #include "Time.h"
 
 #include "Core.h"
-#include "LayerSystem.h"
 
 namespace Engine
 {
@@ -10,6 +9,7 @@ namespace Engine
 	class Renderer;
 	class Window;
 	class Layer;
+	class LayerHandler;
 	class Application final
 	{
 	public:
@@ -32,8 +32,6 @@ namespace Engine
 
 		static double DeltaTime();
 
-		static Window& WindowRef();
-
 		Application(const Application&) = delete;
 	
 		Application& operator=(const Application& v) = delete;
@@ -54,26 +52,22 @@ namespace Engine
 		void EndSystems();
 
 		//--------- APP LOOP
-		void Update();
+		void Update() const;
 
-		void PollEvents();
+		void PollEvents() const;
 
-		void Render();
+		void Render() const;
 		//----------
-
-		Profile m_Profile;
 
 		bool m_IsRunning;
 
-		Window* m_Window;
-
-		SharedPtr<Renderer> m_Renderer;
+		UniquePtr<Window> m_Window;
 
 		InputHandler* m_InputHandler;
 
 		Time m_Time;
 
-		LayerSystem m_LayerSystem;
+		UniquePtr<LayerHandler> m_LayerHandler;
 
 		static Application m_Instance;
 

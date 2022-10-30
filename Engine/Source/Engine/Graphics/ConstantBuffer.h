@@ -11,12 +11,9 @@ namespace Engine
 	{
 	public:
 		ConstantBuffer(const void* buffer,
-		               size_t bufferSize,
-		               Renderer* renderer);
+		               size_t bufferSize);
 
 		~ConstantBuffer() override;
-
-		void Release() override;
 
 	private:
 		friend class DeviceContext;

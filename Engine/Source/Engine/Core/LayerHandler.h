@@ -3,26 +3,28 @@
 
 namespace Engine
 {
-	class LayerSystem final
+	class LayerHandler final
 	{
 	public:
-		explicit LayerSystem(size_t expectedLayerCount = 5);
+		explicit LayerHandler(size_t expectedLayerCount = 5);
 
-		~LayerSystem();
+		~LayerHandler();
 
-		void Start() const;
+		void StartLayers();
 
-		void End();
+		void EndLayers();
 		
 		void Add(Layer* layer);
-		// void Remove(Layer* layer);
+		void Remove(Layer* layer);
 
 		void PollInput(InputHandler* inputHandlerRef) const;
 		void Update() const;
-		void Render(Renderer* rendererRef) const;
+		void Render() const;
+
 		void ImGuiRender() const;
 	private:
 		List<Layer*> m_Layers{};
+		List<Layer*> m_ActiveLayers{};
 	};
 }
 

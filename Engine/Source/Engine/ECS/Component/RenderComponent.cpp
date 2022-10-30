@@ -28,16 +28,16 @@ struct Constant
 namespace Engine
 {
 	RenderComponent::RenderComponent(Entity* owner) :
-		AComponent{owner}
-		// m_VertexData{nullptr},
-		// m_VertexLayoutData{nullptr},
-		// m_IndexData{nullptr},
-		// m_VertexShader{nullptr},
-		// m_PixelShader{nullptr},
-		// m_VertexBuffer{nullptr},
-		// m_IndexBuffer{nullptr}
-		//m_ConstantBuffer{nullptr},
-		//m_Constant{nullptr}
+		AComponent{owner},
+		m_VertexData{nullptr},
+		m_VertexLayoutData{nullptr},
+		m_IndexData{nullptr},
+		m_VertexShader{nullptr},
+		m_PixelShader{nullptr},
+		m_VertexBuffer{nullptr},
+		m_IndexBuffer{nullptr},
+		m_ConstantBuffer{nullptr},
+		m_Constant{nullptr}
 	{
 	}
 
@@ -52,22 +52,23 @@ namespace Engine
 	                                 void* constantBufferData,
 	                                 size_t constantBufferDataSize)
 	{
-		// m_VertexData       = std::move(&vertexData);
-		// m_VertexLayoutData = std::move(&vertexLayoutData);
-		// m_IndexData        = std::move(&indexLayoutData);
-		// m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
-		// m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
-		//
-		// m_Constant = new Constant{};
-		//
-		// m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
-		//                                                sizeof(Vertex),
-		//                                                m_VertexData->VertexListCount,
-		//                                                m_VertexShader->GetByteCodeData(),
-		//                                                static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),
-		//                                                m_VertexLayoutData->VertexLayout,
-		//                                                m_VertexLayoutData->VertexLayoutCount);
-		//
+		m_VertexData       = std::move(&vertexData);
+		m_VertexLayoutData = std::move(&vertexLayoutData);
+		m_IndexData        = std::move(&indexLayoutData);
+		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
+		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
+		
+		m_Constant = new Constant{};
+
+		// Do we have to create vertex, index buffers, and constant buffers here?
+		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
+		                                               sizeof(Vertex),
+		                                               m_VertexData->VertexListCount,
+		                                               m_VertexShader->GetByteCodeData(),
+		                                               static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),
+		                                               m_VertexLayoutData->VertexLayout,
+		                                               m_VertexLayoutData->VertexLayoutCount);
+		
 		// m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
 		//                                              m_IndexData->IndexListCount);
 		//

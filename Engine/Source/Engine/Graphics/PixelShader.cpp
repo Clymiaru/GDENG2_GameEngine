@@ -9,15 +9,14 @@
 
 namespace Engine
 {
-	PixelShader::PixelShader(ID3DBlob* blob,
-	                         Renderer* renderer) :
-		Shader(blob, renderer)
+	PixelShader::PixelShader(ID3DBlob* blob) :
+		Shader(blob)
 	{
-		const auto result = renderer->CreatePixelShader(blob->GetBufferPointer(),
+		const auto result = Renderer::CreatePixelShader(blob->GetBufferPointer(),
 		                                                blob->GetBufferSize(),
 		                                                &m_Data);
 
-		ENGINE_ASSERT_TRUE(SUCCEEDED(result), "Shader cannot be created and initialized!")
+		Debug::Assert(SUCCEEDED(result), "Shader cannot be created and initialized!");
 	}
 
 	PixelShader::~PixelShader()
