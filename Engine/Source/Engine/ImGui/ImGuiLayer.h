@@ -11,7 +11,7 @@ namespace Engine
 	
 		void OnAttach() override;
 	
-		void OnPollInput(InputHandler* inputHandlerRef) override;
+		void OnPollInput() override;
 	
 		void OnUpdate() override;
 	

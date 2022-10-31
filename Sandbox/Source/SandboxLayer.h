@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <Engine/Core/Layer.h>
-#include <Engine/Event/Event.h>
 
 #include "Engine/Engine.h"
 
@@ -22,7 +21,7 @@ namespace Sandbox
 
 		void OnAttach() override;
 
-		void OnPollInput(Engine::InputHandler* inputHandlerRef) override;
+		void OnPollInput() override;
 
 		void OnUpdate() override;
 
@@ -34,9 +33,6 @@ namespace Sandbox
 
 	private:
 		Engine::List<Engine::Entity*> m_EntityList;
-
-		Engine::MouseEvent* m_ActiveMouseEvent;
-		Engine::KeyEvent* m_ActiveKeyEvent;
 
 		bool m_IsDemoWindowOpen = true;
 	};

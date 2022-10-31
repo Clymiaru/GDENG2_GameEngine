@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-	class InputHandler;
+	class Input;
 	class Renderer;
 	class Layer
 	{
@@ -16,7 +16,7 @@ namespace Engine
 		// Executes when this layer is created
 		virtual void OnAttach() = 0;
 
-		virtual void OnPollInput(InputHandler* inputHandlerRef) = 0;
+		virtual void OnPollInput() = 0;
 
 		// Executes per frame
 		virtual void OnUpdate() = 0;

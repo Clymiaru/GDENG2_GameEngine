@@ -68,11 +68,11 @@ namespace Engine
 		m_Layers.erase(resultFromLayers);
 	}
 
-	void LayerHandler::PollInput(InputHandler* inputHandlerRef) const
+	void LayerHandler::PollInput() const
 	{
 		for (auto* layer : m_Layers)
 		{
-			layer->OnPollInput(inputHandlerRef);
+			layer->OnPollInput();
 		}
 	}
 

@@ -4,7 +4,6 @@
 #include "TransformComponent.h"
 
 #include "Engine/ECS/Entity/Entity.h"
-#include "Engine/Graphics/Camera.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 #include "Engine/Math/Color.h"
@@ -163,7 +162,7 @@ namespace Engine
 		m_Constant->Time = 0;
 		m_Constant->Model = m_EntityRef->Transform().LocalMatrix();
 		m_Constant->Projection = Matrix4();
-		m_Constant->View = Camera::Instance().ViewProjMatrix();
+		m_Constant->View = Matrix4();
 	}
 
 	void RenderComponent::Draw()

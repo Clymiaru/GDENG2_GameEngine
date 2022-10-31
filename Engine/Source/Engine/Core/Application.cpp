@@ -7,7 +7,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 #include "Engine/ImGui/ImGuiSystem.h"
-#include "Engine/Input/InputHandler.h"
+#include "Engine/Input/Input.h"
 
 namespace Engine
 {
@@ -15,8 +15,7 @@ namespace Engine
 
 	Application::Application() :
 		m_IsRunning{false},
-		m_Window{nullptr},
-		m_InputHandler{nullptr}
+		m_Window{nullptr}
 	{
 		m_LayerHandler = CreateUniquePtr<LayerHandler>(5);
 	}
@@ -58,8 +57,7 @@ namespace Engine
 
 		ShaderLibrary::Initialize(4);
 
-		m_InputHandler = new InputHandler();
-		m_InputHandler->Start();
+		Input::Start();
 	}
 
 	void Application::Run()
@@ -95,6 +93,8 @@ namespace Engine
 
 		Renderer::End();
 
+		Input::End();
+
 		m_Window.reset();
 
 		ImGuiSystem::Instance().End();
@@ -117,12 +117,10 @@ namespace Engine
 
 	void Application::PollEvents() const
 	{
-		// Retrieve all input events that have been triggered this frame;
-		// Pass the active input list to the layers.
-		m_InputHandler->PollInputEvents();
+		Input::PollInputEvents();
 		m_Window->PollEvents();
 
-		m_LayerHandler->PollInput(m_InputHandler);
+		m_LayerHandler->PollInput();
 	}
 
 	void Application::Render() const

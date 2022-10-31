@@ -17,7 +17,7 @@ namespace Engine
 		void Add(Layer* layer);
 		void Remove(Layer* layer);
 
-		void PollInput(InputHandler* inputHandlerRef) const;
+		void PollInput() const;
 		void Update() const;
 		void Render() const;
 

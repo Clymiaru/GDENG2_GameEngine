@@ -5,7 +5,7 @@
 
 namespace Engine
 {
-	class InputHandler;
+	class Input;
 	class Renderer;
 	class Window;
 	class Layer;
@@ -62,8 +62,6 @@ namespace Engine
 		bool m_IsRunning;
 
 		UniquePtr<Window> m_Window;
-
-		InputHandler* m_InputHandler;
 
 		Time m_Time;
 
