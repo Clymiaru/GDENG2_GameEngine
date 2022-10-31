@@ -1,11 +1,9 @@
 ﻿#pragma once
 
 #include "Engine/Core/Core.h"
-
 namespace Engine
 {
 	class TransformComponent;
-	class RenderComponent;
 	class Entity
 	{
 	public:
@@ -14,11 +12,18 @@ namespace Engine
 
 		const String& Name();
 		TransformComponent& Transform() const;
-		RenderComponent& Render() const;
-	private:
+
+		// TODO: What to do for copying
+		Entity(const Entity&) = delete;
+	
+		Entity& operator=(const Entity& v) = delete;
+	
+		Entity(Entity&&) noexcept = delete;
+	
+		Entity& operator=(Entity&&) noexcept = delete;
+	protected:
 		String m_Name;
 		TransformComponent* m_Transform;
-		RenderComponent* m_RenderComponent;
 	};
 
 }

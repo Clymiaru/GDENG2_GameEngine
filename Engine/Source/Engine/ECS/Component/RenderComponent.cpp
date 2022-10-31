@@ -9,6 +9,8 @@
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Vector3.h"
 
+#include "Engine/ECS/Entity/Camera.h"
+
 struct Vertex
 {
 	Engine::Vector3Float Position;
@@ -53,42 +55,42 @@ namespace Engine
 		Vertex* vertices = new Vertex[8]
 		{
 			{
-				Vector3Float{-0.5f,-0.5f,-0.5f},
+				Vector3Float{-0.5f, -0.5f, -0.5f},
 				Color{0.8f, 0, 0}
 			},
 
 			{
-				Vector3Float{-0.5f,0.5f,-0.5f},
+				Vector3Float{-0.5f, 0.5f, -0.5f},
 				Color{0.8f, 0.8f, 0}
 			},
 
 			{
-				Vector3Float{0.5f,0.5f,-0.5f},
+				Vector3Float{0.5f, 0.5f, -0.5f},
 				Color{0.8f, 0.8f, 0}
 			},
 
 			{
-				Vector3Float{0.5f,-0.5f,-0.5f},
+				Vector3Float{0.5f, -0.5f, -0.5f},
 				Color{0.8f, 0, 0},
 			},
 
 			{
-				Vector3Float{0.5f,-0.5f,0.5f},
+				Vector3Float{0.5f, -0.5f, 0.5f},
 				Color{0, 0.8f, 0}
 			},
 
 			{
-				Vector3Float{0.5f,0.5f,0.5f},
+				Vector3Float{0.5f, 0.5f, 0.5f},
 				Color{0, 0.8f, 0.8f}
 			},
 
 			{
-				Vector3Float{-0.5f,0.5f,0.5f},
+				Vector3Float{-0.5f, 0.5f, 0.5f},
 				Color{0, 0.8f, 0.8f}
 			},
 
 			{
-				Vector3Float{-0.5f,-0.5f,0.5f},
+				Vector3Float{-0.5f, -0.5f, 0.5f},
 				Color{0, 0.8f, 0},
 			}
 		};
@@ -105,23 +107,49 @@ namespace Engine
 		uint32_t* indices = new uint32_t[36]
 		{
 			//FRONT SIDE
-			0,1,2,  //FIRST TRIANGLE
-			2,3,0,  //SECOND TRIANGLE
+			0,
+			1,
+			2,
+			//FIRST TRIANGLE
+			2,
+			3,
+			0,
+			//SECOND TRIANGLE
 			//BACK SIDE
-			4,5,6,
-			6,7,4,
+			4,
+			5,
+			6,
+			6,
+			7,
+			4,
 			//TOP SIDE
-			1,6,5,
-			5,2,1,
+			1,
+			6,
+			5,
+			5,
+			2,
+			1,
 			//BOTTOM SIDE
-			7,0,3,
-			3,4,7,
+			7,
+			0,
+			3,
+			3,
+			4,
+			7,
 			//RIGHT SIDE
-			3,2,5,
-			5,4,3,
+			3,
+			2,
+			5,
+			5,
+			4,
+			3,
 			//LEFT SIDE
-			7,6,1,
-			1,0,7
+			7,
+			6,
+			1,
+			1,
+			0,
+			7
 		};
 		//size_t indexSize = ARRAYSIZE(indices);
 
@@ -130,7 +158,7 @@ namespace Engine
 		m_IndexData        = new IndexData{indices, 36};
 		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(L"DefaultShader");
 		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(L"DefaultShader");
-		
+
 		m_Constant = new Constant{};
 
 		// Do we have to create vertex, index buffers, and constant buffers here?
@@ -141,14 +169,12 @@ namespace Engine
 		                                               static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),
 		                                               m_VertexLayoutData->VertexLayout,
 		                                               m_VertexLayoutData->VertexLayoutCount);
-		
+
 		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
 		                                             m_IndexData->IndexListCount);
-		
+
 		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(m_Constant, sizeof(Constant));
 	}
-
-	
 
 	void RenderComponent::Terminate()
 	{
@@ -159,21 +185,36 @@ namespace Engine
 
 	void RenderComponent::Update()
 	{
-		m_Constant->Time = 0;
-		m_Constant->Model = m_EntityRef->Transform().LocalMatrix();
+		m_Constant->Time       = 0;
+		m_Constant->Model      = m_EntityRef->Transform().LocalMatrix();
 		m_Constant->Projection = Matrix4();
-		m_Constant->View = Matrix4();
+		m_Constant->View       = Matrix4();
 	}
 
-	void RenderComponent::Draw()
+	void RenderComponent::Draw(Camera& camera)
 	{
-		Update();
-		
+		m_Constant->Time       = 0;
+		m_Constant->Model      = m_EntityRef->Transform().LocalMatrix();
+		m_Constant->Projection = camera.ViewProjMatrix();
+		m_Constant->View       = Matrix4();
+
 		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
 
 		Renderer::Draw(*m_VertexShader, *m_PixelShader,
-		                  *m_VertexBuffer, *m_IndexBuffer,
-		                  *m_ConstantBuffer, m_Constant,
-		                  D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		               *m_VertexBuffer, *m_IndexBuffer,
+		               *m_ConstantBuffer, m_Constant,
+		               D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
+
+	// void RenderComponent::Draw()
+	// {
+	// 	Update();
+	// 	
+	// 	Renderer::UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
+	//
+	// 	Renderer::Draw(*m_VertexShader, *m_PixelShader,
+	// 	                  *m_VertexBuffer, *m_IndexBuffer,
+	// 	                  *m_ConstantBuffer, m_Constant,
+	// 	                  D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	// }
 }

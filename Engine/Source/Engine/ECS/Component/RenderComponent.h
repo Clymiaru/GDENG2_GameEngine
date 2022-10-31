@@ -5,6 +5,7 @@
 #include "AComponent.h"
 
 #include "Engine/Core/Core.h"
+#include "Engine/ECS/Entity/Camera.h"
 
 #include "Engine/Graphics/ConstantBuffer.h"
 #include "Engine/Graphics/IndexBuffer.h"
@@ -59,7 +60,7 @@ namespace Engine
 		void Terminate();
 
 		void Update();
-		void Draw();
+		void Draw(Camera& camera);
 		
 
 	private:

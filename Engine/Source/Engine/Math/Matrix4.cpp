@@ -308,7 +308,7 @@ namespace Engine
 	{
 		using namespace DirectX;
 		Matrix4 result;
-		XMStoreFloat4x4(&result, XMMatrixPerspectiveFovRH(fov, aspectRatio, nearPlane, farPlane));
+		XMStoreFloat4x4(&result, XMMatrixPerspectiveFovLH(fov, aspectRatio, nearPlane, farPlane));
 		return result;
 	}
 
@@ -319,7 +319,7 @@ namespace Engine
 	{
 		using namespace DirectX;
 		Matrix4 result;
-		XMStoreFloat4x4(&result, XMMatrixPerspectiveRH(width, height, nearPlane, farPlane));
+		XMStoreFloat4x4(&result, XMMatrixPerspectiveLH(width, height, nearPlane, farPlane));
 		return result;
 	}
 
@@ -330,7 +330,20 @@ namespace Engine
 	{
 		using namespace DirectX;
 		Matrix4 result;
-		XMStoreFloat4x4(&result, XMMatrixOrthographicRH(width, height, zNearPlane, zFarPlane));
+		XMStoreFloat4x4(&result, XMMatrixOrthographicLH(width, height, zNearPlane, zFarPlane));
+		return result;
+	}
+
+	Matrix4 Matrix4::CreateLookAt(Vector3Float eye, Vector3Float focus, Vector3Float up)
+	{
+		using namespace DirectX;
+
+		const XMVECTOR x1 = XMLoadFloat3(&eye);
+		const XMVECTOR x2 = XMLoadFloat3(&focus);
+		const XMVECTOR x3 = XMLoadFloat3(&up);
+		
+		Matrix4 result;
+		XMStoreFloat4x4(&result, XMMatrixLookAtLH(x1, x2, x3));
 		return result;
 	}
 

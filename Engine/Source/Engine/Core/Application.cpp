@@ -110,6 +110,11 @@ namespace Engine
 		return Instance().m_Time.DeltaTime();
 	}
 
+	Rect<uint32_t> Application::WindowRect()
+	{
+		return Instance().m_Window->WindowRect();
+	}
+
 	void Application::Update() const
 	{
 		m_LayerHandler->Update();

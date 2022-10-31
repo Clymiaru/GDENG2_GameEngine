@@ -1,28 +1,30 @@
 ﻿#pragma once
+#include "Entity.h"
 
-#include "Engine/ECS/Entity/AEntity.h"
+#include "Engine/Math/Vector3.h"
+
+namespace Engine
+{
+	class Camera;
+	class RenderComponent;
+}
 
 namespace Engine
 {
 	struct Constant;
 
-	class Cube : public AEntity
+	class Cube : public Entity
 	{
 	public:
-		Cube(const Vector3Float& position,
-		     const Vector3Float& size,
-		     const std::wstring& shaderName);
+		explicit Cube(const String& name,
+		              const Vector3Float& position);
 
 		~Cube() override;
 
-		void Update(float deltaTime) override;
-
-		void Draw() override;
+		void Update();
+		void Draw(Camera& camera);
 
 	private:
-		Constant* m_Constant;
-
-		
-		Primitive* m_Primitive;
+		RenderComponent* m_Render;
 	};
 }

@@ -3,6 +3,8 @@
 
 #include "Core.h"
 
+#include "Engine/Math/Rect.h"
+
 namespace Engine
 {
 	class Input;
@@ -31,6 +33,8 @@ namespace Engine
 		static void Quit();
 
 		static double DeltaTime();
+
+		static Rect<uint32_t> WindowRect();
 
 		Application(const Application&) = delete;
 	
