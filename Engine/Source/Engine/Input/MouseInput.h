@@ -26,7 +26,7 @@ namespace Engine
 		}
 	}
 
-	enum class MouseState
+	enum class	MouseState
 	{
 		None,
 		ButtonPressed,

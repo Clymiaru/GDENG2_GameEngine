@@ -11,13 +11,6 @@
 
 #include "Engine/ECS/Entity/Camera.h"
 
-struct Vertex
-{
-	Engine::Vector3Float Position;
-
-	Engine::Color Color;
-};
-
 __declspec(align(16))
 struct Constant
 {
@@ -50,120 +43,23 @@ namespace Engine
 	{
 	}
 
-	void RenderComponent::Initialize()
+	void RenderComponent::Initialize(VertexData* vertexData,
+									VertexLayoutData* vertexLayoutData,
+									IndexData* indexData,
+									size_t vertexDataSize,
+									String shaderName)
 	{
-		Vertex* vertices = new Vertex[8]
-		{
-			{
-				Vector3Float{-0.5f, -0.5f, -0.5f},
-				Color{0.8f, 0, 0}
-			},
-
-			{
-				Vector3Float{-0.5f, 0.5f, -0.5f},
-				Color{0.8f, 0.8f, 0}
-			},
-
-			{
-				Vector3Float{0.5f, 0.5f, -0.5f},
-				Color{0.8f, 0.8f, 0}
-			},
-
-			{
-				Vector3Float{0.5f, -0.5f, -0.5f},
-				Color{0.8f, 0, 0},
-			},
-
-			{
-				Vector3Float{0.5f, -0.5f, 0.5f},
-				Color{0, 0.8f, 0}
-			},
-
-			{
-				Vector3Float{0.5f, 0.5f, 0.5f},
-				Color{0, 0.8f, 0.8f}
-			},
-
-			{
-				Vector3Float{-0.5f, 0.5f, 0.5f},
-				Color{0, 0.8f, 0.8f}
-			},
-
-			{
-				Vector3Float{-0.5f, -0.5f, 0.5f},
-				Color{0, 0.8f, 0},
-			}
-		};
-
-		size_t vertexSize = sizeof(*vertices);
-
-		D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[2]
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(float) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
-		size_t layoutSize = 2U; //INFO: Is there a way to automate this (to automate layoutSize calculation).
-
-		uint32_t* indices = new uint32_t[36]
-		{
-			//FRONT SIDE
-			0,
-			1,
-			2,
-			//FIRST TRIANGLE
-			2,
-			3,
-			0,
-			//SECOND TRIANGLE
-			//BACK SIDE
-			4,
-			5,
-			6,
-			6,
-			7,
-			4,
-			//TOP SIDE
-			1,
-			6,
-			5,
-			5,
-			2,
-			1,
-			//BOTTOM SIDE
-			7,
-			0,
-			3,
-			3,
-			4,
-			7,
-			//RIGHT SIDE
-			3,
-			2,
-			5,
-			5,
-			4,
-			3,
-			//LEFT SIDE
-			7,
-			6,
-			1,
-			1,
-			0,
-			7
-		};
-		//size_t indexSize = ARRAYSIZE(indices);
-
-		m_VertexData       = new VertexData{vertices, vertexSize};
-		m_VertexLayoutData = new VertexLayoutData{layout, layoutSize};
-		m_IndexData        = new IndexData{indices, 36};
-		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(L"DefaultShader");
-		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(L"DefaultShader");
+		m_VertexData       = vertexData;
+		m_VertexLayoutData = vertexLayoutData;
+		m_IndexData        = indexData;
+		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
+		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
 
 		m_Constant = new Constant{};
 
 		// Do we have to create vertex, index buffers, and constant buffers here?
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
-		                                               sizeof(Vertex),
+		                                               vertexDataSize,
 		                                               m_VertexData->VertexListCount,
 		                                               m_VertexShader->GetByteCodeData(),
 		                                               static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),

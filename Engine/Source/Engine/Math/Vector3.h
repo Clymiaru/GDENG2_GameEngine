@@ -4,9 +4,13 @@
 namespace Engine
 {
 	// TODO: Make operator overload for printing to log
+
+	
 	//----------
 	// Vector3Float
 	//----------
+
+	
 	struct Vector3Float final : DirectX::XMFLOAT3
 	{
 		Vector3Float();

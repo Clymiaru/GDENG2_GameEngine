@@ -37,8 +37,22 @@ namespace Engine
 
 	void SwapChain::Present(const uint32_t vsync) const
 	{
-		m_SwapChain->Present(vsync, NULL);
+		m_SwapChain->Present(vsync, DXGI_SWAP_EFFECT_FLIP_DISCARD);
 	}
+
+	// void SwapChain::GetFrameBuffer(ID3D11Device* device,)
+	// {
+	// 	ID3D11Texture2D* buffer = nullptr;
+	//
+	// 	HRESULT result = m_SwapChain->GetBuffer(0,
+	// 											__uuidof(ID3D11Texture2D),
+	// 											reinterpret_cast<void**>(&buffer));
+	//
+	// 	Debug::Assert(SUCCEEDED(result), "Failed to get buffer!");
+	//
+	// 	
+	// 	buffer->Release();
+	// }
 
 	ID3D11RenderTargetView& SwapChain::GetRenderTargetView() const
 	{

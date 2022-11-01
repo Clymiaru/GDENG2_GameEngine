@@ -45,6 +45,7 @@ namespace Engine
 		};
 
 		RenderComponent(Entity* owner);
+
 		~RenderComponent() override;
 
 		// void Initialize(
@@ -54,14 +55,18 @@ namespace Engine
 		// 	const String shaderName,
 		// 	void* constantBufferData,
 		// 	size_t constantBufferDataSize);
-		
-		void Initialize();
+
+		void Initialize(VertexData* vertexData,
+		                VertexLayoutData* vertexLayoutData,
+		                IndexData* indexData,
+		                size_t vertexDataSize,
+		                String shaderName);
 
 		void Terminate();
 
 		void Update();
+
 		void Draw(Camera& camera);
-		
 
 	private:
 		// Material
@@ -74,21 +79,21 @@ namespace Engine
 		//	IndexBuffer
 		//
 		VertexData* m_VertexData;
-		
+
 		VertexLayoutData* m_VertexLayoutData;
-		
+
 		IndexData* m_IndexData;
-		
+
 		SharedPtr<VertexShader> m_VertexShader;
-		
+
 		SharedPtr<PixelShader> m_PixelShader;
-		
+
 		UniquePtr<VertexBuffer> m_VertexBuffer;
-		
+
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer;
-		
+
 		Constant* m_Constant;
 	};
 }

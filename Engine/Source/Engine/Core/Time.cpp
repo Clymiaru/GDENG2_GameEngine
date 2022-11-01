@@ -31,5 +31,5 @@ auto Engine::Time::End() -> void
 
 	const auto duration = duration_cast<milliseconds>(elapsed).count();
 	
-	m_DeltaTime = static_cast<double>(duration);
+	m_DeltaTime = static_cast<double>(duration) / 1000.0;
 }

@@ -1,28 +1,29 @@
 ﻿#pragma once
-#include "Primitive.h"
+#include "Entity.h"
 
-#include "Engine/Core/AEntity.h"
+#include "Engine/Math/Vector3.h"
 
 namespace Engine
 {
+	class Camera;
+
+	class RenderComponent;
+
 	struct Constant;
 
-	class Plane : public AEntity
+	class Plane : public Entity
 	{
 	public:
-		Plane(const Vector3& position,
-		     const Vector3& size,
-		     const std::wstring& shaderName);
+		Plane(const String& name,
+		      const Vector3Float& position);
 
 		~Plane() override;
 
-		void Update(float deltaTime) override;
+		void Update();
 
-		void Draw() override;
+		void Draw(Camera& camera);
 
 	private:
-		Constant* m_Constant;
-
-		Primitive* m_Primitive;
+		RenderComponent* m_Render;
 	};
 }

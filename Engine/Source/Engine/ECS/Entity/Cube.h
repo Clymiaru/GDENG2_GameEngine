@@ -7,10 +7,6 @@ namespace Engine
 {
 	class Camera;
 	class RenderComponent;
-}
-
-namespace Engine
-{
 	struct Constant;
 
 	class Cube : public Entity

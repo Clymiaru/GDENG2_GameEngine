@@ -15,12 +15,12 @@ namespace Engine
 
 		~Camera() override;
 
-		float FoV = 45.0f;
 
 		Matrix4 ViewProjMatrix();
 
 		void Update();
 
+		float FoV = 45.0f;
 	private:
 		void UpdateViewMatrix();
 

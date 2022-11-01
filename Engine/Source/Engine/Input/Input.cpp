@@ -35,7 +35,8 @@ namespace Engine
 	KeyCode TranslateVirtualKeyCodeToKeyCode(unsigned char vkCode)
 	{
 		if (vkCode >= 'A' && vkCode <= 'Z' ||
-		    vkCode >= '0' && vkCode <= '9')
+		    vkCode >= '0' && vkCode <= '9' ||
+		    vkCode == ' ')
 		{
 			return (KeyCode)vkCode;
 		}
@@ -51,7 +52,6 @@ namespace Engine
 	{
 		POINT currentMousePosition = {};
 		GetCursorPos(&currentMousePosition);
-
 		s_CurrentMousePosition = Vector2Int(currentMousePosition.x,
 											currentMousePosition.y);
 
@@ -61,8 +61,6 @@ namespace Engine
 			s_CurrentMousePosition.y != s_PrevMousePosition.y)
 		{
 			s_MouseInput.DeltaMousePosition = s_CurrentMousePosition - s_PrevMousePosition;
-			s_MouseInput.State              = MouseState::Moved;
-			s_MouseInput.Button             = MouseButton::None;
 		}
 		else
 		{

@@ -17,6 +17,8 @@ namespace Engine
 
 		void Present(uint32_t vsync) const;
 
+		//void GetFrameBuffer(ID3D11Device* device,);
+
 		[[nodiscard]]
 		ID3D11RenderTargetView& GetRenderTargetView() const;
 

@@ -3,6 +3,7 @@
 #include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Entity/Cube.h>
+#include <Engine/ECS/Entity/Plane.h>
 #include <Engine/Input/Input.h>
 #include <Engine/SceneManagement/EditorSceneCamera.h>
 
@@ -18,6 +19,7 @@ namespace Sandbox
 	SandboxLayer::SandboxLayer() :
 		Layer{L"SandboxLayer"},
 		m_EntityList{Engine::List<Engine::Cube*>()},
+		m_Plane{nullptr},
 		m_CameraHandler{3}
 	{
 	}
@@ -33,9 +35,13 @@ namespace Sandbox
 		ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
 		                                     "psmain");
 
+		// TODO: Make cube and plane from entity and not from its own class
 		Cube* cubeEntity              = new Cube(L"Testing Entity", Vector3Float());
 		cubeEntity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
 		m_EntityList.emplace_back(cubeEntity);
+
+		m_Plane = new Plane(L"PlaneEntity", Vector3Float());
+		m_Plane->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
 
 		// Initialize Scene Cameras
 		m_CameraHandler.Initialize(3,
@@ -51,18 +57,6 @@ namespace Sandbox
 			                           Vector3Float(60.0f, 90.0f, 0),
 			                           Vector3Float(60.0f, -90.0f, 0)
 		                           });
-
-		// // Object initialization
-		// m_Plane = CreateUniquePtr<Plane>(Vector3Float(0,0,0), Vector3Float(500, 500.0f, 500), L"DefaultShader");
-		//
-		// m_TestCube = CreateUniquePtr<Cube>(Vector3Float(0,
-		//                                            0,
-		//                                            0),
-		//                                    Vector3Float(50,
-		//                                            50,
-		//                                            50),
-		//                                    L"DefaultShader");
-		//
 	}
 
 	void SandboxLayer::OnUpdate()
@@ -82,68 +76,64 @@ namespace Sandbox
 
 	void SandboxLayer::OnRender()
 	{
-		// FOR TEST RENDERING SYSTEM
-
 		for (auto* entity : m_EntityList)
 		{
 			entity->Draw(m_CameraHandler.GetSceneCamera(m_CurrentSceneCamera));
 		}
-
-		// Scene Showcase
-		// Input System and Camera (Scene can be traversed using keyboard and mouse)
-		// Primitives (Cube, Capsules, Cylinder, Spheres, Planes)
-		// Object Transforms
-		// Basic SHaders
-		// Depth Buffer and Perspective View
+		m_Plane->Draw(m_CameraHandler.GetSceneCamera(m_CurrentSceneCamera));
 	}
 
 	void SandboxLayer::OnImGuiRender()
 	{
-		ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
+		//ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
+		int entityNo = 0;
+		auto displayEntityInfo = [](Engine::Entity* toDisplay, int number) -> void
+		{
+			std::basic_string toString = toDisplay->Name();
+			ImGui::Text("%ws", toString.c_str());
 
-		ImGui::Begin("Viewport");
+			std::string positionLabel = "Position##";
+			positionLabel+= "Entity" + std::to_string(number);
+			ImGui::DragFloat3(positionLabel.c_str(), (float*)toDisplay->Transform().Position);
 
-		ImGui::Text("Testing debug");
+			std::string scaleLabel = "Scale##";
+			scaleLabel+= "Entity" + std::to_string(number);
+			ImGui::DragFloat3(scaleLabel.c_str(), (float*)toDisplay->Transform().Scale);
+
+			std::string rotationLabel = "Rotation##";
+			rotationLabel+= "Entity" + std::to_string(number);
+			ImGui::DragFloat3(rotationLabel.c_str(), (float*)toDisplay->Transform().Rotation);
+
+			ImGui::Spacing();
+		};
+		
+		ImGui::Begin("Inspector");
 
 		for (auto* entity : m_EntityList)
 		{
-			std::basic_string toString = entity->Name();
-			ImGui::Text("%ws", toString.c_str());
-
-			auto entityPosition = (float*)entity->Transform().Position;
-
-			ImGui::DragFloat3("Position", entityPosition);
-
-			//entity->Transform().Position(Engine::Vector3Float(entityPosition[0], entityPosition[1], entityPosition[2]));
-
-			auto entityScale = (float*)entity->Transform().Scale;
-			ImGui::DragFloat3("Scale", entityScale);
-
-			//entity->Transform().Scale(Engine::Vector3Float(entityScale[0], entityScale[1], entityScale[2]));
-
-			auto entityRotation = (float*)entity->Transform().Rotation;
-			ImGui::DragFloat3("Rotation", entityRotation);
-
-			//entity->Transform().Rotation(Engine::Vector3Float(entityRotation[0], entityRotation[1], entityRotation[2]));
+			displayEntityInfo(entity, entityNo);
+			entityNo++;
 		}
 
-		ImGui::Text("FPS: %f", m_Fps);
-		ImGui::Text("Key Event Status");
-		Engine::KeyboardInput keyInput = Engine::Input::Keyboard();
-		ImGui::Text("Key Pressed: %c", (char)keyInput.KeyCode);
-		ImGui::Text("Key State: %s", KeyStateToString(keyInput.KeyState).c_str());
+		displayEntityInfo(m_Plane, entityNo);
 
-		ImGui::Spacing();
+		// ImGui::Text("FPS: %f", m_Fps);
+		// ImGui::Text("Key Event Status");
+		// Engine::KeyboardInput keyInput = Engine::Input::Keyboard();
+		// ImGui::Text("Key Pressed: %c", (char)keyInput.KeyCode);
+		// ImGui::Text("Key State: %s", KeyStateToString(keyInput.KeyState).c_str());
+		//
+		// ImGui::Spacing();
+		//
+		// Engine::MouseInput mouseInput = Engine::Input::Mouse();
+		// ImGui::Text("Mouse Event Status");
+		// ImGui::Text("Mouse Position: %i, %i", mouseInput.MousePosition.x, mouseInput.MousePosition.y);
+		// ImGui::Text("Mouse Button: %s", MouseButtonToString(mouseInput.Button).c_str());
+		// ImGui::Text("Mouse State: %s", MouseStateToString(mouseInput.State).c_str());
+		// ImGui::Text("Delta Mouse Position: %i, %i", mouseInput.DeltaMousePosition.x,
+		//             mouseInput.DeltaMousePosition.y);
 
-		Engine::MouseInput mouseInput = Engine::Input::Mouse();
-		ImGui::Text("Mouse Event Status");
-		ImGui::Text("Mouse Position: %i, %i", mouseInput.MousePosition.x, mouseInput.MousePosition.y);
-		ImGui::Text("Mouse Button: %s", MouseButtonToString(mouseInput.Button).c_str());
-		ImGui::Text("Mouse State: %s", MouseStateToString(mouseInput.State).c_str());
-		ImGui::Text("Delta Mouse Position: %i, %i", mouseInput.DeltaMousePosition.x,
-		            mouseInput.DeltaMousePosition.y);
-
-		ImGui::Spacing();
+		ImGui::Separator();
 
 		ImGui::Text("Scene Cameras");
 
@@ -164,18 +154,18 @@ namespace Sandbox
 		{
 			m_CurrentSceneCamera = 2;
 		}
-
+		ImGui::Separator();
 		for (auto i = 0; i < 3; i++)
 		{
 			std::string cameraId = "Camera" + std::to_string(i);
 
 			ImGui::Text((cameraId).c_str());
 			
-			auto sceneCameraPosition = (float*)m_CameraHandler.GetSceneCamera(i).Transform().Position;
-			ImGui::DragFloat3((std::string("Position##") + cameraId).c_str(), sceneCameraPosition, 0.1f);
+			ImGui::DragFloat3((std::string("Position##") + cameraId).c_str(),
+				(float*)m_CameraHandler.GetSceneCamera(i).Transform().Position, 0.1f);
 
-			auto sceneCameraRotation = (float*)m_CameraHandler.GetSceneCamera(i).Transform().Rotation;
-			ImGui::DragFloat3((std::string("Rotation##") + cameraId).c_str(), sceneCameraRotation, 0.1f);
+			ImGui::DragFloat3((std::string("Rotation##") + cameraId).c_str(),
+				(float*)m_CameraHandler.GetSceneCamera(i).Transform().Rotation, 0.1f);
 
 			ImGui::Separator();
 		}
@@ -194,6 +184,7 @@ namespace Sandbox
 			delete m_EntityList[i];
 			m_EntityList[i] = nullptr;
 		}
+		delete m_Plane;
 
 		m_EntityList.clear();
 

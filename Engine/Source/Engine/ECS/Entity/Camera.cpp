@@ -13,15 +13,10 @@ namespace Engine
 		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
 		m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
 		m_WorldUp = m_Up;
-
-		Transform().Rotation.x = 0;
-		Transform().Rotation.y = -90.0f;
-
 		UpdateCameraVectors();
 	}
 
-	Camera::~Camera()
-	= default;
+	Camera::~Camera() = default;
 
 	Matrix4 Camera::ViewProjMatrix()
 	{
@@ -29,17 +24,9 @@ namespace Engine
 		UpdateCameraVectors();
 		UpdateViewMatrix();
 
-		m_ProjMatrix = Matrix4();
 		auto rect    = Application::WindowRect();
-		m_ProjMatrix *= Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV), (float)rect.Width / rect.Height,
+		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV), (float)rect.Width / rect.Height,
 		                                                      0.001f, 1000.0f);
-
-		//m_ProjMatrix *= Matrix4::CreateOrthographic(rect.Width, rect.Height, -1000.0f, 1000.0f);
-		//m_ProjMatrix *= Matrix4::CreatePerspectiveFieldOfView(45.0f, 1280.0f/1080.0f, 0.001f, 1000.0f);
-		//m_ProjMatrix *= XMMatrixOrthographicLH(winSize.X(), winSize.Y(), -1000.0f, 1000.0f);
-		//m_ProjMatrix *= XMMatrixOrthographicLH(1280, 1080, 0.001f, 1000.0f);
-		//auto winSize = Application::WindowRef().GetSize();
-		//m_ProjMatrix *= XMMatrixOrthographicLH(winSize.X(), winSize.Y(), 0.001f, 1000.0f);
 		m_ProjMatrix = m_ProjMatrix.Transpose();
 
 		return m_ProjMatrix * m_ViewMatrix;
