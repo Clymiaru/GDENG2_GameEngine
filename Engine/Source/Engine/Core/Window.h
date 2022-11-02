@@ -4,7 +4,6 @@
 #include "Core.h"
 
 #include "Engine/Math/Rect.h"
-#include "Engine/Math/Vector2.h"
 
 namespace Engine
 {
@@ -20,7 +19,7 @@ namespace Engine
 			uint32_t Height;
 
 			Profile() :
-				Name{L"Unnamed"},
+				Name{"Unnamed"},
 				Width{640},
 				Height{480}
 			{

@@ -2,7 +2,6 @@
 
 #include "PixelShader.h"
 
-#include "RenderSystem.h"
 #include "Renderer.h"
 
 #include "Engine/Core/Debug.h"

@@ -7,6 +7,8 @@
 
 #include "../../../Dependencies/ImGui/imgui_impl_win32.h"
 
+#include "Utils/Utils.h"
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
                                                              UINT msg,
                                                              WPARAM wParam,
@@ -54,6 +56,8 @@ namespace Engine
 		m_Handle{nullptr},
 		m_Message{}
 	{
+		const std::wstring windowName = Utils::CStringToWString(profile.Name);
+
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
 		windowClass.cbSize        = sizeof(WNDCLASSEX);
@@ -63,7 +67,7 @@ namespace Engine
 		windowClass.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
 		windowClass.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
 		windowClass.hInstance     = nullptr;
-		windowClass.lpszClassName = profile.Name.c_str();
+		windowClass.lpszClassName = windowName.c_str();
 		windowClass.lpszMenuName  = TEXT("");
 		windowClass.style         = NULL;
 		windowClass.lpfnWndProc   = &WindowsProcedure;
@@ -71,9 +75,10 @@ namespace Engine
 		const HRESULT registerResult = RegisterClassEx(&windowClass);
 		Debug::Assert(registerResult, "Window cannot be registered!");
 
+
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-										   profile.Name.c_str(),
-										   profile.Name.c_str(),
+										   windowName.c_str(),
+										   windowName.c_str(),
 										   WS_OVERLAPPEDWINDOW,
 										   CW_USEDEFAULT,
 										   CW_USEDEFAULT,

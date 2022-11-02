@@ -7,9 +7,9 @@
 
 namespace Engine
 {
-	using String = std::wstring;
+	using String = std::string;
 
-	using StringView = std::wstring_view;
+	using StringView = std::string_view;
 	
 	template <typename T>
 	using List = std::vector<T>;

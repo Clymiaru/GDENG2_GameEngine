@@ -5,24 +5,31 @@
 #include "AComponent.h"
 
 #include "Engine/Core/Core.h"
-#include "Engine/ECS/Entity/Camera.h"
 
-#include "Engine/Graphics/ConstantBuffer.h"
-#include "Engine/Graphics/IndexBuffer.h"
-#include "Engine/Graphics/PixelShader.h"
-#include "Engine/Graphics/VertexBuffer.h"
-#include "Engine/Graphics/VertexShader.h"
-#include "Engine/Math/Matrix4.h"
+#include "Engine/Math/Math.h"
 
 struct Constant;
 
 namespace Engine
 {
+	class ConstantBuffer;
+
+	class IndexBuffer;
+
+	class PixelShader;
+
+	class VertexShader;
+
+	class VertexBuffer;
+
 	class Renderer;
+
+	class Camera;
 
 	class RenderComponent final : public AComponent
 	{
 	public:
+		
 		struct VertexData
 		{
 			void* VertexList;
@@ -48,14 +55,6 @@ namespace Engine
 
 		~RenderComponent() override;
 
-		// void Initialize(
-		// 	VertexData vertexData,
-		// 	VertexLayoutData vertexLayoutData,
-		// 	IndexData indexLayoutData,
-		// 	const String shaderName,
-		// 	void* constantBufferData,
-		// 	size_t constantBufferDataSize);
-
 		void Initialize(VertexData* vertexData,
 		                VertexLayoutData* vertexLayoutData,
 		                IndexData* indexData,
@@ -77,7 +76,7 @@ namespace Engine
 		// Buffers
 		//	VertexBuffer
 		//	IndexBuffer
-		//
+		
 		VertexData* m_VertexData;
 
 		VertexLayoutData* m_VertexLayoutData;

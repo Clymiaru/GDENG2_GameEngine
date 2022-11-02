@@ -21,7 +21,7 @@ namespace Engine
 	D3D_FEATURE_LEVEL Renderer::s_FeatureLevel;
 
 	ID3D11Device* Renderer::s_Device = nullptr;
-	
+
 	const std::vector<D3D_DRIVER_TYPE> DRIVER_TYPES_SUPPORTED
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -55,7 +55,7 @@ namespace Engine
 			if (SUCCEEDED(result))
 				break;
 		}
- 
+
 		Debug::Assert(SUCCEEDED(result), "Failed to create device!");
 
 		s_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
@@ -94,14 +94,8 @@ namespace Engine
 		s_DeviceContext->Clear(*s_SwapChain, clearColor);
 	}
 
-	void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-	                                    const void* updatedBufferData)
-	{
-		s_DeviceContext->UpdateConstantBuffer(constantBuffer, updatedBufferData);
-	}
-
-	HRESULT Renderer::CreateBuffer(D3D11_BUFFER_DESC* desc,
-	                               D3D11_SUBRESOURCE_DATA* resource,
+	HRESULT Renderer::CreateBuffer(const D3D11_BUFFER_DESC* desc,
+	                               const D3D11_SUBRESOURCE_DATA* resource,
 	                               ID3D11Buffer** buffer)
 	{
 		return s_Device->CreateBuffer(desc, resource, buffer);
@@ -138,20 +132,43 @@ namespace Engine
 	                    const void* updatedConstantBuffer,
 	                    D3D11_PRIMITIVE_TOPOLOGY topology)
 	{
+		// Device Context sets Vertex and Pixel Shader
+		// Set the shader to use
+		// Device.SetShader(VertexShader, PixelShader);
 		s_DeviceContext->SetShader<VertexShader>(vertexShader);
 		s_DeviceContext->SetShader<PixelShader>(pixelShader);
-		
-		s_DeviceContext->SetConstantBuffer<VertexShader>(constantBuffer);
-		s_DeviceContext->SetConstantBuffer<PixelShader>(constantBuffer);
-		
+
+		// Device Context Sets Vertex and Pixel Shader's Constant Buffer
+		// Send the necessary constant buffers to the shaders
+		// Device.SendConstantBuffer(VertexShader, ConstantBuffer);
+		// Device.SendConstantBuffer(PixelShader, ConstantBuffer);
+		s_DeviceContext->SendConstantBuffer<VertexShader>(constantBuffer);
+		s_DeviceContext->SendConstantBuffer<PixelShader>(constantBuffer);
+
+		// Set the Vertex Buffer to be rendered
+		// Device Context sets Vertex Buffer
 		s_DeviceContext->SetBuffer<VertexBuffer>(vertexBuffer);
+
+		// Set the IndexBuffer to be used
+		// Device Context sets Index Buffer
 		s_DeviceContext->SetBuffer<IndexBuffer>(indexBuffer);
+
+		// Set drawing process
+		// Device Context sets Draw Topology
 		s_DeviceContext->SetTopology(topology);
+
+		// Actual drawing into the frame buffer
 		s_DeviceContext->DrawIndexed(indexBuffer.ElementCount(), 0);
 	}
 
 	void Renderer::ShowFrame()
 	{
 		s_SwapChain->Present(0);
+	}
+
+	void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
+	                                    const void* updatedBufferData)
+	{
+		s_DeviceContext->UpdateBufferResource(constantBuffer.m_Data, updatedBufferData);
 	}
 }

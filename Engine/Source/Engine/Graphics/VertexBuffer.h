@@ -8,6 +8,9 @@ namespace Engine
 	class DeviceContext;
 	class Renderer;
 
+	// Idea:
+	// List<Vertex> vertices;
+	
 	class VertexBuffer final : public Buffer
 	{
 	public:
@@ -25,4 +28,6 @@ namespace Engine
 		ID3D11InputLayout* m_DataLayout;
 		friend class DeviceContext;
 	};
+
+
 }

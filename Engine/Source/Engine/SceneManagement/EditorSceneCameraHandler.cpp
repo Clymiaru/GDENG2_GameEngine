@@ -22,7 +22,7 @@ namespace Engine
 	{
 		for (auto i = 0; i < numberOfEditorSceneCamera; i++)
 		{
-			m_EditorSceneCameraList.push_back(new EditorSceneCamera(L"EditorCamera" + i));
+			m_EditorSceneCameraList.push_back(new EditorSceneCamera("EditorCamera" + i));
 			m_EditorSceneCameraList[i]->Transform().Position = cameraPositions[i];
 			m_EditorSceneCameraList[i]->Transform().Rotation = cameraRotation[i];
 		}

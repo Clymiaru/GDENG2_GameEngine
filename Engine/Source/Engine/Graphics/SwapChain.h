@@ -3,6 +3,8 @@
 
 namespace Engine
 {
+	class DeviceContext;
+
 	class Window;
 	class SwapChain final
 	{
@@ -17,7 +19,6 @@ namespace Engine
 
 		void Present(uint32_t vsync) const;
 
-		//void GetFrameBuffer(ID3D11Device* device,);
 
 		[[nodiscard]]
 		ID3D11RenderTargetView& GetRenderTargetView() const;
@@ -38,5 +39,7 @@ namespace Engine
 		ID3D11RenderTargetView* m_RenderTargetView;
 
 		ID3D11DepthStencilView* m_DepthStencilView;
+
+		ID3D11Texture2D* m_Framebuffer = nullptr;
 	};
 }

@@ -6,21 +6,15 @@
 #include "Engine/ECS/Entity/Entity.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/ShaderLibrary.h"
-#include "Engine/Math/Color.h"
-#include "Engine/Math/Vector3.h"
 
 #include "Engine/ECS/Entity/Camera.h"
 
 __declspec(align(16))
 struct Constant
 {
-	DirectX::XMMATRIX View;
-
-	DirectX::XMMATRIX Projection;
-
 	DirectX::XMMATRIX Model;
 
-	float Time;
+	DirectX::XMMATRIX ViewProjection;
 };
 
 namespace Engine
@@ -44,10 +38,10 @@ namespace Engine
 	}
 
 	void RenderComponent::Initialize(VertexData* vertexData,
-									VertexLayoutData* vertexLayoutData,
-									IndexData* indexData,
-									size_t vertexDataSize,
-									String shaderName)
+	                                 VertexLayoutData* vertexLayoutData,
+	                                 IndexData* indexData,
+	                                 size_t vertexDataSize,
+	                                 String shaderName)
 	{
 		m_VertexData       = vertexData;
 		m_VertexLayoutData = vertexLayoutData;
@@ -61,8 +55,8 @@ namespace Engine
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
 		                                               vertexDataSize,
 		                                               m_VertexData->VertexListCount,
-		                                               m_VertexShader->GetByteCodeData(),
-		                                               static_cast<uint32_t>(m_VertexShader->GetByteCodeSizeData()),
+		                                               m_VertexShader->ByteCodeData(),
+		                                               static_cast<uint32_t>(m_VertexShader->ByteCodeSizeData()),
 		                                               m_VertexLayoutData->VertexLayout,
 		                                               m_VertexLayoutData->VertexLayoutCount);
 
@@ -81,18 +75,13 @@ namespace Engine
 
 	void RenderComponent::Update()
 	{
-		m_Constant->Time       = 0;
-		m_Constant->Model      = m_EntityRef->Transform().LocalMatrix();
-		m_Constant->Projection = Matrix4();
-		m_Constant->View       = Matrix4();
 	}
 
 	void RenderComponent::Draw(Camera& camera)
 	{
-		m_Constant->Time       = 0;
-		m_Constant->Model      = m_EntityRef->Transform().LocalMatrix();
-		m_Constant->Projection = camera.ViewProjMatrix();
-		m_Constant->View       = Matrix4();
+		m_Constant->Model          = m_EntityRef->Transform().LocalMatrix();
+		m_Constant->ViewProjection = camera.ViewProjMatrix();
+		//m_ConstantBuffer->Update();
 
 		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
 
@@ -101,16 +90,4 @@ namespace Engine
 		               *m_ConstantBuffer, m_Constant,
 		               D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-
-	// void RenderComponent::Draw()
-	// {
-	// 	Update();
-	// 	
-	// 	Renderer::UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
-	//
-	// 	Renderer::Draw(*m_VertexShader, *m_PixelShader,
-	// 	                  *m_VertexBuffer, *m_IndexBuffer,
-	// 	                  *m_ConstantBuffer, m_Constant,
-	// 	                  D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	// }
 }

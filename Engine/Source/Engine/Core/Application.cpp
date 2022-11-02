@@ -124,7 +124,6 @@ namespace Engine
 	{
 		Input::PollInputEvents();
 		m_Window->PollEvents();
-
 		m_LayerHandler->PollInput();
 	}
 
@@ -134,10 +133,20 @@ namespace Engine
 
 		m_LayerHandler->Render();
 
-		// ImGui::Begin();
+		ImGuiIO& io = ImGui::GetIO();
+
+		const Rect<uint32_t> windowRect = WindowRect();
+
+		io.DisplaySize = ImVec2(windowRect.Width, windowRect.Height);
+
 		m_LayerHandler->ImGuiRender();
-		// ImGui::End();
-		
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
+
 		Renderer::ShowFrame();
 	}
 }

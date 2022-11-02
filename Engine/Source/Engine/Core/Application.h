@@ -17,7 +17,7 @@ namespace Engine
 	public:
 		struct Profile
 		{
-			String Name = L"Untitled";
+			String Name = "Untitled";
 			uint32_t Width = 0;
 			uint32_t Height = 0;
 		};

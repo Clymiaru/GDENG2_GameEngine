@@ -4,6 +4,8 @@
 namespace Engine
 {
 	class TransformComponent;
+	// Let's try entity without TransformComponent
+	// This is so an entity with pure data is possible?
 	class Entity
 	{
 	public:

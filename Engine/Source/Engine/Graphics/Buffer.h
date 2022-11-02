@@ -3,12 +3,14 @@
 
 namespace Engine
 {
-	class Renderer;
-
 	class Buffer
 	{
 	public:
 		Buffer(uint32_t elementCount,
+		       size_t dataTypeSize);
+
+		Buffer(ID3D11Buffer* bufferData,
+		       uint32_t elementCount,
 		       size_t dataTypeSize);
 
 		virtual ~Buffer();
@@ -21,6 +23,15 @@ namespace Engine
 
 		[[nodiscard]]
 		size_t ByteSize() const;
+
+		// Copy and move is disabled
+		Buffer(const Buffer&) = delete;
+
+		Buffer& operator=(const Buffer&) = delete;
+
+		Buffer(Buffer&&) noexcept = delete;
+
+		Buffer& operator=(Buffer&&) = delete;
 
 	protected:
 		ID3D11Buffer* m_Data;

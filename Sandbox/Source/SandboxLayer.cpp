@@ -1,6 +1,5 @@
 ﻿#include "SandboxLayer.h"
 
-#include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
@@ -15,7 +14,7 @@
 namespace Sandbox
 {
 	SandboxLayer::SandboxLayer() :
-		Layer{L"SandboxLayer"},
+		Layer{"SandboxLayer"},
 		m_EntityList{Engine::List<Engine::Cube*>()},
 		m_Plane{nullptr},
 		m_CameraHandler{3}
@@ -27,18 +26,18 @@ namespace Sandbox
 	void SandboxLayer::OnAttach()
 	{
 		using namespace Engine;
-		ShaderLibrary::Register<VertexShader>(L"Assets/DefaultShader.hlsl",
+		ShaderLibrary::Register<VertexShader>("Assets/DefaultShader.hlsl",
 		                                      "vsmain");
 
-		ShaderLibrary::Register<PixelShader>(L"Assets/DefaultShader.hlsl",
+		ShaderLibrary::Register<PixelShader>("Assets/DefaultShader.hlsl",
 		                                     "psmain");
 
 		// TODO: Make cube and plane from entity and not from its own class
-		Cube* cubeEntity              = new Cube(L"Testing Entity", Vector3Float());
+		Cube* cubeEntity              = new Cube("Testing Entity", Vector3Float());
 		cubeEntity->Transform().Scale = Vector3Float(10.0f, 10.0f, 10.0f);
 		m_EntityList.emplace_back(cubeEntity);
 
-		m_Plane = new Plane(L"PlaneEntity", Vector3Float());
+		m_Plane = new Plane("PlaneEntity", Vector3Float());
 		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
 		m_Plane->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
 
@@ -88,8 +87,7 @@ namespace Sandbox
 		int entityNo = 0;
 		auto displayEntityInfo = [](Engine::Entity* toDisplay, int number) -> void
 		{
-			std::basic_string toString = toDisplay->Name();
-			ImGui::Text("%ws", toString.c_str());
+			ImGui::Text("%s", toDisplay->Name().c_str());
 
 			std::string positionLabel = "Position##";
 			positionLabel+= "Entity" + std::to_string(number);

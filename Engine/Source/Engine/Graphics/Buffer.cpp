@@ -1,30 +1,43 @@
 ﻿#include "pch.h"
 #include "Buffer.h"
 
-Engine::Buffer::Buffer(const uint32_t elementCount,
-                       const size_t dataTypeSize) :
-	m_Data{nullptr},
-	m_DataTypeSize{dataTypeSize},
-	m_BufferSize{elementCount * dataTypeSize},
-	m_ElementCount{elementCount}
+namespace Engine
 {
-}
+	Buffer::Buffer(const uint32_t elementCount,
+	               const size_t dataTypeSize) :
+		m_Data{nullptr},
+		m_DataTypeSize{dataTypeSize},
+		m_BufferSize{elementCount * dataTypeSize},
+		m_ElementCount{elementCount}
+	{
+	}
 
-Engine::Buffer::~Buffer()
-{
-}
+	Buffer::Buffer(ID3D11Buffer* bufferData,
+	               const uint32_t elementCount,
+	               const size_t dataTypeSize) :
+		m_Data{bufferData},
+		m_DataTypeSize{dataTypeSize},
+		m_BufferSize{elementCount * dataTypeSize},
+		m_ElementCount{elementCount}
+	{
+	}
 
-uint32_t Engine::Buffer::ElementCount() const
-{
-	return m_ElementCount;
-}
+	Buffer::~Buffer()
+	{
+	}
 
-size_t Engine::Buffer::DataTypeSize() const
-{
-	return m_DataTypeSize;
-}
+	uint32_t Buffer::ElementCount() const
+	{
+		return m_ElementCount;
+	}
 
-size_t Engine::Buffer::ByteSize() const
-{
-	return m_BufferSize;
+	size_t Buffer::DataTypeSize() const
+	{
+		return m_DataTypeSize;
+	}
+
+	size_t Buffer::ByteSize() const
+	{
+		return m_BufferSize;
+	}
 }

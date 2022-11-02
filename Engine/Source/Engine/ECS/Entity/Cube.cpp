@@ -125,7 +125,7 @@ namespace Engine
 		                     new RenderComponent::VertexLayoutData{layout, layoutSize},
 		                     new RenderComponent::IndexData{indices, 36},
 		                     sizeof(Vertex),
-		                     L"DefaultShader");
+		                     "DefaultShader");
 	}
 
 	Cube::~Cube()

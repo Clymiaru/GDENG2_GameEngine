@@ -4,7 +4,6 @@
 
 #include "ShaderLibrary.h"
 
-
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Graphics/VertexShader.h"
 
@@ -38,8 +37,7 @@ namespace Engine
 		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
 
 		m_DeviceContext->ClearDepthStencilView(&swapChain.GetDepthStencilView(),
-											   D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-
+		                                       D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    renderTargetViews.data(),
@@ -54,7 +52,6 @@ namespace Engine
 		viewport.MinDepth       = 0.0f;
 		viewport.MaxDepth       = 1.0f;
 		m_DeviceContext->RSSetViewports(1, &viewport);
-
 	}
 
 	void DeviceContext::SetViewportSize(const Vector2Int& size) const
@@ -67,10 +64,10 @@ namespace Engine
 		m_DeviceContext->RSSetViewports(1, &viewport);
 	}
 
-	void DeviceContext::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-	                                         const void* updatedBufferData)
+	void DeviceContext::UpdateBufferResource(ID3D11Buffer* bufferResource,
+	                                         const void* updatedBufferData) const
 	{
-		m_DeviceContext->UpdateSubresource(constantBuffer.m_Data,
+		m_DeviceContext->UpdateSubresource(bufferResource,
 		                                   NULL,
 		                                   nullptr,
 		                                   updatedBufferData,

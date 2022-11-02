@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "VertexBuffer.h"
 
-#include "RenderSystem.h"
 #include "Renderer.h"
 
 #include "Engine/Core/Debug.h"

@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "IndexBuffer.h"
 
-#include "RenderSystem.h"
 #include "Renderer.h"
 
 #include "Engine/Core/Debug.h"

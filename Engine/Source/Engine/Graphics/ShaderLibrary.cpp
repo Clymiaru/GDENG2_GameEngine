@@ -21,10 +21,10 @@ namespace Engine
 
 	ShaderLibrary::~ShaderLibrary() = default;
 
-	std::wstring ShaderLibrary::GetShaderNameFromFilename(const std::wstring& fileName)
+	std::string ShaderLibrary::GetShaderNameFromFilename(const std::string& fileName)
 	{
 		size_t finalBackslashPos   = fileName.find_last_of(L'/');
-		if (finalBackslashPos == std::wstring::npos)
+		if (finalBackslashPos == std::string::npos)
 		{
 			finalBackslashPos = 0ULL;
 		}
@@ -33,7 +33,7 @@ namespace Engine
 			finalBackslashPos += 1;
 		}
 		const size_t startOfExtensionPos = fileName.find(L'.');
-		std::wstring shaderName = fileName.substr(finalBackslashPos, startOfExtensionPos - finalBackslashPos);
+		std::string shaderName = fileName.substr(finalBackslashPos, startOfExtensionPos - finalBackslashPos);
 		return shaderName;
 	}
 }

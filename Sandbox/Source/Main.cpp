@@ -11,7 +11,7 @@ int main()
 	Application::SetLayers({new Sandbox::SandboxLayer()});
 	
 	Application::Start(Application::Profile(
-		L"Sandbox",
+		"Sandbox",
 		1280,
 		720
 	));

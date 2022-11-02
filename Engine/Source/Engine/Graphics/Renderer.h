@@ -15,6 +15,10 @@ namespace Engine
 
 		static void ShowFrame();
 
+		// static void SetShader();
+		//
+		// static void 
+
 		static void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
 		                                 const void* updatedBufferData);
 
@@ -26,8 +30,8 @@ namespace Engine
 		                 const void* updatedConstantBuffer,
 		                 D3D11_PRIMITIVE_TOPOLOGY topology);
 
-		static HRESULT CreateBuffer(D3D11_BUFFER_DESC* desc,
-		                            D3D11_SUBRESOURCE_DATA* resource,
+		static HRESULT CreateBuffer(const D3D11_BUFFER_DESC* desc,
+		                            const D3D11_SUBRESOURCE_DATA* resource,
 		                            ID3D11Buffer** buffer);
 
 		static HRESULT CreateLayout(const D3D11_INPUT_ELEMENT_DESC* desc,

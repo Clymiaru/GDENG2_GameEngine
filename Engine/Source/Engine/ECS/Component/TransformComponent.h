@@ -10,7 +10,7 @@ namespace Engine
 	{
 	public:
 		explicit TransformComponent(Entity* owner);
-		~TransformComponent();
+		~TransformComponent() override;
 
 		Vector3Float Position;
 

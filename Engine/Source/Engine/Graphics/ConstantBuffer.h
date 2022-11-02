@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include <d3d11.h>
-
 #include "Buffer.h"
 
 namespace Engine
@@ -15,7 +13,19 @@ namespace Engine
 
 		~ConstantBuffer() override;
 
+		void Update(const DeviceContext& deviceContext,
+		            const void* updatedBufferData) const;
+
+		ConstantBuffer(const ConstantBuffer&) = delete;
+
+		ConstantBuffer& operator=(const ConstantBuffer&) = delete;
+
+		ConstantBuffer(Buffer&&) noexcept = delete;
+
+		ConstantBuffer& operator=(ConstantBuffer&&) = delete;
+
 	private:
+		friend class Renderer;
 		friend class DeviceContext;
 	};
 }
