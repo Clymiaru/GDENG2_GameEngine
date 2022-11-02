@@ -55,10 +55,10 @@ namespace Engine
 		uint32_t* indices = new uint32_t[6]
 		{
 			0,
-			3,
-			2,
-			2,
 			1,
+			2,
+			2,
+			3,
 			0
 		};
 		//size_t indexSize = ARRAYSIZE(indices);

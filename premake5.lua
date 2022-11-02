@@ -1,5 +1,5 @@
 workspace ("Engine")
-    startproject "Sandbox"
+    startproject "Editor"
 
     configurations {
         "Debug",
@@ -25,3 +25,4 @@ DependenciesDir = {}
 
 include "Engine"
 include "Sandbox"
+include "Editor"

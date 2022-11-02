@@ -4,8 +4,6 @@
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
-#include <Engine/Input/Input.h>
-#include <Engine/SceneManagement/EditorSceneCamera.h>
 
 #include "Engine/ECS/Entity/Entity.h"
 #include "../../Engine/Dependencies/ImGui/imgui.h"
@@ -37,10 +35,11 @@ namespace Sandbox
 
 		// TODO: Make cube and plane from entity and not from its own class
 		Cube* cubeEntity              = new Cube(L"Testing Entity", Vector3Float());
-		cubeEntity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+		cubeEntity->Transform().Scale = Vector3Float(10.0f, 10.0f, 10.0f);
 		m_EntityList.emplace_back(cubeEntity);
 
 		m_Plane = new Plane(L"PlaneEntity", Vector3Float());
+		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
 		m_Plane->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
 
 		// Initialize Scene Cameras
@@ -66,7 +65,7 @@ namespace Sandbox
 
 		if (m_Timer > 60.0f)
 		{
-			m_Fps   = (float)m_Frame / (m_Timer / 1000.0f);
+			m_Fps   = (float)m_Frame / m_Timer;
 			m_Frame = 0;
 			m_Timer = 0.0f;
 		}
@@ -85,7 +84,7 @@ namespace Sandbox
 
 	void SandboxLayer::OnImGuiRender()
 	{
-		//ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
+		ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
 		int entityNo = 0;
 		auto displayEntityInfo = [](Engine::Entity* toDisplay, int number) -> void
 		{
@@ -108,7 +107,7 @@ namespace Sandbox
 		};
 		
 		ImGui::Begin("Inspector");
-
+		
 		for (auto* entity : m_EntityList)
 		{
 			displayEntityInfo(entity, entityNo);
@@ -117,21 +116,7 @@ namespace Sandbox
 
 		displayEntityInfo(m_Plane, entityNo);
 
-		// ImGui::Text("FPS: %f", m_Fps);
-		// ImGui::Text("Key Event Status");
-		// Engine::KeyboardInput keyInput = Engine::Input::Keyboard();
-		// ImGui::Text("Key Pressed: %c", (char)keyInput.KeyCode);
-		// ImGui::Text("Key State: %s", KeyStateToString(keyInput.KeyState).c_str());
-		//
-		// ImGui::Spacing();
-		//
-		// Engine::MouseInput mouseInput = Engine::Input::Mouse();
-		// ImGui::Text("Mouse Event Status");
-		// ImGui::Text("Mouse Position: %i, %i", mouseInput.MousePosition.x, mouseInput.MousePosition.y);
-		// ImGui::Text("Mouse Button: %s", MouseButtonToString(mouseInput.Button).c_str());
-		// ImGui::Text("Mouse State: %s", MouseStateToString(mouseInput.State).c_str());
-		// ImGui::Text("Delta Mouse Position: %i, %i", mouseInput.DeltaMousePosition.x,
-		//             mouseInput.DeltaMousePosition.y);
+		ImGui::Text("FPS: %f", m_Fps);
 
 		ImGui::Separator();
 

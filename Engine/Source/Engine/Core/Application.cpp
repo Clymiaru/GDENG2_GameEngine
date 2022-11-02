@@ -134,8 +134,10 @@ namespace Engine
 
 		m_LayerHandler->Render();
 
+		// ImGui::Begin();
 		m_LayerHandler->ImGuiRender();
-
+		// ImGui::End();
+		
 		Renderer::ShowFrame();
 	}
 }

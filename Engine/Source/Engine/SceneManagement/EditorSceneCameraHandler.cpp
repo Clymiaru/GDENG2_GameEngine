@@ -35,19 +35,24 @@ namespace Engine
 			delete m_EditorSceneCameraList[i];
 			m_EditorSceneCameraList[i] = nullptr;
 		}
-		
+
 		m_EditorSceneCameraList.clear();
 	}
 
 	void EditorSceneCameraHandler::UpdateSceneCameraOfId(int editorSceneCameraId)
 	{
-		Debug::Assert(editorSceneCameraId <= m_EditorSceneCameraList.size() - 1 && editorSceneCameraId >= 0);
+		Debug::Assert(editorSceneCameraId <=
+		              m_EditorSceneCameraList.size() - 1 &&
+		              editorSceneCameraId >= 0);
 		m_EditorSceneCameraList[editorSceneCameraId]->UpdateController();
 	}
 
-	EditorSceneCamera& EditorSceneCameraHandler::GetSceneCamera(const int editorSceneCameraId) const
+	EditorSceneCamera& EditorSceneCameraHandler::
+	GetSceneCamera(const int editorSceneCameraId) const
 	{
-		Debug::Assert(editorSceneCameraId <= m_EditorSceneCameraList.size() - 1 && editorSceneCameraId >= 0);
+		Debug::Assert(editorSceneCameraId <=
+		              m_EditorSceneCameraList.size() - 1
+		              && editorSceneCameraId >= 0);
 		return *m_EditorSceneCameraList[editorSceneCameraId];
 	}
 }

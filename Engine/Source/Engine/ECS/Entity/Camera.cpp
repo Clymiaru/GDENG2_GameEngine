@@ -25,8 +25,9 @@ namespace Engine
 		UpdateViewMatrix();
 
 		auto rect    = Application::WindowRect();
-		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV), (float)rect.Width / rect.Height,
-		                                                      0.001f, 1000.0f);
+		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV),
+		                                                     (float)rect.Width / rect.Height,
+		                                                     0.001f, 1000.0f);
 		m_ProjMatrix = m_ProjMatrix.Transpose();
 
 		return m_ProjMatrix * m_ViewMatrix;
@@ -56,8 +57,6 @@ namespace Engine
 		m_Front.z = std::sin(DirectX::XMConvertToRadians(yaw)) * std::cos(DirectX::XMConvertToRadians(pitch));
 		m_Front.Normalize();
 
-		// TODO: Fix vector class to have static Cross()
-		// TODO: Fix Normalize to have return normalized vector
 		m_Right = m_Front.Cross(m_WorldUp);
 		m_Right.Normalize();
 

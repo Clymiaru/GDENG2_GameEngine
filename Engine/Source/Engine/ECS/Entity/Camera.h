@@ -12,18 +12,12 @@ namespace Engine
 	{
 	public:
 		explicit Camera(String name);
-
 		~Camera() override;
-
-
 		Matrix4 ViewProjMatrix();
-
 		void Update();
-
 		float FoV = 45.0f;
 	private:
 		void UpdateViewMatrix();
-
 		void UpdateCameraVectors();
 
 		Matrix4 m_ViewMatrix;

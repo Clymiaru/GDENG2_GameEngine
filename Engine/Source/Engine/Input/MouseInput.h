@@ -52,11 +52,8 @@ namespace Engine
 	struct MouseInput
 	{
 		Vector2Int MousePosition;
-
 		Vector2Int DeltaMousePosition;
-
 		MouseButton Button = MouseButton::None;
-
 		MouseState State = MouseState::None;
 	};
 }

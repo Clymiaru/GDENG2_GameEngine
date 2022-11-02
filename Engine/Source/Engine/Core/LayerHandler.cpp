@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "LayerHandler.h"
 
+#include "Application.h"
+
 #include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
 #include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
 
@@ -26,7 +28,7 @@ namespace Engine
 			{
 				continue;
 			}
-			
+
 			layer->OnAttach();
 			m_ActiveLayers.push_back(layer);
 		}
@@ -38,7 +40,7 @@ namespace Engine
 		{
 			m_ActiveLayers[i]->OnDetach();
 			m_ActiveLayers.erase(m_ActiveLayers.begin(),
-				m_ActiveLayers.begin() + i);
+			                     m_ActiveLayers.begin() + i);
 		}
 	}
 
@@ -57,14 +59,14 @@ namespace Engine
 		}
 
 		if (const auto resultFromActiveLayers =
-			std::ranges::find(m_ActiveLayers, *resultFromLayers);
+					std::ranges::find(m_ActiveLayers, *resultFromLayers);
 			resultFromActiveLayers != m_ActiveLayers.end())
 		{
 			(*resultFromActiveLayers)->OnDetach();
 			m_ActiveLayers.erase(m_ActiveLayers.begin(),
-				resultFromActiveLayers);
+			                     resultFromActiveLayers);
 		}
-		
+
 		m_Layers.erase(resultFromLayers);
 	}
 
@@ -94,19 +96,29 @@ namespace Engine
 
 	void LayerHandler::ImGuiRender() const
 	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		const Rect<uint32_t> windowRect = Application::WindowRect();
+		io.DisplaySize                  = ImVec2(windowRect.Width, windowRect.Height);
+
 		for (auto* layer : m_Layers)
 		{
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
-		
+
 			layer->OnImGuiRender();
-	
+
 			ImGui::Render();
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-		
+
 			ImGui::EndFrame();
+		}
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
 		}
 	}
 }
-
