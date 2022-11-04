@@ -7,6 +7,8 @@
 
 #include "../../../Dependencies/ImGui/imgui_impl_win32.h"
 
+#include "Engine/Graphics/Renderer.h"
+
 #include "Utils/Utils.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
@@ -17,9 +19,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
 namespace Engine
 {
 	LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
-									  const UINT message,
-									  const WPARAM wParam,
-									  const LPARAM lParam)
+	                                  const UINT message,
+	                                  const WPARAM wParam,
+	                                  const LPARAM lParam)
 	{
 		LRESULT result = ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam);
 		if (result)
@@ -37,6 +39,15 @@ namespace Engine
 				window->UpdateClientSize();
 				break;
 			}
+			case WM_SIZE:
+			{
+				// TODO: At a later time
+				// auto* window = (Window*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
+				// window->UpdateClientSize();
+				// Vector2Uint winSize = Vector2Uint(window->WindowRect().Width, window->WindowRect().Height);
+				// Renderer::Resize(winSize);
+				break;
+			}
 			case WM_CLOSE:
 			{
 				Application::Quit();
@@ -51,7 +62,7 @@ namespace Engine
 		}
 		return 0;
 	}
-	
+
 	Window::Window(const Profile& profile) :
 		m_Handle{nullptr},
 		m_Message{}
@@ -75,19 +86,18 @@ namespace Engine
 		const HRESULT registerResult = RegisterClassEx(&windowClass);
 		Debug::Assert(registerResult, "Window cannot be registered!");
 
-
 		const auto handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-										   windowName.c_str(),
-										   windowName.c_str(),
-										   WS_OVERLAPPEDWINDOW,
-										   CW_USEDEFAULT,
-										   CW_USEDEFAULT,
-										   static_cast<int>(profile.Width),
-										   static_cast<int>(profile.Height),
-										   nullptr,
-										   nullptr,
-										   nullptr,
-										   this);
+		                                   windowName.c_str(),
+		                                   windowName.c_str(),
+		                                   WS_OVERLAPPEDWINDOW,
+		                                   CW_USEDEFAULT,
+		                                   CW_USEDEFAULT,
+		                                   static_cast<int>(profile.Width),
+		                                   static_cast<int>(profile.Height),
+		                                   nullptr,
+		                                   nullptr,
+		                                   nullptr,
+		                                   this);
 
 		Debug::Assert(handle, "Handle cannot be retrieved!");
 

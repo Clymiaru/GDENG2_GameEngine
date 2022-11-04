@@ -11,7 +11,7 @@ int main()
 	Application::SetLayers({new Editor::EditorLayer()});
 	
 	Application::Start(Application::Profile(
-		L"Editor",
+		"Editor",
 		1280,
 		720
 	));

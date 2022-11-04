@@ -47,8 +47,7 @@ namespace Engine
 		m_EditorSceneCameraList[editorSceneCameraId]->UpdateController();
 	}
 
-	EditorSceneCamera& EditorSceneCameraHandler::
-	GetSceneCamera(const int editorSceneCameraId) const
+	EditorSceneCamera& EditorSceneCameraHandler::GetSceneCamera(const int editorSceneCameraId) const
 	{
 		Debug::Assert(editorSceneCameraId <=
 		              m_EditorSceneCameraList.size() - 1

@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	TransformComponent::TransformComponent(Entity* owner) :
+	TransformComponent::TransformComponent(Entity& owner) :
 		AComponent{owner},
 		Position{Vector3Float{0.0f, 0.0f, 0.0f}},
 		Scale{Vector3Float{1.0f, 1.0f, 1.0f}},

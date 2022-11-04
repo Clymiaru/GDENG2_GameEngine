@@ -8,8 +8,8 @@
 
 namespace Engine
 {
-	EditorSceneCameraControllerComponent::EditorSceneCameraControllerComponent(EditorSceneCamera* sceneCameraRef) :
-		AComponent{(Entity*)sceneCameraRef}
+	EditorSceneCameraControllerComponent::EditorSceneCameraControllerComponent(EditorSceneCamera& sceneCameraRef) :
+		AComponent{*((Entity*)&sceneCameraRef)}
 	{
 	}
 
@@ -27,8 +27,8 @@ namespace Engine
 
 		const float deltaTime = (float)Application::DeltaTime();
 
-		const auto currentPosition = m_EntityRef->Transform().Position;
-		const auto currentRotation = m_EntityRef->Transform().Rotation;
+		const auto currentPosition = m_EntityRef.Transform().Position;
+		const auto currentRotation = m_EntityRef.Transform().Rotation;
 
 		Vector3Float newPosition = Vector3Float();
 		Vector3Float newRotation = Vector3Float();
@@ -85,8 +85,8 @@ namespace Engine
 
 		newPosition += ProcessZooming();
 
-		m_EntityRef->Transform().Position += newPosition * deltaTime;
-		m_EntityRef->Transform().Rotation += newRotation * deltaTime;
+		m_EntityRef.Transform().Position += newPosition * deltaTime;
+		m_EntityRef.Transform().Rotation += newRotation * deltaTime;
 	}
 
 	void EditorSceneCameraControllerComponent::
@@ -116,8 +116,8 @@ namespace Engine
 
 		if (keyPressed == m_ResetCameraToOrigin)
 		{
-			m_EntityRef->Transform().Position = Vector3Float(0.0f, 0.0f, -10.0f);
-			m_EntityRef->Transform().Rotation = Vector3Float(0.0f, 90.0f, 0.0f);
+			m_EntityRef.Transform().Position = Vector3Float(0.0f, 0.0f, -10.0f);
+			m_EntityRef.Transform().Rotation = Vector3Float(0.0f, 90.0f, 0.0f);
 			m_CurrentState                    = State::None;
 		}
 	}

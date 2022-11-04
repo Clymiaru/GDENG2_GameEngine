@@ -15,6 +15,7 @@ namespace Engine
 	{
 		s_Instance.m_VertexShaderMap.clear();
 		s_Instance.m_PixelShaderMap.clear();
+
 	}
 
 	ShaderLibrary::ShaderLibrary() = default;

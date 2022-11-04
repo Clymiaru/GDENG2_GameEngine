@@ -12,10 +12,8 @@ struct VS_OUTPUT
 
 cbuffer Constant: register(b0)
 {
-	float4x4 View;
-	float4x4 Projection;
 	float4x4 Model;
-	float Time;
+	float4x4 ViewProjection;
 };
 
 VS_OUTPUT vsmain(VS_INPUT input)
@@ -24,8 +22,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.position = input.position;
 	
 	output.position = mul(output.position, Model);
-	output.position = mul(output.position, View);
-	output.position = mul(output.position, Projection);
+	output.position = mul(output.position, ViewProjection);
 	
 	output.color = input.color;
 	return output;
@@ -39,5 +36,5 @@ struct PS_INPUT
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	return input.color;
+	return float4(input.color.x, input.color.y, input.color.z, 1.0f);
 }

@@ -13,11 +13,15 @@ namespace Engine
 
 		static void Clear(const Color& clearColor);
 
-		static void ShowFrame();
+		static void ClearRenderTarget(ID3D11RenderTargetView* renderTargetView,
+		                              const Color& clearColor);
 
-		// static void SetShader();
-		//
-		// static void 
+		static void ClearDepthStencil(ID3D11DepthStencilView* depthStencilView);
+
+		static void SetRenderTarget(ID3D11RenderTargetView* renderTarget,
+		                            ID3D11DepthStencilView* depthStencil);
+
+		static void ShowFrame();
 
 		static void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
 		                                 const void* updatedBufferData);
@@ -47,6 +51,22 @@ namespace Engine
 		static HRESULT CreatePixelShader(const void* shaderByteCode,
 		                                 size_t bytecodeLength,
 		                                 ID3D11PixelShader** pixelShader);
+
+		static void Resize(Vector2Uint& size);
+
+
+		// Raster Stage
+		static void SetViewportSize(const Vector2Int& viewportSize);
+
+		static ID3D11Device& GetDevice()
+		{
+			return *s_Device;
+		};
+
+		static SwapChain& GetSwapChain()
+		{
+			return *s_SwapChain;
+		};
 
 		Renderer(const Renderer&) = delete;
 

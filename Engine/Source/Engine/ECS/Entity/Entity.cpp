@@ -7,8 +7,10 @@ namespace Engine
 {
 	Entity::Entity(const String& name) :
 		m_Name{name},
-		m_Transform{new TransformComponent(this)}
+		m_Transform{nullptr},
+		m_ComponentList{}
 	{
+		m_Transform = new TransformComponent(*this);
 	}
 
 	Entity::~Entity()

@@ -13,7 +13,7 @@ namespace Engine
 	EditorSceneCamera::EditorSceneCamera(String name) :
 		Camera{name}
 	{
-		m_CameraController = new EditorSceneCameraControllerComponent(this);
+		m_CameraController = new EditorSceneCameraControllerComponent(*this);
 	}
 
 	EditorSceneCamera::~EditorSceneCamera()

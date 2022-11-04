@@ -19,7 +19,7 @@ struct Constant
 
 namespace Engine
 {
-	RenderComponent::RenderComponent(Entity* owner) :
+	RenderComponent::RenderComponent(Entity& owner) :
 		AComponent{owner},
 		m_VertexData{nullptr},
 		m_VertexLayoutData{nullptr},
@@ -28,8 +28,7 @@ namespace Engine
 		m_PixelShader{nullptr},
 		m_VertexBuffer{nullptr},
 		m_IndexBuffer{nullptr},
-		m_ConstantBuffer{nullptr},
-		m_Constant{nullptr}
+		m_ConstantBuffer{nullptr}
 	{
 	}
 
@@ -49,7 +48,7 @@ namespace Engine
 		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
 		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
 
-		m_Constant = new Constant{};
+		Constant* constant = new Constant{};
 
 		// Do we have to create vertex, index buffers, and constant buffers here?
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
@@ -63,7 +62,7 @@ namespace Engine
 		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
 		                                             m_IndexData->IndexListCount);
 
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(m_Constant, sizeof(Constant));
+		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(Constant));
 	}
 
 	void RenderComponent::Terminate()
@@ -79,15 +78,17 @@ namespace Engine
 
 	void RenderComponent::Draw(Camera& camera)
 	{
-		m_Constant->Model          = m_EntityRef->Transform().LocalMatrix();
-		m_Constant->ViewProjection = camera.ViewProjMatrix();
+		Constant* constant = new Constant();
+
+		constant->Model          = m_EntityRef.Transform().LocalMatrix();
+		constant->ViewProjection = camera.ViewProjMatrix();
 		//m_ConstantBuffer->Update();
 
-		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, m_Constant);
+		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, constant);
 
 		Renderer::Draw(*m_VertexShader, *m_PixelShader,
 		               *m_VertexBuffer, *m_IndexBuffer,
-		               *m_ConstantBuffer, m_Constant,
+		               *m_ConstantBuffer, constant,
 		               D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 }

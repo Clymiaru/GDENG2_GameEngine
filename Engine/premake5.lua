@@ -5,14 +5,13 @@ project ("Engine")
     staticruntime "on"
     toolset "v143"
 
-    targetdir ("bin/"..OutputDir.."/%{prj.name}")
-    objdir ("bin-int/"..OutputDir.."/%{prj.name}")
+    targetdir ("%{wks.location}/bin/"..OutputDir.."/%{prj.name}")
+    objdir ("%{wks.location}/bin-int/"..OutputDir.."/%{prj.name}")
 
     pchheader "pch.h"
     pchsource "Source/pch.cpp"
     
-    files
-    {
+    files { 
         "Source/**.h",
         "Source/**.cpp",
         "Dependencies/ImGui/**.h",

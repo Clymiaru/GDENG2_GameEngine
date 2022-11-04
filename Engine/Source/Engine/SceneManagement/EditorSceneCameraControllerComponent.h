@@ -15,10 +15,12 @@ namespace Engine
 			None, Panning, Zooming, Orbiting
 		};
 		
-		EditorSceneCameraControllerComponent(EditorSceneCamera* sceneCameraRef);
+		EditorSceneCameraControllerComponent(EditorSceneCamera& sceneCameraRef);
 		~EditorSceneCameraControllerComponent() override;
 
 		void UpdateController();
+
+		MAKE_COMPONENT(EditorSceneCameraController)
 
 		float ZoomSpeed = 1000.0f;
 		float PanSpeed = 1000.0f;

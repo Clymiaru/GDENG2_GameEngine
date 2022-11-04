@@ -36,5 +36,5 @@ struct PS_INPUT
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	return input.color;
+	return float4(input.color.x, input.color.y, input.color.z, 1.0f) * 0.5;
 }

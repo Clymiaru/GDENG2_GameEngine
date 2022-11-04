@@ -122,30 +122,29 @@ namespace Engine
 
 	void Application::PollEvents() const
 	{
-		Input::PollInputEvents();
 		m_Window->PollEvents();
+		Input::PollInputEvents();
 		m_LayerHandler->PollInput();
 	}
 
 	void Application::Render() const
 	{
-		Renderer::Clear(Color{0.0f, 0.5f, 1.0f, 1.0f});
+		// Render target 1
+		Renderer::ClearRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
+		                            Color(0.5f, 0.2f, 0.7f, 1.0f));
+
+		Renderer::ClearDepthStencil(&Renderer::GetSwapChain().GetDepthStencil());
+		Renderer::SetRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
+		                          &Renderer::GetSwapChain().GetDepthStencil());
+
 
 		m_LayerHandler->Render();
-
-		ImGuiIO& io = ImGui::GetIO();
-
-		const Rect<uint32_t> windowRect = WindowRect();
-
-		io.DisplaySize = ImVec2(windowRect.Width, windowRect.Height);
+		// Render target UI
+		
 
 		m_LayerHandler->ImGuiRender();
 
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-		}
+		
 
 		Renderer::ShowFrame();
 	}

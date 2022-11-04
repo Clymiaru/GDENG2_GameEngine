@@ -51,7 +51,7 @@ namespace Engine
 			size_t IndexListCount;
 		};
 
-		RenderComponent(Entity* owner);
+		RenderComponent(Entity& owner);
 
 		~RenderComponent() override;
 
@@ -66,6 +66,8 @@ namespace Engine
 		void Update();
 
 		void Draw(Camera& camera);
+
+		MAKE_COMPONENT(Render)
 
 	private:
 		// Material
@@ -92,7 +94,5 @@ namespace Engine
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer;
-
-		Constant* m_Constant;
 	};
 }

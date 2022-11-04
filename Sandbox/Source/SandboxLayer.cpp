@@ -83,77 +83,77 @@ namespace Sandbox
 
 	void SandboxLayer::OnImGuiRender()
 	{
-		ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
-		int entityNo = 0;
-		auto displayEntityInfo = [](Engine::Entity* toDisplay, int number) -> void
-		{
-			ImGui::Text("%s", toDisplay->Name().c_str());
-
-			std::string positionLabel = "Position##";
-			positionLabel+= "Entity" + std::to_string(number);
-			ImGui::DragFloat3(positionLabel.c_str(), (float*)toDisplay->Transform().Position);
-
-			std::string scaleLabel = "Scale##";
-			scaleLabel+= "Entity" + std::to_string(number);
-			ImGui::DragFloat3(scaleLabel.c_str(), (float*)toDisplay->Transform().Scale);
-
-			std::string rotationLabel = "Rotation##";
-			rotationLabel+= "Entity" + std::to_string(number);
-			ImGui::DragFloat3(rotationLabel.c_str(), (float*)toDisplay->Transform().Rotation);
-
-			ImGui::Spacing();
-		};
-		
-		ImGui::Begin("Inspector");
-		
-		for (auto* entity : m_EntityList)
-		{
-			displayEntityInfo(entity, entityNo);
-			entityNo++;
-		}
-
-		displayEntityInfo(m_Plane, entityNo);
-
-		ImGui::Text("FPS: %f", m_Fps);
-
-		ImGui::Separator();
-
-		ImGui::Text("Scene Cameras");
-
-
-		if (ImGui::Button("Camera 0"))
-		{
-			m_CurrentSceneCamera = 0;
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Button("Camera 1"))
-		{
-			m_CurrentSceneCamera = 1;
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Button("Camera 2"))
-		{
-			m_CurrentSceneCamera = 2;
-		}
-		ImGui::Separator();
-		for (auto i = 0; i < 3; i++)
-		{
-			std::string cameraId = "Camera" + std::to_string(i);
-
-			ImGui::Text((cameraId).c_str());
-			
-			ImGui::DragFloat3((std::string("Position##") + cameraId).c_str(),
-				(float*)m_CameraHandler.GetSceneCamera(i).Transform().Position, 0.1f);
-
-			ImGui::DragFloat3((std::string("Rotation##") + cameraId).c_str(),
-				(float*)m_CameraHandler.GetSceneCamera(i).Transform().Rotation, 0.1f);
-
-			ImGui::Separator();
-		}
-		
-		ImGui::End();
+		// ImGui::ShowDemoWindow(&m_IsDemoWindowOpen);
+		// int entityNo = 0;
+		// auto displayEntityInfo = [](Engine::Entity* toDisplay, int number) -> void
+		// {
+		// 	ImGui::Text("%s", toDisplay->Name().c_str());
+		//
+		// 	std::string positionLabel = "Position##";
+		// 	positionLabel+= "Entity" + std::to_string(number);
+		// 	ImGui::DragFloat3(positionLabel.c_str(), (float*)toDisplay->Transform().Position);
+		//
+		// 	std::string scaleLabel = "Scale##";
+		// 	scaleLabel+= "Entity" + std::to_string(number);
+		// 	ImGui::DragFloat3(scaleLabel.c_str(), (float*)toDisplay->Transform().Scale);
+		//
+		// 	std::string rotationLabel = "Rotation##";
+		// 	rotationLabel+= "Entity" + std::to_string(number);
+		// 	ImGui::DragFloat3(rotationLabel.c_str(), (float*)toDisplay->Transform().Rotation);
+		//
+		// 	ImGui::Spacing();
+		// };
+		//
+		// ImGui::Begin("Inspector");
+		//
+		// for (auto* entity : m_EntityList)
+		// {
+		// 	displayEntityInfo(entity, entityNo);
+		// 	entityNo++;
+		// }
+		//
+		// displayEntityInfo(m_Plane, entityNo);
+		//
+		// ImGui::Text("FPS: %f", m_Fps);
+		//
+		// ImGui::Separator();
+		//
+		// ImGui::Text("Scene Cameras");
+		//
+		//
+		// if (ImGui::Button("Camera 0"))
+		// {
+		// 	m_CurrentSceneCamera = 0;
+		// }
+		// ImGui::SameLine();
+		//
+		// if (ImGui::Button("Camera 1"))
+		// {
+		// 	m_CurrentSceneCamera = 1;
+		// }
+		// ImGui::SameLine();
+		//
+		// if (ImGui::Button("Camera 2"))
+		// {
+		// 	m_CurrentSceneCamera = 2;
+		// }
+		// ImGui::Separator();
+		// for (auto i = 0; i < 3; i++)
+		// {
+		// 	std::string cameraId = "Camera" + std::to_string(i);
+		//
+		// 	ImGui::Text((cameraId).c_str());
+		// 	
+		// 	ImGui::DragFloat3((std::string("Position##") + cameraId).c_str(),
+		// 		(float*)m_CameraHandler.GetSceneCamera(i).Transform().Position, 0.1f);
+		//
+		// 	ImGui::DragFloat3((std::string("Rotation##") + cameraId).c_str(),
+		// 		(float*)m_CameraHandler.GetSceneCamera(i).Transform().Rotation, 0.1f);
+		//
+		// 	ImGui::Separator();
+		// }
+		//
+		// ImGui::End();
 	}
 
 	void SandboxLayer::OnPollInput()

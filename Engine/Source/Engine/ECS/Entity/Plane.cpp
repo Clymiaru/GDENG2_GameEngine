@@ -16,7 +16,7 @@ namespace Engine
 	Plane::Plane(const String& name,
 	             const Vector3Float& position) :
 		Entity(name),
-		m_Render{new RenderComponent(this)}
+		m_Render{new RenderComponent(*this)}
 	{
 		Transform().Position = position;
 

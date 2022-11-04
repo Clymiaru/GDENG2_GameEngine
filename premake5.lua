@@ -24,5 +24,5 @@ OutputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 DependenciesDir = {}
 
 include "Engine"
-include "Sandbox"
 include "Editor"
+include "Sandbox"

@@ -10,8 +10,7 @@
 namespace Engine
 {
 	DeviceContext::DeviceContext(ID3D11DeviceContext* deviceContext) :
-		m_DeviceContext(std::move(deviceContext)),
-		m_Topology{}
+		m_DeviceContext(std::move(deviceContext))
 	{
 	}
 
@@ -22,27 +21,51 @@ namespace Engine
 		m_DeviceContext->Release();
 	}
 
-	ID3D11DeviceContext& DeviceContext::Context() const
+	void DeviceContext::ClearRenderTargetView(ID3D11RenderTargetView* renderTarget,
+	                                          const Color& color) const
 	{
-		return *m_DeviceContext;
+		m_DeviceContext->ClearRenderTargetView(renderTarget,
+		                                       (const float*)color);
 	}
 
-	void DeviceContext::Clear(const SwapChain& swapChain,
-	                          const Color color) const
+	void DeviceContext::ClearDepthStencilView(ID3D11DepthStencilView* depthStencilView) const
 	{
-		m_DeviceContext->ClearRenderTargetView(&swapChain.GetRenderTargetView(),
+		m_DeviceContext->ClearDepthStencilView(depthStencilView,
+		                                       D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+	}
+
+	void DeviceContext::ClearRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
+	                                                         ID3D11DepthStencilView* depthStencil,
+	                                                         const Color& color) const
+	{
+		m_DeviceContext->ClearRenderTargetView(renderTarget,
 		                                       (const float*)color);
 
-		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
-		renderTargetViews.push_back(&swapChain.GetRenderTargetView());
-
-		m_DeviceContext->ClearDepthStencilView(&swapChain.GetDepthStencilView(),
+		m_DeviceContext->ClearDepthStencilView(depthStencil,
 		                                       D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+	}
+
+	void DeviceContext::BindRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
+	                                                        ID3D11DepthStencilView* depthStencil) const
+	{
+		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
+		renderTargetViews.push_back(renderTarget);
 
 		m_DeviceContext->OMSetRenderTargets(1,
 		                                    renderTargetViews.data(),
-		                                    &swapChain.GetDepthStencilView());
+		                                    depthStencil);
+
 	}
+
+	// void DeviceContext::Clear(const SwapChain& swapChain,
+	//                           const Color color) const
+	// {
+	// 	ClearRenderTargetAndDepthStencilView(&swapChain.GetRenderTargetView(),
+	// 	                                     &swapChain.GetDepthStencilView(),
+	// 	                                     color);
+	// 	BindRenderTargetAndDepthStencilView(&swapChain.GetRenderTargetView(),
+	// 	                                    &swapChain.GetDepthStencilView());
+	// }
 
 	void DeviceContext::SetViewportSize(const Vector2Float& size) const
 	{
@@ -75,16 +98,14 @@ namespace Engine
 		                                   NULL);
 	}
 
-	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology)
+	void DeviceContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) const
 	{
-		m_Topology = topology;
-		m_DeviceContext->IASetPrimitiveTopology(m_Topology);
+		m_DeviceContext->IASetPrimitiveTopology(topology);
 	}
 
 	void DeviceContext::DrawIndexed(const uint32_t indexCount,
 	                                const uint32_t startingIndex) const
 	{
-		Debug::Assert(m_Topology != D3D10_PRIMITIVE_TOPOLOGY_UNDEFINED, "Please set Topology before drawing!");
 		m_DeviceContext->DrawIndexed(indexCount,
 		                             startingIndex,
 		                             0);

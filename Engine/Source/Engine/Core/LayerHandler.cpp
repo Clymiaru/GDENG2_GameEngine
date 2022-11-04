@@ -108,6 +108,17 @@ namespace Engine
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
+		ImGuiIO& io = ImGui::GetIO();
+		const Rect<uint32_t> windowRect = Application::WindowRect();
+
+		io.DisplaySize = ImVec2((float)windowRect.Width, (float)windowRect.Height);
+		
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
+
 		ImGui::EndFrame();
 	}
 }

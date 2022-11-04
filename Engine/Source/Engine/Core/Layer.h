@@ -37,7 +37,7 @@ namespace Engine
 		// what happens when layers are copied
 		Layer(const Layer&) = delete;
 	
-		Layer& operator=(const Layer& v) = delete;
+		Layer& operator=(const Layer&) = delete;
 	
 		Layer(Layer&&) noexcept = delete;
 	

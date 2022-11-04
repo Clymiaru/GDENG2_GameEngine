@@ -29,6 +29,14 @@ void Engine::ImGuiSystem::Start()
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 	ImGui::StyleColorsDark();
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+	
 	ImGui::SetCurrentContext(m_Context);
 }
 
