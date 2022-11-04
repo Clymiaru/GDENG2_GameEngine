@@ -26,8 +26,14 @@ namespace Engine
 		static void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
 		                                 const void* updatedBufferData);
 
-		static void Draw(VertexShader& vertexShader,
-		                 PixelShader& pixelShader,
+		static void Draw(const VertexShader& vertexShader,
+		                 const PixelShader& pixelShader,
+		                 const VertexBuffer& vertexBuffer,
+		                 const IndexBuffer& indexBuffer,
+		                 D3D11_PRIMITIVE_TOPOLOGY topology);
+
+		static void Draw(const VertexShader& vertexShader,
+		                 const PixelShader& pixelShader,
 		                 const VertexBuffer& vertexBuffer,
 		                 const IndexBuffer& indexBuffer,
 		                 const ConstantBuffer& constantBuffer,
@@ -66,6 +72,11 @@ namespace Engine
 		static SwapChain& GetSwapChain()
 		{
 			return *s_SwapChain;
+		};
+
+		static DeviceContext& GetDeviceContext()
+		{
+			return *s_DeviceContext;
 		};
 
 		Renderer(const Renderer&) = delete;

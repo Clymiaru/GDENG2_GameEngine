@@ -110,7 +110,7 @@ namespace Engine
 				std::string errorString = "Vertex shader cannot be compiled! (";
 				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
 				errorString += ")\n";
-				Debug::Assert(errorBlob != nullptr, errorString);
+				Debug::Assert(errorBlob == nullptr, errorString);
 				errorBlob->Release();
 			}
 		}
@@ -151,7 +151,7 @@ namespace Engine
 				std::string errorString = "Pixel shader cannot be compiled! (";
 				errorString += static_cast<char*>(errorBlob->GetBufferPointer());
 				errorString += ")\n";
-				Debug::Assert(errorBlob != nullptr, errorString);
+				Debug::Assert(errorBlob == nullptr, errorString);
 				errorBlob->Release();
 			}
 		}

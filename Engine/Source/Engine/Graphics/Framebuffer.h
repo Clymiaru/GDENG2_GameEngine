@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <d3d11.h>
 
+#include "RenderTexture.h"
+
 namespace Engine
 {
 	struct Color;
@@ -23,24 +25,27 @@ namespace Engine
 
 		~Framebuffer();
 
-		ID3D11ShaderResourceView& GetShaderResourceView() const;
+		void Clear(const Color& clearColor) const;
 
-		ID3D11RenderTargetView& GetRenderTargetView() const;
+		void SetAsRenderTarget();
 
-		ID3D11DepthStencilView& GetDepthStencilView() const;
+		ID3D11ShaderResourceView& GetFrame() const
+		{
+			return m_RenderTarget->GetShaderResourceView();
+		}
 
-		void ClearRenderTarget(const Color& clearColor) const;
-
-		void ClearDepthStencil() const;
+		Framebuffer(const Framebuffer&) = delete;
+	
+		Framebuffer& operator=(const Framebuffer&) = delete;
+	
+		Framebuffer(Framebuffer&&) noexcept = delete;
+	
+		Framebuffer& operator=(Framebuffer&&) noexcept = delete;
 
 	private:
 		FramebufferProfile m_Profile;
 
-		ID3D11Texture2D* m_FrameTexture;
-
-		ID3D11ShaderResourceView* m_ShaderResourceView;
-
-		ID3D11RenderTargetView* m_RenderTargetView;
+		RenderTexture* m_RenderTarget;
 
 		ID3D11DepthStencilView* m_DepthStencilView;
 	};

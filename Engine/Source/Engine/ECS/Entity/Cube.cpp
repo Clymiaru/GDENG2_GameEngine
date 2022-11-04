@@ -121,9 +121,9 @@ namespace Engine
 		};
 		//size_t indexSize = ARRAYSIZE(indices);
 
-		m_Render->Initialize(new RenderComponent::VertexData{vertices, vertexSize},
-		                     new RenderComponent::VertexLayoutData{layout, layoutSize},
-		                     new RenderComponent::IndexData{indices, 36},
+		m_Render->Initialize(new VertexData{vertices, vertexSize},
+		                     new VertexLayoutData{layout, layoutSize},
+		                     new IndexData{indices, 36},
 		                     sizeof(Vertex),
 		                     "DefaultShader");
 	}

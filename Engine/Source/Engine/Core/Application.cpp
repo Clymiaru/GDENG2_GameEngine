@@ -141,7 +141,9 @@ namespace Engine
 		m_LayerHandler->Render();
 		// Render target UI
 		
-
+		Renderer::SetRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
+										  &Renderer::GetSwapChain().GetDepthStencil());
+		
 		m_LayerHandler->ImGuiRender();
 
 		

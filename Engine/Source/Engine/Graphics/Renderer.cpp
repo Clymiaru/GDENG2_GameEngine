@@ -22,8 +22,6 @@ namespace Engine
 
 	ID3D11Device* Renderer::s_Device = nullptr;
 
-
-
 	const std::vector<D3D_DRIVER_TYPE> DRIVER_TYPES_SUPPORTED
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -78,7 +76,6 @@ namespace Engine
 
 		s_DeviceContext->SetViewportSize(winSize);
 
-		
 		ImGui_ImplDX11_Init(s_Device, deviceContext);
 	}
 
@@ -111,7 +108,7 @@ namespace Engine
 	                               ID3D11DepthStencilView* depthStencil)
 	{
 		s_DeviceContext->BindRenderTargetAndDepthStencilView(renderTarget,
-															 depthStencil);
+		                                                     depthStencil);
 	}
 
 	HRESULT Renderer::CreateBuffer(const D3D11_BUFFER_DESC* desc,
@@ -148,7 +145,7 @@ namespace Engine
 	{
 		if (s_SwapChain == nullptr)
 			return;
-		
+
 		s_SwapChain->ResizeBuffers(size, *s_DeviceContext, s_Device);
 	}
 
@@ -157,8 +154,8 @@ namespace Engine
 		s_DeviceContext->SetViewportSize(viewportSize);
 	}
 
-	void Renderer::Draw(VertexShader& vertexShader,
-	                    PixelShader& pixelShader,
+	void Renderer::Draw(const VertexShader& vertexShader,
+	                    const PixelShader& pixelShader,
 	                    const VertexBuffer& vertexBuffer,
 	                    const IndexBuffer& indexBuffer,
 	                    const ConstantBuffer& constantBuffer,
@@ -193,5 +190,26 @@ namespace Engine
 	                                    const void* updatedBufferData)
 	{
 		s_DeviceContext->UpdateBufferResource(constantBuffer.m_Data, updatedBufferData);
+	}
+
+	void Renderer::Draw(const VertexShader& vertexShader,
+	                    const PixelShader& pixelShader,
+	                    const VertexBuffer& vertexBuffer,
+	                    const IndexBuffer& indexBuffer,
+	                    const D3D11_PRIMITIVE_TOPOLOGY topology)
+	{
+		s_DeviceContext->SetRenderData<VertexShader>(vertexShader);
+		s_DeviceContext->SetRenderData<PixelShader>(pixelShader);
+
+		s_DeviceContext->SetRenderData<VertexBuffer>(vertexBuffer);
+		s_DeviceContext->SetRenderData<IndexBuffer>(indexBuffer);
+
+		// Set drawing process
+		// Device Context sets Draw Topology
+		s_DeviceContext->SetTopology(topology);
+
+		// Actual drawing into the frame buffer
+		s_DeviceContext->DrawIndexed(indexBuffer.ElementCount(),
+		                             0);
 	}
 }

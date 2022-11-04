@@ -23,6 +23,8 @@ namespace Engine
 
 		void Release() const;
 
+		ID3D11DeviceContext& GetContext() { return *m_DeviceContext; }
+
 		void ClearRenderTargetView(ID3D11RenderTargetView* renderTarget,
 		                           const Color& color) const;
 
