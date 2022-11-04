@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Renderer.h"
 
+#include "Framebuffer.h"
+
 #include "Engine/Core/Debug.h"
 #include "Engine/Core/Window.h"
 
@@ -89,26 +91,41 @@ namespace Engine
 		s_Device->Release();
 	}
 
-	void Renderer::Clear(const Color& clearColor)
+	void Renderer::StartRender(const Framebuffer& framebuffer)
 	{
+		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
+		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
+
+		s_DeviceContext->ClearRenderTargetView(renderTarget,
+		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
+
+		s_DeviceContext->ClearDepthStencilView(depthStencil);
+
+		s_DeviceContext->SetRenderTargetTo(&renderTarget,
+		                                   &depthStencil);
 	}
 
-	void Renderer::ClearRenderTarget(ID3D11RenderTargetView* renderTargetView,
-	                                 const Color& clearColor)
+	void Renderer::EndRender(const Framebuffer& framebuffer)
 	{
-		s_DeviceContext->ClearRenderTargetView(renderTargetView, clearColor);
+		// Unbound render target?
 	}
 
-	void Renderer::ClearDepthStencil(ID3D11DepthStencilView* depthStencilView)
+	void Renderer::ClearFramebuffer(const Framebuffer& framebuffer)
 	{
-		s_DeviceContext->ClearDepthStencilView(depthStencilView);
+		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
+		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
+
+		s_DeviceContext->ClearRenderTargetView(renderTarget,
+											   Color(0.5f, 0.3f, 0.8f, 1.0f));
+
+		s_DeviceContext->ClearDepthStencilView(depthStencil);
 	}
 
-	void Renderer::SetRenderTarget(ID3D11RenderTargetView* renderTarget,
-	                               ID3D11DepthStencilView* depthStencil)
+	void Renderer::SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
+	                                 ID3D11DepthStencilView* depthStencil)
 	{
-		s_DeviceContext->BindRenderTargetAndDepthStencilView(renderTarget,
-		                                                     depthStencil);
+		s_DeviceContext->SetRenderTargetTo(renderTarget,
+		                                   depthStencil);
 	}
 
 	HRESULT Renderer::CreateBuffer(const D3D11_BUFFER_DESC* desc,
@@ -146,7 +163,7 @@ namespace Engine
 		if (s_SwapChain == nullptr)
 			return;
 
-		s_SwapChain->ResizeBuffers(size, *s_DeviceContext, s_Device);
+	//	s_SwapChain->ResizeBuffers(size, *s_DeviceContext, s_Device);
 	}
 
 	void Renderer::SetViewportSize(const Vector2Int& viewportSize)

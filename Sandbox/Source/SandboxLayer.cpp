@@ -3,6 +3,7 @@
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
+#include <Engine/Graphics/Renderer.h>
 
 #include "Engine/ECS/Entity/Entity.h"
 #include "../../Engine/Dependencies/ImGui/imgui.h"
@@ -26,6 +27,13 @@ namespace Sandbox
 	void SandboxLayer::OnAttach()
 	{
 		using namespace Engine;
+
+		FramebufferProfile sceneFramebufferProfile;
+		sceneFramebufferProfile.Width = Application::WindowRect().Width;
+		sceneFramebufferProfile.Height = Application::WindowRect().Height;
+		m_Framebuffer = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
+
+		
 		ShaderLibrary::Register<VertexShader>("Assets/DefaultShader.hlsl",
 		                                      "vsmain");
 
@@ -37,9 +45,9 @@ namespace Sandbox
 		cubeEntity->Transform().Scale = Vector3Float(10.0f, 10.0f, 10.0f);
 		m_EntityList.emplace_back(cubeEntity);
 
-		m_Plane = new Plane("PlaneEntity", Vector3Float());
+		m_Plane                       = new Plane("PlaneEntity", Vector3Float());
 		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
-		m_Plane->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+		m_Plane->Transform().Scale    = Vector3Float(100.0f, 100.0f, 100.0f);
 
 		// Initialize Scene Cameras
 		m_CameraHandler.Initialize(3,
@@ -74,6 +82,10 @@ namespace Sandbox
 
 	void SandboxLayer::OnRender()
 	{
+		using namespace Engine;
+		Renderer::SetRenderTargetTo(&Renderer::GetSwapChain().GetBackbuffer().GetRenderTarget(),
+		                            &Renderer::GetSwapChain().GetBackbuffer().GetDepthStencil());
+		
 		for (auto* entity : m_EntityList)
 		{
 			entity->Draw(m_CameraHandler.GetSceneCamera(m_CurrentSceneCamera));

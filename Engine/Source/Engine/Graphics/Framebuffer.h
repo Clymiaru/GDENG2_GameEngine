@@ -13,7 +13,7 @@ namespace Engine
 
 		uint32_t Height;
 
-		uint32_t Samples = 1;
+		ID3D11Texture2D* ExistingTexture = nullptr;
 
 		bool SwapChainTarget = false;
 	};
@@ -25,13 +25,22 @@ namespace Engine
 
 		~Framebuffer();
 
-		void Clear(const Color& clearColor) const;
-
-		void SetAsRenderTarget();
-
+		[[nodiscard]]
 		ID3D11ShaderResourceView& GetFrame() const
 		{
 			return m_RenderTarget->GetShaderResourceView();
+		}
+
+		[[nodiscard]]
+		ID3D11RenderTargetView& GetRenderTarget() const
+		{
+			return m_RenderTarget->GetRenderTargetView();
+		}
+
+		[[nodiscard]]
+		ID3D11DepthStencilView& GetDepthStencil() const
+		{
+			return *m_DepthStencilView;
 		}
 
 		Framebuffer(const Framebuffer&) = delete;

@@ -1,12 +1,14 @@
 ﻿#pragma once
-#include "RenderData.h"
+#include "PostProcessEffect.h"
+
+#include <d3d11.h>
+
+#include "Engine/Graphics/RenderData.h"
 
 #include "Engine/Core/Core.h"
 
 namespace Engine
 {
-	class ConstantBuffer;
-
 	class IndexBuffer;
 
 	class VertexBuffer;
@@ -15,7 +17,7 @@ namespace Engine
 
 	class VertexShader;
 
-	class PostProcessQuad
+	class PostProcessQuad final
 	{
 	public:
 		PostProcessQuad();
@@ -35,13 +37,11 @@ namespace Engine
 
 		SharedPtr<VertexShader> m_VertexShader;
 
-		SharedPtr<PixelShader> m_PixelShader;
-
 		UniquePtr<VertexBuffer> m_VertexBuffer;
 
 		UniquePtr<IndexBuffer> m_IndexBuffer;
 
-		UniquePtr<ConstantBuffer> m_ConstantBuffer;
+		PostProcessEffect* m_PostProcessEffect;
 		
 		ID3D11ShaderResourceView* m_FrameReference;
 

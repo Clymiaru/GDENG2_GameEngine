@@ -1,10 +1,11 @@
 #pragma once
 #include <d3d11.h>
 
-#include "Engine/Math/Vector2.h"
 
 namespace Engine
 {
+	class Framebuffer;
+	
 	class DeviceContext;
 
 	class Window;
@@ -18,17 +19,13 @@ namespace Engine
 
 		~SwapChain();
 
+		// TODO: Determine if the resource will be released on command or through RAII
 		void Release() const;
 
 		void Present(uint32_t vsync) const;
 
-		ID3D11RenderTargetView& GetBackbufferRenderTarget() const;
-
-		ID3D11DepthStencilView& GetDepthStencil() const;
-
-		void ResizeBuffers(Vector2Uint& size,
-		                   DeviceContext& deviceContext,
-		                   ID3D11Device* device);
+		[[nodiscard]]
+		Framebuffer& GetBackbuffer() const;
 
 		SwapChain(const SwapChain&) = delete;
 
@@ -46,9 +43,7 @@ namespace Engine
 
 		IDXGISwapChain* m_SwapChain;
 
-		ID3D11RenderTargetView* m_BackbufferRenderTarget;
-
-		ID3D11DepthStencilView* m_DepthStencil;
+		Framebuffer* m_MainFramebuffer;
 
 		Window& m_WindowRef;
 	};

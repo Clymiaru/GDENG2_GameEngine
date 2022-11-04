@@ -11,14 +11,20 @@ namespace Engine
 
 		static void End();
 
-		static void Clear(const Color& clearColor);
+		// Takes in the Framebuffer to clear then set it as current render target
+		static void StartRender(const Framebuffer& framebuffer);
+
+		// Removes the bound framebuffer as rendertarget
+		static void EndRender(const Framebuffer& framebuffer);
+
+		static void ClearFramebuffer(const Framebuffer& framebuffer);
 
 		static void ClearRenderTarget(ID3D11RenderTargetView* renderTargetView,
 		                              const Color& clearColor);
 
 		static void ClearDepthStencil(ID3D11DepthStencilView* depthStencilView);
 
-		static void SetRenderTarget(ID3D11RenderTargetView* renderTarget,
+		static void SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
 		                            ID3D11DepthStencilView* depthStencil);
 
 		static void ShowFrame();

@@ -15,7 +15,8 @@ namespace Engine
 
 	Application::Application() :
 		m_IsRunning{false},
-		m_Window{nullptr}
+		m_Window{nullptr},
+		m_LayerHandler{nullptr}
 	{
 		m_LayerHandler = CreateUniquePtr<LayerHandler>(5);
 	}
@@ -53,11 +54,12 @@ namespace Engine
 	{
 		Instance().m_Time = Time();
 
-		Renderer::Start(*m_Window);;
+		Renderer::Start(*m_Window);
 
 		ShaderLibrary::Initialize(4);
 
 		Input::Start();
+
 	}
 
 	void Application::Run()
@@ -129,25 +131,17 @@ namespace Engine
 
 	void Application::Render() const
 	{
-		// Render target 1
-		Renderer::ClearRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
-		                            Color(0.5f, 0.2f, 0.7f, 1.0f));
+		Renderer::ClearFramebuffer(Renderer::GetSwapChain().GetBackbuffer());
 
-		Renderer::ClearDepthStencil(&Renderer::GetSwapChain().GetDepthStencil());
-		Renderer::SetRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
-		                          &Renderer::GetSwapChain().GetDepthStencil());
-
-
+		// Each layer has the responsibility to retarget the render target to
+		// swap chain if framebuffer will not be utilized for now.
 		m_LayerHandler->Render();
-		// Render target UI
-		
-		Renderer::SetRenderTarget(&Renderer::GetSwapChain().GetBackbufferRenderTarget(),
-										  &Renderer::GetSwapChain().GetDepthStencil());
+
+		Renderer::SetRenderTargetTo(&Renderer::GetSwapChain().GetBackbuffer().GetRenderTarget(),
+		                            &Renderer::GetSwapChain().GetBackbuffer().GetDepthStencil());
 		
 		m_LayerHandler->ImGuiRender();
-
 		
-
 		Renderer::ShowFrame();
 	}
 }

@@ -6,6 +6,8 @@
 #include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
 #include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
 
+#include "Engine/Graphics/Renderer.h"
+
 namespace Engine
 {
 	LayerHandler::LayerHandler(const size_t expectedLayerCount)
@@ -90,7 +92,16 @@ namespace Engine
 	{
 		for (auto* layer : m_Layers)
 		{
+			// TODO: Mght require refactor since checking for null may be more expensive than emptyFrame buffer;
+			const Framebuffer* layerFramebuffer = layer->GetFramebuffer();
+			if (layerFramebuffer == nullptr)
+				continue;
+			
+			Renderer::StartRender(*layerFramebuffer);
+			
 			layer->OnRender();
+
+			Renderer::EndRender(*layerFramebuffer);
 		}
 	}
 

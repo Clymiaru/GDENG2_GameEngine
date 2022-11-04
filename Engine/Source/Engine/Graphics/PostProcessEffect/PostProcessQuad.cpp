@@ -1,19 +1,14 @@
 ﻿#include "pch.h"
 #include "PostProcessQuad.h"
 
-#include "Renderer.h"
-#include "ShaderLibrary.h"
+#include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/ShaderLibrary.h"
 
 #include "Engine/Input/Input.h"
 #include "Engine/Math/Color.h"
 #include "Engine/Math/Vector3.h"
 
-__declspec(align(16))
-struct Constant
-{
-	Engine::Vector2Float ScreenSize;
-	Engine::Vector2Float Direction;
-};
+
 
 namespace Engine
 {
@@ -31,7 +26,6 @@ namespace Engine
 		m_VertexLayoutData{nullptr},
 		m_IndexData{nullptr},
 		m_VertexShader{nullptr},
-		m_PixelShader{nullptr},
 		m_VertexBuffer{nullptr},
 		m_IndexBuffer{nullptr}
 	{
@@ -85,10 +79,11 @@ namespace Engine
 		m_VertexData       = new VertexData(vertices, vertexSize);
 		m_VertexLayoutData = new VertexLayoutData(layout, layoutSize);
 		m_IndexData        = new IndexData(indices, indexSize);
-		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>("PostProcessSimpleChromaticAberration");
-		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>("PostProcessSimpleChromaticAberration");
+		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>("PostProcess_VS");
 
-		Constant* constant = new Constant{};
+		m_PostProcessEffect = new PostProcessEffect("VignetteEffect");
+		
+		//m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>("PostProcess_VignetteEffect");
 		
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
 		                                               sizeof(PostProcessVertex),
@@ -101,7 +96,7 @@ namespace Engine
 		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
 		                                             m_IndexData->IndexListCount);
 
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(Constant));
+		
 
 		D3D11_SAMPLER_DESC samplerDesc = {};
 		samplerDesc.Filter             = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -116,7 +111,6 @@ namespace Engine
 	{
 		m_VertexBuffer.release();
 		m_IndexBuffer.release();
-		m_ConstantBuffer.release();
 	}
 
 	void PostProcessQuad::UpdateFrameRef(ID3D11ShaderResourceView* frame)
@@ -126,25 +120,16 @@ namespace Engine
 
 	void PostProcessQuad::Draw() const
 	{
-		Constant* constant = new Constant();
-
-		constant->ScreenSize          = Vector2Float(1280, 1080);
-
-		auto mousePos = Input::Mouse().MousePosition;
-		auto mag = mousePos.Length();
-		constant->Direction = Vector2Float((float)mousePos.x / mag, (float)mousePos.y / mag);
-		//m_ConstantBuffer->Update();
-
-		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, constant);
+		//Renderer::UpdateConstantBuffer(*m_ConstantBuffer, constant);
 		
 		Renderer::GetDeviceContext().SetRenderData<VertexShader>(*m_VertexShader);
-		Renderer::GetDeviceContext().SetRenderData<PixelShader>(*m_PixelShader);
+		Renderer::GetDeviceContext().SetRenderData<PixelShader>(m_PostProcessEffect->GetEffectShader());
 
 		Renderer::GetDeviceContext().GetContext().PSSetShaderResources(0, 1, &m_FrameReference);
 		Renderer::GetDeviceContext().GetContext().PSSetSamplers(0, 1, &m_TextureSampler);
 
-		Renderer::GetDeviceContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
-		Renderer::GetDeviceContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+		// Renderer::GetDeviceContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
+		// Renderer::GetDeviceContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
 
 		Renderer::GetDeviceContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
 		Renderer::GetDeviceContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);

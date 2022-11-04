@@ -2,7 +2,7 @@
 #include <Engine/Core/Layer.h>
 #include <Engine/Engine.h>
 #include <Engine/Graphics/Framebuffer.h>
-#include <Engine/Graphics/PostProcessQuad.h>
+//#include <Engine/Graphics/PostProcessQuad.h>
 #include <Engine/SceneManagement/EditorSceneCameraHandler.h>
 
 #include "Screen/CreditsScreen.h"
@@ -63,7 +63,7 @@ namespace Editor
 		Engine::List<Engine::Cube*> m_EntityList;
 		Engine::Plane* m_Plane;
 
-		Engine::PostProcessQuad* m_PostProcessQuad;
+		// Engine::PostProcessQuad* m_PostProcessQuad;
 		
 		Engine::EditorSceneCameraHandler m_CameraHandler;
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Engine/Core/Core.h"
+#include "Engine/Graphics/Framebuffer.h"
 
 namespace Engine
 {
@@ -18,20 +19,26 @@ namespace Engine
 
 		virtual void OnPollInput() = 0;
 
-		// Executes per frame
 		virtual void OnUpdate() = 0;
 
-		// Executes per frame
 		virtual void OnRender() = 0;
 
-		// Executes per frame
 		virtual void OnImGuiRender() = 0;
 		
 		// Executes when this layer is destroyed
 		virtual void OnDetach() = 0;
 
 		[[nodiscard]]
-		const String& GetName() const;
+		const String& GetName() const
+		{
+			return m_Name;
+		}
+
+		[[nodiscard]]
+		Framebuffer* GetFramebuffer() const
+		{
+			return m_Framebuffer.get();
+		}
 
 		// Delete Move and Copy functionality for now until we decide on
 		// what happens when layers are copied
@@ -45,5 +52,8 @@ namespace Engine
 
 	private:
 		String m_Name;
+
+	protected:
+		UniquePtr<Framebuffer> m_Framebuffer;
 	};
 }

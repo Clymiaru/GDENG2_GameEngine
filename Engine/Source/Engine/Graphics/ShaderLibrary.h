@@ -10,6 +10,8 @@
 
 namespace Engine
 {
+	// TODO: Streamline Shader registration
+	// Maybe always expect <ShaderPrefix>Main for the entry point
 	class ShaderLibrary final
 	{
 	public:

@@ -12,7 +12,14 @@ namespace Engine
 		m_RenderTarget{nullptr},
 		m_DepthStencilView{nullptr}
 	{
-		m_RenderTarget = new RenderTexture(profile.Width, profile.Height);
+		if (profile.ExistingTexture == nullptr)
+		{
+			m_RenderTarget = new RenderTexture(profile.Width, profile.Height);
+		}
+		else
+		{
+			m_RenderTarget = new RenderTexture(profile.ExistingTexture, profile.SwapChainTarget);
+		}
 
 		ID3D11Texture2D* depthStencilTexture = nullptr;
 		D3D11_TEXTURE2D_DESC textureDesc     = {};
@@ -43,17 +50,5 @@ namespace Engine
 			m_DepthStencilView->Release();
 
 		delete m_RenderTarget;
-	}
-
-	void Framebuffer::Clear(const Color& clearColor) const
-	{
-		Renderer::ClearRenderTarget(&m_RenderTarget->GetRenderTargetView(), clearColor);
-		Renderer::ClearDepthStencil(m_DepthStencilView);
-	}
-
-	void Framebuffer::SetAsRenderTarget()
-	{
-		Renderer::SetRenderTarget(&m_RenderTarget->GetRenderTargetView(),
-		                          m_DepthStencilView);
 	}
 }

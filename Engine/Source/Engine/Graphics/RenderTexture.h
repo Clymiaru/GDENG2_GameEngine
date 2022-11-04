@@ -7,7 +7,10 @@ namespace Engine
 	{
 	public:
 		explicit RenderTexture(uint32_t width,
-		              uint32_t height);
+		                       uint32_t height);
+
+		explicit RenderTexture(ID3D11Texture2D* existingTexture,
+		                       bool isSwapChainTexture = false);
 
 		~RenderTexture();
 
@@ -24,11 +27,11 @@ namespace Engine
 		}
 
 		RenderTexture(const RenderTexture&) = delete;
-	
+
 		RenderTexture& operator=(const RenderTexture&) = delete;
-	
+
 		RenderTexture(RenderTexture&&) noexcept = delete;
-	
+
 		RenderTexture& operator=(RenderTexture&&) noexcept = delete;
 
 	private:

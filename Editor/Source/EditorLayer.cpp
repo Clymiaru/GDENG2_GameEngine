@@ -4,7 +4,7 @@
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
 #include <Engine/Graphics/Renderer.h>
-#include <Engine/SceneManagement/Scene.h>
+#include <Engine/Graphics/PostProcessEffect/PostProcessQuad.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
 
@@ -25,7 +25,7 @@ namespace Editor
 		m_EntityList{Engine::List<Engine::Cube*>()},
 		m_Plane{nullptr},
 		m_CameraHandler{2},
-		m_PostProcessQuad{nullptr},
+		//m_PostProcessQuad{nullptr},
 		m_CurrentSceneCamera{0}
 	{
 	}
@@ -41,7 +41,8 @@ namespace Editor
 		FramebufferProfile sceneFramebufferProfile;
 		sceneFramebufferProfile.Width  = Application::WindowRect().Width;
 		sceneFramebufferProfile.Height = Application::WindowRect().Height;
-
+		
+		m_Framebuffer   = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
 		m_EditorViewFramebuffer = new Framebuffer(sceneFramebufferProfile);
 		m_GameViewFramebuffer   = new Framebuffer(sceneFramebufferProfile);
 
@@ -52,11 +53,8 @@ namespace Editor
 		ShaderLibrary::Register<PixelShader>("Assets/DefaultShader.hlsl",
 		                                     "psmain");
 
-		ShaderLibrary::Register<VertexShader>("Assets/Shaders/PostProcessFullscreenEffects/PostProcessSimpleChromaticAberration.hlsl",
-		                                      "vsmain");
-
-		ShaderLibrary::Register<PixelShader>("Assets/Shaders/PostProcessFullscreenEffects/PostProcessSimpleChromaticAberration.hlsl",
-		                                     "psmain");
+		ShaderLibrary::Register<VertexShader>("Assets/Shaders/PostProcess/PostProcess_VS.hlsl",
+											  "VSMain");
 
 		// Object initialization
 		Cube* cubeEntity              = new Cube("Testing Entity", Vector3Float());
@@ -67,7 +65,7 @@ namespace Editor
 		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
 		m_Plane->Transform().Scale    = Vector3Float(100.0f, 100.0f, 100.0f);
 
-		m_PostProcessQuad = new PostProcessQuad();
+		//m_PostProcessQuad = new PostProcessQuad();
 
 		m_CameraHandler.Initialize(2,
 		                           List<Vector3Float>
@@ -93,8 +91,14 @@ namespace Editor
 
 	void EditorLayer::OnRender()
 	{
-		m_EditorViewFramebuffer->Clear(Engine::Color{0.0f, 0.5f, 1.0f, 1.0f});
-		m_EditorViewFramebuffer->SetAsRenderTarget();
+		
+		for (auto* entity : m_EntityList)
+		{
+			entity->Draw(m_CameraHandler.GetSceneCamera(0));
+		}
+		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
+
+		Engine::Renderer::StartRender(*m_EditorViewFramebuffer);
 
 		for (auto* entity : m_EntityList)
 		{
@@ -102,26 +106,26 @@ namespace Editor
 		}
 		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
 
+		// m_PostProcessQuad->UpdateFrameRef(&m_EditorViewFramebuffer->GetFrame());
+		// m_PostProcessQuad->Draw();
+
+		Engine::Renderer::EndRender(*m_EditorViewFramebuffer);
+
 		// Apply Post processing to EditorView-----
 		// Get Texture from the Framebuffer to the quad.
 
+		Engine::Renderer::StartRender(*m_GameViewFramebuffer);
 
-		m_GameViewFramebuffer->Clear(Engine::Color{0.0f, 0.5f, 1.0f, 1.0f});
-		m_GameViewFramebuffer->SetAsRenderTarget();
+		for (auto* entity : m_EntityList)
+		{
+			entity->Draw(m_CameraHandler.GetSceneCamera(0));
+		}
+		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
 
-		m_PostProcessQuad->UpdateFrameRef(&m_EditorViewFramebuffer->GetFrame());
-		m_PostProcessQuad->Draw();
+		// m_PostProcessQuad->UpdateFrameRef(&m_EditorViewFramebuffer->GetFrame());
+		// m_PostProcessQuad->Draw();
 
-		// for (auto* entity : m_EntityList)
-		// {
-		// 	entity->Draw(m_CameraHandler.GetSceneCamera(1));
-		// }
-		// m_Plane->Draw(m_CameraHandler.GetSceneCamera(1));
-
-		// Apply Post processing to GameView
-
-		// TODO: Post-Processed Quad must be the last to be rendered
-		// TODO: Last render target is the post-processed quad
+		Engine::Renderer::EndRender(*m_GameViewFramebuffer);
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -138,50 +142,19 @@ namespace Editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				// New Scene
-
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Edit"))
 			{
-				// Create Entity
-				// More options:
-				// Empty Entity
-				// Cube Entity
-				// Plane Entity
-
 				if (ImGui::MenuItem("Create Entity"))
 				{
 				}
 
-				// ImGui::Separator();
-				// if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-				// if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-				// if (ImGui::MenuItem("Paste", "CTRL+V")) {}
 				ImGui::EndMenu();
 			}
 
-			// if (ImGui::Button("Credits##Button"))
-			// {
-			// 	showCredits = !showCredits;
-			// }
-
-			// if (ImGui::BeginMenu("Credits"))
-			// {
-			// 	showCredits = !showCredits;
-			// 	ImGui::EndMenu();
-			// }
-
 			ImGui::EndMainMenuBar();
 		}
-
-		// if (showCredits)
-		// {
-		// 	ImGui::Begin("Credits");
-		// 	ImGui::Text("Developer: Lanz Santiago");
-		// 	ImGui::Text("Acknowlwedgements");
-		// 	ImGui::End();
-		// }
 
 		m_CreditsScreen->DrawImpl();
 
@@ -218,7 +191,7 @@ namespace Editor
 
 		//delete m_ActiveScene;
 
-		delete m_PostProcessQuad;
+		//delete m_PostProcessQuad;
 		
 		delete m_EditorViewFramebuffer;
 		delete m_GameViewFramebuffer;

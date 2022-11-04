@@ -4,9 +4,6 @@
 
 #include "ShaderLibrary.h"
 
-#include "Engine/Graphics/SwapChain.h"
-#include "Engine/Graphics/VertexShader.h"
-
 namespace Engine
 {
 	DeviceContext::DeviceContext(ID3D11DeviceContext* deviceContext) :
@@ -21,40 +18,33 @@ namespace Engine
 		m_DeviceContext->Release();
 	}
 
-	void DeviceContext::ClearRenderTargetView(ID3D11RenderTargetView* renderTarget,
+	void DeviceContext::ClearRenderTargetView(ID3D11RenderTargetView& renderTarget,
 	                                          const Color& color) const
 	{
-		m_DeviceContext->ClearRenderTargetView(renderTarget,
+		m_DeviceContext->ClearRenderTargetView(&renderTarget,
 		                                       (const float*)color);
 	}
 
-	void DeviceContext::ClearDepthStencilView(ID3D11DepthStencilView* depthStencilView) const
+	void DeviceContext::ClearDepthStencilView(ID3D11DepthStencilView& depthStencilView) const
 	{
-		m_DeviceContext->ClearDepthStencilView(depthStencilView,
+		m_DeviceContext->ClearDepthStencilView(&depthStencilView,
 		                                       D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}
 
-	void DeviceContext::ClearRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
-	                                                         ID3D11DepthStencilView* depthStencil,
-	                                                         const Color& color) const
+	void DeviceContext::SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
+	                                      ID3D11DepthStencilView* depthStencil) const
 	{
-		m_DeviceContext->ClearRenderTargetView(renderTarget,
-		                                       (const float*)color);
+		int numOfRenderTarget = 1;
 
-		m_DeviceContext->ClearDepthStencilView(depthStencil,
-		                                       D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-	}
+		if (renderTarget == nullptr)
+			numOfRenderTarget = 0;
 
-	void DeviceContext::BindRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
-	                                                        ID3D11DepthStencilView* depthStencil) const
-	{
 		std::vector<ID3D11RenderTargetView*> renderTargetViews = {};
 		renderTargetViews.push_back(renderTarget);
 
-		m_DeviceContext->OMSetRenderTargets(1,
+		m_DeviceContext->OMSetRenderTargets(numOfRenderTarget,
 		                                    renderTargetViews.data(),
 		                                    depthStencil);
-
 	}
 
 	// void DeviceContext::Clear(const SwapChain& swapChain,

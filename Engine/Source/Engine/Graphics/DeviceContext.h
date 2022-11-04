@@ -23,19 +23,18 @@ namespace Engine
 
 		void Release() const;
 
-		ID3D11DeviceContext& GetContext() { return *m_DeviceContext; }
+		ID3D11DeviceContext& GetContext()
+		{
+			return *m_DeviceContext;
+		}
 
-		void ClearRenderTargetView(ID3D11RenderTargetView* renderTarget,
+		void ClearRenderTargetView(ID3D11RenderTargetView& renderTarget,
 		                           const Color& color) const;
 
-		void ClearDepthStencilView(ID3D11DepthStencilView* depthStencilView) const;
+		void ClearDepthStencilView(ID3D11DepthStencilView& depthStencilView) const;
 
-		void ClearRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
-		                                          ID3D11DepthStencilView* depthStencil,
-		                                          const Color& color) const;
-
-		void BindRenderTargetAndDepthStencilView(ID3D11RenderTargetView* renderTarget,
-		                                         ID3D11DepthStencilView* depthStencil) const;
+		void SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
+		                       ID3D11DepthStencilView* depthStencil) const;
 
 		template <typename T>
 		void SetRenderData(const T& renderData) const;
