@@ -6,7 +6,7 @@
 #include "Engine/Math/Vector2.h"
 
 __declspec(align(16))
-struct Constant
+struct SimpleChromaticAberrationConstantData
 {
 	Engine::Vector2Float ScreenSize;
 	Engine::Vector2Float Direction;
@@ -14,7 +14,9 @@ struct Constant
 
 namespace Engine
 {
-	PostProcessEffect::PostProcessEffect(const String& effectName)
+	PostProcessEffect::PostProcessEffect(const String& effectName) :
+		m_EffectPixelShader{nullptr},
+		m_ConstantBuffer{nullptr}
 	{
 		const String shaderEffectName = "PostProcess_" + effectName;
 		String shaderEffectShaderPath = "Assets/Shaders/PostProcess/";
@@ -24,10 +26,6 @@ namespace Engine
 		                                     "PSMain");
 
 		m_EffectPixelShader = ShaderLibrary::GetShaderRef<PixelShader>(shaderEffectName);
-
-		Constant* constant = new Constant{};
-
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(Constant));
 	}
 
 	PostProcessEffect::~PostProcessEffect() = default;

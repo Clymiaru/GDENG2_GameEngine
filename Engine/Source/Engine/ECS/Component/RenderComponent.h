@@ -5,7 +5,7 @@
 #include "Engine/Core/Core.h"
 #include "Engine/Graphics/RenderData.h"
 
-struct Constant;
+struct SimpleChromaticAberrationConstantData;
 
 namespace Engine
 {

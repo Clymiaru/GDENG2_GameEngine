@@ -26,6 +26,12 @@ namespace Engine
 		~Framebuffer();
 
 		[[nodiscard]]
+		FramebufferProfile& GetInfo()
+		{
+			return m_Profile;
+		}
+
+		[[nodiscard]]
 		ID3D11ShaderResourceView& GetFrame() const
 		{
 			return m_RenderTarget->GetShaderResourceView();
@@ -42,6 +48,8 @@ namespace Engine
 		{
 			return *m_DepthStencilView;
 		}
+
+		ID3D11Texture2D* CopyFrameTexture();
 
 		Framebuffer(const Framebuffer&) = delete;
 	

@@ -1,13 +1,11 @@
 ﻿#include "pch.h"
-#include "PostProcessQuad.h"
-
-#include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/ShaderLibrary.h"
+#include "RenderQuad.h"
 
 #include "Engine/Math/Vector2.h"
 #include "Engine/Math/Vector3.h"
 
-#include "PostProcessEffect.h"
+#include "Engine/Graphics/Renderer.h"
+#include "Engine/Graphics/ShaderLibrary.h"
 
 namespace Engine
 {
@@ -18,49 +16,25 @@ namespace Engine
 		Vector2Float TextureCoordinates;
 	};
 
-	PostProcessQuad::PostProcessQuad() :
-		m_VertexData{nullptr},
-		m_VertexLayoutData{nullptr},
-		m_IndexData{nullptr},
+	RenderQuad::RenderQuad() :
 		m_VertexShader{nullptr},
+		m_PixelShader{nullptr},
 		m_VertexBuffer{nullptr},
-		m_IndexBuffer{nullptr},
-		m_TextureSampler{nullptr}
+		m_IndexBuffer{nullptr}
 	{
 		PostProcessVertex* vertices = new PostProcessVertex[4]
 		{
-			{
-				Vector3Float{-1.0f, -1.0f, 0.0f},
-				Vector2Float{0.0f, 1.0f},
-
-			},
-
-			{
-				Vector3Float{-1.0f, 1.0f, 0.0f},
-				Vector2Float{0.0f, 0.0f},
-
-			},
-
-			{
-				Vector3Float{1.0f, 1.0f, 0.0f},
-				Vector2Float{1.0f, 0.0f},
-
-			},
-
-			{
-				Vector3Float{1.0f, -1.0f, 0.0f},
-				Vector2Float{1.0f, 1.0f},
-
-			},
+			{Vector3Float{-1.0f, -1.0f, 0.0f}, Vector2Float{0.0f, 1.0f}},
+			{Vector3Float{-1.0f, 1.0f, 0.0f}, Vector2Float{0.0f, 0.0f}},
+			{Vector3Float{1.0f, 1.0f, 0.0f}, Vector2Float{1.0f, 0.0f}},
+			{Vector3Float{1.0f, -1.0f, 0.0f}, Vector2Float{1.0f, 1.0f}},
 		};
-		size_t vertexSize = sizeof(*vertices);
 
-		D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[3]
+		D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[2]
 		{
 			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
-		size_t layoutSize = 2U; //INFO: Is there a way to automate this (to automate layoutSize calculation).
 
 		auto* indices = new uint32_t[6]
 		{
@@ -71,23 +45,27 @@ namespace Engine
 			1,
 			2
 		};
-		size_t indexSize = sizeof(indices);
 
-		m_VertexData       = new VertexData(vertices, vertexSize);
-		m_VertexLayoutData = new VertexLayoutData(layout, layoutSize);
-		m_IndexData        = new IndexData(indices, indexSize);
-		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>("PostProcess_VS");
+		const VertexData vertexData = VertexData(vertices, sizeof(*vertices));
 
-		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
+		const VertexLayoutData vertexLayoutData = VertexLayoutData(layout, 2U);
+
+		const IndexData indexData = IndexData(indices, sizeof(indices));
+
+		m_VertexShader = ShaderLibrary::GetShaderRef<VertexShader>("BasicQuad_VertexShader");
+
+		m_PixelShader = ShaderLibrary::GetShaderRef<PixelShader>("BasicQuad_PixelShader");
+
+		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(vertexData.VertexList,
 		                                               sizeof(PostProcessVertex),
-		                                               m_VertexData->VertexListCount,
+		                                               vertexData.VertexListCount,
 		                                               m_VertexShader->ByteCodeData(),
 		                                               static_cast<uint32_t>(m_VertexShader->ByteCodeSizeData()),
-		                                               m_VertexLayoutData->VertexLayout,
-		                                               m_VertexLayoutData->VertexLayoutCount);
+		                                               vertexLayoutData.VertexLayout,
+		                                               vertexLayoutData.VertexLayoutCount);
 
-		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
-		                                             m_IndexData->IndexListCount);
+		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(indexData.IndexList,
+		                                             indexData.IndexListCount);
 
 		D3D11_SAMPLER_DESC samplerDesc = {};
 		samplerDesc.Filter             = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -98,22 +76,15 @@ namespace Engine
 		Renderer::GetDevice().CreateSamplerState(&samplerDesc, &m_TextureSampler);
 	}
 
-	PostProcessQuad::~PostProcessQuad()
+	RenderQuad::~RenderQuad()
 	{
-		// delete m_VertexData;
-		// delete m_VertexLayoutData;
-		// delete m_IndexData;
 		delete m_TextureSampler;
 	}
 
-	void PostProcessQuad::Draw(ID3D11ShaderResourceView& renderTargetFrame,
-	                           const PostProcessEffect& postProcessEffect) const
+	void RenderQuad::Draw(ID3D11ShaderResourceView& renderTargetFrame)
 	{
 		Renderer::GetDeviceContext().SetRenderData<VertexShader>(*m_VertexShader);
-		Renderer::GetDeviceContext().SetRenderData<PixelShader>(postProcessEffect.GetEffectShader());
-
-		postProcessEffect.UploadEffectData();
-		
+		Renderer::GetDeviceContext().SetRenderData<PixelShader>(*m_PixelShader);
 
 		std::vector<ID3D11ShaderResourceView*> frameReferenceViews = {};
 		frameReferenceViews.push_back(&renderTargetFrame);

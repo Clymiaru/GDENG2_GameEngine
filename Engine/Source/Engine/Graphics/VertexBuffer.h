@@ -1,6 +1,4 @@
 #pragma once
-#include <d3d11.h>
-
 #include "Buffer.h"
 
 namespace Engine
@@ -8,9 +6,6 @@ namespace Engine
 	class DeviceContext;
 	class Renderer;
 
-	// Idea:
-	// List<Vertex> vertices;
-	
 	class VertexBuffer final : public Buffer
 	{
 	public:

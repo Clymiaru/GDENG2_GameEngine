@@ -10,7 +10,7 @@
 #include "Engine/ECS/Entity/Camera.h"
 
 __declspec(align(16))
-struct Constant
+struct SimpleChromaticAberrationConstantData
 {
 	DirectX::XMMATRIX Model;
 
@@ -48,7 +48,7 @@ namespace Engine
 		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
 		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
 
-		Constant* constant = new Constant{};
+		SimpleChromaticAberrationConstantData* constant = new SimpleChromaticAberrationConstantData{};
 
 		// Do we have to create vertex, index buffers, and constant buffers here?
 		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
@@ -62,7 +62,7 @@ namespace Engine
 		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
 		                                             m_IndexData->IndexListCount);
 
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(Constant));
+		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(SimpleChromaticAberrationConstantData));
 	}
 
 	void RenderComponent::Terminate()
@@ -78,7 +78,7 @@ namespace Engine
 
 	void RenderComponent::Draw(Camera& camera)
 	{
-		Constant* constant = new Constant();
+		SimpleChromaticAberrationConstantData* constant = new SimpleChromaticAberrationConstantData();
 
 		constant->Model          = m_EntityRef.Transform().LocalMatrix();
 		constant->ViewProjection = camera.ViewProjMatrix();

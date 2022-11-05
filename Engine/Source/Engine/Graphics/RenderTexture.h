@@ -12,6 +12,9 @@ namespace Engine
 		explicit RenderTexture(ID3D11Texture2D* existingTexture,
 		                       bool isSwapChainTexture = false);
 
+		explicit RenderTexture(ID3D11ShaderResourceView& existingTextureView,
+		                       bool isSwapChainTexture = false);
+
 		~RenderTexture();
 
 		[[nodiscard]]
@@ -25,6 +28,8 @@ namespace Engine
 		{
 			return *m_RenderTarget;
 		}
+
+		ID3D11Texture2D* CopyTexture();
 
 		RenderTexture(const RenderTexture&) = delete;
 

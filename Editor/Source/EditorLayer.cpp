@@ -3,29 +3,27 @@
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
+#include <Engine/Graphics/RenderQuad.h>
 #include <Engine/Graphics/Renderer.h>
-#include <Engine/Graphics/PostProcessEffect/PostProcessQuad.h>
+
+#include <Engine/Graphics/PostProcessEffect/PostProcessHandler.h>
+#include <Engine/Graphics/PostProcessEffect/SimpleChromaticAberrationPostProcessEffect.h>
+#include <Engine/Graphics/PostProcessEffect/VignettePostProcessEffect.h>
+#include <Engine/Input/Input.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
-
-// TODO: Goal for today
-// Framebuffer and Viewport issue
-
-// UI Screens and Manager
-// Create game objects through the editor
-// Display heirarchy
 
 namespace Editor
 {
 	EditorLayer::EditorLayer() :
 		Layer{"EditorLayer"},
-		m_CreditsScreen(new CreditsScreen()),
 		m_EditorViewFramebuffer{nullptr},
 		m_GameViewFramebuffer{nullptr},
 		m_EntityList{Engine::List<Engine::Cube*>()},
 		m_Plane{nullptr},
 		m_CameraHandler{2},
-		//m_PostProcessQuad{nullptr},
+		m_RenderQuad{nullptr},
+		m_PostProcessHandler{nullptr},
 		m_CurrentSceneCamera{0}
 	{
 	}
@@ -41,20 +39,23 @@ namespace Editor
 		FramebufferProfile sceneFramebufferProfile;
 		sceneFramebufferProfile.Width  = Application::WindowRect().Width;
 		sceneFramebufferProfile.Height = Application::WindowRect().Height;
-		
-		m_Framebuffer   = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
-		m_EditorViewFramebuffer = new Framebuffer(sceneFramebufferProfile);
-		m_GameViewFramebuffer   = new Framebuffer(sceneFramebufferProfile);
 
-		// Shader initialization
+		m_Framebuffer           = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
+		m_EditorViewFramebuffer = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
+		m_GameViewFramebuffer   = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
+
+		// Shader initialization (AUTOMATE?)
 		ShaderLibrary::Register<VertexShader>("Assets/DefaultShader.hlsl",
 		                                      "vsmain");
 
 		ShaderLibrary::Register<PixelShader>("Assets/DefaultShader.hlsl",
 		                                     "psmain");
 
-		ShaderLibrary::Register<VertexShader>("Assets/Shaders/PostProcess/PostProcess_VS.hlsl",
-											  "VSMain");
+		ShaderLibrary::Register<VertexShader>("Assets/Shaders/Render/BasicQuad_VertexShader.hlsl",
+		                                      "VSMain");
+
+		ShaderLibrary::Register<PixelShader>("Assets/Shaders/Render/BasicQuad_PixelShader.hlsl",
+		                                     "PSMain");
 
 		// Object initialization
 		Cube* cubeEntity              = new Cube("Testing Entity", Vector3Float());
@@ -65,7 +66,7 @@ namespace Editor
 		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
 		m_Plane->Transform().Scale    = Vector3Float(100.0f, 100.0f, 100.0f);
 
-		//m_PostProcessQuad = new PostProcessQuad();
+		m_RenderQuad = CreateUniquePtr<RenderQuad>();
 
 		m_CameraHandler.Initialize(2,
 		                           List<Vector3Float>
@@ -78,6 +79,18 @@ namespace Editor
 			                           Vector3Float(0, 90.0f, 0),
 			                           Vector3Float(60.0f, 90.0f, 0),
 		                           });
+		m_PostProcessHandler = CreateUniquePtr<PostProcessHandler>(3);
+		m_PostProcessHandler->Start();
+
+		m_PostProcessHandler->AddEffect(new VignettePostProcessEffect());
+		m_ChromaticEffectID = m_PostProcessHandler->AddEffect(new SimpleChromaticAberrationPostProcessEffect({
+			                                                                                                     Vector2Float(Application::WindowRect()
+			                                                                                                                  .Width,
+			                                                                                                                  Application::WindowRect()
+			                                                                                                                  .Height),
+			                                                                                                     Vector2Float(-1.0f,
+			                                                                                                                  1.0f)
+		                                                                                                     }));
 	}
 
 	void EditorLayer::OnPollInput()
@@ -86,45 +99,41 @@ namespace Editor
 
 	void EditorLayer::OnUpdate()
 	{
+		using namespace Engine;
+		Vector2Float mousePosition = Vector2Float((float)Input::Mouse().DeltaMousePosition.x,
+		                                          (float)Input::Mouse().DeltaMousePosition.y);
+		mousePosition.Normalize();
+		
+		SimpleChromaticAberrationEffectData* chromaticEffectData =
+				new SimpleChromaticAberrationEffectData(Vector2Float(Application::WindowRect().Width,
+				                                                     Application::WindowRect().Height),
+				                                        mousePosition);
+
+		m_PostProcessHandler->UpdateEffectData(m_ChromaticEffectID, chromaticEffectData);
 		m_CameraHandler.UpdateSceneCameraOfId(0);
 	}
 
 	void EditorLayer::OnRender()
 	{
-		
+		// Draw the entity
 		for (auto* entity : m_EntityList)
 		{
 			entity->Draw(m_CameraHandler.GetSceneCamera(0));
 		}
 		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
+
+		// Post Process that requires previous frame goes like this
+		// Post Process that do not require previous frame might need multiple RTV or
+		// draw multiple quads at the same time
+
+		auto* postProcessView = &m_PostProcessHandler->ProcessEffects(*m_Framebuffer);
 
 		Engine::Renderer::StartRender(*m_EditorViewFramebuffer);
-
-		for (auto* entity : m_EntityList)
-		{
-			entity->Draw(m_CameraHandler.GetSceneCamera(0));
-		}
-		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
-
-		// m_PostProcessQuad->UpdateFrameRef(&m_EditorViewFramebuffer->GetFrame());
-		// m_PostProcessQuad->Draw();
-
+		m_RenderQuad->Draw(*postProcessView);
 		Engine::Renderer::EndRender(*m_EditorViewFramebuffer);
 
-		// Apply Post processing to EditorView-----
-		// Get Texture from the Framebuffer to the quad.
-
 		Engine::Renderer::StartRender(*m_GameViewFramebuffer);
-
-		for (auto* entity : m_EntityList)
-		{
-			entity->Draw(m_CameraHandler.GetSceneCamera(0));
-		}
-		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
-
-		// m_PostProcessQuad->UpdateFrameRef(&m_EditorViewFramebuffer->GetFrame());
-		// m_PostProcessQuad->Draw();
-
+		m_RenderQuad->Draw(*postProcessView);
 		Engine::Renderer::EndRender(*m_GameViewFramebuffer);
 	}
 
@@ -156,8 +165,6 @@ namespace Editor
 			ImGui::EndMainMenuBar();
 		}
 
-		m_CreditsScreen->DrawImpl();
-
 		ImGui::Begin("World Outliner");
 		ImGui::Text("World Outliner Placeholder");
 		ImGui::End();
@@ -188,14 +195,5 @@ namespace Editor
 		m_EntityList.clear();
 
 		m_CameraHandler.Terminate();
-
-		//delete m_ActiveScene;
-
-		//delete m_PostProcessQuad;
-		
-		delete m_EditorViewFramebuffer;
-		delete m_GameViewFramebuffer;
-
-		delete m_CreditsScreen;
 	}
 }

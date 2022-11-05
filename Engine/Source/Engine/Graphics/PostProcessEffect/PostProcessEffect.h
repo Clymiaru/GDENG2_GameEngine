@@ -1,23 +1,25 @@
 ﻿#pragma once
+
 #include "Engine/Core/Core.h"
-#include "Engine/ECS/Component/RenderComponent.h"
+
+#include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/Graphics/PixelShader.h"
 
 namespace Engine
 {
-	class ConstantBuffer;
-
-	class PixelShader;
-
 	class PostProcessEffect
 	{
 	public:
 		explicit PostProcessEffect(const String& effectName);
 
-		~PostProcessEffect();
+		virtual ~PostProcessEffect();
 
+		[[nodiscard]]
 		PixelShader& GetEffectShader() const { return *m_EffectPixelShader; }
 
-		void UploadData();
+		virtual void UpdateEffectData(void* updatedEffectData) const = 0;
+
+		virtual void UploadEffectData() const = 0;
 
 		PostProcessEffect(const PostProcessEffect&) = delete;
 
@@ -29,8 +31,8 @@ namespace Engine
 
 	private:
 		SharedPtr<PixelShader> m_EffectPixelShader;
-		UniquePtr<ConstantBuffer> m_ConstantBuffer;
 
-		ID3D11RenderTargetView* m_PostProcessRenderTarget;
+	protected:
+		UniquePtr<ConstantBuffer> m_ConstantBuffer;
 	};
 }

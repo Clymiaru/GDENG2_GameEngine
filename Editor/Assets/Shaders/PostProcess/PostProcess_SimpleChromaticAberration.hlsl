@@ -1,31 +1,8 @@
-struct VSInput
-{
-	float4 Position: POSITION;
-	float2 TexCoord : TEXCOORD;
-	float4 Color: COLOR;
-};
-
-struct VSOutput
-{
-	float4 Position: SV_POSITION;
-	float2 TexCoord : TexCoord;
-	float4 Color: COLOR;
-};
-
 cbuffer Constant: register(b0)
 {
 	float2 ScreenSize;
 	float2 Direction;
 };
-
-VSOutput VSMain(VSInput input)
-{
-	VSOutput output;
-	output.Position = input.Position;
-	output.TexCoord = input.TexCoord;
-	output.Color = input.Color;
-	return output;
-}
 
 Texture2D tex;
 
@@ -35,7 +12,6 @@ struct PSInput
 {
 	float4 Position: SV_POSITION;
 	float2 TexCoord : TexCoord;
-	float4 Color: COLOR;
 };
 
 float4 PSMain(PSInput input) : SV_TARGET
@@ -44,9 +20,9 @@ float4 PSMain(PSInput input) : SV_TARGET
 	float greenOffset =  0.006;
 	float blueOffset  = -0.006;
 
-	float2 direction = float2(Direction.x, Direction.y);
+	float2 direction = Direction;
 	
-	float2 textureSize = float2(1280, 1080);
+	float2 textureSize = ScreenSize;
 	
 	float2 texCoord2 = input.Position.xy / textureSize;
 	

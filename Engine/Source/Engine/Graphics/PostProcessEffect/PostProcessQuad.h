@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include "PostProcessEffect.h"
-
 #include <d3d11.h>
 
 #include "Engine/Graphics/RenderData.h"
@@ -9,24 +7,31 @@
 
 namespace Engine
 {
+	class PostProcessEffect;
+
 	class IndexBuffer;
 
 	class VertexBuffer;
-
-	class PixelShader;
 
 	class VertexShader;
 
 	class PostProcessQuad final
 	{
 	public:
-		PostProcessQuad();
+		explicit PostProcessQuad();
 
 		~PostProcessQuad();
 
-		void UpdateFrameRef(ID3D11ShaderResourceView* frame);
+		void Draw(ID3D11ShaderResourceView& renderTargetFrame,
+		          const PostProcessEffect& postProcessEffect) const;
 
-		void Draw() const;
+		PostProcessQuad(const PostProcessQuad&) = delete;
+
+		PostProcessQuad& operator=(const PostProcessQuad&) = delete;
+
+		PostProcessQuad(PostProcessQuad&&) noexcept = delete;
+
+		PostProcessQuad& operator=(PostProcessQuad&&) noexcept = delete;
 
 	private:
 		VertexData* m_VertexData;
@@ -40,10 +45,6 @@ namespace Engine
 		UniquePtr<VertexBuffer> m_VertexBuffer;
 
 		UniquePtr<IndexBuffer> m_IndexBuffer;
-
-		PostProcessEffect* m_PostProcessEffect;
-		
-		ID3D11ShaderResourceView* m_FrameReference;
 
 		ID3D11SamplerState* m_TextureSampler;
 	};

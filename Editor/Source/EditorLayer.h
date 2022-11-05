@@ -2,13 +2,16 @@
 #include <Engine/Core/Layer.h>
 #include <Engine/Engine.h>
 #include <Engine/Graphics/Framebuffer.h>
-//#include <Engine/Graphics/PostProcessQuad.h>
 #include <Engine/SceneManagement/EditorSceneCameraHandler.h>
-
-#include "Screen/CreditsScreen.h"
 
 namespace Engine
 {
+	class PostProcessHandler;
+
+	class RenderQuad;
+
+	class PostProcessQuad;
+
 	class Scene;
 
 	class Plane;
@@ -52,20 +55,22 @@ namespace Editor
 		EditorLayer& operator=(EditorLayer&&) noexcept = delete;
 
 	private:
-		CreditsScreen* m_CreditsScreen;
-
 		// Only support 1 Game View and 1 Editor View for now
-		Engine::Framebuffer* m_EditorViewFramebuffer;
+		Engine::UniquePtr<Engine::Framebuffer> m_EditorViewFramebuffer;
 
-		Engine::Framebuffer* m_GameViewFramebuffer;
+		Engine::UniquePtr<Engine::Framebuffer> m_GameViewFramebuffer;
 		
 		// TODO: How to make this into only one list?
 		Engine::List<Engine::Cube*> m_EntityList;
 		Engine::Plane* m_Plane;
 
-		// Engine::PostProcessQuad* m_PostProcessQuad;
-		
 		Engine::EditorSceneCameraHandler m_CameraHandler;
+
+		Engine::UniquePtr<Engine::RenderQuad> m_RenderQuad;
+
+		Engine::UniquePtr<Engine::PostProcessHandler> m_PostProcessHandler;
+
+		int m_ChromaticEffectID;
 
 		int m_CurrentSceneCamera = 0;
 	};

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "DeviceContext.h"
 #include "SwapChain.h"
+#include "Engine/Core/Core.h"
 
 namespace Engine
 {

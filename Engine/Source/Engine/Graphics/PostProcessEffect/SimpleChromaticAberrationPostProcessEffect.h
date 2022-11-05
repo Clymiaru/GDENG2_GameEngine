@@ -1,0 +1,27 @@
+﻿#pragma once
+#include "PostProcessEffect.h"
+
+#include "Engine/Math/Vector2.h"
+
+namespace Engine
+{
+	__declspec(align(16))
+	struct SimpleChromaticAberrationEffectData
+	{
+		Vector2Float ScreenSize;
+
+		Vector2Float Direction;
+	};
+	
+	class SimpleChromaticAberrationPostProcessEffect : public PostProcessEffect
+	{
+	public:
+		explicit SimpleChromaticAberrationPostProcessEffect(SimpleChromaticAberrationEffectData effectData);
+
+		~SimpleChromaticAberrationPostProcessEffect() override;
+
+		void UploadEffectData() const override;
+
+		void UpdateEffectData(void* updatedEffectData) const override;
+	};
+}

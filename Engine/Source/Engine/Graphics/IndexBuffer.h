@@ -1,10 +1,5 @@
 ﻿#pragma once
-#include <d3d11.h>
-
 #include "Buffer.h"
-
-#include "Engine/Core/Core.h"
-#include "Engine/Math/Math.h"
 
 namespace Engine
 {

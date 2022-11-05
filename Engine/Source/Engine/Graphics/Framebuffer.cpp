@@ -51,4 +51,10 @@ namespace Engine
 
 		delete m_RenderTarget;
 	}
+
+	ID3D11Texture2D* Framebuffer::CopyFrameTexture()
+	{
+		// GetTexture then create a copy from that
+		return m_RenderTarget->CopyTexture();
+	}
 }

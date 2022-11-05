@@ -1,12 +1,9 @@
 ﻿#pragma once
-#include <d3d11.h>
 #include "Shader.h"
 
 namespace Engine
 {
 	class DeviceContext;
-
-	class ConstantBuffer;
 
 	class VertexShader final : public Shader
 	{
