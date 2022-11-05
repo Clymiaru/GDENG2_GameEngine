@@ -1,15 +1,20 @@
 ﻿#include "EditorLayer.h"
 
+#include <Engine/Core/Application.h>
+#include <Engine/Graphics/Renderer.h>
+#include <Engine/Graphics/ShaderLibrary.h>
+#include <Engine/Input/Input.h>
+
 #include <Engine/ECS/Component/TransformComponent.h>
+
+#include <Engine/Graphics/RenderQuad.h>
+
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/Plane.h>
-#include <Engine/Graphics/RenderQuad.h>
-#include <Engine/Graphics/Renderer.h>
 
 #include <Engine/Graphics/PostProcessEffect/PostProcessHandler.h>
 #include <Engine/Graphics/PostProcessEffect/SimpleChromaticAberrationPostProcessEffect.h>
 #include <Engine/Graphics/PostProcessEffect/VignettePostProcessEffect.h>
-#include <Engine/Input/Input.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
 
@@ -40,29 +45,27 @@ namespace Editor
 		sceneFramebufferProfile.Width  = Application::WindowRect().Width;
 		sceneFramebufferProfile.Height = Application::WindowRect().Height;
 
-		m_Framebuffer           = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
-		m_EditorViewFramebuffer = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
-		m_GameViewFramebuffer   = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile);
+		m_Framebuffer           = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile, Renderer::GetDevice());
+		m_EditorViewFramebuffer = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile, Renderer::GetDevice());
+		m_GameViewFramebuffer   = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile, Renderer::GetDevice());
 
 		// Shader initialization (AUTOMATE?)
-		ShaderLibrary::Register<VertexShader>("Assets/DefaultShader.hlsl",
-		                                      "vsmain");
+		ShaderLibrary::Register<VertexShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
 
-		ShaderLibrary::Register<PixelShader>("Assets/DefaultShader.hlsl",
-		                                     "psmain");
+		ShaderLibrary::Register<PixelShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
 
-		ShaderLibrary::Register<VertexShader>("Assets/Shaders/Render/BasicQuad_VertexShader.hlsl",
-		                                      "VSMain");
+		ShaderLibrary::Register<VertexShader>("Assets/Shaders/RenderTarget/RenderQuad_VS.hlsl");
 
-		ShaderLibrary::Register<PixelShader>("Assets/Shaders/Render/BasicQuad_PixelShader.hlsl",
-		                                     "PSMain");
+		ShaderLibrary::Register<PixelShader>("Assets/Shaders/RenderTarget/RenderQuad_PS.hlsl");
 
 		// Object initialization
-		Cube* cubeEntity              = new Cube("Testing Entity", Vector3Float());
-		cubeEntity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
-		m_EntityList.emplace_back(cubeEntity);
+		Cube* cubeEntity = new Cube("CubeEntity");
 
-		m_Plane                       = new Plane("PlaneEntity", Vector3Float());
+		cubeEntity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+		m_EntityList.push_back(cubeEntity);
+
+		m_Plane = new Plane("PlaneEntity");
+
 		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
 		m_Plane->Transform().Scale    = Vector3Float(100.0f, 100.0f, 100.0f);
 
@@ -79,10 +82,17 @@ namespace Editor
 			                           Vector3Float(0, 90.0f, 0),
 			                           Vector3Float(60.0f, 90.0f, 0),
 		                           });
+
 		m_PostProcessHandler = CreateUniquePtr<PostProcessHandler>(3);
 		m_PostProcessHandler->Start();
 
-		m_PostProcessHandler->AddEffect(new VignettePostProcessEffect());
+		m_PostProcessHandler->AddEffect(new VignettePostProcessEffect({
+			                                                              Color(0.5f, 0.0f, 0.2f, 1.0f),
+			                                                              Vector2Float(1.0f, 0.0f),
+			                                                              Vector2Float(Application::WindowRect().Width,
+			                                                                           Application::WindowRect().Height)
+		                                                              }));
+
 		m_ChromaticEffectID = m_PostProcessHandler->AddEffect(new SimpleChromaticAberrationPostProcessEffect({
 			                                                                                                     Vector2Float(Application::WindowRect()
 			                                                                                                                  .Width,
@@ -103,7 +113,7 @@ namespace Editor
 		Vector2Float mousePosition = Vector2Float((float)Input::Mouse().DeltaMousePosition.x,
 		                                          (float)Input::Mouse().DeltaMousePosition.y);
 		mousePosition.Normalize();
-		
+
 		SimpleChromaticAberrationEffectData* chromaticEffectData =
 				new SimpleChromaticAberrationEffectData(Vector2Float(Application::WindowRect().Width,
 				                                                     Application::WindowRect().Height),
@@ -115,7 +125,6 @@ namespace Editor
 
 	void EditorLayer::OnRender()
 	{
-		// Draw the entity
 		for (auto* entity : m_EntityList)
 		{
 			entity->Draw(m_CameraHandler.GetSceneCamera(0));

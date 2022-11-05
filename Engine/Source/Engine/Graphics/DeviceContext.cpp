@@ -47,26 +47,6 @@ namespace Engine
 		                                    depthStencil);
 	}
 
-	// void DeviceContext::Clear(const SwapChain& swapChain,
-	//                           const Color color) const
-	// {
-	// 	ClearRenderTargetAndDepthStencilView(&swapChain.GetRenderTargetView(),
-	// 	                                     &swapChain.GetDepthStencilView(),
-	// 	                                     color);
-	// 	BindRenderTargetAndDepthStencilView(&swapChain.GetRenderTargetView(),
-	// 	                                    &swapChain.GetDepthStencilView());
-	// }
-
-	void DeviceContext::SetViewportSize(const Vector2Float& size) const
-	{
-		D3D11_VIEWPORT viewport = {};
-		viewport.Width          = size.x;
-		viewport.Height         = size.y;
-		viewport.MinDepth       = 0.0f;
-		viewport.MaxDepth       = 1.0f;
-		m_DeviceContext->RSSetViewports(1, &viewport);
-	}
-
 	void DeviceContext::SetViewportSize(const Vector2Int& size) const
 	{
 		D3D11_VIEWPORT viewport = {};

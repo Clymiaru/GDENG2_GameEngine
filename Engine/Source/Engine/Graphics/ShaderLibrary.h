@@ -1,17 +1,16 @@
 ﻿#pragma once
 #include <d3dcompiler.h>
-
-#include "Engine/Core/Core.h"
-#include "Engine/Core/Debug.h"
 #include "Utils/Utils.h"
-
+#include "Shader.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 
 namespace Engine
 {
-	// TODO: Streamline Shader registration
-	// Maybe always expect <ShaderPrefix>Main for the entry point
+	constexpr const char* VertexShaderEntryPointName = "VSMain";
+
+	constexpr const char* PixelShaderEntryPointName = "PSMain";
+
 	class ShaderLibrary final
 	{
 	public:
@@ -20,17 +19,16 @@ namespace Engine
 		static void Terminate();
 
 		template <typename T>
-		static void Register(const std::string& fileName,
-		                     const std::string& entryPointName);
+		static void Register(StringView filename);
 
 		template <typename T>
-		static bool IsShaderRegistered(const std::string& name);
+		static bool IsShaderRegistered(StringView name);
 
 		template <typename T>
-		static T& GetShader(const std::string& name);
+		static T& GetShader(StringView name);
 
 		template <typename T>
-		static SharedPtr<T> GetShaderRef(const std::string& name);
+		static SharedPtr<T> GetShaderRef(StringView name);
 
 		ShaderLibrary(const ShaderLibrary&) = delete;
 
@@ -45,46 +43,44 @@ namespace Engine
 
 		~ShaderLibrary();
 
-		static std::string GetShaderNameFromFilename(const std::string& fileName);
+		static std::string GetShaderNameFromFilename(StringView filename);
 
 		static ShaderLibrary s_Instance;
 
-		HashMap<std::string, SharedPtr<VertexShader>> m_VertexShaderMap;
+		HashMap<String, SharedPtr<VertexShader>> m_VertexShaderMap{};
 
-		HashMap<std::string, SharedPtr<PixelShader>> m_PixelShaderMap;
+		HashMap<String, SharedPtr<PixelShader>> m_PixelShaderMap{};
 	};
 
 	//---------- IS SHADER REGISTERED
 	template <typename T>
-	bool ShaderLibrary::IsShaderRegistered(const std::string& name)
+	bool ShaderLibrary::IsShaderRegistered(StringView name)
 	{
 		return false;
 	}
 
 	template <>
-	inline bool ShaderLibrary::IsShaderRegistered<VertexShader>(const std::string& name)
+	inline bool ShaderLibrary::IsShaderRegistered<VertexShader>(const StringView name)
 	{
-		return s_Instance.m_VertexShaderMap.contains(name);
+		return s_Instance.m_VertexShaderMap.contains(name.data());
 	}
 
 	template <>
-	inline bool ShaderLibrary::IsShaderRegistered<PixelShader>(const std::string& name)
+	inline bool ShaderLibrary::IsShaderRegistered<PixelShader>(const StringView name)
 	{
-		return s_Instance.m_PixelShaderMap.contains(name);
+		return s_Instance.m_PixelShaderMap.contains(name.data());
 	}
 
 	//---------- REGISTER SHADER
 	template <typename T>
-	void ShaderLibrary::Register(const std::string& fileName,
-	                             const std::string& entryPointName)
+	void ShaderLibrary::Register(const StringView filename)
 	{
 	}
 
 	template <>
-	inline void ShaderLibrary::Register<VertexShader>(const std::string& fileName,
-	                                                  const std::string& entryPointName)
+	inline void ShaderLibrary::Register<VertexShader>(const StringView filename)
 	{
-		const std::string& shaderName = GetShaderNameFromFilename(fileName);
+		const std::string& shaderName = GetShaderNameFromFilename(filename.data());
 
 		if (IsShaderRegistered<VertexShader>(shaderName))
 		{
@@ -94,12 +90,12 @@ namespace Engine
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
 
-		const std::wstring filenameWideStr = Utils::CStringToWString(fileName);
+		const std::wstring filenameWideStr = Utils::CStringToWString(filename.data());
 
 		const HRESULT result = D3DCompileFromFile(filenameWideStr.c_str(),
 		                                          nullptr,
 		                                          nullptr,
-		                                          entryPointName.c_str(),
+		                                          VertexShaderEntryPointName,
 		                                          "vs_5_0",
 		                                          0,
 		                                          0,
@@ -121,10 +117,9 @@ namespace Engine
 	}
 
 	template <>
-	inline void ShaderLibrary::Register<PixelShader>(const std::string& fileName,
-	                                                 const std::string& entryPointName)
+	inline void ShaderLibrary::Register<PixelShader>(const StringView filename)
 	{
-		const std::string& shaderName = GetShaderNameFromFilename(fileName);
+		const std::string& shaderName = GetShaderNameFromFilename(filename.data());
 
 		if (IsShaderRegistered<PixelShader>(shaderName))
 		{
@@ -134,12 +129,12 @@ namespace Engine
 		ID3DBlob* errorBlob = nullptr;
 		ID3DBlob* blob      = nullptr;
 
-		const std::wstring filenameWideStr = Utils::CStringToWString(fileName);
+		const std::wstring filenameWideStr = Utils::CStringToWString(filename.data());
 
 		const HRESULT result = D3DCompileFromFile(filenameWideStr.c_str(),
 		                                          nullptr,
 		                                          nullptr,
-		                                          entryPointName.c_str(),
+		                                          PixelShaderEntryPointName,
 		                                          "ps_5_0",
 		                                          0,
 		                                          0,
@@ -163,47 +158,51 @@ namespace Engine
 
 	//---------- GET SHADER
 	template <typename T>
-	T& ShaderLibrary::GetShader(const std::string& name)
+	T& ShaderLibrary::GetShader(const StringView name)
 	{
 		return T();
 	}
 
 	template <>
-	inline VertexShader& ShaderLibrary::GetShader<VertexShader>(const std::string& name)
+	inline VertexShader& ShaderLibrary::GetShader<VertexShader>(const StringView name)
 	{
 		const bool isFound = IsShaderRegistered<VertexShader>(name);
 		Debug::Assert(isFound, "Vertex Shader is not registered!");
-		return *s_Instance.m_VertexShaderMap[name];
+		const char* shaderName = name.data();
+		return *s_Instance.m_VertexShaderMap[shaderName];
 	}
 
 	template <>
-	inline PixelShader& ShaderLibrary::GetShader<PixelShader>(const std::string& name)
+	inline PixelShader& ShaderLibrary::GetShader<PixelShader>(const StringView name)
 	{
 		const bool isFound = IsShaderRegistered<PixelShader>(name);
 		Debug::Assert(isFound, "Pixel Shader is not registered!");
-		return *s_Instance.m_PixelShaderMap[name];
+		const char* shaderName = name.data();
+		return *s_Instance.m_PixelShaderMap[shaderName];
 	}
 
 	//---------- GET SHADER REF
 	template <typename T>
-	inline SharedPtr<T> ShaderLibrary::GetShaderRef(const std::string& name)
+	inline SharedPtr<T> ShaderLibrary::GetShaderRef(const StringView name)
 	{
 		return nullptr;
 	}
 
 	template <>
-	inline SharedPtr<VertexShader> ShaderLibrary::GetShaderRef<VertexShader>(const std::string& name)
+	inline SharedPtr<VertexShader> ShaderLibrary::GetShaderRef<VertexShader>(const StringView name)
 	{
 		const bool isFound = IsShaderRegistered<VertexShader>(name);
 		Debug::Assert(isFound, "Vertex Shader is not registered!");
-		return s_Instance.m_VertexShaderMap[name];
+		const char* shaderName = name.data();
+		return s_Instance.m_VertexShaderMap[shaderName];
 	}
 
 	template <>
-	inline SharedPtr<PixelShader> ShaderLibrary::GetShaderRef<PixelShader>(const std::string& name)
+	inline SharedPtr<PixelShader> ShaderLibrary::GetShaderRef<PixelShader>(const StringView name)
 	{
 		const bool isFound = IsShaderRegistered<PixelShader>(name);
 		Debug::Assert(isFound, "Pixel Shader is not registered!");
-		return s_Instance.m_PixelShaderMap[name];
+		const char* shaderName = name.data();
+		return s_Instance.m_PixelShaderMap[shaderName];
 	}
 }

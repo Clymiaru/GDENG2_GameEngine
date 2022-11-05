@@ -1,13 +1,13 @@
 ﻿#pragma once
+#include "Engine/Core/Core.h"
+
+#include "RenderData.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
 #include "PixelShader.h"
 #include "VertexShader.h"
-
-#include "Engine/Graphics/RenderData.h"
-#include "Engine/Core/Core.h"
 
 namespace Engine
 {
@@ -18,7 +18,7 @@ namespace Engine
 
 		~RenderQuad();
 
-		void Draw(ID3D11ShaderResourceView& renderTargetFrame);
+		void Draw(ID3D11ShaderResourceView& renderTargetFrame) const;
 
 		RenderQuad(const RenderQuad&) = delete;
 
@@ -27,14 +27,17 @@ namespace Engine
 		RenderQuad(RenderQuad&&) noexcept = delete;
 
 		RenderQuad& operator=(RenderQuad&&) noexcept = delete;
-	private:
-		SharedPtr<VertexShader> m_VertexShader;
 		
-		SharedPtr<PixelShader> m_PixelShader;
+	private:
+		RenderData* m_RenderData;
+		
+		SharedPtr<VertexShader> m_VertexShader{};
+		
+		SharedPtr<PixelShader> m_PixelShader{};
 
-		UniquePtr<VertexBuffer> m_VertexBuffer;
+		UniquePtr<VertexBuffer> m_VertexBuffer{};
 
-		UniquePtr<IndexBuffer> m_IndexBuffer;
+		UniquePtr<IndexBuffer> m_IndexBuffer{};
 
 		ID3D11SamplerState* m_TextureSampler;
 	};

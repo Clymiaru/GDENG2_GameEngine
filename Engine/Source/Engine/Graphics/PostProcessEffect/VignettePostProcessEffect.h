@@ -3,10 +3,16 @@
 
 namespace Engine
 {
+	struct VignetteEffectData
+	{
+		Color EffectColor;
+		Vector2Float EffectPosition;
+		Vector2Float ScreenSize;
+	};
 	class VignettePostProcessEffect final : public PostProcessEffect
 	{
 	public:
-		explicit VignettePostProcessEffect();
+		explicit VignettePostProcessEffect(VignetteEffectData effectData);
 
 		~VignettePostProcessEffect() override;
 

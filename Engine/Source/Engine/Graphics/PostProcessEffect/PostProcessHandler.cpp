@@ -28,8 +28,7 @@ namespace Engine
 
 	void PostProcessHandler::Start()
 	{
-		ShaderLibrary::Register<VertexShader>("Assets/Shaders/PostProcess/PostProcess_VS.hlsl",
-		                                      "VSMain");
+		ShaderLibrary::Register<VertexShader>("Assets/Shaders/PostProcess/VSQuad_FX.hlsl");
 	}
 
 	void PostProcessHandler::End()
@@ -46,7 +45,7 @@ namespace Engine
 		FramebufferProfile postProcessFramebufferProfile;
 		postProcessFramebufferProfile.Width  = Application::WindowRect().Width;
 		postProcessFramebufferProfile.Height = Application::WindowRect().Height;
-		m_PostProcessFramebuffers.push_back(new Framebuffer(postProcessFramebufferProfile));
+		m_PostProcessFramebuffers.push_back(new Framebuffer(postProcessFramebufferProfile, Renderer::GetDevice()));
 
 		return (int)m_PostProcessEffects.size() - 1;
 	}

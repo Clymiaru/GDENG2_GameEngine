@@ -50,11 +50,6 @@ namespace Engine
 		void DrawIndexed(uint32_t indexCount,
 		                 uint32_t startingIndex) const;
 
-		// void Clear(const SwapChain& swapChain,
-		//            Color color) const;
-
-		void SetViewportSize(const Vector2Float& size) const;
-
 		void SetViewportSize(const Vector2Int& size) const;
 
 		DeviceContext(const DeviceContext&) = delete;

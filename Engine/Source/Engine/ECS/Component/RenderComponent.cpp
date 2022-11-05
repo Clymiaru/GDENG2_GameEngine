@@ -1,94 +1,86 @@
 ﻿#include "pch.h"
 #include "RenderComponent.h"
-
 #include "TransformComponent.h"
 
-#include "Engine/ECS/Entity/Entity.h"
+#include "Engine/ECS/Core/Entity.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/ShaderLibrary.h"
-
 #include "Engine/ECS/Entity/Camera.h"
 
 __declspec(align(16))
-struct SimpleChromaticAberrationConstantData
+struct RenderObjectData
 {
-	DirectX::XMMATRIX Model;
+	Engine::Matrix4 Model;
 
-	DirectX::XMMATRIX ViewProjection;
+	Engine::Matrix4 ViewProjection;
+
+	Engine::Color SolidColor;
 };
 
 namespace Engine
 {
-	RenderComponent::RenderComponent(Entity& owner) :
+	RenderComponent::RenderComponent(Entity& owner,
+	                                 RenderData* renderData,
+	                                 SharedPtr<VertexShader> vertexShader,
+	                                 SharedPtr<PixelShader> pixelShader) :
 		AComponent{owner},
-		m_VertexData{nullptr},
-		m_VertexLayoutData{nullptr},
-		m_IndexData{nullptr},
-		m_VertexShader{nullptr},
-		m_PixelShader{nullptr},
+		m_RenderData{std::move(renderData)},
+		m_VertexShader{vertexShader},
+		m_PixelShader{pixelShader},
 		m_VertexBuffer{nullptr},
 		m_IndexBuffer{nullptr},
 		m_ConstantBuffer{nullptr}
 	{
+		if (renderData == nullptr)
+		{
+			Debug::Log("Attempting to Attach a RenderComponent to {0} with null RenderData!",
+			           owner.Name.c_str());
+			return;
+		}
+
+		RenderObjectData* constant = new RenderObjectData();
+
+		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(*m_RenderData,
+		                                               *m_VertexShader);
+
+		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(*m_RenderData);
+
+		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant,
+		                                                   sizeof(RenderObjectData));
 	}
 
-	RenderComponent::~RenderComponent()
+	RenderComponent::~RenderComponent() = default;
+
+	void RenderComponent::Draw(Camera& camera) const
 	{
-	}
-
-	void RenderComponent::Initialize(VertexData* vertexData,
-	                                 VertexLayoutData* vertexLayoutData,
-	                                 IndexData* indexData,
-	                                 size_t vertexDataSize,
-	                                 String shaderName)
-	{
-		m_VertexData       = vertexData;
-		m_VertexLayoutData = vertexLayoutData;
-		m_IndexData        = indexData;
-		m_VertexShader     = ShaderLibrary::GetShaderRef<VertexShader>(shaderName);
-		m_PixelShader      = ShaderLibrary::GetShaderRef<PixelShader>(shaderName);
-
-		SimpleChromaticAberrationConstantData* constant = new SimpleChromaticAberrationConstantData{};
-
-		// Do we have to create vertex, index buffers, and constant buffers here?
-		m_VertexBuffer = CreateUniquePtr<VertexBuffer>(m_VertexData->VertexList,
-		                                               vertexDataSize,
-		                                               m_VertexData->VertexListCount,
-		                                               m_VertexShader->ByteCodeData(),
-		                                               static_cast<uint32_t>(m_VertexShader->ByteCodeSizeData()),
-		                                               m_VertexLayoutData->VertexLayout,
-		                                               m_VertexLayoutData->VertexLayoutCount);
-
-		m_IndexBuffer = CreateUniquePtr<IndexBuffer>(m_IndexData->IndexList,
-		                                             m_IndexData->IndexListCount);
-
-		m_ConstantBuffer = CreateUniquePtr<ConstantBuffer>(constant, sizeof(SimpleChromaticAberrationConstantData));
-	}
-
-	void RenderComponent::Terminate()
-	{
-		m_VertexBuffer.release();
-		m_IndexBuffer.release();
-		m_ConstantBuffer.release();
-	}
-
-	void RenderComponent::Update()
-	{
-	}
-
-	void RenderComponent::Draw(Camera& camera)
-	{
-		SimpleChromaticAberrationConstantData* constant = new SimpleChromaticAberrationConstantData();
-
-		constant->Model          = m_EntityRef.Transform().LocalMatrix();
-		constant->ViewProjection = camera.ViewProjMatrix();
-		//m_ConstantBuffer->Update();
+		RenderObjectData* constant = new RenderObjectData();
+		constant->Model            = m_EntityRef.Transform().LocalMatrix();
+		constant->ViewProjection   = camera.ViewProjMatrix();
+		constant->SolidColor       = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, constant);
 
-		Renderer::Draw(*m_VertexShader, *m_PixelShader,
-		               *m_VertexBuffer, *m_IndexBuffer,
-		               *m_ConstantBuffer, constant,
-		               D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Renderer::GetDeviceContext().SetRenderData<VertexShader>(*m_VertexShader);
+		Renderer::GetDeviceContext().SetRenderData<PixelShader>(*m_PixelShader);
+
+
+		Renderer::GetDeviceContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
+		Renderer::GetDeviceContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+
+		/* Textures
+		Renderer::GetDeviceContext().GetContext().PSSetShaderResources(0,
+																	   1,
+																	   frameReferenceViews.data());
+		Renderer::GetDeviceContext().GetContext().PSSetSamplers(0,
+																1,
+																&m_TextureSampler);
+		*/
+
+		Renderer::GetDeviceContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
+		Renderer::GetDeviceContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);
+
+		Renderer::GetDeviceContext().SetTopology(m_RenderData->Topology);
+
+		Renderer::GetDeviceContext().DrawIndexed(m_IndexBuffer->ElementCount(), 0);
 	}
 }

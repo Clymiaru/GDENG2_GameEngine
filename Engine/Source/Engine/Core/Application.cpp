@@ -13,6 +13,8 @@ namespace Engine
 {
 	Application Application::m_Instance;
 
+	std::string Application::AssetDataPath = "Assets/";
+
 	Application::Application() :
 		m_IsRunning{false},
 		m_Window{nullptr},

@@ -10,7 +10,7 @@
 
 namespace Engine
 {
-	EditorSceneCamera::EditorSceneCamera(String name) :
+	EditorSceneCamera::EditorSceneCamera(StringView name) :
 		Camera{name}
 	{
 		m_CameraController = new EditorSceneCameraControllerComponent(*this);

@@ -1,8 +1,7 @@
 ﻿#pragma once
-#include "Engine/ECS/Component/AComponent.h"
+#include "Engine/ECS/Core/AComponent.h"
 #include "Engine/Input/KeyboardInput.h"
 #include "Engine/Input/MouseInput.h"
-#include "Engine/Math/Vector3.h"
 
 namespace Engine
 {
@@ -14,8 +13,8 @@ namespace Engine
 		{
 			None, Panning, Zooming, Orbiting
 		};
-		
-		EditorSceneCameraControllerComponent(EditorSceneCamera& sceneCameraRef);
+
+		explicit EditorSceneCameraControllerComponent(EditorSceneCamera& sceneCameraRef);
 		~EditorSceneCameraControllerComponent() override;
 
 		void UpdateController();
@@ -30,8 +29,14 @@ namespace Engine
 		State m_CurrentState = State::None;
 
 		void KeyboardInputControls(KeyCode keyPressed);
+		
+		[[nodiscard]]
 		Vector3Float ProcessPanning() const;
+
+		[[nodiscard]]
 		Vector3Float ProcessOrbiting() const;
+
+		[[nodiscard]]
 		Vector3Float ProcessZooming() const;
 
 		Vector3Float m_ZoomDirection;
@@ -44,6 +49,7 @@ namespace Engine
 		KeyCode m_OribitRightward = KeyCode::D;
 		KeyCode m_OribitLeftward = KeyCode::A;
 		KeyCode m_ResetCameraToOrigin = KeyCode::Space;
+		
 		// Mouse Controls
 		MouseButton m_StartPan = MouseButton::MiddleButton;
 		MouseButton m_StartOrbit = MouseButton::RightButton;

@@ -1,48 +1,44 @@
 ﻿#pragma once
-
-#include "AComponent.h"
-
 #include "Engine/Core/Core.h"
+#include "Engine/ECS/Core/AComponent.h"
+
 #include "Engine/Graphics/RenderData.h"
 
-struct SimpleChromaticAberrationConstantData;
+#include "Engine/Graphics/VertexShader.h"
+#include "Engine/Graphics/PixelShader.h"
+
+#include "Engine/Graphics/VertexBuffer.h"
+#include "Engine/Graphics/IndexBuffer.h"
+#include "Engine/Graphics/ConstantBuffer.h"
 
 namespace Engine
 {
-	class ConstantBuffer;
-
-	class IndexBuffer;
-
-	class PixelShader;
-
-	class VertexShader;
-
-	class VertexBuffer;
-
 	class Renderer;
 
 	class Camera;
 
+	// TODO: Abstract to material later on
 	class RenderComponent final : public AComponent
 	{
 	public:
-		RenderComponent(Entity& owner);
+		RenderComponent(Entity& owner,
+		                RenderData* renderData,
+		                SharedPtr<VertexShader> vertexShader,
+		                SharedPtr<PixelShader> pixelShader);
 
 		~RenderComponent() override;
 
-		void Initialize(VertexData* vertexData,
-		                VertexLayoutData* vertexLayoutData,
-		                IndexData* indexData,
-		                size_t vertexDataSize,
-		                String shaderName);
-
-		void Terminate();
-
-		void Update();
-
-		void Draw(Camera& camera);
+		void Draw(Camera& camera) const;
 
 		MAKE_COMPONENT(Render)
+
+		RenderComponent(const RenderComponent&) = delete;
+	
+		RenderComponent& operator=(const RenderComponent&) = delete;
+	
+		RenderComponent(RenderComponent&&) noexcept = delete;
+	
+		RenderComponent& operator=(RenderComponent&&) noexcept = delete;
 
 	private:
 		// Material
@@ -53,21 +49,17 @@ namespace Engine
 		// Buffers
 		//	VertexBuffer
 		//	IndexBuffer
-		
-		VertexData* m_VertexData;
 
-		VertexLayoutData* m_VertexLayoutData;
+		UniquePtr<RenderData> m_RenderData{};
 
-		IndexData* m_IndexData;
+		SharedPtr<VertexShader> m_VertexShader{};
 
-		SharedPtr<VertexShader> m_VertexShader;
+		SharedPtr<PixelShader> m_PixelShader{};
 
-		SharedPtr<PixelShader> m_PixelShader;
+		UniquePtr<VertexBuffer> m_VertexBuffer{};
 
-		UniquePtr<VertexBuffer> m_VertexBuffer;
+		UniquePtr<IndexBuffer> m_IndexBuffer{};
 
-		UniquePtr<IndexBuffer> m_IndexBuffer;
-
-		UniquePtr<ConstantBuffer> m_ConstantBuffer;
+		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
 	};
 }

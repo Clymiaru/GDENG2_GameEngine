@@ -34,12 +34,8 @@ namespace Engine
 		PostProcessQuad& operator=(PostProcessQuad&&) noexcept = delete;
 
 	private:
-		VertexData* m_VertexData;
-
-		VertexLayoutData* m_VertexLayoutData;
-
-		IndexData* m_IndexData;
-
+		RenderData* m_RenderData;
+		
 		SharedPtr<VertexShader> m_VertexShader;
 
 		UniquePtr<VertexBuffer> m_VertexBuffer;

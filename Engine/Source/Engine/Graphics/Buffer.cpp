@@ -12,19 +12,7 @@ namespace Engine
 	{
 	}
 
-	Buffer::Buffer(ID3D11Buffer* bufferData,
-	               const uint32_t elementCount,
-	               const size_t dataTypeSize) :
-		m_Data{bufferData},
-		m_DataTypeSize{dataTypeSize},
-		m_BufferSize{elementCount * dataTypeSize},
-		m_ElementCount{elementCount}
-	{
-	}
-
-	Buffer::~Buffer()
-	{
-	}
+	Buffer::~Buffer() = default;
 
 	uint32_t Buffer::ElementCount() const
 	{

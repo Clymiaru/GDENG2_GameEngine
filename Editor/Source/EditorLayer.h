@@ -1,7 +1,5 @@
 ﻿#pragma once
 #include <Engine/Core/Layer.h>
-#include <Engine/Engine.h>
-#include <Engine/Graphics/Framebuffer.h>
 #include <Engine/SceneManagement/EditorSceneCameraHandler.h>
 
 namespace Engine

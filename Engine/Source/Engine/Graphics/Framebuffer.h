@@ -1,12 +1,9 @@
 ﻿#pragma once
 #include <d3d11.h>
-
 #include "RenderTexture.h"
 
 namespace Engine
 {
-	struct Color;
-
 	struct FramebufferProfile
 	{
 		uint32_t Width;
@@ -21,7 +18,8 @@ namespace Engine
 	class Framebuffer final
 	{
 	public:
-		explicit Framebuffer(const FramebufferProfile& profile);
+		explicit Framebuffer(const FramebufferProfile& profile,
+		                     ID3D11Device& device);
 
 		~Framebuffer();
 
@@ -49,20 +47,18 @@ namespace Engine
 			return *m_DepthStencilView;
 		}
 
-		ID3D11Texture2D* CopyFrameTexture();
-
 		Framebuffer(const Framebuffer&) = delete;
-	
+
 		Framebuffer& operator=(const Framebuffer&) = delete;
-	
+
 		Framebuffer(Framebuffer&&) noexcept = delete;
-	
+
 		Framebuffer& operator=(Framebuffer&&) noexcept = delete;
 
 	private:
 		FramebufferProfile m_Profile;
 
-		RenderTexture* m_RenderTarget;
+		UniquePtr<RenderTexture> m_RenderTarget;
 
 		ID3D11DepthStencilView* m_DepthStencilView;
 	};

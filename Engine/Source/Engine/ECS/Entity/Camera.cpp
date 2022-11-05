@@ -7,7 +7,7 @@
 
 namespace Engine
 {
-	Camera::Camera(const String name) :
+	Camera::Camera(const StringView name) :
 		Entity{name}
 	{
 		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
@@ -52,9 +52,9 @@ namespace Engine
 		float yaw   = Transform().Rotation.y;
 		float roll  = Transform().Rotation.z;
 
-		m_Front.x = std::cos(DirectX::XMConvertToRadians(yaw)) * std::cos(DirectX::XMConvertToRadians(pitch));
-		m_Front.y = std::sin(DirectX::XMConvertToRadians(pitch));
-		m_Front.z = std::sin(DirectX::XMConvertToRadians(yaw)) * std::cos(DirectX::XMConvertToRadians(pitch));
+		m_Front.x = std::cos(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
+		m_Front.y = std::sin(DegreesToRadians(pitch));
+		m_Front.z = std::sin(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
 		m_Front.Normalize();
 
 		m_Right = m_Front.Cross(m_WorldUp);

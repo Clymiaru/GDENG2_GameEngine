@@ -8,8 +8,8 @@ namespace Engine
 	class ConstantBuffer final : public Buffer
 	{
 	public:
-		ConstantBuffer(const void* buffer,
-		               size_t bufferSize);
+		explicit ConstantBuffer(const void* buffer,
+		                        size_t bufferSize);
 
 		~ConstantBuffer() override;
 
@@ -26,6 +26,7 @@ namespace Engine
 
 	private:
 		friend class Renderer;
+
 		friend class DeviceContext;
 	};
 }

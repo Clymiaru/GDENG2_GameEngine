@@ -30,7 +30,7 @@ namespace Engine
 		swapChainFramebufferProfile.ExistingTexture = backBuffer;
 		swapChainFramebufferProfile.SwapChainTarget = true;
 
-		m_MainFramebuffer = new Framebuffer(swapChainFramebufferProfile);
+		m_MainFramebuffer = new Framebuffer(swapChainFramebufferProfile, *device);
 	}
 
 	SwapChain::~SwapChain() = default;

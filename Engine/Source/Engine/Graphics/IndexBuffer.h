@@ -1,18 +1,25 @@
 ﻿#pragma once
 #include "Buffer.h"
+#include "RenderData.h"
 
 namespace Engine
 {
- 	class Renderer;
  	class DeviceContext;
 
  	class IndexBuffer final : public Buffer
  	{
  	public:
- 		IndexBuffer(const uint32_t* indexList,
- 		            uint32_t indexListCount);
+ 		explicit IndexBuffer(const RenderData& renderDataRef);
 
  		~IndexBuffer() override;
+
+ 		IndexBuffer(const IndexBuffer&) = delete;
+
+ 		IndexBuffer& operator=(const IndexBuffer&) = delete;
+
+ 		IndexBuffer(IndexBuffer&&) noexcept = delete;
+
+ 		IndexBuffer& operator=(IndexBuffer&&) noexcept = delete;
 
  	private:
  		friend class DeviceContext;

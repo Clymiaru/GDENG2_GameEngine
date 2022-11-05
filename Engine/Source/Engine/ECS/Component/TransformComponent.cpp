@@ -11,11 +11,7 @@ namespace Engine
 	{
 	}
 
-	TransformComponent::~TransformComponent()
-	{
-		// Execute the parent's destructor last
-		AComponent::~AComponent();
-	}
+	TransformComponent::~TransformComponent() = default;
 
 	Matrix4& TransformComponent::LocalMatrix()
 	{
@@ -27,10 +23,11 @@ namespace Engine
 	{
 		using namespace DirectX;
 		m_LocalMatrix = Matrix4();
+		
 		// Apply Rotation
-		m_LocalMatrix *= Matrix4::CreateRotationX(XMConvertToRadians(Rotation.x));
-		m_LocalMatrix *= Matrix4::CreateRotationY(XMConvertToRadians(Rotation.y));
-		m_LocalMatrix *= Matrix4::CreateRotationZ(XMConvertToRadians(Rotation.z));
+		m_LocalMatrix *= Matrix4::CreateRotationX(DegreesToRadians(Rotation.x));
+		m_LocalMatrix *= Matrix4::CreateRotationY(DegreesToRadians(Rotation.y));
+		m_LocalMatrix *= Matrix4::CreateRotationZ(DegreesToRadians(Rotation.z));
 
 		// Apply Scale 
 		m_LocalMatrix *= Matrix4::CreateScale(Scale);

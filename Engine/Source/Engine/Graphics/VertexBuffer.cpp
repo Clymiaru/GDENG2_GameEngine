@@ -1,44 +1,40 @@
 #include "pch.h"
 #include "VertexBuffer.h"
-
 #include "Renderer.h"
-
-#include "Engine/Core/Debug.h"
 
 namespace Engine
 {
-	VertexBuffer::VertexBuffer(const void* vertexList,
-	                           size_t vertexSize,
-	                           uint32_t vertexListCount,
-	                           const void* shaderByteCode,
-	                           size_t shaderByteCodeSize,
-	                           const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-	                           size_t indexLayoutSize) :
-		Buffer(vertexListCount, vertexSize),
+	VertexBuffer::VertexBuffer(const RenderData& renderDataRef,
+	                           const Shader& shaderRef) :
+		Buffer(renderDataRef.VertexCount, renderDataRef.VertexSize),
 		m_DataLayout{nullptr}
 	{
-		D3D11_BUFFER_DESC bufferDesc = {};
-		bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-		bufferDesc.ByteWidth         = ByteSize();
-		bufferDesc.BindFlags         = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.CPUAccessFlags    = 0;
-		bufferDesc.MiscFlags         = 0;
+		D3D11_BUFFER_DESC vertexBufferDesc = {};
+		vertexBufferDesc.ByteWidth         = (UINT)ByteSize();
+		vertexBufferDesc.Usage             = D3D11_USAGE_DEFAULT;
+		vertexBufferDesc.BindFlags         = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags    = 0;
+		vertexBufferDesc.MiscFlags         = 0;
+		// bufferDesc.StructureByteStride = 0; // Might be needed for StructuredBuffers  
 
-		D3D11_SUBRESOURCE_DATA initData = {};
-		initData.pSysMem                = vertexList;
+		D3D11_SUBRESOURCE_DATA vertexBufferInitData = {};
+		vertexBufferInitData.pSysMem                = renderDataRef.Vertices;
 
-		const auto result = Renderer::CreateBuffer(&bufferDesc, &initData, &m_Data);
+		HRESULT result = Renderer::CreateBuffer(&vertexBufferDesc,
+		                                        &vertexBufferInitData,
+		                                        &m_Data);
 
-		Debug::Assert(SUCCEEDED(result), "Vertex buffer cannot be created!");
+		Debug::Assert(SUCCEEDED(result),
+		              "Vertex buffer cannot be created!");
 
-		const auto layoutResult =
-				Renderer::CreateLayout(indexLayout,
-				                       indexLayoutSize,
-				                       shaderByteCode,
-				                       shaderByteCodeSize,
-				                       &m_DataLayout);
+		result = Renderer::CreateLayout(renderDataRef.VertexLayout,
+		                                renderDataRef.VertexLayoutElementCount,
+		                                shaderRef.ByteCodeData(),
+		                                shaderRef.ByteCodeSizeData(),
+		                                &m_DataLayout);
 
-		Debug::Assert(SUCCEEDED(layoutResult), "Vertex layout cannot be created!");
+		Debug::Assert(SUCCEEDED(result),
+		              "Vertex layout cannot be created!");
 	}
 
 	VertexBuffer::~VertexBuffer()

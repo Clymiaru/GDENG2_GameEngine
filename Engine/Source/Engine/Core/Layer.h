@@ -40,8 +40,6 @@ namespace Engine
 			return m_Framebuffer.get();
 		}
 
-		// Delete Move and Copy functionality for now until we decide on
-		// what happens when layers are copied
 		Layer(const Layer&) = delete;
 	
 		Layer& operator=(const Layer&) = delete;

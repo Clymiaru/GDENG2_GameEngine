@@ -11,6 +11,21 @@
 
 #include "Rect.h"
 
+namespace Engine
+{
+	constexpr float DegreesToRadians(const float degrees)
+	{
+		using namespace DirectX;
+		return XMConvertToRadians(degrees);
+	}
+
+	constexpr float RadiansToDegrees(const float radians)
+	{
+		using namespace DirectX;
+		return XMConvertToDegrees(radians);
+	}
+}
+
 // struct Vector4 (TODO);
 // struct Quaternion (TODO);
 // struct Ray (TODO);

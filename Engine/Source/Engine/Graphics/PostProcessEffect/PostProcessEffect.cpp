@@ -18,12 +18,11 @@ namespace Engine
 		m_EffectPixelShader{nullptr},
 		m_ConstantBuffer{nullptr}
 	{
-		const String shaderEffectName = "PostProcess_" + effectName;
+		const String shaderEffectName = effectName + "_FX";
 		String shaderEffectShaderPath = "Assets/Shaders/PostProcess/";
 		shaderEffectShaderPath += shaderEffectName;
 		shaderEffectShaderPath += ".hlsl";
-		ShaderLibrary::Register<PixelShader>(shaderEffectShaderPath,
-		                                     "PSMain");
+		ShaderLibrary::Register<PixelShader>(shaderEffectShaderPath);
 
 		m_EffectPixelShader = ShaderLibrary::GetShaderRef<PixelShader>(shaderEffectName);
 	}

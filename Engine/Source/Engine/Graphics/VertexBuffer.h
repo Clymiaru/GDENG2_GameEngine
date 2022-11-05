@@ -1,28 +1,31 @@
 #pragma once
 #include "Buffer.h"
+#include "RenderData.h"
+#include "Shader.h"
 
 namespace Engine
 {
 	class DeviceContext;
-	class Renderer;
 
 	class VertexBuffer final : public Buffer
 	{
 	public:
-		VertexBuffer(const void* vertexList,
-		             size_t vertexSize,
-		             uint32_t vertexListCount,
-		             const void* shaderByteCode,
-		             size_t shaderByteCodeSize,
-		             const D3D11_INPUT_ELEMENT_DESC* indexLayout,
-		             size_t indexLayoutSize);
+		explicit VertexBuffer(const RenderData& renderDataRef,
+		                      const Shader& shaderRef);
 
 		~VertexBuffer() override;
 
+		VertexBuffer(const VertexBuffer&) = delete;
+
+		VertexBuffer& operator=(const VertexBuffer&) = delete;
+
+		VertexBuffer(VertexBuffer&&) noexcept = delete;
+
+		VertexBuffer& operator=(VertexBuffer&&) noexcept = delete;
+
 	private:
 		ID3D11InputLayout* m_DataLayout;
+
 		friend class DeviceContext;
 	};
-
-
 }

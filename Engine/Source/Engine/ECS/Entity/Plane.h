@@ -1,29 +1,16 @@
 ﻿#pragma once
-#include "Entity.h"
-
-#include "Engine/Math/Vector3.h"
+#include "Engine/ECS/Core/Entity.h"
 
 namespace Engine
 {
 	class Camera;
-
-	class RenderComponent;
-
-	struct Constant;
-
-	class Plane : public Entity
+	class Plane final : public Entity
 	{
 	public:
-		Plane(const String& name,
-		      const Vector3Float& position);
+		explicit Plane(StringView name);
 
 		~Plane() override;
 
-		void Update();
-
 		void Draw(Camera& camera);
-
-	private:
-		RenderComponent* m_Render;
 	};
 }

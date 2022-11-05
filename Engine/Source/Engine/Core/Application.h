@@ -22,6 +22,8 @@ namespace Engine
 			uint32_t Height = 0;
 		};
 
+		static std::string AssetDataPath;
+
 		static void SetLayers(List<Layer*> initialLayers);
 
 		static void Start(const Profile& profile);

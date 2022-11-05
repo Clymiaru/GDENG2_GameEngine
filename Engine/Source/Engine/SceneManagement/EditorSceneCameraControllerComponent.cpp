@@ -3,7 +3,7 @@
 
 #include "Engine/Core/Application.h"
 #include "Engine/ECS/Component/TransformComponent.h"
-#include "Engine/ECS/Entity/Entity.h"
+#include "Engine/ECS/Core/Entity.h"
 #include "Engine/Input/Input.h"
 
 namespace Engine

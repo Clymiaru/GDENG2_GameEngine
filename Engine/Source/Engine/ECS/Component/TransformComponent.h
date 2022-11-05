@@ -1,8 +1,6 @@
 ﻿#pragma once
-
-#include "AComponent.h"
-
 #include "Engine/Math/Math.h"
+#include "Engine/ECS/Core/AComponent.h"
 
 namespace Engine
 {
@@ -10,6 +8,7 @@ namespace Engine
 	{
 	public:
 		explicit TransformComponent(Entity& owner);
+		
 		~TransformComponent() override;
 
 		MAKE_COMPONENT(Transform)
@@ -21,6 +20,14 @@ namespace Engine
 		Vector3Float Scale;
 
 		Vector3Float Rotation;
+
+		TransformComponent(const TransformComponent&) = delete;
+	
+		TransformComponent& operator=(const TransformComponent&) = delete;
+	
+		TransformComponent(TransformComponent&&) noexcept = delete;
+	
+		TransformComponent& operator=(TransformComponent&&) noexcept = delete;
 
 	private:
 		void RecalculateLocalMatrix();

@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "AComponent.h"
 
-#include "Engine/ECS/Entity/Entity.h"
+#include "Entity.h"
 
 namespace Engine
 {
@@ -10,10 +10,7 @@ namespace Engine
 	{
 	}
 
-	AComponent::~AComponent()
-	{
-		// Remove component at EntityRef?
-	}
+	AComponent::~AComponent() = default;
 
 	Entity& AComponent::GetOwner() const
 	{
@@ -23,12 +20,12 @@ namespace Engine
 	bool AComponent::operator==(const AComponent& other) const
 	{
 		return GetName() == other.GetName() &&
-		       m_EntityRef.Name() == other.GetOwner().Name();
+		       m_EntityRef.Name == other.GetOwner().Name;
 	}
 
 	bool AComponent::operator!=(const AComponent& other) const
 	{
 		return GetName() != other.GetName() ||
-		       m_EntityRef.Name() != other.GetOwner().Name();
+		       m_EntityRef.Name != other.GetOwner().Name;
 	}
 }

@@ -3,24 +3,22 @@
 
 namespace Engine
 {
-	struct VertexData
+	struct RenderData
 	{
-		void* VertexList;
+		// Vertices
+		void* Vertices;
+		size_t VertexCount;
+		size_t VertexSize;
 
-		size_t VertexListCount;
-	};
-
-	struct VertexLayoutData
-	{
+		// Vertex Layout
 		D3D11_INPUT_ELEMENT_DESC* VertexLayout;
+		size_t VertexLayoutElementCount;
 
-		size_t VertexLayoutCount;
-	};
+		// Indices
+		uint32_t* Indices;
+		size_t IndexCount;
 
-	struct IndexData
-	{
-		uint32_t* IndexList;
-
-		size_t IndexListCount;
+		// Topology
+		D3D11_PRIMITIVE_TOPOLOGY Topology;
 	};
 }

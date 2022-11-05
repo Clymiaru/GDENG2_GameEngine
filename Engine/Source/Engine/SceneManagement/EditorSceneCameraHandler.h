@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "EditorSceneCamera.h"
 
+#include "Engine/Math/Math.h"
+
 namespace Engine
 {
 	class EditorSceneCameraHandler final
 	{
 	public:
-		EditorSceneCameraHandler(int expectedEditorSceneCameras);
+		explicit EditorSceneCameraHandler(int expectedEditorSceneCameras);
 		~EditorSceneCameraHandler();
 		
 		void Initialize(int numberOfEditorSceneCamera,

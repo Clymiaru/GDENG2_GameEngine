@@ -9,10 +9,6 @@ namespace Engine
 		Buffer(uint32_t elementCount,
 		       size_t dataTypeSize);
 
-		Buffer(ID3D11Buffer* bufferData,
-		       uint32_t elementCount,
-		       size_t dataTypeSize);
-
 		virtual ~Buffer();
 
 		[[nodiscard]]
@@ -24,7 +20,6 @@ namespace Engine
 		[[nodiscard]]
 		size_t ByteSize() const;
 
-		// Copy and move is disabled
 		Buffer(const Buffer&) = delete;
 
 		Buffer& operator=(const Buffer&) = delete;

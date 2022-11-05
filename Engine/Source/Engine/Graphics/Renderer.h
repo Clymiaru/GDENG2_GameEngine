@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <d3d11.h>
 #include "DeviceContext.h"
 #include "SwapChain.h"
 #include "Engine/Core/Core.h"

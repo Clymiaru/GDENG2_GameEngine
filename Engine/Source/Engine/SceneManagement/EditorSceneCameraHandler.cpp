@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "EditorSceneCameraHandler.h"
 
-#include "Engine/Core/Debug.h"
 #include "Engine/ECS/Component/TransformComponent.h"
 
 namespace Engine
