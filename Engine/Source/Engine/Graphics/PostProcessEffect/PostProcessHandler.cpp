@@ -12,18 +12,14 @@
 namespace Engine
 {
 	PostProcessHandler::PostProcessHandler(int numberOfPostProcessEffects) :
-		m_PostProcessQuads{List<PostProcessQuad*>()}
+		m_PostProcessEffectList{List<PostProcessEntry>()}
 	{
-		m_PostProcessQuads.reserve(numberOfPostProcessEffects);
-		m_PostProcessFramebuffers.reserve(numberOfPostProcessEffects);
-		m_PostProcessEffects.reserve(numberOfPostProcessEffects);
+		m_PostProcessEffectList.reserve(numberOfPostProcessEffects);
 	}
 
 	PostProcessHandler::~PostProcessHandler()
 	{
-		m_PostProcessQuads.clear();
-		m_PostProcessFramebuffers.clear();
-		m_PostProcessEffects.clear();
+		m_PostProcessEffectList.clear();
 	}
 
 	void PostProcessHandler::Start()
@@ -33,49 +29,115 @@ namespace Engine
 
 	void PostProcessHandler::End()
 	{
-		m_PostProcessQuads.clear();
-		m_PostProcessFramebuffers.clear();
+		m_PostProcessEffectList.erase(m_PostProcessEffectList.begin(),
+		                              m_PostProcessEffectList.end());
 	}
 
 	int PostProcessHandler::AddEffect(PostProcessEffect* postProcessEffect)
 	{
-		m_PostProcessEffects.push_back(postProcessEffect);
-		m_PostProcessQuads.push_back(new PostProcessQuad());
-
 		FramebufferProfile postProcessFramebufferProfile;
 		postProcessFramebufferProfile.Width  = Application::WindowRect().Width;
 		postProcessFramebufferProfile.Height = Application::WindowRect().Height;
-		m_PostProcessFramebuffers.push_back(new Framebuffer(postProcessFramebufferProfile, Renderer::GetDevice()));
 
-		return (int)m_PostProcessEffects.size() - 1;
+		int postProcessEffectID = m_PostProcessEffectList.size();
+		if (!m_ReservedID.empty())
+		{
+			postProcessEffectID = m_ReservedID.front();
+			m_ReservedID.pop();
+		}
+
+		PostProcessEntry entry;
+		entry.EffectID    = postProcessEffectID;
+		entry.Effect      = std::move(postProcessEffect);
+		entry.Frame       = new PostProcessQuad();
+		entry.Framebuffer = new Framebuffer(postProcessFramebufferProfile,
+		                                    Renderer::GetDevice());
+
+		m_PostProcessEffectList.emplace_back(entry);
+
+		return (int)m_PostProcessEffectList.size() - 1;
 	}
 
 	void PostProcessHandler::UpdateEffectData(int effectID,
 	                                          void* updatedEffectData) const
 	{
-		m_PostProcessEffects[effectID]->UpdateEffectData(updatedEffectData);
+		m_PostProcessEffectList[effectID].Effect->UpdateEffectData(updatedEffectData);
 	}
 
-	// TODO: Implement actual removal
 	void PostProcessHandler::RemoveEffect(int effectID)
 	{
-		PostProcessEffect* effectToRemove = m_PostProcessEffects[effectID];
-		std::erase(m_PostProcessEffects, effectToRemove);
-		delete effectToRemove;
+		auto postEffectFindPred = [effectID](const PostProcessEntry other) -> bool
+		{
+			return other.EffectID == effectID;
+		};
+
+		const auto foundEffect = std::ranges::find_if(m_PostProcessEffectList,
+		                                              postEffectFindPred);
+
+		if (foundEffect == m_PostProcessEffectList.end())
+		{
+			return;
+		}
+
+		m_ReservedID.push(effectID);
+
+		std::erase(m_PostProcessEffectList, *foundEffect);
+		m_PostProcessEffectList.shrink_to_fit();
 	}
 
 	ID3D11ShaderResourceView& PostProcessHandler::ProcessEffects(const Framebuffer& originalFrame) const
 	{
 		const auto* currentFrame = &originalFrame;
 
-		for (int i = 0; i < m_PostProcessEffects.size(); i++)
+		for (int i = 0; i < m_PostProcessEffectList.size(); i++)
 		{
-			Renderer::StartRender(*m_PostProcessFramebuffers[i]);
-			m_PostProcessQuads[i]->Draw(currentFrame->GetFrame(), *m_PostProcessEffects[i]);
-			currentFrame = m_PostProcessFramebuffers[i];
+			Renderer::StartRender(*m_PostProcessEffectList[i].Framebuffer);
+			m_PostProcessEffectList[i].Frame->Draw(currentFrame->GetFrame(),
+			                                       *m_PostProcessEffectList[i].Effect);
+			currentFrame = m_PostProcessEffectList[i].Framebuffer;
 		}
 
 		// RenderTarget and ShaderResourceView is bound to the same texture
 		return currentFrame->GetFrame();
+	}
+
+	PostProcessEntry* PostProcessHandler::GetPostProcessEffect(int effectID)
+	{
+		for (int i = 0; i < m_PostProcessEffectList.size(); i++)
+		{
+			if (m_PostProcessEffectList[i].EffectID == effectID)
+			{
+				return &m_PostProcessEffectList[i];
+			}
+		}
+		return nullptr;
+	}
+
+	void PostProcessHandler::SwapEffects(int effectAID,
+	                                     int effectBID)
+	{
+		if (effectAID == effectBID)
+			return;
+		
+		PostProcessEntry* effectA = nullptr;
+		PostProcessEntry* effectB = nullptr;
+		
+		for (int i = 0; i < m_PostProcessEffectList.size(); i++)
+		{
+			if (m_PostProcessEffectList[i].EffectID == effectAID)
+			{
+				effectA = &m_PostProcessEffectList[i];
+			}
+
+			if (m_PostProcessEffectList[i].EffectID == effectBID)
+			{
+				effectB = &m_PostProcessEffectList[i];
+			}
+		}
+
+		if (effectA == nullptr || effectB == nullptr)
+			return;
+		
+		std::swap(effectA, effectB);
 	}
 }

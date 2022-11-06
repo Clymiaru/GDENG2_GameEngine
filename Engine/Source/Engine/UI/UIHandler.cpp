@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	List<AUIScreen*> UIHandler::s_UIScreenList = List<AUIScreen*>();
+	List<AUIPanel*> UIHandler::s_UIScreenList = List<AUIPanel*>();
 	
 	void UIHandler::Start()
 	{
@@ -13,11 +13,11 @@ namespace Engine
 	{
 	}
 
-	void UIHandler::Register(AUIScreen* uiScreen)
+	void UIHandler::Register(AUIPanel* uiScreen)
 	{
 	}
 
-	void UIHandler::Deregister(AUIScreen* uiScreen)
+	void UIHandler::Deregister(AUIPanel* uiScreen)
 	{
 	}
 }

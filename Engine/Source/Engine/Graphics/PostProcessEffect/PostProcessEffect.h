@@ -29,6 +29,7 @@ namespace Engine
 
 		PostProcessEffect& operator=(PostProcessEffect&&) noexcept = delete;
 
+		String Name;
 	private:
 		SharedPtr<PixelShader> m_EffectPixelShader;
 

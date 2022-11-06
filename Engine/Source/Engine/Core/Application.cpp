@@ -40,8 +40,6 @@ namespace Engine
 
 	void Application::Start(const Profile& profile)
 	{
-		ImGuiSystem::Instance().Start();
-
 		Instance().m_Window = CreateUniquePtr<Window>(Window::Profile{
 			                                              profile.Name,
 			                                              profile.Width,
@@ -58,10 +56,13 @@ namespace Engine
 
 		Renderer::Start(*m_Window);
 
+		ImGuiSystem::Start(*m_Window,
+		                   &Renderer::GetDevice(),
+		                   &Renderer::GetDeviceContext().GetContext());
+
 		ShaderLibrary::Initialize(4);
 
 		Input::Start();
-
 	}
 
 	void Application::Run()
@@ -101,7 +102,7 @@ namespace Engine
 
 		m_Window.reset();
 
-		ImGuiSystem::Instance().End();
+		ImGuiSystem::End();
 	}
 
 	void Application::Quit()
@@ -141,9 +142,9 @@ namespace Engine
 
 		Renderer::SetRenderTargetTo(&Renderer::GetSwapChain().GetBackbuffer().GetRenderTarget(),
 		                            &Renderer::GetSwapChain().GetBackbuffer().GetDepthStencil());
-		
+
 		m_LayerHandler->ImGuiRender();
-		
+
 		Renderer::ShowFrame();
 	}
 }

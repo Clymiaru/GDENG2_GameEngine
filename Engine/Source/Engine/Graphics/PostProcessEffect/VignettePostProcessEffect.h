@@ -9,6 +9,7 @@ namespace Engine
 		Vector2Float EffectPosition;
 		Vector2Float ScreenSize;
 	};
+	
 	class VignettePostProcessEffect final : public PostProcessEffect
 	{
 	public:

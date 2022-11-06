@@ -1,21 +1,24 @@
 ﻿#include "pch.h"
-#include "AUIScreen.h"
+#include "AUIPanel.h"
 
 #include "../../../Dependencies/ImGui/imgui.h"
 
 namespace Engine
 {
-	AUIScreen::AUIScreen(const String& name) :
+	AUIPanel::AUIPanel(const String& name) :
 		m_Name{name}
 	{
 	}
 
-	void AUIScreen::DrawImpl()
+	void AUIPanel::Draw()
 	{
 		ImGui::Begin(m_Name.c_str());
-
-		Draw();
-
+		DrawImpl();
 		ImGui::End();
+	}
+
+	void AUIPanel::DrawImpl()
+	{
+		
 	}
 }

@@ -77,8 +77,6 @@ namespace Engine
 		                                      window.WindowRect().Height);
 
 		s_DeviceContext->SetViewportSize(winSize);
-
-		ImGui_ImplDX11_Init(s_Device, deviceContext);
 	}
 
 	void Renderer::End()

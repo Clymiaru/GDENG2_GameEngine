@@ -1,15 +1,15 @@
 ﻿#pragma once
 
-#include "Engine/UI/AUIScreen.h"
+#include "Engine/UI/AUIPanel.h"
 
 namespace Editor
 {
-	class CreditsScreen final : public Engine::AUIScreen
+	class CreditsScreen final : public Engine::AUIPanel
 	{
 	public:
 		CreditsScreen();
 		~CreditsScreen() override;
 
-		void Draw() override;
+		void DrawImpl() override;
 	};
 }

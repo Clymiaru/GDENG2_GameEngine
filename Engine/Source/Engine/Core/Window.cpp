@@ -5,16 +5,10 @@
 
 #include "Application.h"
 
-#include "../../../Dependencies/ImGui/imgui_impl_win32.h"
-
 #include "Engine/Graphics/Renderer.h"
+#include "Engine/ImGui/ImGuiSystem.h"
 
 #include "Utils/Utils.h"
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
-                                                             UINT msg,
-                                                             WPARAM wParam,
-                                                             LPARAM lParam);
 
 namespace Engine
 {
@@ -23,8 +17,11 @@ namespace Engine
 	                                  const WPARAM wParam,
 	                                  const LPARAM lParam)
 	{
-		LRESULT result = ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam);
-		if (result)
+		if (const LRESULT result = ImGuiSystem::HandleEvents(windowHandle,
+		                                                     message,
+		                                                     wParam,
+		                                                     lParam);
+			result)
 		{
 			return result;
 		}
@@ -104,8 +101,6 @@ namespace Engine
 		UpdateClientSize();
 
 		ShowWindow(m_Handle, SW_SHOW);
-
-		ImGui_ImplWin32_Init(m_Handle);
 
 		UpdateWindow(m_Handle);
 	}

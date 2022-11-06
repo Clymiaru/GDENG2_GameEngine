@@ -13,10 +13,11 @@
 #include <Engine/ECS/Entity/Plane.h>
 
 #include <Engine/Graphics/PostProcessEffect/PostProcessHandler.h>
-#include <Engine/Graphics/PostProcessEffect/SimpleChromaticAberrationPostProcessEffect.h>
-#include <Engine/Graphics/PostProcessEffect/VignettePostProcessEffect.h>
+#include <Engine/ImGui/ImGuiSystem.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
+
+#include "Screen/PostProcessingPanel.h"
 
 namespace Editor
 {
@@ -29,7 +30,8 @@ namespace Editor
 		m_CameraHandler{2},
 		m_RenderQuad{nullptr},
 		m_PostProcessHandler{nullptr},
-		m_CurrentSceneCamera{0}
+		m_CurrentSceneCamera{0},
+		m_PostProcessingPanel{nullptr}
 	{
 	}
 
@@ -86,21 +88,7 @@ namespace Editor
 		m_PostProcessHandler = CreateUniquePtr<PostProcessHandler>(3);
 		m_PostProcessHandler->Start();
 
-		m_PostProcessHandler->AddEffect(new VignettePostProcessEffect({
-			                                                              Color(0.5f, 0.0f, 0.2f, 1.0f),
-			                                                              Vector2Float(1.0f, 0.0f),
-			                                                              Vector2Float(Application::WindowRect().Width,
-			                                                                           Application::WindowRect().Height)
-		                                                              }));
-
-		m_ChromaticEffectID = m_PostProcessHandler->AddEffect(new SimpleChromaticAberrationPostProcessEffect({
-			                                                                                                     Vector2Float(Application::WindowRect()
-			                                                                                                                  .Width,
-			                                                                                                                  Application::WindowRect()
-			                                                                                                                  .Height),
-			                                                                                                     Vector2Float(-1.0f,
-			                                                                                                                  1.0f)
-		                                                                                                     }));
+		m_PostProcessingPanel = new PostProcessingPanel(*m_PostProcessHandler);
 	}
 
 	void EditorLayer::OnPollInput()
@@ -110,16 +98,16 @@ namespace Editor
 	void EditorLayer::OnUpdate()
 	{
 		using namespace Engine;
-		Vector2Float mousePosition = Vector2Float((float)Input::Mouse().DeltaMousePosition.x,
-		                                          (float)Input::Mouse().DeltaMousePosition.y);
-		mousePosition.Normalize();
-
-		SimpleChromaticAberrationEffectData* chromaticEffectData =
-				new SimpleChromaticAberrationEffectData(Vector2Float(Application::WindowRect().Width,
-				                                                     Application::WindowRect().Height),
-				                                        mousePosition);
-
-		m_PostProcessHandler->UpdateEffectData(m_ChromaticEffectID, chromaticEffectData);
+		// Vector2Float mousePosition = Vector2Float((float)Input::Mouse().DeltaMousePosition.x,
+		//                                           (float)Input::Mouse().DeltaMousePosition.y);
+		// mousePosition.Normalize();
+		//
+		// SimpleChromaticAberrationEffectData* chromaticEffectData =
+		// 		new SimpleChromaticAberrationEffectData(Vector2Float(Application::WindowRect().Width,
+		// 		                                                     Application::WindowRect().Height),
+		// 		                                        mousePosition);
+		//
+		// m_PostProcessHandler->UpdateEffectData(m_ChromaticEffectID, chromaticEffectData);
 		m_CameraHandler.UpdateSceneCameraOfId(0);
 	}
 
@@ -148,11 +136,11 @@ namespace Editor
 
 	void EditorLayer::OnImGuiRender()
 	{
+		using namespace Engine;
 		// TODO: Resizing viewports
 		ImGui::DockSpaceOverViewport();
 
-		static bool showDemoWindow = true;
-		ImGui::ShowDemoWindow(&showDemoWindow);
+		ImGuiSystem::ShowDemoWindow(true);
 
 		static bool showCredits = false;
 
@@ -176,11 +164,10 @@ namespace Editor
 
 		ImGui::Begin("World Outliner");
 		ImGui::Text("World Outliner Placeholder");
+
 		ImGui::End();
 
-		ImGui::Begin("Properties");
-		ImGui::Text("Properties Placeholder");
-		ImGui::End();
+		m_PostProcessingPanel->Draw();
 
 		ImGui::Begin("Scene View");
 		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(16 * 15, 9 * 15));
@@ -204,5 +191,7 @@ namespace Editor
 		m_EntityList.clear();
 
 		m_CameraHandler.Terminate();
+
+		delete m_PostProcessingPanel;
 	}
 }

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "AUIScreen.h"
+#include "AUIPanel.h"
 
 namespace Engine
 {
@@ -16,12 +16,12 @@ namespace Engine
 
 		static void End();
 
-		static void Register(AUIScreen* uiScreen);
-		static void Deregister(AUIScreen* uiScreen);
+		static void Register(AUIPanel* uiScreen);
+		static void Deregister(AUIPanel* uiScreen);
 	private:
 		// List of UI Screens
 		// Issue: Draw UI Screen specific to scene?
 
-		static List<AUIScreen*> s_UIScreenList;
+		static List<AUIPanel*> s_UIScreenList;
 	};
 }

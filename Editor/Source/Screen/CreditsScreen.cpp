@@ -5,13 +5,13 @@
 namespace Editor
 {
 	CreditsScreen::CreditsScreen() :
-		AUIScreen{"Credits"}
+		AUIPanel{"Credits"}
 	{
 	}
 
 	CreditsScreen::~CreditsScreen() = default;
 
-	void CreditsScreen::Draw()
+	void CreditsScreen::DrawImpl()
 	{
 		ImGui::Text("Scene Editor Version: 0.01");
 		ImGui::Text("Developer: Lanz Santiago");

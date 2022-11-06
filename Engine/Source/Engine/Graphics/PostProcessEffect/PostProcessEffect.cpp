@@ -9,12 +9,14 @@ __declspec(align(16))
 struct SimpleChromaticAberrationConstantData
 {
 	Engine::Vector2Float ScreenSize;
+
 	Engine::Vector2Float Direction;
 };
 
 namespace Engine
 {
 	PostProcessEffect::PostProcessEffect(const String& effectName) :
+		Name{effectName},
 		m_EffectPixelShader{nullptr},
 		m_ConstantBuffer{nullptr}
 	{
