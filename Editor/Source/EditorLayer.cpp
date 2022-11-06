@@ -113,6 +113,7 @@ namespace Editor
 
 	void EditorLayer::OnRender()
 	{
+		// RenderTarget is the Layer's Framebuffer
 		for (auto* entity : m_EntityList)
 		{
 			entity->Draw(m_CameraHandler.GetSceneCamera(0));
@@ -126,7 +127,7 @@ namespace Editor
 		auto* postProcessView = &m_PostProcessHandler->ProcessEffects(*m_Framebuffer);
 
 		Engine::Renderer::StartRender(*m_EditorViewFramebuffer);
-		m_RenderQuad->Draw(*postProcessView);
+		m_RenderQuad->Draw(m_Framebuffer->GetFrame());
 		Engine::Renderer::EndRender(*m_EditorViewFramebuffer);
 
 		Engine::Renderer::StartRender(*m_GameViewFramebuffer);
@@ -170,11 +171,11 @@ namespace Editor
 		m_PostProcessingPanel->Draw();
 
 		ImGui::Begin("Scene View");
-		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(16 * 15, 9 * 15));
+		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(16 * 60, 9 * 60));
 		ImGui::End();
 
 		ImGui::Begin("Game View");
-		ImGui::Image(&m_GameViewFramebuffer->GetFrame(), ImVec2(16 * 40, 9 * 40));
+		ImGui::Image(&m_GameViewFramebuffer->GetFrame(), ImVec2(16 * 60, 9 * 60));
 		ImGui::End();
 	}
 

@@ -3,11 +3,12 @@
 
 namespace Engine
 {
+	__declspec(align(16))
 	struct VignetteEffectData
 	{
 		Color EffectColor;
 		Vector2Float EffectPosition;
-		Vector2Float ScreenSize;
+		Vector2Float IntensitySmoothness;
 	};
 	
 	class VignettePostProcessEffect final : public PostProcessEffect

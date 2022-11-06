@@ -2,7 +2,7 @@ cbuffer b_EffectData : register(b0)
 {
 	float4 EffectColor;
 	float2 EffectCenterPosition;
-	float2 ScreenSize;
+	float2 IntensitySmoothness;
 };
 
 Texture2D t_Frame : register(t0);
@@ -17,17 +17,15 @@ struct PSInput
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-	float2 position = (input.Position.xy / ScreenSize) - 0.5f;
-	float dist = length(position * float2(ScreenSize.x / ScreenSize.y, 1.0));
+	float2 uv = input.TexCoord.xy + EffectCenterPosition.xy;
 
-	float radius = 0.75;
-	float softness = 0.02;
+	uv *=  1.0 - uv.yx;
 
-	float vignette = smoothstep(radius, radius - softness, dist);
+	float vignette = uv.x * uv.y * IntensitySmoothness.x;
 
-	float4 color = t_Frame.Sample(s_FrameSampler, input.TexCoord);
+	vignette = pow(vignette, IntensitySmoothness.y);
 	
-	color.rgb = color.rgb - (1.0 - vignette);
-	
+	float4 color = t_Frame.Sample(s_FrameSampler, input.TexCoord) *
+					EffectColor * vignette;
 	return color;
 }

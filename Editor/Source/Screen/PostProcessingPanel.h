@@ -4,6 +4,16 @@
 
 namespace Engine
 {
+	struct SimpleChromaticAberrationEffectData;
+}
+
+namespace Engine
+{
+	struct VignetteEffectData;
+}
+
+namespace Engine
+{
 	class PostProcessHandler;
 }
 
@@ -29,9 +39,13 @@ namespace Editor
 		Engine::List<Engine::String> m_AvailablePostEffectOptions =
 		{
 			"Vignette",
-			"Chromatic Aberration"
+			"Chromatic Aberration",
+			"Custom"
 		};
 
+		Engine::VignetteEffectData* m_VignetteEffectData;
+
+		Engine::SimpleChromaticAberrationEffectData* m_ChromaticAberrationEffectData;
 
 	};
 }

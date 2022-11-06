@@ -8,6 +8,8 @@ namespace Engine
 	__declspec(align(16))
 	struct SimpleChromaticAberrationEffectData
 	{
+		Color RGBOffset;
+		
 		Vector2Float ScreenSize;
 
 		Vector2Float Direction;

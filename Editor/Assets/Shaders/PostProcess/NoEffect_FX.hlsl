@@ -12,3 +12,4 @@ float4 PSMain(const PSInput input) : SV_TARGET
 {
 	return t_Frame.Sample(s_FrameSampler, input.TexCoord);
 }
+
