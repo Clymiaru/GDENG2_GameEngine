@@ -8,6 +8,13 @@ namespace Engine::Primitive
 		Vector3Float Position;
 	};
 
+	struct TexturedVertex
+	{
+		Vector3Float Position;
+
+		Vector2Float TextureCoordinates;
+	};
+
 	inline RenderData* Circle(const int sectors)
 	{
 		List<Vertex>* vertices  = new List<Vertex>();
@@ -126,6 +133,230 @@ namespace Engine::Primitive
 		cubeRenderData->VertexLayoutElementCount = 1U;
 		cubeRenderData->Indices                  = indices;
 		cubeRenderData->IndexCount               = 36;
+		cubeRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+		return cubeRenderData;
+	}
+
+	inline RenderData* RainbowCube()
+	{
+		Vector3Float* positionList = new Vector3Float[]
+		{
+			{Vector3Float(-0.5f, -0.5f, -0.5f)},
+			{Vector3Float(-0.5f, 0.5f, -0.5f)},
+			{Vector3Float(0.5f, 0.5f, -0.5f)},
+			{Vector3Float(0.5f, -0.5f, -0.5f)},
+
+			//BACK FACE
+			{Vector3Float(0.5f, -0.5f, 0.5f)},
+			{Vector3Float(0.5f, 0.5f, 0.5f)},
+			{Vector3Float(-0.5f, 0.5f, 0.5f)},
+			{Vector3Float(-0.5f, -0.5f, 0.5f)}
+		};
+
+		Vector2Float* texCoordList = new Vector2Float[]
+		{
+			{Vector2Float(0.0f, 0.0f)},
+			{Vector2Float(0.0f, 1.0f)},
+			{Vector2Float(1.0f, 0.0f)},
+			{Vector2Float(1.0f, 1.0f)}
+		};
+
+		TexturedVertex* vertexList = new TexturedVertex[]
+		{
+			{positionList[0], texCoordList[1]},
+			{positionList[1], texCoordList[0]},
+			{positionList[2], texCoordList[2]},
+			{positionList[3], texCoordList[3]},
+
+			{positionList[4], texCoordList[1]},
+			{positionList[5], texCoordList[0]},
+			{positionList[6], texCoordList[2]},
+			{positionList[7], texCoordList[3]},
+
+			{positionList[1], texCoordList[1]},
+			{positionList[6], texCoordList[0]},
+			{positionList[5], texCoordList[2]},
+			{positionList[2], texCoordList[3]},
+
+			{positionList[7], texCoordList[1]},
+			{positionList[0], texCoordList[0]},
+			{positionList[3], texCoordList[2]},
+			{positionList[4], texCoordList[3]},
+
+			{positionList[3], texCoordList[1]},
+			{positionList[2], texCoordList[0]},
+			{positionList[5], texCoordList[2]},
+			{positionList[4], texCoordList[3]},
+
+			{positionList[7], texCoordList[1]},
+			{positionList[6], texCoordList[0]},
+			{positionList[1], texCoordList[2]},
+			{positionList[0], texCoordList[3]}
+
+		};
+
+		uint32_t* indexList  = new uint32_t[]
+		{
+			//FRONT SIDE
+			0,1,2,  //FIRST TRIANGLE
+		2,3,0,  //SECOND TRIANGLE
+		//BACK SIDE
+		4,5,6,
+		6,7,4,
+		//TOP SIDE
+		8,9,10,
+		10,11,8,
+		//BOTTOM SIDE
+		12,13,14,
+		14,15,12,
+		//RIGHT SIDE
+		16,17,18,
+		18,19,16,
+		//LEFT SIDE
+		20,21,22,
+		22,23,20
+		};
+
+		D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[2]
+		{
+			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+
+		RenderData* cubeRenderData               = new RenderData();
+		cubeRenderData->Vertices                 = vertexList;
+		cubeRenderData->VertexCount              = sizeof(*vertexList);
+		cubeRenderData->VertexSize               = sizeof(TexturedVertex);
+		cubeRenderData->VertexLayout             = layout;
+		cubeRenderData->VertexLayoutElementCount = 2U;
+		cubeRenderData->Indices                  = indexList;
+		cubeRenderData->IndexCount               = 36;
+		cubeRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+		return cubeRenderData;
+	}
+
+	inline RenderData* TexturedCube()
+	{
+		Vector3Float* positionList = new Vector3Float[]
+		{
+			{Vector3Float(-0.5f, -0.5f, -0.5f)},
+			{Vector3Float(-0.5f, 0.5f, -0.5f)},
+			{Vector3Float(0.5f, 0.5f, -0.5f)},
+			{Vector3Float(0.5f, -0.5f, -0.5f)},
+
+			//BACK FACE
+			{Vector3Float(0.5f, -0.5f, 0.5f)},
+			{Vector3Float(0.5f, 0.5f, 0.5f)},
+			{Vector3Float(-0.5f, 0.5f, 0.5f)},
+			{Vector3Float(-0.5f, -0.5f, 0.5f)}
+		};
+
+		Vector2Float* texCoordList = new Vector2Float[]
+		{
+			{Vector2Float(0.0f, 0.0f)},
+			{Vector2Float(0.0f, 1.0f)},
+			{Vector2Float(1.0f, 0.0f)},
+			{Vector2Float(1.0f, 1.0f)}
+		};
+
+		TexturedVertex* vertexList = new TexturedVertex[]
+		{
+			{positionList[0], texCoordList[1]},
+			{positionList[1], texCoordList[0]},
+			{positionList[2], texCoordList[2]},
+			{positionList[3], texCoordList[3]},
+
+			{positionList[4], texCoordList[1]},
+			{positionList[5], texCoordList[0]},
+			{positionList[6], texCoordList[2]},
+			{positionList[7], texCoordList[3]},
+
+			{positionList[1], texCoordList[1]},
+			{positionList[6], texCoordList[0]},
+			{positionList[5], texCoordList[2]},
+			{positionList[2], texCoordList[3]},
+
+			{positionList[7], texCoordList[1]},
+			{positionList[0], texCoordList[0]},
+			{positionList[3], texCoordList[2]},
+			{positionList[4], texCoordList[3]},
+
+			{positionList[3], texCoordList[1]},
+			{positionList[2], texCoordList[0]},
+			{positionList[5], texCoordList[2]},
+			{positionList[4], texCoordList[3]},
+
+			{positionList[7], texCoordList[1]},
+			{positionList[6], texCoordList[0]},
+			{positionList[1], texCoordList[2]},
+			{positionList[0], texCoordList[3]}
+
+		};
+
+		unsigned int indexList[] =
+		{
+			//FRONT SIDE
+			0,
+			1,
+			2,
+			//FIRST TRIANGLE
+			2,
+			3,
+			0,
+			//SECOND TRIANGLE
+			//BACK SIDE
+			4,
+			5,
+			6,
+			6,
+			7,
+			4,
+			//TOP SIDE
+			8,
+			9,
+			10,
+			10,
+			11,
+			8,
+			//BOTTOM SIDE
+			12,
+			13,
+			14,
+			14,
+			15,
+			12,
+			//RIGHT SIDE
+			16,
+			17,
+			18,
+			18,
+			19,
+			16,
+			//LEFT SIDE
+			20,
+			21,
+			22,
+			22,
+			23,
+			20
+		};
+
+		D3D11_INPUT_ELEMENT_DESC* layout = new D3D11_INPUT_ELEMENT_DESC[2]
+		{
+			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+
+		RenderData* cubeRenderData               = new RenderData();
+		cubeRenderData->Vertices                 = vertexList;
+		cubeRenderData->VertexCount              = sizeof(*vertexList);
+		cubeRenderData->VertexSize               = sizeof(TexturedVertex);
+		cubeRenderData->VertexLayout             = layout;
+		cubeRenderData->VertexLayoutElementCount = 2U;
+		cubeRenderData->Indices                  = indexList;
+		cubeRenderData->IndexCount               = sizeof(*indexList);
 		cubeRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 		return cubeRenderData;

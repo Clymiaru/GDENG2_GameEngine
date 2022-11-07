@@ -25,4 +25,3 @@ DependenciesDir = {}
 
 include "Engine"
 include "Editor"
-include "Sandbox"

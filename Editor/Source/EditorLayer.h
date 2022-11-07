@@ -77,5 +77,8 @@ namespace Editor
 		PostProcessingPanel* m_PostProcessingPanel = nullptr;
 		WorldOutlinerPanel* m_WorldOutlinerPanel = nullptr;
 		EntityPropertiesPanel* m_EntityPropertiesPanel = nullptr;
+
+		float m_CameraPosition[3] = {5.0f, 1.5f, -7.0f};
+		float m_CameraRotation[3] = {0.0f, 120.0f, 0.0f};
 	};
 }

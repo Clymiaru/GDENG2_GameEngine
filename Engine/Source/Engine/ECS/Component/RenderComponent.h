@@ -17,6 +17,11 @@ namespace Engine
 
 	class Camera;
 
+	bool LoadTextureFromFile(const char* filename,
+	                         ID3D11ShaderResourceView** out_srv,
+	                         int* out_width,
+	                         int* out_height);
+
 	// TODO: Abstract to material later on
 	class RenderComponent final : public AComponent
 	{
@@ -26,6 +31,12 @@ namespace Engine
 		                SharedPtr<VertexShader> vertexShader,
 		                SharedPtr<PixelShader> pixelShader);
 
+		RenderComponent(Entity& owner,
+		                RenderData* renderData,
+		                SharedPtr<VertexShader> vertexShader,
+		                SharedPtr<PixelShader> pixelShader,
+		                StringView textureFilepath);
+
 		~RenderComponent() override;
 
 		void Draw(Camera& camera) const;
@@ -33,11 +44,11 @@ namespace Engine
 		MAKE_COMPONENT(Render)
 
 		RenderComponent(const RenderComponent&) = delete;
-	
+
 		RenderComponent& operator=(const RenderComponent&) = delete;
-	
+
 		RenderComponent(RenderComponent&&) noexcept = delete;
-	
+
 		RenderComponent& operator=(RenderComponent&&) noexcept = delete;
 
 		Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -63,5 +74,15 @@ namespace Engine
 		UniquePtr<IndexBuffer> m_IndexBuffer{};
 
 		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
+
+		bool m_HasTexture = false;
+
+		ID3D11ShaderResourceView* m_TextureView = nullptr;
+
+		int m_TextureWidth;
+
+		int m_TextureHeight;
+
+		ID3D11SamplerState* m_TextureSampler = nullptr;
 	};
 }
