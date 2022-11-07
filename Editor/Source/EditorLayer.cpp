@@ -66,53 +66,76 @@ namespace Editor
 		auto solidPS = ShaderLibrary::GetShaderRef<PixelShader>("SolidColorShader");
 
 		// Object initialization
-		for (int i = 0; i < 100; i++)
+		// for (int i = 0; i < 100; i++)
+		// {
+		// 	Entity* entity            = new Entity("Cube" + std::to_string(i));
+		// 	entity->Transform().Scale = Vector3Float(20.0f, 20.0f, 20.0f);
+		//
+		// 	entity->Transform().Position = Vector3Float(Random::Range(-200.0f, 200.0f),
+		// 	                                            Random::Range(-200.0f, 200.0f),
+		// 	                                            Random::Range(-200.0f, 200.0f));
+		//
+		// 	auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity,
+		// 	                                                                 Primitive::Cube(),
+		// 	                                                                 solidVS,
+		// 	                                                                 solidPS);
+		// 	renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
+		// 	                                    Random::Range(0.1f, 0.9f),
+		// 	                                    Random::Range(0.1f, 0.9f));
+		//
+		// 	m_EntityList.push_back(entity);
+		// }
+		
+		// for (int i = 0; i < 5; i++)
+		// {
+		// 	Entity* entity            = new Entity("Plane" + std::to_string(i));
+		// 	entity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+		//
+		// 	entity->Transform().Position = Vector3Float(0.0f,
+		// 	                                            -5.0f,
+		// 	                                            (i * 100.0f));
+		//
+		// 	auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity,
+		// 	                                                                 Primitive::Plane(),
+		// 	                                                                 solidVS,
+		// 	                                                                 solidPS);
+		//
+		// 	renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
+		// 	                                    Random::Range(0.1f, 0.9f),
+		// 	                                    Random::Range(0.1f, 0.9f));
+		//
+		// 	m_EntityList.push_back(entity);
+		// }
+
+		for (int i = 0; i < 1; i++)
 		{
-			Entity* entity            = new Entity("Cube" + std::to_string(i));
+			Entity* entity            = new Entity("Circle" + std::to_string(i));
 			entity->Transform().Scale = Vector3Float(20.0f, 20.0f, 20.0f);
-
-			entity->Transform().Position = Vector3Float(Random::Range(-200.0f, 200.0f),
-			                                            Random::Range(-200.0f, 200.0f),
-			                                            Random::Range(-200.0f, 200.0f));
-
-			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Cube(), solidVS,
-			                                                                 solidPS);
-			renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
-			                                    Random::Range(0.1f, 0.9f),
-			                                    Random::Range(0.1f, 0.9f));
-
-			m_EntityList.push_back(entity);
-		}
-
-		for (int i = 0; i < 5; i++)
-		{
-			Entity* entity            = new Entity("Plane" + std::to_string(i));
-			entity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
-
-			entity->Transform().Position = Vector3Float(0.0f,
-			                                            -5.0f,
-			                                            (i * 100.0f));
-
-			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Plane(), solidVS, solidPS);
-
-			renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
-												Random::Range(0.1f, 0.9f),
-												Random::Range(0.1f, 0.9f));
-
+		
+			entity->Transform().Position = Vector3Float(40.0f, 0.0f , 0.0f);
+		
+			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity,
+			                                                                 Primitive::Circle(64),
+			                                                                 solidVS, solidPS);
+		
+			renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
+		
 			m_EntityList.push_back(entity);
 		}
 
 		for (int i = 0; i < 1; i++)
 		{
-			Entity* entity            = new Entity("Circle" + std::to_string(i));
-			entity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
-
+			Entity* entity            = new Entity("Sphere" + std::to_string(i));
+			entity->Transform().Scale = Vector3Float(20.0f, 20.0f, 20.0f);
+		
 			entity->Transform().Position = Vector3Float();
-
-			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Circle(5.0f, 32), solidVS, solidPS);
-
+		
+			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity,
+																			 Primitive::Cylinder(16, 16),
+																			 solidVS, solidPS);
+		
 			renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
-
+		
 			m_EntityList.push_back(entity);
 		}
 
@@ -133,8 +156,8 @@ namespace Editor
 		m_PostProcessHandler = CreateUniquePtr<PostProcessHandler>(3);
 		m_PostProcessHandler->Start();
 
-		m_PostProcessingPanel = new PostProcessingPanel(*m_PostProcessHandler);
-		m_WorldOutlinerPanel = new WorldOutlinerPanel(m_EntityList);
+		m_PostProcessingPanel   = new PostProcessingPanel(*m_PostProcessHandler);
+		m_WorldOutlinerPanel    = new WorldOutlinerPanel(m_EntityList);
 		m_EntityPropertiesPanel = new EntityPropertiesPanel(*m_WorldOutlinerPanel, m_EntityList);
 	}
 
@@ -216,7 +239,7 @@ namespace Editor
 		delete m_PostProcessingPanel;
 		delete m_EntityPropertiesPanel;
 		delete m_WorldOutlinerPanel;
-		
+
 		for (auto i = 0; i < m_EntityList.size(); i++)
 		{
 			delete m_EntityList[i];
@@ -224,7 +247,5 @@ namespace Editor
 		}
 
 		m_CameraHandler.Terminate();
-
-		
 	}
 }
