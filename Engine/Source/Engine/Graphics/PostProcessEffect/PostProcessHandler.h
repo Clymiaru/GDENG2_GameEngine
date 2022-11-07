@@ -2,15 +2,13 @@
 #include <d3d11.h>
 #include <queue>
 
+#include "PostProcessQuad.h"
+
 #include "Engine/Core/Core.h"
 
 namespace Engine
 {
-	class PostProcessEffect;
-
 	class Framebuffer;
-
-	class PostProcessQuad;
 
 	struct PostProcessEntry
 	{

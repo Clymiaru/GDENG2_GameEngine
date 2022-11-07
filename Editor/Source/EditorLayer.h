@@ -25,6 +25,8 @@ namespace Engine
 
 namespace Editor
 {
+	class EntityPropertiesPanel;
+	class WorldOutlinerPanel;
 	class PostProcessingPanel;
 	class EditorLayer final : public Engine::Layer
 	{
@@ -59,10 +61,7 @@ namespace Editor
 
 		Engine::UniquePtr<Engine::Framebuffer> m_GameViewFramebuffer;
 
-		// TODO: How to make this into only one list?
-		Engine::List<Engine::Cube*> m_EntityList;
-
-		Engine::Plane* m_Plane;
+		Engine::List<Engine::Entity*> m_EntityList;
 
 		Engine::EditorSceneCameraHandler m_CameraHandler;
 
@@ -76,5 +75,7 @@ namespace Editor
 
 		// For PostProcessing Effects Demo
 		PostProcessingPanel* m_PostProcessingPanel = nullptr;
+		WorldOutlinerPanel* m_WorldOutlinerPanel = nullptr;
+		EntityPropertiesPanel* m_EntityPropertiesPanel = nullptr;
 	};
 }

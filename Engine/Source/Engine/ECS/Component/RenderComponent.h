@@ -40,6 +40,8 @@ namespace Engine
 	
 		RenderComponent& operator=(RenderComponent&&) noexcept = delete;
 
+		Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 	private:
 		// Material
 		//	Shader

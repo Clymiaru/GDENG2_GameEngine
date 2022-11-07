@@ -3,12 +3,12 @@
 
 namespace Engine
 {
-	class AUIPanel
+	class AUIHUD
 	{
 	public:
-		virtual ~AUIPanel() = default;
-		explicit AUIPanel(const String& name);
-		
+		explicit AUIHUD(const String& name);
+		virtual ~AUIHUD() = default;
+
 		void Draw();
 	private:
 		

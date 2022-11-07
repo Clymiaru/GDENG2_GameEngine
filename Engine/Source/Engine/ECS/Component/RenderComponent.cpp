@@ -56,7 +56,7 @@ namespace Engine
 		RenderObjectData* constant = new RenderObjectData();
 		constant->Model            = m_EntityRef.Transform().LocalMatrix();
 		constant->ViewProjection   = camera.ViewProjMatrix();
-		constant->SolidColor       = Color(1.0f, 1.0f, 1.0f, 1.0f);
+		constant->SolidColor       = AlbedoColor;
 
 		Renderer::UpdateConstantBuffer(*m_ConstantBuffer, constant);
 

@@ -1,24 +1,64 @@
 ﻿#pragma once
 #include <Engine/Core/Core.h>
+
 #include <Engine/UI/AUIPanel.h>
+#include <Engine/UI/AUIHUD.h>
 
 namespace Engine
 {
 	struct SimpleChromaticAberrationEffectData;
-}
 
-namespace Engine
-{
-	struct VignetteEffectData;
-}
-
-namespace Engine
-{
 	class PostProcessHandler;
+
+	struct VignetteEffectData;
+
+	struct PostProcessEntry;
 }
 
 namespace Editor
 {
+	class VignetteEffectPropertiesHUD : public Engine::AUIHUD
+	{
+	public:
+		VignetteEffectPropertiesHUD(Engine::PostProcessEntry& effectRef,
+		                            Engine::VignetteEffectData& initialData,
+		                            Engine::PostProcessHandler& postProcessHandlerRef);
+
+		~VignetteEffectPropertiesHUD() override;
+
+		Engine::PostProcessEntry& GetEffectRef() const;
+
+	private:
+		void DrawImpl() override;
+
+		Engine::PostProcessEntry& m_EffectRef;
+
+		Engine::PostProcessHandler& m_PostProcessHandlerRef;
+
+		Engine::VignetteEffectData* m_VignetteEffectData;
+	};
+
+	class ChromaticAberrationHUD : public Engine::AUIHUD
+	{
+	public:
+		ChromaticAberrationHUD(Engine::PostProcessEntry& effectRef,
+		                       Engine::SimpleChromaticAberrationEffectData& initialData,
+		                       Engine::PostProcessHandler& postProcessHandlerRef);
+
+		~ChromaticAberrationHUD() override;
+
+		Engine::PostProcessEntry& GetEffectRef() const;
+
+	private:
+		void DrawImpl() override;
+
+		Engine::PostProcessEntry& m_EffectRef;
+
+		Engine::PostProcessHandler& m_PostProcessHandlerRef;
+
+		Engine::SimpleChromaticAberrationEffectData* m_ChromaticAberrationData;
+	};
+
 	class PostProcessingPanel final : public Engine::AUIPanel
 	{
 	public:
@@ -30,6 +70,7 @@ namespace Editor
 
 	private:
 		int m_CurrentToCreate;
+
 		Engine::String m_CurrentToCreatePreview;
 
 		Engine::List<std::pair<int, bool>> m_EffectActiveFlags;
@@ -43,9 +84,7 @@ namespace Editor
 			"Custom"
 		};
 
-		Engine::VignetteEffectData* m_VignetteEffectData;
-
-		Engine::SimpleChromaticAberrationEffectData* m_ChromaticAberrationEffectData;
-
+		Engine::List<VignetteEffectPropertiesHUD*> m_VignetteEffectHUDList;
+		Engine::List<ChromaticAberrationHUD*> m_ChromaticAberrationHUDList;
 	};
 }

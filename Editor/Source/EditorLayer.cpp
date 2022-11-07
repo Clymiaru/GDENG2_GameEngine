@@ -1,6 +1,7 @@
 ﻿#include "EditorLayer.h"
 
 #include <Engine/Core/Application.h>
+#include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/Graphics/Renderer.h>
 #include <Engine/Graphics/ShaderLibrary.h>
 #include <Engine/Input/Input.h>
@@ -9,15 +10,17 @@
 
 #include <Engine/Graphics/RenderQuad.h>
 
-#include <Engine/ECS/Entity/Cube.h>
-#include <Engine/ECS/Entity/Plane.h>
-
 #include <Engine/Graphics/PostProcessEffect/PostProcessHandler.h>
+#include <Engine/Graphics/Primitives/Primitive.h>
 #include <Engine/ImGui/ImGuiSystem.h>
+
+#include <Utils/Random.h>
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
 
+#include "Screen/EntityPropertiesPanel.h"
 #include "Screen/PostProcessingPanel.h"
+#include "Screen/WorldOutlinerPanel.h"
 
 namespace Editor
 {
@@ -25,8 +28,7 @@ namespace Editor
 		Layer{"EditorLayer"},
 		m_EditorViewFramebuffer{nullptr},
 		m_GameViewFramebuffer{nullptr},
-		m_EntityList{Engine::List<Engine::Cube*>()},
-		m_Plane{nullptr},
+		m_EntityList{Engine::List<Engine::Entity*>()},
 		m_CameraHandler{2},
 		m_RenderQuad{nullptr},
 		m_PostProcessHandler{nullptr},
@@ -60,16 +62,59 @@ namespace Editor
 
 		ShaderLibrary::Register<PixelShader>("Assets/Shaders/RenderTarget/RenderQuad_PS.hlsl");
 
+		auto solidVS = ShaderLibrary::GetShaderRef<VertexShader>("SolidColorShader");
+		auto solidPS = ShaderLibrary::GetShaderRef<PixelShader>("SolidColorShader");
+
 		// Object initialization
-		Cube* cubeEntity = new Cube("CubeEntity");
+		for (int i = 0; i < 100; i++)
+		{
+			Entity* entity            = new Entity("Cube" + std::to_string(i));
+			entity->Transform().Scale = Vector3Float(20.0f, 20.0f, 20.0f);
 
-		cubeEntity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
-		m_EntityList.push_back(cubeEntity);
+			entity->Transform().Position = Vector3Float(Random::Range(-200.0f, 200.0f),
+			                                            Random::Range(-200.0f, 200.0f),
+			                                            Random::Range(-200.0f, 200.0f));
 
-		m_Plane = new Plane("PlaneEntity");
+			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Cube(), solidVS,
+			                                                                 solidPS);
+			renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
+			                                    Random::Range(0.1f, 0.9f),
+			                                    Random::Range(0.1f, 0.9f));
 
-		m_Plane->Transform().Position = Vector3Float(0.0f, -5.0f, 0.0f);
-		m_Plane->Transform().Scale    = Vector3Float(100.0f, 100.0f, 100.0f);
+			m_EntityList.push_back(entity);
+		}
+
+		for (int i = 0; i < 5; i++)
+		{
+			Entity* entity            = new Entity("Plane" + std::to_string(i));
+			entity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+
+			entity->Transform().Position = Vector3Float(0.0f,
+			                                            -5.0f,
+			                                            (i * 100.0f));
+
+			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Plane(), solidVS, solidPS);
+
+			renderComponent.AlbedoColor = Color(Random::Range(0.1f, 0.9f),
+												Random::Range(0.1f, 0.9f),
+												Random::Range(0.1f, 0.9f));
+
+			m_EntityList.push_back(entity);
+		}
+
+		for (int i = 0; i < 1; i++)
+		{
+			Entity* entity            = new Entity("Circle" + std::to_string(i));
+			entity->Transform().Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+
+			entity->Transform().Position = Vector3Float();
+
+			auto& renderComponent = entity->AttachComponent<RenderComponent>(*entity, Primitive::Circle(5.0f, 32), solidVS, solidPS);
+
+			renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
+
+			m_EntityList.push_back(entity);
+		}
 
 		m_RenderQuad = CreateUniquePtr<RenderQuad>();
 
@@ -89,6 +134,8 @@ namespace Editor
 		m_PostProcessHandler->Start();
 
 		m_PostProcessingPanel = new PostProcessingPanel(*m_PostProcessHandler);
+		m_WorldOutlinerPanel = new WorldOutlinerPanel(m_EntityList);
+		m_EntityPropertiesPanel = new EntityPropertiesPanel(*m_WorldOutlinerPanel, m_EntityList);
 	}
 
 	void EditorLayer::OnPollInput()
@@ -98,31 +145,19 @@ namespace Editor
 	void EditorLayer::OnUpdate()
 	{
 		using namespace Engine;
-		// Vector2Float mousePosition = Vector2Float((float)Input::Mouse().DeltaMousePosition.x,
-		//                                           (float)Input::Mouse().DeltaMousePosition.y);
-		// mousePosition.Normalize();
-		//
-		// SimpleChromaticAberrationEffectData* chromaticEffectData =
-		// 		new SimpleChromaticAberrationEffectData(Vector2Float(Application::WindowRect().Width,
-		// 		                                                     Application::WindowRect().Height),
-		// 		                                        mousePosition);
-		//
-		// m_PostProcessHandler->UpdateEffectData(m_ChromaticEffectID, chromaticEffectData);
 		m_CameraHandler.UpdateSceneCameraOfId(0);
 	}
 
 	void EditorLayer::OnRender()
 	{
-		// RenderTarget is the Layer's Framebuffer
 		for (auto* entity : m_EntityList)
 		{
-			entity->Draw(m_CameraHandler.GetSceneCamera(0));
+			if (const auto* component = entity->GetComponent<Engine::RenderComponent>();
+				component != nullptr)
+			{
+				component->Draw(m_CameraHandler.GetSceneCamera(0));
+			}
 		}
-		m_Plane->Draw(m_CameraHandler.GetSceneCamera(0));
-
-		// Post Process that requires previous frame goes like this
-		// Post Process that do not require previous frame might need multiple RTV or
-		// draw multiple quads at the same time
 
 		auto* postProcessView = &m_PostProcessHandler->ProcessEffects(*m_Framebuffer);
 
@@ -143,8 +178,6 @@ namespace Editor
 
 		ImGuiSystem::ShowDemoWindow(true);
 
-		static bool showCredits = false;
-
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -163,10 +196,9 @@ namespace Editor
 			ImGui::EndMainMenuBar();
 		}
 
-		ImGui::Begin("World Outliner");
-		ImGui::Text("World Outliner Placeholder");
+		m_WorldOutlinerPanel->Draw();
 
-		ImGui::End();
+		m_EntityPropertiesPanel->Draw();
 
 		m_PostProcessingPanel->Draw();
 
@@ -181,18 +213,18 @@ namespace Editor
 
 	void EditorLayer::OnDetach()
 	{
-		// Unload scenes
+		delete m_PostProcessingPanel;
+		delete m_EntityPropertiesPanel;
+		delete m_WorldOutlinerPanel;
+		
 		for (auto i = 0; i < m_EntityList.size(); i++)
 		{
 			delete m_EntityList[i];
 			m_EntityList[i] = nullptr;
 		}
-		delete m_Plane;
-
-		m_EntityList.clear();
 
 		m_CameraHandler.Terminate();
 
-		delete m_PostProcessingPanel;
+		
 	}
 }

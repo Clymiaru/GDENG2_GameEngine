@@ -24,6 +24,8 @@ namespace Engine
 		using namespace DirectX;
 		return XMConvertToDegrees(radians);
 	}
+
+	constexpr float PI = 3.141592654f;
 }
 
 // struct Vector4 (TODO);
