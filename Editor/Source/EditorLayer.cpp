@@ -31,9 +31,9 @@
 #define Q7
 
 #undef Q1
+#undef Q3
 #undef Q5
 #undef Q6
-#undef Q7
 
 namespace Editor
 {
@@ -227,9 +227,10 @@ namespace Editor
 			Entity* card               = new Entity("Card" + std::to_string(id));
 			card->Transform().Scale    = Vector3Float(4.5f, 7.0f, 0.5f);
 			card->Transform().Position = Vector3Float(position);
+			card->Transform().Rotation = Vector3Float(-45.0f, 0.0f, 125.0f);
 
 			auto& rc = card->AttachComponent<RenderComponent>(*card,
-			                                                  Primitive::Cube(),
+			                                                  Primitive::Plane(),
 			                                                  solidVS, solidPS);
 			rc.AlbedoColor = Color(0.8f, 0.4f, 1.0f);
 			m_EntityList.push_back(card);
@@ -237,24 +238,24 @@ namespace Editor
 
 		List<Vector3Float> cardPositions =
 		{
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
-			Vector3Float(0.0f, 0.0f, 0.0f),
+			Vector3Float(1.0f, 0.0f, 0.0f),
+			Vector3Float(5.0f, 0.0f, 0.0f),
+			Vector3Float(10.0f, 0.0f, 0.0f),
+			Vector3Float(15.0f, 0.0f, 0.0f),
+			Vector3Float(20.0f, 0.0f, 0.0f),
+			Vector3Float(25.0f, 0.0f, 0.0f),
+			Vector3Float(30.0f, 0.0f, 0.0f),
+			Vector3Float(35.0f, 0.0f, 0.0f),
+			Vector3Float(40.0f, 0.0f, 0.0f),
+			Vector3Float(45.0f, 0.0f, 0.0f),
+			Vector3Float(50.0f, 0.0f, 0.0f),
+			Vector3Float(55.0f, 0.0f, 0.0f),
+			Vector3Float(60.0f, 0.0f, 0.0f),
+			Vector3Float(65.0f, 0.0f, 0.0f),
+			Vector3Float(70.0f, 0.0f, 0.0f),
 		};
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 15; i++)
 		{
 			createCardEntity(i, cardPositions[i]);
 		}
@@ -288,7 +289,7 @@ namespace Editor
 		                           List<Vector3Float>
 		                           {
 			                           Vector3Float(0, 120.0f, 0),
-			                           Vector3Float(270.0f, 90.0f, 0),
+			                           Vector3Float(0.0f, 90.0f, 0),
 		                           });
 
 		m_PostProcessHandler = CreateUniquePtr<PostProcessHandler>(3);
