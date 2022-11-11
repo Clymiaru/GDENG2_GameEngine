@@ -6,7 +6,7 @@ namespace Engine
 	class Texture
 	{
 	public:
-		Texture();
+		explicit Texture(StringView path);
 		~Texture();
 	private:
 		ID3D11ShaderResourceView* m_TextureView;

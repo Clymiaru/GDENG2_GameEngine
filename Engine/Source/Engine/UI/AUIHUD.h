@@ -10,10 +10,10 @@ namespace Engine
 		virtual ~AUIHUD() = default;
 
 		void Draw();
-	private:
-		
-		virtual void DrawImpl() = 0;
 
+	private:
+		virtual void DrawImpl() = 0;
+	protected:
 		String m_Name;
 	};
 }

@@ -15,7 +15,10 @@ project ("Engine")
         "Source/**.h",
         "Source/**.cpp",
         "Dependencies/ImGui/**.h",
-        "Dependencies/ImGui/**.cpp"
+        "Dependencies/ImGui/**.cpp",
+        "Dependencies/stb/**.h",
+        "Dependencies/stb/**.cpp"
+
     }
 
     includedirs {
@@ -23,7 +26,11 @@ project ("Engine")
     }
 
     defines {
-        "_CRT_SECURE_NO_WARNINGS"    
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
+    libdirs {
+
     }
 
     links

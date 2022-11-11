@@ -18,6 +18,7 @@
 
 #include "../../Engine/Dependencies/ImGui/imgui.h"
 
+#include "Screen/PlaceholderHUD.h"
 #include "Screen/EntityPropertiesPanel.h"
 #include "Screen/PostProcessingPanel.h"
 #include "Screen/WorldOutlinerPanel.h"
@@ -96,188 +97,6 @@ namespace Editor
 		auto texturedVS = ShaderLibrary::GetShaderRef<VertexShader>("TexturedShader");
 		auto texturedPS = ShaderLibrary::GetShaderRef<PixelShader>("TexturedShader");
 
-#ifdef Q1
-		{
-			Entity* rotateWhiteAnimeCube            = new Entity("RotateAnimCube");
-			rotateWhiteAnimeCube->Transform().Scale = Vector3Float(5.0f, 5.0f, 5.0f);
-		
-			rotateWhiteAnimeCube->Transform().Position = Vector3Float(0.0f, 0.0f, -0.0f);
-			rotateWhiteAnimeCube->Transform().Rotation = Vector3Float(-0.0f, 0.0f, 0.0f);
-		
-			auto& renderComponent = rotateWhiteAnimeCube->AttachComponent<RenderComponent>(*rotateWhiteAnimeCube,
-			                                                                               Primitive::RainbowCube(),
-			                                                                               rainbowColorVS, rainbowColorPS);
-			renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
-			m_EntityList.push_back(rotateWhiteAnimeCube);
-		}
-#endif
-
-#ifdef Q3
-		{
-			Entity* rotateWhiteAnimeCube            = new Entity("RotateAnimCube");
-			rotateWhiteAnimeCube->Transform().Scale = Vector3Float(1.0f, 1.0f, 1.0f);
-
-			rotateWhiteAnimeCube->Transform().Position = Vector3Float(0.0f, 0.0f, 0.0f);
-
-			auto& renderComponent = rotateWhiteAnimeCube->AttachComponent<RenderComponent>(*rotateWhiteAnimeCube,
-			                                                                               Primitive::RainbowCube(),
-			                                                                               rainbowColorVS,
-			                                                                               rainbowColorPS);
-			renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
-			m_EntityList.push_back(rotateWhiteAnimeCube);
-		}
-#endif
-		// {
-		// 	Entity* rotateWhiteAnimeCube            = new Entity("RotateAnimCube");
-		// 	rotateWhiteAnimeCube->Transform().Scale = Vector3Float(20.0f, 20.0f, 20.0f);
-		//
-		// 	rotateWhiteAnimeCube->Transform().Position = Vector3Float(0.0f, 0.0f, -300.0f);
-		// 	rotateWhiteAnimeCube->Transform().Rotation = Vector3Float(-20.0f, 25.0f, 0.0f);
-		//
-		// 	auto& renderComponent = rotateWhiteAnimeCube->AttachComponent<RenderComponent>(*rotateWhiteAnimeCube,
-		// 	                                                                               Primitive::Cube(),
-		// 	                                                                               whiteColorVS, whiteColorPS);
-		// 	renderComponent.AlbedoColor = Color(1.0f, 1.0f, 1.0f);
-		// 	m_EntityList.push_back(rotateWhiteAnimeCube);
-		// }
-
-		// {
-		// 	for (int i = 0; i < 50; i++)
-		// 	{
-		// 		Entity* rotateWhiteAnimeCube               = new Entity("Rotate50Cube" + std::to_string(i));
-		// 		rotateWhiteAnimeCube->Transform().Scale    = Vector3Float(15.0f, 15.0f, 15.0f);
-		// 		rotateWhiteAnimeCube->Transform().Position = Vector3Float(Random::Range(-100.0f, 100.0f),
-		// 		                                                          Random::Range(-100.0f, 100.0f),
-		// 		                                                          Random::Range(-100.0f, 100.0f));
-		//
-		// 		auto& renderComponent = rotateWhiteAnimeCube->AttachComponent<RenderComponent>(*rotateWhiteAnimeCube,
-		// 		                                                                               Primitive::Cube(),
-		// 		                                                                               solidVS,
-		// 		                                                                               solidPS);
-		// 		renderComponent.AlbedoColor = Color(Random::Range(0.01f, 1.0f),
-		// 		                                    Random::Range(0.01f, 1.0f),
-		// 		                                    Random::Range(0.01f, 1.0f));
-		// 		m_EntityList.push_back(rotateWhiteAnimeCube);
-		// 	}
-		// }
-#ifdef Q5
-		{
-			Entity* warpingCubePlane            = new Entity("WarpAnimCube");
-			warpingCubePlane->Transform().Scale = Vector3Float(10.0f, 10.0f, 10.0f);
-
-			auto& renderComponent = warpingCubePlane->AttachComponent<RenderComponent>(*warpingCubePlane,
-			                                                                           Primitive::Cube(),
-			                                                                           whiteColorVS, whiteColorPS);
-			renderComponent.AlbedoColor = Color(0.8f, 0.4f, 1.0f);
-			m_EntityList.push_back(warpingCubePlane);
-		}
-#endif
-
-#ifdef Q6
-
-		{
-			Entity* cube0               = new Entity("Cube0");
-			cube0->Transform().Position = Vector3Float(0.0f, 0.9f, 0.0f);
-			cube0->Transform().Scale = Vector3Float(1.0f, 1.0f, 1.0f);
-
-			auto& rc = cube0->AttachComponent<RenderComponent>(*cube0,
-			                                                   Primitive::Cube(),
-			                                                   solidVS, solidPS);
-			m_EntityList.push_back(cube0);
-		}
-
-		{
-			Entity* cube1               = new Entity("Cube1");
-			cube1->Transform().Position = Vector3Float(-1.5f, 2.0f, 0.0f);
-			cube1->Transform().Scale = Vector3Float(1.0f, 1.0f, 1.0f);
-
-			auto& rc = cube1->AttachComponent<RenderComponent>(*cube1,
-			                                                   Primitive::Cube(),
-			                                                   solidVS, solidPS);
-			m_EntityList.push_back(cube1);
-		}
-
-		{
-			Entity* cube2               = new Entity("Cube2");
-			cube2->Transform().Position = Vector3Float(-1.5f, 3.0f, -2.0f);
-			cube2->Transform().Scale = Vector3Float(1.0f, 1.0f, 1.0f);
-
-			auto& rc = cube2->AttachComponent<RenderComponent>(*cube2,
-			                                                   Primitive::Cube(),
-			                                                   solidVS, solidPS);
-			m_EntityList.push_back(cube2);
-		}
-
-		{
-			Entity* plane               = new Entity("Plane");
-			plane->Transform().Position = Vector3Float(0.0f, 0.0f, 0.0f);
-			plane->Transform().Scale = Vector3Float(10.0f, 10.0f, 10.0f);
-
-			auto& rc = plane->AttachComponent<RenderComponent>(*plane,
-															   Primitive::Plane(),
-															   solidVS, solidPS);
-			m_EntityList.push_back(plane);
-		}
-#endif
-
-#ifdef Q7
-		auto createCardEntity = [&](const int id,
-		                            const Vector3Float position) -> void
-		{
-			Entity* card               = new Entity("Card" + std::to_string(id));
-			card->Transform().Scale    = Vector3Float(4.5f, 7.0f, 0.5f);
-			card->Transform().Position = Vector3Float(position);
-			card->Transform().Rotation = Vector3Float(-45.0f, 0.0f, 125.0f);
-
-			auto& rc = card->AttachComponent<RenderComponent>(*card,
-			                                                  Primitive::Plane(),
-			                                                  solidVS, solidPS);
-			rc.AlbedoColor = Color(0.8f, 0.4f, 1.0f);
-			m_EntityList.push_back(card);
-		};
-
-		List<Vector3Float> cardPositions =
-		{
-			Vector3Float(1.0f, 0.0f, 0.0f),
-			Vector3Float(5.0f, 0.0f, 0.0f),
-			Vector3Float(10.0f, 0.0f, 0.0f),
-			Vector3Float(15.0f, 0.0f, 0.0f),
-			Vector3Float(20.0f, 0.0f, 0.0f),
-			Vector3Float(25.0f, 0.0f, 0.0f),
-			Vector3Float(30.0f, 0.0f, 0.0f),
-			Vector3Float(35.0f, 0.0f, 0.0f),
-			Vector3Float(40.0f, 0.0f, 0.0f),
-			Vector3Float(45.0f, 0.0f, 0.0f),
-			Vector3Float(50.0f, 0.0f, 0.0f),
-			Vector3Float(55.0f, 0.0f, 0.0f),
-			Vector3Float(60.0f, 0.0f, 0.0f),
-			Vector3Float(65.0f, 0.0f, 0.0f),
-			Vector3Float(70.0f, 0.0f, 0.0f),
-		};
-
-		for (int i = 0; i < 15; i++)
-		{
-			createCardEntity(i, cardPositions[i]);
-		}
-#endif
-		// {
-		// 	Entity* card1  = new Entity("Card1");
-		// }
-		//
-		// 	Entity* card2  = new Entity("Card2");
-		// 	Entity* card3  = new Entity("Card3");
-		// 	Entity* card4  = new Entity("Card4");
-		// 	Entity* card5  = new Entity("Card5");
-		// 	Entity* card6  = new Entity("Card6");
-		// 	Entity* card7  = new Entity("Card7");
-		// 	Entity* card8  = new Entity("Card8");
-		// 	Entity* card9  = new Entity("Card9");
-		// 	Entity* card10 = new Entity("Card10");
-		// 	Entity* card11 = new Entity("Card11");
-		// 	Entity* card12 = new Entity("Card12");
-		// 	Entity* card13 = new Entity("Card13");
-		// 	Entity* card14 = new Entity("Card14");
-
 		m_RenderQuad = CreateUniquePtr<RenderQuad>();
 
 		m_CameraHandler.Initialize(2,
@@ -298,6 +117,8 @@ namespace Editor
 		m_PostProcessingPanel   = new PostProcessingPanel(*m_PostProcessHandler);
 		m_WorldOutlinerPanel    = new WorldOutlinerPanel(m_EntityList);
 		m_EntityPropertiesPanel = new EntityPropertiesPanel(*m_WorldOutlinerPanel, m_EntityList);
+		m_CreditsScreen = new CreditsScreen();
+		m_PlaceholderHUD = new PlaceholderHUD();
 	}
 
 	void EditorLayer::OnPollInput()
@@ -396,7 +217,6 @@ namespace Editor
 	void EditorLayer::OnImGuiRender()
 	{
 		using namespace Engine;
-		// TODO: Resizing viewports
 		ImGui::DockSpaceOverViewport();
 
 		ImGuiSystem::ShowDemoWindow(true);
@@ -415,6 +235,23 @@ namespace Editor
 
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Window"))
+			{
+				if (ImGui::MenuItem("Placeholder"))
+				{
+					m_PlaceholderHUD->Open();
+				}
+
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("About"))
+			{
+				if (ImGui::MenuItem("Credits"))
+				{
+					m_CreditsScreen->Open();
+				}
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMainMenuBar();
 		}
@@ -430,6 +267,10 @@ namespace Editor
 
 		m_PostProcessingPanel->Draw();
 
+		m_CreditsScreen->Draw();
+
+		m_PlaceholderHUD->Draw();
+
 		ImGui::Begin("Scene View");
 		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(16 * 60, 9 * 60));
 		ImGui::End();
@@ -444,6 +285,11 @@ namespace Editor
 		delete m_PostProcessingPanel;
 		delete m_EntityPropertiesPanel;
 		delete m_WorldOutlinerPanel;
+
+		if (m_CreditsScreen != nullptr)
+		{
+			delete m_CreditsScreen;
+		}
 
 		for (auto i = 0; i < m_EntityList.size(); i++)
 		{

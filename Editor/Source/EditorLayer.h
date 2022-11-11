@@ -2,8 +2,20 @@
 #include <Engine/Core/Layer.h>
 #include <Engine/SceneManagement/EditorSceneCameraHandler.h>
 
+#include "Screen/CreditsScreen.h"
+
+namespace Editor
+{
+	class PlaceholderHUD;
+}
+namespace Editor
+{
+	class ColorPickerHUD;
+}
 namespace Engine
 {
+	class CreditsScreen;
+	
 	class PostProcessHandler;
 
 	class RenderQuad;
@@ -77,7 +89,8 @@ namespace Editor
 		PostProcessingPanel* m_PostProcessingPanel = nullptr;
 		WorldOutlinerPanel* m_WorldOutlinerPanel = nullptr;
 		EntityPropertiesPanel* m_EntityPropertiesPanel = nullptr;
-
+		CreditsScreen* m_CreditsScreen = nullptr;
+		PlaceholderHUD* m_PlaceholderHUD = nullptr;
 		float m_CameraPosition[3] = {5.0f, 1.5f, -7.0f};
 		float m_CameraRotation[3] = {0.0f, 120.0f, 0.0f};
 	};

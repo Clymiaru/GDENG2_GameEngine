@@ -3,7 +3,8 @@
 
 namespace Engine
 {
-	AUIHUD::AUIHUD(const String& name)
+	AUIHUD::AUIHUD(const String& name) :
+		m_Name{name}
 	{
 	}
 

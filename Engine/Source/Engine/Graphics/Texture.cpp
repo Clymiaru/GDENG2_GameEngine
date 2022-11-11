@@ -3,11 +3,11 @@
 
 namespace Engine
 {
-	Texture::Texture() :
+	Texture::Texture(StringView path) :
 		m_TextureView{nullptr}
 	{
+		
 	}
-
 	Texture::~Texture()
 	{
 		if (m_TextureView != nullptr)
