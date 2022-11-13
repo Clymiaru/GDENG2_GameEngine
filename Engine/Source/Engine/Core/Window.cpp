@@ -4,7 +4,7 @@
 #include "Debug.h"
 
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/ImGui/ImGuiSystem.h"
+#include "Engine/UI/UISystem.h"
 
 #include "Utils/Utils.h"
 
@@ -13,10 +13,10 @@ LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
                                   const WPARAM wParam,
                                   const LPARAM lParam)
 {
-	if (const LRESULT result = Engine::ImGuiSystem::HandleEvents(windowHandle,
-	                                                             message,
-	                                                             wParam,
-	                                                             lParam);
+	if (const LRESULT result = Engine::UISystem::HandleEvents(windowHandle,
+	                                                          message,
+	                                                          wParam,
+	                                                          lParam);
 		result)
 	{
 		return result;
@@ -137,7 +137,7 @@ namespace Engine
 				delete currentEvent;
 				continue;
 			}
-			
+
 			for (auto f : m_EventListenerMap[currentEvent->GetType()])
 			{
 				if (!currentEvent->IsHandled)
@@ -145,7 +145,7 @@ namespace Engine
 					currentEvent->IsHandled |= f(currentEvent);
 				}
 			}
-			
+
 			m_EventQueue.pop();
 			delete currentEvent;
 		}
@@ -157,7 +157,7 @@ namespace Engine
 		{
 			m_EventListenerMap[eventType] = List<std::function<bool(Event*)>>();
 		}
-		
+
 		// TODO: Check for if this callback in stored already?
 		m_EventListenerMap[eventType].push_back(callback);
 	}

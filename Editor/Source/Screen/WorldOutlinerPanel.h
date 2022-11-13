@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <Engine/UI/AUIPanel.h>
+#include <Engine/Core/Core.h>
+#include <Engine/UI/AUIScreen.h>
 
 namespace Engine
 {
@@ -8,7 +9,7 @@ namespace Engine
 
 namespace Editor
 {
-	class WorldOutlinerPanel : public Engine::AUIPanel
+	class WorldOutlinerPanel : public Engine::AUIScreen
 	{
 	public:
 		explicit WorldOutlinerPanel(Engine::List<Engine::Entity*>& entityRef);

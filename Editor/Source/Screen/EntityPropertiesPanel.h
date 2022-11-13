@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <Engine/UI/AUIPanel.h>
+#include <Engine/Core/Core.h>
+#include <Engine/UI/AUIScreen.h>
 
 namespace Engine
 {
@@ -10,7 +11,7 @@ namespace Editor
 {
 	class WorldOutlinerPanel;
 
-	class EntityPropertiesPanel : public Engine::AUIPanel
+	class EntityPropertiesPanel : public Engine::AUIScreen
 	{
 	public:
 		EntityPropertiesPanel(WorldOutlinerPanel& worldOutlinerPanel,

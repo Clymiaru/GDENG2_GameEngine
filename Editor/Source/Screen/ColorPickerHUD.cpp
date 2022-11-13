@@ -1,5 +1,6 @@
 ﻿#include "ColorPickerHUD.h"
 
+#include <Engine/Core/Core.h>
 #include <Engine/Math/Math.h>
 
 #include "../../../Engine/Dependencies/ImGui/imgui.h"
@@ -7,7 +8,7 @@
 namespace Editor
 {
 	ColorPickerHUD::ColorPickerHUD() :
-		AUIHUD{"ColorPickerPlaceholder"}
+		AUIScreen{"ColorPickerPlaceholder"}
 	{
 	}
 	

@@ -16,7 +16,7 @@ namespace Editor
 	VignetteEffectPropertiesHUD::VignetteEffectPropertiesHUD(Engine::PostProcessEntry& effectRef,
 	                                                         Engine::VignetteEffectData& initialData,
 	                                                         Engine::PostProcessHandler& postProcessHandlerRef) :
-		AUIHUD{"VignetteEffectProperties"},
+		AUIScreen{"VignetteEffectProperties"},
 		m_EffectRef{effectRef},
 		m_PostProcessHandlerRef{postProcessHandlerRef},
 		m_VignetteEffectData{new Engine::VignetteEffectData()}
@@ -71,7 +71,7 @@ namespace Editor
 	ChromaticAberrationHUD::ChromaticAberrationHUD(Engine::PostProcessEntry& effectRef,
 	                                               Engine::SimpleChromaticAberrationEffectData& initialData,
 	                                               Engine::PostProcessHandler& postProcessHandlerRef) :
-		AUIHUD{"ChromaticAberrationProperties"},
+		AUIScreen{"ChromaticAberrationProperties"},
 		m_EffectRef{effectRef},
 		m_PostProcessHandlerRef{postProcessHandlerRef},
 		m_ChromaticAberrationData{new Engine::SimpleChromaticAberrationEffectData()}
@@ -111,7 +111,7 @@ namespace Editor
 
 	//----------------------------------
 	PostProcessingPanel::PostProcessingPanel(Engine::PostProcessHandler& postProcessHandler) :
-		AUIPanel{"Post Processing"},
+		AUIScreen{"Post Processing"},
 		m_CurrentToCreate{0},
 		m_CurrentToCreatePreview{"Default"},
 		m_EffectActiveFlags{Engine::List<std::pair<int, bool>>()},

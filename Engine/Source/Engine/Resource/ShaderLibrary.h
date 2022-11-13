@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <d3dcompiler.h>
 #include "Utils/Utils.h"
-#include "Shader.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
+#include "Engine/Graphics/Shader.h"
+#include "Engine/Graphics/VertexShader.h"
+#include "Engine/Graphics/PixelShader.h"
 
 namespace Engine
 {

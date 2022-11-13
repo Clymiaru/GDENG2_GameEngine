@@ -5,8 +5,8 @@
 #include "Window.h"
 
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/Graphics/ShaderLibrary.h"
-#include "Engine/ImGui/ImGuiSystem.h"
+#include "Engine/Resource/ShaderLibrary.h"
+#include "Engine/UI/UISystem.h"
 #include "Engine/Input/Input.h"
 
 namespace Engine
@@ -73,9 +73,9 @@ namespace Engine
 
 		Renderer::Start(*m_Window);
 
-		ImGuiSystem::Start(*m_Window,
-		                   &Renderer::GetDevice(),
-		                   &Renderer::GetDeviceContext().GetContext());
+		UISystem::Start(*m_Window,
+		                &Renderer::GetDevice(),
+		                &Renderer::GetDeviceContext().GetContext());
 
 		// ResourceLibrary::Init();
 		ShaderLibrary::Initialize(4);
@@ -104,7 +104,7 @@ namespace Engine
 			s_Instance->Update();
 			s_Instance->Render();
 
-			s_Instance->m_Timer->End();
+			s_Instance->m_Timer->Stop();
 
 			Sleep(1);
 		}
@@ -126,7 +126,7 @@ namespace Engine
 
 		delete m_Window;
 
-		ImGuiSystem::End();
+		UISystem::End();
 	}
 
 	void Application::Update() const

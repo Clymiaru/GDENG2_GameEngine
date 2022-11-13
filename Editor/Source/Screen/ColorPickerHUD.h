@@ -1,9 +1,9 @@
 ﻿#pragma once
-#include <Engine/UI/AUIHUD.h>
+#include <Engine/UI/AUIScreen.h>
 
 namespace Editor
 {
-	class ColorPickerHUD : public Engine::AUIHUD
+	class ColorPickerHUD : public Engine::AUIScreen
 	{
 	public:
 		ColorPickerHUD();

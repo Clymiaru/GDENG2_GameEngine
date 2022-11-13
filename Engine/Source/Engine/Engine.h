@@ -7,6 +7,3 @@
 #include "Core/Layer.h"
 
 #include "Core/Application.h"
-
-#include "Graphics/ShaderLibrary.h"
-

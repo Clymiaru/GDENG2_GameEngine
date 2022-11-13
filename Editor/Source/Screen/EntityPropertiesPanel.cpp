@@ -1,5 +1,6 @@
 ﻿#include "EntityPropertiesPanel.h"
 
+#include <Engine/Core/Core.h>
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Core/Entity.h>
 
@@ -11,7 +12,7 @@ namespace Editor
 {
 	EntityPropertiesPanel::EntityPropertiesPanel(WorldOutlinerPanel& worldOutlinerPanel,
 	                                             Engine::List<Engine::Entity*>& entityRef) :
-		AUIPanel{"Entity Inspector"},
+		AUIScreen{"Entity Inspector"},
 		m_WorldOutlinerPanelRef{worldOutlinerPanel},
 		m_EntityRef{entityRef}
 		

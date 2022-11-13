@@ -1,11 +1,11 @@
 ﻿#pragma once
-#include <Engine/UI/AUIHUD.h>
+#include <Engine/UI/AUIScreen.h>
 
 #include "ColorPickerHUD.h"
 
 namespace Editor
 {
-	class PlaceholderHUD : public Engine::AUIHUD
+	class PlaceholderHUD : public Engine::AUIScreen
 	{
 	public:
 		PlaceholderHUD();

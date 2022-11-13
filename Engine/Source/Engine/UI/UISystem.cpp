@@ -1,24 +1,22 @@
 ﻿#include "pch.h"
-#include "ImGuiSystem.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_dx11.h"
-#include "../../Engine/Dependencies/ImGui/imgui_impl_win32.h"
+#include "UISystem.h"
 
 #include "Engine/Core/Window.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
-                                                             UINT msg,
-                                                             WPARAM wParam,
-                                                             LPARAM lParam);
+															 UINT msg,
+															 WPARAM wParam,
+															 LPARAM lParam);
 
 namespace Engine
 {
-	ImGuiContext* ImGuiSystem::s_Context = nullptr;
+	ImGuiContext* UISystem::s_Context = nullptr;
 
-	bool ImGuiSystem::s_ShowDemoWindow = false;
+	bool UISystem::s_ShowDemoWindow = false;
+	
+	List<AUIScreen*> UISystem::s_UIScreenList = List<AUIScreen*>();
 
-	void ImGuiSystem::Start(Window& windowRef,
-	                        ID3D11Device* device,
-	                        ID3D11DeviceContext* deviceContext)
+	void UISystem::Start(Window& windowRef, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	{
 		IMGUI_CHECKVERSION();
 		s_Context = ImGui::CreateContext();
@@ -46,25 +44,29 @@ namespace Engine
 
 		ImGui_ImplDX11_Init(device, deviceContext);
 	}
-
-	void ImGuiSystem::End()
+	
+	void UISystem::End()
 	{
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiSystem::ShowDemoWindow(const bool flag)
+	void UISystem::ShowDemoWindow(const bool flag)
 	{
 		s_ShowDemoWindow = flag;
 		ImGui::ShowDemoWindow(&s_ShowDemoWindow);
 	}
 
-	LRESULT ImGuiSystem::HandleEvents(const HWND windowHandle,
-	                                  const UINT message,
-	                                  const WPARAM wParam,
-	                                  const LPARAM lParam)
+	LRESULT UISystem::HandleEvents(const HWND windowHandle,
+									  const UINT message,
+									  const WPARAM wParam,
+									  const LPARAM lParam)
 	{
 		return ImGui_ImplWin32_WndProcHandler(windowHandle, message, wParam, lParam);
 	}
+
+	void UISystem::Register(AUIScreen* uiScreen) { }
+
+	void UISystem::Deregister(AUIScreen* uiScreen) { }
 }

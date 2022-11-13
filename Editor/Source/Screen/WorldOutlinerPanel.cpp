@@ -1,5 +1,7 @@
 ﻿#include "WorldOutlinerPanel.h"
 
+#include <Engine/Core/Core.h>
+
 #include "../Dependencies/ImGui/imgui.h"
 
 #include <Engine/ECS/Core/Entity.h>
@@ -7,7 +9,7 @@
 namespace Editor
 {
 	WorldOutlinerPanel::WorldOutlinerPanel(Engine::List<Engine::Entity*>& entityRef) :
-		AUIPanel{"World Outliner"},
+		AUIScreen{"World Outliner"},
 		m_EntitiesRef{entityRef}
 	{
 		for (int i = 0; i < (int)m_EntitiesRef.size(); i++)

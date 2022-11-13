@@ -62,7 +62,7 @@ namespace Editor
 	}
 
 	CreditsScreen::CreditsScreen() :
-		AUIHUD{"Credits"},
+		AUIScreen{"Credits"},
 		m_IsOpen{false}
 	{
 		LoadTextureFromFile("Assets/DLSU_Logo.png", &m_TextureView, &m_ImageWidth, &m_ImageHeight);

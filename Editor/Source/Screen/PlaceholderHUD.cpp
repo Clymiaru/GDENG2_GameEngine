@@ -1,11 +1,13 @@
 ﻿#include "PlaceholderHUD.h"
 
+#include <Engine/Core/Core.h>
+
 #include "../../../Engine/Dependencies/ImGui/imgui.h"
 
 namespace Editor
 {
 	PlaceholderHUD::PlaceholderHUD() :
-		AUIHUD{"PlaceholderHUD"},
+		AUIScreen{"PlaceholderHUD"},
 		m_IsOpen{false},
 		m_ColorPickerHUD{nullptr}
 	{

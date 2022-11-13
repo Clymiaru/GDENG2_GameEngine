@@ -2,11 +2,11 @@
 
 #include <d3d11.h>
 
-#include <Engine/UI/AUIHUD.h>
+#include <Engine/UI/AUIScreen.h>
 
 namespace Editor
 {
-	class CreditsScreen final : public Engine::AUIHUD
+	class CreditsScreen final : public Engine::AUIScreen
 	{
 	public:
 		CreditsScreen();

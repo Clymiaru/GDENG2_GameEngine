@@ -3,7 +3,7 @@
 #include <Engine/Core/Application.h>
 #include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/Graphics/Renderer.h>
-#include <Engine/Graphics/ShaderLibrary.h>
+#include <Engine/Resource/ShaderLibrary.h>
 #include <Engine/Input/Input.h>
 
 #include <Engine/ECS/Component/TransformComponent.h>
@@ -12,7 +12,7 @@
 
 #include <Engine/Graphics/PostProcessEffect/PostProcessHandler.h>
 #include <Engine/Graphics/Primitives/Primitive.h>
-#include <Engine/ImGui/ImGuiSystem.h>
+#include <Engine/UI/UISystem.h>
 
 #include <Utils/Random.h>
 
@@ -167,7 +167,7 @@ namespace Editor
 		using namespace Engine;
 		ImGui::DockSpaceOverViewport();
 
-		ImGuiSystem::ShowDemoWindow(true);
+		UISystem::ShowDemoWindow(true);
 
 		if (ImGui::BeginMainMenuBar())
 		{

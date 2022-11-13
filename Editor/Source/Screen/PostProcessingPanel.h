@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <Engine/Core/Core.h>
 
-#include <Engine/UI/AUIPanel.h>
-#include <Engine/UI/AUIHUD.h>
+#include <Engine/UI/AUIScreen.h>
 
 namespace Engine
 {
@@ -17,7 +16,7 @@ namespace Engine
 
 namespace Editor
 {
-	class VignetteEffectPropertiesHUD : public Engine::AUIHUD
+	class VignetteEffectPropertiesHUD : public Engine::AUIScreen
 	{
 	public:
 		VignetteEffectPropertiesHUD(Engine::PostProcessEntry& effectRef,
@@ -38,7 +37,7 @@ namespace Editor
 		Engine::VignetteEffectData* m_VignetteEffectData;
 	};
 
-	class ChromaticAberrationHUD : public Engine::AUIHUD
+	class ChromaticAberrationHUD : public Engine::AUIScreen
 	{
 	public:
 		ChromaticAberrationHUD(Engine::PostProcessEntry& effectRef,
@@ -59,7 +58,7 @@ namespace Editor
 		Engine::SimpleChromaticAberrationEffectData* m_ChromaticAberrationData;
 	};
 
-	class PostProcessingPanel final : public Engine::AUIPanel
+	class PostProcessingPanel final : public Engine::AUIScreen
 	{
 	public:
 		explicit PostProcessingPanel(Engine::PostProcessHandler& postProcessHandler);
