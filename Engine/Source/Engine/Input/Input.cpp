@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 #include "Engine/Core/Debug.h"
-#include "Engine/Math/Vector2.h"
+#include "Engine/Math/Math.h"
 
 namespace Engine
 {

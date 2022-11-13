@@ -4,8 +4,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/ShaderLibrary.h"
 
-#include "Engine/Math/Vector2.h"
-#include "Engine/Math/Vector3.h"
+#include "Engine/Math/Math.h"
 
 #include "PostProcessEffect.h"
 

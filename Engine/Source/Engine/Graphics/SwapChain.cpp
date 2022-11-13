@@ -7,7 +7,7 @@
 
 #include "Engine/Core/Window.h"
 
-#include "Engine/Math/Vector2.h"
+#include "Engine/Math/Math.h"
 
 #include "Framebuffer.h"
 

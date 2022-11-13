@@ -3,7 +3,7 @@
 
 #include "Engine/Graphics/ShaderLibrary.h"
 
-#include "Engine/Math/Vector2.h"
+#include "Engine/Math/Math.h"
 
 __declspec(align(16))
 struct SimpleChromaticAberrationConstantData

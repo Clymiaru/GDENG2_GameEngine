@@ -7,8 +7,7 @@
 #include "SwapChain.h"
 #include "VertexBuffer.h"
 #include "VertexShader.h"
-#include "Engine/Math/Vector2.h"
-#include "Engine/Math/Color.h"
+#include "Engine/Math/Math.h"
 
 namespace Engine
 {

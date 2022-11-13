@@ -22,7 +22,7 @@ namespace Engine
 	inline int Random::Range(const int& min,
 	                         const int& max)
 	{
-		const std::uniform_int_distribution<int> distribution(min, max + 1);
+		std::uniform_int_distribution<int> distribution(min, max);
 		return distribution(Instance().m_RandomEngine);
 	}
 
@@ -30,7 +30,7 @@ namespace Engine
 	inline float Random::Range(const float& min,
 	                           const float& max)
 	{
-		const std::uniform_real_distribution<float> distribution(min, max + 1.0f);
+		std::uniform_real_distribution<float> distribution(min, max + 1.0f);
 		return distribution(Instance().m_RandomEngine);
 	}
 }

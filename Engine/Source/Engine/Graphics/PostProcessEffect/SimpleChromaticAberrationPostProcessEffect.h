@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "PostProcessEffect.h"
 
-#include "Engine/Math/Vector2.h"
-
+#include "Engine/Math/Math.h"
 namespace Engine
 {
 	__declspec(align(16))
