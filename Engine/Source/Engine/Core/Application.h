@@ -2,8 +2,7 @@
 #include "Time.h"
 
 #include "Core.h"
-
-#include "Engine/Math/Rect.h"
+#include "Window.h"
 
 namespace Engine
 {
@@ -12,69 +11,67 @@ namespace Engine
 	class Window;
 	class Layer;
 	class LayerHandler;
+
 	class Application final
 	{
 	public:
-		struct Profile
+		struct Specification
 		{
-			String Name = "Untitled";
-			uint32_t Width = 0;
-			uint32_t Height = 0;
+			String Name         = "Untitled";
+			unsigned int InitialWindowWidth  = 0;
+			unsigned int InitialWindowHeight = 0;
+			List<Layer*> InitialLayers = List<Layer*>();
 		};
 
-		static std::string AssetDataPath;
+		struct Profile
+		{
+			bool IsRunning = false;
+			String AssetDataPath = "Assets/";
+			TimeData Time = TimeData();
+		};
 
-		static void SetLayers(List<Layer*> initialLayers);
-
-		static void Start(const Profile& profile);
-
-		static void Run();
-
-		static void End();
-		
-		static void Quit();
-
-		static double DeltaTime();
-
-		static Rect<uint32_t> WindowRect();
-
-		Application(const Application&) = delete;
-	
-		Application& operator=(const Application& v) = delete;
-	
-		Application(Application&&) noexcept = delete;
-	
-		Application& operator=(Application&&) noexcept = delete;
-
-	private:
-		Application();
+		explicit Application(const Specification& specs);
 
 		~Application();
 
-		static Application& Instance();
+		static Profile GetInfo();
 
-		void StartSystems();
+		static Window::Profile GetWindowInfo();
 
-		void EndSystems();
+		bool Quit(Event* event);
 
-		//--------- APP LOOP
+		void Run();
+
+		Application(const Application&)                = delete;
+		Application& operator=(const Application&)     = delete;
+		Application(Application&&) noexcept            = delete;
+		Application& operator=(Application&&) noexcept = delete;
+
+	private:
+		void Start();
+
+		void End();
+
+		//--------------------------------//
+		// APP LOOP                       //
+		//--------------------------------//
 		void Update() const;
 
 		void PollEvents() const;
 
 		void Render() const;
-		//----------
+		//--------------------------------//
 
-		bool m_IsRunning;
+		Specification m_Specs;
 
-		UniquePtr<Window> m_Window;
+		Profile m_Profile;
 
-		Time m_Time;
+		Window* m_Window;
 
-		UniquePtr<LayerHandler> m_LayerHandler;
+		Timer* m_Timer;
 
-		static Application m_Instance;
+		LayerHandler* m_LayerHandler;
 
-		friend class Window;
+		static Application* s_Instance;
 	};
 }

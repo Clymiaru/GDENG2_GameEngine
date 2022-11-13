@@ -1,11 +1,10 @@
 #pragma once
 #include <d3d11.h>
 
-
 namespace Engine
 {
 	class Framebuffer;
-	
+
 	class DeviceContext;
 
 	class Window;
@@ -26,6 +25,9 @@ namespace Engine
 
 		[[nodiscard]]
 		Framebuffer& GetBackbuffer() const;
+
+		void Resize(unsigned int width, unsigned int height,
+		            DeviceContext& deviceContext, ID3D11Device* device);
 
 		SwapChain(const SwapChain&) = delete;
 

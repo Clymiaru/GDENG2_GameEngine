@@ -1,27 +1,27 @@
 ﻿#include "pch.h"
 #include "Time.h"
 
-Engine::Time::Time() :
+Engine::Timer::Timer() :
 	m_DeltaTime{0.0},
 	m_StartFrameTime{},
 	m_EndFrameTime{}
 {
 }
 
-Engine::Time::~Time() = default;
+Engine::Timer::~Timer() = default;
 
-double Engine::Time::DeltaTime() const
+double Engine::Timer::DeltaTime() const
 {
 	return m_DeltaTime;
 }
 
-auto Engine::Time::Start() -> void
+auto Engine::Timer::Start() -> void
 {
 	using namespace std::chrono;
 	m_StartFrameTime = steady_clock::now();
 }
 
-auto Engine::Time::End() -> void
+auto Engine::Timer::End() -> void
 {
 	using namespace std::chrono;
 	

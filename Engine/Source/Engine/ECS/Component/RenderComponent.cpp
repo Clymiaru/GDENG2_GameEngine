@@ -100,7 +100,7 @@ namespace Engine
 	void RenderComponent::Draw(Camera& camera) const
 	{
 		RenderObjectData* constant = new RenderObjectData();
-		constant->Model            = m_EntityRef.Transform().LocalMatrix();
+		constant->Model            = m_EntityRef.Transform().GetLocalMatrix();
 		constant->ViewProjection   = camera.ViewProjMatrix();
 		constant->SolidColor       = AlbedoColor;
 

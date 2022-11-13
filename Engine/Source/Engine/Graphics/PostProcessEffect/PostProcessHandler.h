@@ -64,7 +64,7 @@ namespace Engine
 		
 		int GetPostProcessEffectCount() const
 		{
-			return m_PostProcessEffectList.size();
+			return (int)m_PostProcessEffectList.size();
 		}
 	private:
 		List<PostProcessEntry> m_PostProcessEffectList;

@@ -1,7 +1,17 @@
 ﻿#pragma once
+#include "Entity.h"
+#include <queue>
 
-class EntityManager
+namespace Engine
 {
-public:
-	
-};
+	class EntityManager final
+	{
+	public:
+		Entity* CreateEntity();
+
+		List<Entity*>& GetAllEntities();
+	private:
+		List<Entity*> m_EntityList;
+		// std::queue<EntityID> m_ReservedEntityID;
+	};
+}

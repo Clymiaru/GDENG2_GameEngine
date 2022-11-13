@@ -25,8 +25,8 @@ namespace Engine
 		const auto backBuffer = GetBackBuffer();
 
 		FramebufferProfile swapChainFramebufferProfile;
-		swapChainFramebufferProfile.Width           = window.WindowRect().Width;
-		swapChainFramebufferProfile.Height          = window.WindowRect().Height;
+		swapChainFramebufferProfile.Width           = window.GetInfo().Width;
+		swapChainFramebufferProfile.Height          = window.GetInfo().Height;
 		swapChainFramebufferProfile.ExistingTexture = backBuffer;
 		swapChainFramebufferProfile.SwapChainTarget = true;
 
@@ -56,8 +56,7 @@ namespace Engine
 	void SwapChain::CreateSwapChain(ID3D11Device* device,
 	                                IDXGIFactory* factory)
 	{
-		const Rect<uint32_t> windowRect = m_WindowRef.WindowRect();
-		const Vector2Uint windowSize    = Vector2Uint(windowRect.Width, windowRect.Height);
+		const Vector2Uint windowSize = Vector2Uint(m_WindowRef.GetInfo().Width, m_WindowRef.GetInfo().Height);
 
 		DXGI_SWAP_CHAIN_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -96,6 +95,45 @@ namespace Engine
 	Framebuffer& SwapChain::GetBackbuffer() const
 	{
 		return *m_MainFramebuffer;
+	}
+
+	void SwapChain::Resize(unsigned width, unsigned height, DeviceContext& deviceContext, ID3D11Device* device)
+	{
+		if (deviceContext.m_DeviceContext == nullptr || device == nullptr)
+			return;
+
+		deviceContext.m_DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+		HRESULT result = m_SwapChain->ResizeBuffers(1, width, height,
+		                                            DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+		delete m_MainFramebuffer;
+
+		ID3D11Texture2D* buffer;
+		result = m_SwapChain->GetBuffer(0, __uuidof( ID3D11Texture2D),
+		                                (void**)&buffer);
+
+		FramebufferProfile resizedFramebuffer;
+		resizedFramebuffer.Width           = width;
+		resizedFramebuffer.Height           = height;
+		resizedFramebuffer.ExistingTexture = buffer;
+		resizedFramebuffer.SwapChainTarget = true;
+
+		m_MainFramebuffer = new Framebuffer(resizedFramebuffer, *device);
+
+		List<ID3D11RenderTargetView*> renderTargetViews;
+		renderTargetViews.push_back(&m_MainFramebuffer->GetRenderTarget());
+		deviceContext.m_DeviceContext->OMSetRenderTargets(1,
+		                                                  renderTargetViews.data(),
+		                                                  &m_MainFramebuffer->GetDepthStencil());
+		D3D11_VIEWPORT vp;
+		vp.Width    = width;
+		vp.Height   = height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		deviceContext.m_DeviceContext->RSSetViewports(1, &vp);
 	}
 
 	// void SwapChain::ResizeBuffers(Vector2Uint& size,

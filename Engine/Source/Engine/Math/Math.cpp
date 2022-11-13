@@ -4,6 +4,24 @@
 
 namespace Engine
 {
+	Vector2Float Vector2Float::Zero = Vector2Float(0.0f, 0.0f);
+	Vector2Float Vector2Float::One  = Vector2Float(1.0f, 1.0f);
+
+	Vector2Int Vector2Int::Zero = Vector2Int(0, 0);
+	Vector2Int Vector2Int::One  = Vector2Int(1, 1);
+
+	Vector2Uint Vector2Uint::Zero = Vector2Uint(0, 0);
+	Vector2Uint Vector2Uint::One  = Vector2Uint(1, 1);
+
+	Vector3Float Vector3Float::Zero = Vector3Float(0.0f, 0.0f, 0.0f);
+	Vector3Float Vector3Float::One  = Vector3Float(1.0f, 1.0f, 1.0f);
+
+	Vector3Int Vector3Int::Zero = Vector3Int(0, 0, 0);
+	Vector3Int Vector3Int::One  = Vector3Int(1, 1, 1);
+
+	Vector3Uint Vector3Uint::Zero = Vector3Uint(0, 0, 0);
+	Vector3Uint Vector3Uint::One  = Vector3Uint(1, 1, 1);
+
 	//--------------------------------//
 	// Vector2                        //
 	//--------------------------------//
@@ -2182,7 +2200,7 @@ namespace Engine
 	{
 		return (float*)this;
 	}
-	
+
 	bool Color::operator==(const Color& c) const
 	{
 		using namespace DirectX;

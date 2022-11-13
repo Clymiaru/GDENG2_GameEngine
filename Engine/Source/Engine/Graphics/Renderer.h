@@ -27,7 +27,7 @@ namespace Engine
 		static void ClearDepthStencil(ID3D11DepthStencilView* depthStencilView);
 
 		static void SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
-		                            ID3D11DepthStencilView* depthStencil);
+		                              ID3D11DepthStencilView* depthStencil);
 
 		static void ShowFrame();
 
@@ -66,8 +66,7 @@ namespace Engine
 		                                 size_t bytecodeLength,
 		                                 ID3D11PixelShader** pixelShader);
 
-		static void Resize(Vector2Uint& size);
-
+		static void Resize(const Vector2Uint& size);
 
 		// Raster Stage
 		static void SetViewportSize(const Vector2Int& viewportSize);
@@ -87,12 +86,9 @@ namespace Engine
 			return *s_DeviceContext;
 		};
 
-		Renderer(const Renderer&) = delete;
-
-		Renderer& operator=(const Renderer&) = delete;
-
-		Renderer(Renderer&&) noexcept = delete;
-
+		Renderer(const Renderer&)                = delete;
+		Renderer& operator=(const Renderer&)     = delete;
+		Renderer(Renderer&&) noexcept            = delete;
 		Renderer& operator=(Renderer&&) noexcept = delete;
 
 	private:

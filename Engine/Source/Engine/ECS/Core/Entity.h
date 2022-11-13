@@ -2,19 +2,26 @@
 
 #include "Engine/Core/Debug.h"
 
+// Remember:
+// Entity are ID
+// Components are Data
+// System are DataProcessors
+
+// Architecture:
+// 1 Entity : 1 Component type (An entity can only have 1 TransformComponent at any given time)
+
 namespace Engine
 {
 	class TransformComponent;
 
 	class AComponent;
 
-	// Let's try entity without TransformComponent
-	// This is so an entity with pure data is possible?
-
-	// Assume that all Entities have Transform
+	using EntityID = uint64_t;
 	class Entity
 	{
 	public:
+		//explicit Entity(EntityID id, StringView name);
+
 		explicit Entity(StringView name);
 
 		virtual ~Entity();
@@ -31,18 +38,11 @@ namespace Engine
 		[[nodiscard]]
 		TransformComponent& Transform() const;
 
-		// TODO: Consider this 2 functions if Entity is like Unity's Monobehavior
-		// void Update(float deltaTime);
-		// void Draw();
-
 		// TODO: What to do for copying
 		// Idea is that all component's data will be copied
 		Entity(const Entity&) = delete;
-
 		Entity& operator=(const Entity& v) = delete;
-
 		Entity(Entity&&) noexcept = delete;
-
 		Entity& operator=(Entity&&) noexcept = delete;
 
 		String Name;
@@ -50,9 +50,7 @@ namespace Engine
 		bool Active{};
 
 	protected:
-		// For our engine case, only 1 component type is
-		// able to be added to an object at anytime. (i.e. 1 TransformComponent max)
-		// TODO: IF UUID approach, change String to uint128_t?
+		EntityID m_ID;
 
 		HashMap<String, AComponent*> m_ComponentTable{};
 
@@ -62,6 +60,10 @@ namespace Engine
 	template <typename T, typename ... Args>
 	T& Entity::AttachComponent(Args&&... args)
 	{
+		// Register this entity on the component's system
+
+
+		
 		T* component = nullptr;
 		if (m_ComponentTable.contains(T::GetStaticName()))
 		{

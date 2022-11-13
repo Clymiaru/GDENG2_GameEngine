@@ -6,9 +6,9 @@ namespace Engine
 {
 	struct FramebufferProfile
 	{
-		uint32_t Width;
+		unsigned int Width = 0;
 
-		uint32_t Height;
+		unsigned int Height = 0;
 
 		ID3D11Texture2D* ExistingTexture = nullptr;
 
@@ -24,7 +24,7 @@ namespace Engine
 		~Framebuffer();
 
 		[[nodiscard]]
-		FramebufferProfile& GetInfo()
+		const FramebufferProfile& GetInfo() const
 		{
 			return m_Profile;
 		}

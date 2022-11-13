@@ -3,12 +3,6 @@
 
 namespace Engine
 {
-	// Scene should have its own id.
-	// Meaning that UI or game object for the scene
-
-	// Another way is that we can have UI as a entity?
-	// This way, we can just put in component?
-
 	class UIHandler
 	{
 	public:

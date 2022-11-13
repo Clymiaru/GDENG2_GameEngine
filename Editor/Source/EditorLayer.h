@@ -93,5 +93,8 @@ namespace Editor
 		PlaceholderHUD* m_PlaceholderHUD = nullptr;
 		float m_CameraPosition[3] = {5.0f, 1.5f, -7.0f};
 		float m_CameraRotation[3] = {0.0f, 120.0f, 0.0f};
+
+		int m_SceneViewportWidth;
+		int m_SceneViewportHeight;
 	};
 }

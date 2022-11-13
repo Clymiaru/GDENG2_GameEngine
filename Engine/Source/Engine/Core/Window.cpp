@@ -3,68 +3,83 @@
 
 #include "Debug.h"
 
-#include "Application.h"
-
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/ImGui/ImGuiSystem.h"
 
 #include "Utils/Utils.h"
 
-namespace Engine
+LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
+                                  const UINT message,
+                                  const WPARAM wParam,
+                                  const LPARAM lParam)
 {
-	LRESULT CALLBACK WindowsProcedure(const HWND windowHandle,
-	                                  const UINT message,
-	                                  const WPARAM wParam,
-	                                  const LPARAM lParam)
+	if (const LRESULT result = Engine::ImGuiSystem::HandleEvents(windowHandle,
+	                                                             message,
+	                                                             wParam,
+	                                                             lParam);
+		result)
 	{
-		if (const LRESULT result = ImGuiSystem::HandleEvents(windowHandle,
-		                                                     message,
-		                                                     wParam,
-		                                                     lParam);
-			result)
-		{
-			return result;
-		}
-
-		switch (message)
-		{
-			case WM_CREATE:
-			{
-				auto* window = static_cast<Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
-				SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
-				window->m_Handle = windowHandle;
-				window->UpdateClientSize();
-				break;
-			}
-			case WM_SIZE:
-			{
-				// TODO: At a later time
-				// auto* window = (Window*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
-				// window->UpdateClientSize();
-				// Vector2Uint winSize = Vector2Uint(window->WindowRect().Width, window->WindowRect().Height);
-				// Renderer::Resize(winSize);
-				break;
-			}
-			case WM_CLOSE:
-			{
-				Application::Quit();
-				break;
-			}
-			case WM_DESTROY:
-			{
-				break;
-			}
-			default:
-				return DefWindowProc(windowHandle, message, wParam, lParam);
-		}
-		return 0;
+		return result;
 	}
 
-	Window::Window(const Profile& profile) :
+	switch (message)
+	{
+		case WM_CREATE:
+		{
+			auto* window = static_cast<Engine::Window*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
+			SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+			window->m_Handle = windowHandle;
+			window->Open();
+			break;
+		}
+		case WM_SIZE:
+		{
+			const UINT width  = LOWORD(lParam);
+			const UINT height = HIWORD(lParam);
+
+			auto* window = reinterpret_cast<Engine::Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+
+			window->Resize(width, height);
+			break;
+		}
+		case WM_SETFOCUS:
+		{
+			auto* window = reinterpret_cast<Engine::Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+			window->Focus();
+			break;
+		}
+		case WM_KILLFOCUS:
+		{
+			auto* window = reinterpret_cast<Engine::Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+			window->Unfocus();
+			break;
+		}
+		case WM_CLOSE:
+		{
+			auto* window = reinterpret_cast<Engine::Window*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+			window->Close();
+			break;
+		}
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			break;
+		}
+		default:
+			return DefWindowProc(windowHandle, message, wParam, lParam);
+	}
+	return 0;
+}
+
+namespace Engine
+{
+	Window::Window(const Specification& specs) :
+		m_Specs{specs},
+		m_Profile{},
 		m_Handle{nullptr},
 		m_Message{}
 	{
-		const std::wstring windowName = Utils::CStringToWString(profile.Name);
+		const std::wstring windowName = Utils::CStringToWString(specs.Name);
 
 		WNDCLASSEX windowClass;
 		windowClass.cbClsExtra    = NULL;
@@ -89,8 +104,8 @@ namespace Engine
 		                                   WS_OVERLAPPEDWINDOW,
 		                                   CW_USEDEFAULT,
 		                                   CW_USEDEFAULT,
-		                                   static_cast<int>(profile.Width),
-		                                   static_cast<int>(profile.Height),
+		                                   (int)specs.Width,
+		                                   (int)specs.Height,
 		                                   nullptr,
 		                                   nullptr,
 		                                   nullptr,
@@ -98,35 +113,10 @@ namespace Engine
 
 		Debug::Assert(handle, "Handle cannot be retrieved!");
 
-		UpdateClientSize();
-
-		ShowWindow(m_Handle, SW_SHOW);
-
-		UpdateWindow(m_Handle);
+		m_Profile.Name = specs.Name;
 	}
 
-	Window::~Window()
-	{
-		const auto result = DestroyWindow(m_Handle);
-		Debug::Assert(result, "Window cannot be destroyed!");
-	}
-
-	Rect<uint32_t>& Window::WindowRect()
-	{
-		return m_ClientRect;
-	}
-
-	void Window::UpdateClientSize()
-	{
-		RECT rect = {};
-		GetClientRect(m_Handle, &rect);
-		m_ClientRect = Rect<uint32_t>(0, 0, rect.right - rect.left, rect.bottom - rect.top);
-	}
-
-	HWND& Window::GetHandle()
-	{
-		return m_Handle;
-	}
+	Window::~Window() { }
 
 	void Window::PollEvents()
 	{
@@ -135,5 +125,97 @@ namespace Engine
 			TranslateMessage(&m_Message);
 			DispatchMessage(&m_Message);
 		}
+	}
+	void Window::ProcessEvents()
+	{
+		while (!m_EventQueue.empty())
+		{
+			auto* currentEvent = m_EventQueue.front();
+			if (!m_EventListenerMap.contains(currentEvent->GetType()))
+			{
+				m_EventQueue.pop();
+				delete currentEvent;
+				continue;
+			}
+			
+			for (auto f : m_EventListenerMap[currentEvent->GetType()])
+			{
+				if (!currentEvent->IsHandled)
+				{
+					currentEvent->IsHandled |= f(currentEvent);
+				}
+			}
+			
+			m_EventQueue.pop();
+			delete currentEvent;
+		}
+	}
+	void Window::SetEventCallback(const Event::Type eventType,
+	                              std::function<bool(Event*)> callback)
+	{
+		if (!m_EventListenerMap.contains(eventType))
+		{
+			m_EventListenerMap[eventType] = List<std::function<bool(Event*)>>();
+		}
+		
+		// TODO: Check for if this callback in stored already?
+		m_EventListenerMap[eventType].push_back(callback);
+	}
+
+	HWND& Window::GetHandle()
+	{
+		return m_Handle;
+	}
+
+	const Window::Profile& Window::GetInfo() const
+	{
+		return m_Profile;
+	}
+
+	Window::Profile Window::GetInfo()
+	{
+		return m_Profile;
+	}
+
+	void Window::Open() const
+	{
+		ShowWindow(m_Handle, SW_SHOW);
+		UpdateWindow(m_Handle);
+	}
+
+	void Window::Close()
+	{
+		const auto result = DestroyWindow(m_Handle);
+		Debug::Assert(result, "Window cannot be destroyed!");
+		m_Profile.Width  = 0;
+		m_Profile.Height = 0;
+		m_Handle         = nullptr;
+
+		m_EventQueue.push(new WindowCloseEvent());
+	}
+
+	void Window::Resize(const UINT width, const UINT height)
+	{
+		m_Profile.Width  = width;
+		m_Profile.Height = height;
+		// Renderer::Resize(Vector2Uint(width, height));
+
+		m_EventQueue.push(new WindowResizeEvent(width, height));
+	}
+
+	void Window::Focus()
+	{
+		Debug::Log("Focus ON!");
+		m_EventQueue.push(new WindowFocusEvent());
+	}
+
+	void Window::Unfocus()
+	{
+		Debug::Log("Focus OFF!");
+
+		// Focus off should still progress simulations (ideally)
+		// However, focus off should not respond to input commands.
+
+		m_EventQueue.push(new WindowUnfocusEvent());
 	}
 }

@@ -176,8 +176,8 @@ namespace Editor
 			{
 				auto chromaticAberrationProperties = Engine::SimpleChromaticAberrationEffectData{
 					Engine::Color(0.009f, 0.006f, -0.006f, 1.0f),
-					Engine::Vector2Float(Engine::Application::WindowRect().Width,
-					                     Engine::Application::WindowRect().Height),
+					Engine::Vector2Float(Engine::Application::GetWindowInfo().Width,
+					                     Engine::Application::GetWindowInfo().Height),
 					Engine::Vector2Float(-1.0f, 1.0f)
 				};
 

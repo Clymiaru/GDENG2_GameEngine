@@ -73,8 +73,8 @@ namespace Engine
 
 		s_SwapChain = CreateUniquePtr<SwapChain>(window, s_Device, s_DxgiFactory);
 
-		const Vector2Int winSize = Vector2Int(window.WindowRect().Width,
-		                                      window.WindowRect().Height);
+		const Vector2Int winSize = Vector2Int((int32_t)window.GetInfo().Width,
+		                                      (int32_t)window.GetInfo().Height);
 
 		s_DeviceContext->SetViewportSize(winSize);
 	}
@@ -94,13 +94,16 @@ namespace Engine
 		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
 		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
 
+		s_DeviceContext->SetRenderTargetTo(&renderTarget,
+		                                   &depthStencil);
+
+		s_DeviceContext->SetViewportSize(Vector2Int(framebuffer.GetInfo().Width,
+		                                            framebuffer.GetInfo().Height));
+
 		s_DeviceContext->ClearRenderTargetView(renderTarget,
 		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
 
 		s_DeviceContext->ClearDepthStencilView(depthStencil);
-
-		s_DeviceContext->SetRenderTargetTo(&renderTarget,
-		                                   &depthStencil);
 	}
 
 	void Renderer::EndRender(const Framebuffer& framebuffer)
@@ -114,7 +117,7 @@ namespace Engine
 		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
 
 		s_DeviceContext->ClearRenderTargetView(renderTarget,
-											   Color(0.5f, 0.3f, 0.8f, 1.0f));
+		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
 
 		s_DeviceContext->ClearDepthStencilView(depthStencil);
 	}
@@ -156,12 +159,12 @@ namespace Engine
 		return s_Device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 	}
 
-	void Renderer::Resize(Vector2Uint& size)
+	void Renderer::Resize(const Vector2Uint& size)
 	{
 		if (s_SwapChain == nullptr)
 			return;
 
-	//	s_SwapChain->ResizeBuffers(size, *s_DeviceContext, s_Device);
+		s_SwapChain->Resize(size.x, size.y, *s_DeviceContext, s_Device);
 	}
 
 	void Renderer::SetViewportSize(const Vector2Int& viewportSize)

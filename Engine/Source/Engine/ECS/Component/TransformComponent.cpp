@@ -5,15 +5,15 @@ namespace Engine
 {
 	TransformComponent::TransformComponent(Entity& owner) :
 		AComponent{owner},
-		Position{Vector3Float{0.0f, 0.0f, 0.0f}},
-		Scale{Vector3Float{1.0f, 1.0f, 1.0f}},
-		Rotation{Vector3Float{0.0f, 0.0f, 0.0f}}
+		Position{Vector3Float::Zero},
+		Scale{Vector3Float::One},
+		Rotation{Vector3Float::Zero}
 	{
 	}
 
 	TransformComponent::~TransformComponent() = default;
 
-	Matrix4& TransformComponent::LocalMatrix()
+	Matrix4& TransformComponent::GetLocalMatrix()
 	{
 		RecalculateLocalMatrix();
 		return m_LocalMatrix;

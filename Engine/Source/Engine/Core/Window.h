@@ -1,70 +1,85 @@
 #pragma once
 #include <Windows.h>
+#include <queue>
 
 #include "Core.h"
 
-#include "Engine/Math/Rect.h"
+#include "Engine/Event/Event.h"
 
+LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
+                                  UINT message,
+                                  WPARAM wParam,
+                                  LPARAM lParam);
 namespace Engine
 {
 	class Window final
 	{
 	public:
-		struct Profile
+		struct Specification
 		{
-			String Name;
-
-			uint32_t Width;
-
-			uint32_t Height;
-
-			Profile() :
-				Name{"Unnamed"},
-				Width{640},
-				Height{480}
-			{
-			}
-
-			Profile(const StringView name,
-					const uint32_t& width,
-					const uint32_t& height) :
-				Name{name},
-				Width{width},
-				Height{height}
-			{
-			}
+			String Name         = "Unnamed";
+			unsigned int Width  = 640;
+			unsigned int Height = 480;
 		};
 
-		explicit Window(const Profile& profile);
+		struct Profile
+		{
+			String Name         = "Unnamed";
+			unsigned int Width  = 0;
+			unsigned int Height = 0;
+		};
+
+		explicit Window(const Specification& specs);
 
 		~Window();
 
 		void PollEvents();
 
+		void ProcessEvents();
+
+		void SetEventCallback(Event::Type eventType,
+		                      std::function<bool(Event*)> callback);
+
+		[[nodiscard]]
 		HWND& GetHandle();
 
-		Rect<uint32_t>& WindowRect();
+		[[nodiscard]]
+		const Profile& GetInfo() const;
 
-		Window(const Window&) = delete;
-	
-		Window& operator=(const Window&) = delete;
-	
-		Window(Window&&) noexcept = delete;
-	
+		[[nodiscard]]
+		Profile GetInfo();
+
+		Window(const Window&)                = delete;
+		Window& operator=(const Window&)     = delete;
+		Window(Window&&) noexcept            = delete;
 		Window& operator=(Window&&) noexcept = delete;
 
 	private:
-		void UpdateClientSize();
+		void Open() const;
+
+		void Close();
+
+		void Resize(UINT width, UINT height);
+
+		void Focus();
+
+		void Unfocus();
+
+		Specification m_Specs;
+
+		Profile m_Profile;
 
 		HWND m_Handle;
 
 		MSG m_Message;
 
-		Rect<uint32_t> m_ClientRect;
+		std::queue<Event*> m_EventQueue;
 
-		friend LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
-										UINT message,
-										WPARAM wParam,
-										LPARAM lParam);
+		HashMap<Event::Type, List<std::function<bool(Event*)>>> m_EventListenerMap;
+
+		friend LRESULT CALLBACK ::WindowsProcedure(HWND windowHandle,
+		                                           UINT message,
+		                                           WPARAM wParam,
+		                                           LPARAM lParam);
 	};
 }

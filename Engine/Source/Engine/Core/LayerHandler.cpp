@@ -96,9 +96,9 @@ namespace Engine
 			const Framebuffer* layerFramebuffer = layer->GetFramebuffer();
 			if (layerFramebuffer == nullptr)
 				continue;
-			
+
 			Renderer::StartRender(*layerFramebuffer);
-			
+
 			layer->OnRender();
 
 			Renderer::EndRender(*layerFramebuffer);
@@ -110,20 +110,20 @@ namespace Engine
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		
+
 		for (auto* layer : m_Layers)
 		{
 			layer->OnImGuiRender();
 		}
-		
+
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		ImGuiIO& io = ImGui::GetIO();
-		const Rect<uint32_t> windowRect = Application::WindowRect();
 
-		io.DisplaySize = ImVec2((float)windowRect.Width, (float)windowRect.Height);
-		
+		io.DisplaySize = ImVec2((float)Application::GetWindowInfo().Width,
+		                        (float)Application::GetWindowInfo().Height);
+
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			ImGui::UpdatePlatformWindows();

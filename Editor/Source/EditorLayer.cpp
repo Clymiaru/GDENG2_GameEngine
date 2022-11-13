@@ -60,8 +60,8 @@ namespace Editor
 
 		// View initialization
 		FramebufferProfile sceneFramebufferProfile;
-		sceneFramebufferProfile.Width  = Application::WindowRect().Width;
-		sceneFramebufferProfile.Height = Application::WindowRect().Height;
+		sceneFramebufferProfile.Width  = Application::GetWindowInfo().Width;
+		sceneFramebufferProfile.Height = Application::GetWindowInfo().Height;
 
 		m_Framebuffer           = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile, Renderer::GetDevice());
 		m_EditorViewFramebuffer = CreateUniquePtr<Framebuffer>(sceneFramebufferProfile, Renderer::GetDevice());
@@ -97,6 +97,10 @@ namespace Editor
 		auto texturedVS = ShaderLibrary::GetShaderRef<VertexShader>("TexturedShader");
 		auto texturedPS = ShaderLibrary::GetShaderRef<PixelShader>("TexturedShader");
 
+		auto* cube = new Entity("Cube");
+		cube->AttachComponent<RenderComponent>(*cube, Primitive::Circle(32), solidVS, solidPS);
+		m_EntityList.push_back(cube);
+		
 		m_RenderQuad = CreateUniquePtr<RenderQuad>();
 
 		m_CameraHandler.Initialize(2,
@@ -134,64 +138,8 @@ namespace Editor
 		m_CameraHandler.GetSceneCamera(0).Transform().Position = Vector3Float(m_CameraPosition[0], m_CameraPosition[1],
 		                                                                      m_CameraPosition[2]);
 
-#ifdef Q3
-		const Vector3Float scaleA = Vector3Float(1.0f, 1.0f, 1.0f);
-		const Vector3Float scaleB   = Vector3Float(0.25f, 0.25f, 0.25f);
-		static float currentTime = 0.0f;
-		currentTime += Application::DeltaTime() * 0.8f;
-		for (int i = 0; i < m_EntityList.size(); i++)
-		{
-			auto* warpAnimCube = m_EntityList[i];
-
-			float moveAmount = 2.0f * Application::DeltaTime();
-			warpAnimCube->Transform().Position += Vector3Float(moveAmount, moveAmount, 0.0f);
-
-			warpAnimCube->Transform().Scale = Vector3Float::Lerp(scaleA,
-																 scaleB,
-																 std::clamp(currentTime,
-																			0.0f,
-																			1.0f));
-		}
-#endif
-		// for (int i = 0; i < m_EntityList.size(); i++)
-		// {
-		// 	if (m_EntityList[i]->Name == "RotateAnimCube")
-		// 	{
-		// 		auto* rotateCubeAnim = m_EntityList[i];
-		// 		rotateCubeAnim->Transform().Rotation.x += Application::DeltaTime() * 500.0f;
-		// 		rotateCubeAnim->Transform().Rotation.y += Application::DeltaTime() * 600.0f;
-		// 		rotateCubeAnim->Transform().Rotation.z += Application::DeltaTime() * 700.0f;
-		// 	}
-		// }
-
-		// for (int i = 0; i < m_EntityList.size(); i++)
-		// {
-		// 	auto* rotateCubeAnim = m_EntityList[i];
-		// 	rotateCubeAnim->Transform().Rotation.x += Application::DeltaTime() * Random::Range(0.01f, 1.0f) * 500.0f;
-		// 	rotateCubeAnim->Transform().Rotation.y += Application::DeltaTime() * Random::Range(0.01f, 1.0f) * 600.0f;
-		// 	rotateCubeAnim->Transform().Rotation.z += Application::DeltaTime() * Random::Range(0.01f, 1.0f) * 700.0f;
-		// }
-#ifdef Q5
-		const Vector3Float originalScale = Vector3Float(10.0f, 10.0f, 10.0f);
-		const Vector3Float warpedScale   = Vector3Float(50.0f, 50.0f, 0.0f);
-		static float currentTime = -0.2f;
-		currentTime += Application::DeltaTime() * 0.5f;
-		if (currentTime < 1.0f)
-		{
-			for (int i = 0; i < m_EntityList.size(); i++)
-			{
-				auto* warpAnimCube = m_EntityList[i];
-
-				warpAnimCube->Transform().Scale = Vector3Float::Lerp(originalScale,
-				                                                     warpedScale,
-				                                                     std::clamp(currentTime,
-				                                                                0.0f,
-				                                                                1.0f));
-			}
-		}
-#endif
+		
 	}
-
 	void EditorLayer::OnRender()
 	{
 		for (auto* entity : m_EntityList)
@@ -271,8 +219,20 @@ namespace Editor
 
 		m_PlaceholderHUD->Draw();
 
+		static bool viewResizing = true;
+		
 		ImGui::Begin("Scene View");
-		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(16 * 60, 9 * 60));
+		ImVec2 view = ImGui::GetContentRegionAvail();
+
+		if (view.x != m_SceneViewportWidth || view.y != m_SceneViewportHeight)
+		{
+			if ( view.x != 0 && view.y != 0 )
+			{
+				m_SceneViewportWidth = view.x;
+				m_SceneViewportHeight = view.y;
+			}
+		}
+		ImGui::Image(&m_EditorViewFramebuffer->GetFrame(), ImVec2(m_SceneViewportWidth, m_SceneViewportHeight));
 		ImGui::End();
 
 		ImGui::Begin("Game View");

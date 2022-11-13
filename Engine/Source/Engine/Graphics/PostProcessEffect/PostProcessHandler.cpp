@@ -36,10 +36,10 @@ namespace Engine
 	int PostProcessHandler::AddEffect(PostProcessEffect* postProcessEffect)
 	{
 		FramebufferProfile postProcessFramebufferProfile;
-		postProcessFramebufferProfile.Width  = Application::WindowRect().Width;
-		postProcessFramebufferProfile.Height = Application::WindowRect().Height;
+		postProcessFramebufferProfile.Width  = Application::GetWindowInfo().Width;
+		postProcessFramebufferProfile.Height = Application::GetWindowInfo().Height;
 
-		int postProcessEffectID = m_PostProcessEffectList.size();
+		int postProcessEffectID = (int)m_PostProcessEffectList.size();
 		if (!m_ReservedID.empty())
 		{
 			postProcessEffectID = m_ReservedID.front();

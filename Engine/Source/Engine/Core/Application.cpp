@@ -11,48 +11,65 @@
 
 namespace Engine
 {
-	Application Application::m_Instance;
+	Application* Application::s_Instance = nullptr;
 
-	std::string Application::AssetDataPath = "Assets/";
-
-	Application::Application() :
-		m_IsRunning{false},
+	Application::Application(const Specification& specs) :
+		m_Specs{specs},
+		m_Profile{},
 		m_Window{nullptr},
+		m_Timer{nullptr},
 		m_LayerHandler{nullptr}
 	{
-		m_LayerHandler = CreateUniquePtr<LayerHandler>(5);
-	}
-
-	Application::~Application() = default;
-
-	Application& Application::Instance()
-	{
-		return m_Instance;
-	}
-
-	void Application::SetLayers(const List<Layer*> initialLayers)
-	{
-		for (size_t i = 0; i < initialLayers.size(); i++)
+		if (s_Instance == nullptr)
 		{
-			Instance().m_LayerHandler->Add(initialLayers[i]);
+			s_Instance = this;
 		}
 	}
 
-	void Application::Start(const Profile& profile)
-	{
-		Instance().m_Window = CreateUniquePtr<Window>(Window::Profile{
-			                                              profile.Name,
-			                                              profile.Width,
-			                                              profile.Height
-		                                              });
+	Application::~Application() { }
 
-		Instance().StartSystems();
-		Instance().m_IsRunning = true;
+	Application::Profile Application::GetInfo()
+	{
+		return s_Instance->m_Profile;
 	}
 
-	void Application::StartSystems()
+	Window::Profile Application::GetWindowInfo()
 	{
-		Instance().m_Time = Time();
+		return s_Instance->m_Window->GetInfo();
+	}
+
+	bool Application::Quit(Event* event)
+	{
+		s_Instance->m_Profile.IsRunning = false;
+		return true;
+	}
+
+	void Application::Start()
+	{
+		const Window::Specification windowSpecs = Window::Specification{m_Specs.Name,
+		                                                                m_Specs.InitialWindowWidth,
+		                                                                m_Specs.InitialWindowHeight};
+		s_Instance->m_Window = new Window(windowSpecs);
+
+		s_Instance->m_Window->SetEventCallback(Event::Type::WindowClose,
+		                                       [this](Event* event) -> bool
+		                                       {
+			                                       return Application::Quit(event);
+		                                       });
+
+		s_Instance->m_Window->SetEventCallback(Event::Type::WindowResize,
+		                                       [this](Event* event) -> bool
+		                                       {
+			                                       const auto* e = (WindowResizeEvent*)event;
+			                                       Renderer::Resize(Vector2Uint(e->Width, e->Height));
+			                                       return true;
+		                                       });
+
+		s_Instance->m_Timer = new Timer();
+
+		s_Instance->m_LayerHandler = new LayerHandler();
+
+		// EventSystem::Init();
 
 		Renderer::Start(*m_Window);
 
@@ -60,39 +77,46 @@ namespace Engine
 		                   &Renderer::GetDevice(),
 		                   &Renderer::GetDeviceContext().GetContext());
 
+		// ResourceLibrary::Init();
 		ShaderLibrary::Initialize(4);
 
 		Input::Start();
+
+		for (size_t i = 0; i < m_Specs.InitialLayers.size(); i++)
+		{
+			s_Instance->m_LayerHandler->Add(m_Specs.InitialLayers[i]);
+		}
+
+		s_Instance->m_LayerHandler->StartLayers();
+
+		s_Instance->m_Profile.IsRunning = true;
 	}
 
 	void Application::Run()
 	{
-		Instance().m_LayerHandler->StartLayers();
+		s_Instance->Start();
 
-		while (Instance().m_IsRunning)
+		while (s_Instance->m_Profile.IsRunning)
 		{
-			Instance().m_Time.Start();
+			s_Instance->m_Timer->Start();
 
-			Instance().PollEvents();
-			Instance().Update();
-			Instance().Render();
+			s_Instance->PollEvents();
+			s_Instance->Update();
+			s_Instance->Render();
 
-			Instance().m_Time.End();
+			s_Instance->m_Timer->End();
 
 			Sleep(1);
 		}
 
-		Instance().m_LayerHandler->EndLayers();
+		s_Instance->End();
 	}
 
 	void Application::End()
 	{
-		Instance().EndSystems();
-	}
+		s_Instance->m_LayerHandler->EndLayers();
 
-	void Application::EndSystems()
-	{
-		m_LayerHandler.reset();
+		delete m_LayerHandler;
 
 		ShaderLibrary::Terminate();
 
@@ -100,36 +124,21 @@ namespace Engine
 
 		Input::End();
 
-		m_Window.reset();
+		delete m_Window;
 
 		ImGuiSystem::End();
 	}
 
-	void Application::Quit()
-	{
-		Instance().m_IsRunning = false;
-	}
-
-	double Application::DeltaTime()
-	{
-		return Instance().m_Time.DeltaTime();
-	}
-
-	Rect<uint32_t> Application::WindowRect()
-	{
-		return Instance().m_Window->WindowRect();
-	}
-
 	void Application::Update() const
 	{
-		m_LayerHandler->Update();
+		s_Instance->m_Window->ProcessEvents();
+		s_Instance->m_LayerHandler->Update();
 	}
 
 	void Application::PollEvents() const
 	{
-		m_Window->PollEvents();
+		s_Instance->m_Window->PollEvents();
 		Input::PollInputEvents();
-		m_LayerHandler->PollInput();
 	}
 
 	void Application::Render() const

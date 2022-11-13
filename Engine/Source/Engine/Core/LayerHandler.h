@@ -11,7 +11,6 @@ namespace Engine
 		~LayerHandler();
 
 		void StartLayers();
-
 		void EndLayers();
 		
 		void Add(Layer* layer);
@@ -20,7 +19,6 @@ namespace Engine
 		void PollInput() const;
 		void Update() const;
 		void Render() const;
-
 		void ImGuiRender() const;
 	private:
 		List<Layer*> m_Layers{};

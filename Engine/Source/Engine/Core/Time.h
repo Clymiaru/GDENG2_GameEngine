@@ -3,12 +3,19 @@
 
 namespace Engine
 {
-	class Time final
+	struct TimeData
+	{
+		float DeltaTimeSec = 0.0f;
+		double DeltaTimeMilli = 0.0;
+		// TODO: Implement FixedDeltaTime;
+	};
+	
+	class Timer final
 	{
 	public:
-		Time();
+		Timer();
 
-		~Time();
+		~Timer();
 
 		void Start();
 
@@ -17,13 +24,13 @@ namespace Engine
 		[[nodiscard]]
 		double DeltaTime() const;
 
-		Time(const Time&) = default;
+		Timer(const Timer&) = default;
 	
-		Time& operator=(const Time&) = default;
+		Timer& operator=(const Timer&) = default;
 	
-		Time(Time&&) noexcept = default;
+		Timer(Timer&&) noexcept = default;
 	
-		Time& operator=(Time&&) noexcept = default;
+		Timer& operator=(Timer&&) noexcept = default;
 		
 	private:
 		double m_DeltaTime;

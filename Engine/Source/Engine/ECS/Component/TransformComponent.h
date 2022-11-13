@@ -8,12 +8,12 @@ namespace Engine
 	{
 	public:
 		explicit TransformComponent(Entity& owner);
-		
+
 		~TransformComponent() override;
 
 		MAKE_COMPONENT(Transform)
-		
-		Matrix4& LocalMatrix();
+
+		Matrix4& GetLocalMatrix();
 
 		Vector3Float Position;
 
@@ -21,12 +21,9 @@ namespace Engine
 
 		Vector3Float Rotation;
 
-		TransformComponent(const TransformComponent&) = delete;
-	
-		TransformComponent& operator=(const TransformComponent&) = delete;
-	
-		TransformComponent(TransformComponent&&) noexcept = delete;
-	
+		TransformComponent(const TransformComponent&)                = delete;
+		TransformComponent& operator=(const TransformComponent&)     = delete;
+		TransformComponent(TransformComponent&&) noexcept            = delete;
 		TransformComponent& operator=(TransformComponent&&) noexcept = delete;
 
 	private:

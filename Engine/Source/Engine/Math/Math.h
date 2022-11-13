@@ -89,6 +89,9 @@ namespace Engine
 		Vector2Float& operator=(Vector2Float&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2Float& v);
+
+		static Vector2Float Zero;
+		static Vector2Float One;
 	};
 
 	Vector2Float operator+(const Vector2Float& v1, const Vector2Float& v2);
@@ -166,6 +169,9 @@ namespace Engine
 		Vector2Int& operator=(Vector2Int&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2Int& v);
+
+		static Vector2Int Zero;
+		static Vector2Int One;
 	};
 
 	Vector2Int operator+(const Vector2Int& v1, const Vector2Int& v2);
@@ -241,6 +247,9 @@ namespace Engine
 		Vector2Uint& operator=(Vector2Uint&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2Uint& v);
+
+		static Vector2Uint Zero;
+		static Vector2Uint One;
 	};
 
 	Vector2Uint operator+(const Vector2Uint& v1, const Vector2Uint& v2);
@@ -321,6 +330,9 @@ namespace Engine
 		Vector3Float& operator=(Vector3Float&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector3Float& v);
+
+		static Vector3Float Zero;
+		static Vector3Float One;
 	};
 
 	Vector3Float operator+(const Vector3Float& v1, const Vector3Float& v2);
@@ -398,6 +410,9 @@ namespace Engine
 		Vector3Int& operator=(Vector3Int&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector3Int& v);
+
+		static Vector3Int Zero;
+		static Vector3Int One;
 	};
 
 	Vector3Int operator+(const Vector3Int& v1, const Vector3Int& v2);
@@ -473,6 +488,9 @@ namespace Engine
 		Vector3Uint& operator=(Vector3Uint&&) noexcept = default;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector3Uint& v);
+
+		static Vector3Uint Zero;
+		static Vector3Uint One;
 	};
 
 	Vector3Uint operator+(const Vector3Uint& v1, const Vector3Uint& v2);
@@ -555,7 +573,6 @@ namespace Engine
 		// Element-wise divide
 		Matrix4& operator/=(const Matrix4& m) noexcept;
 
-		Matrix4 operator+() const noexcept;
 		Matrix4 operator-() const noexcept;
 
 		Matrix4(const Matrix4&)            = default;

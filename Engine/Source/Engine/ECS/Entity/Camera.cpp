@@ -24,7 +24,7 @@ namespace Engine
 		UpdateCameraVectors();
 		UpdateViewMatrix();
 
-		auto rect    = Application::WindowRect();
+		auto rect    = Application::GetWindowInfo();
 		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV),
 		                                                     (float)rect.Width / rect.Height,
 		                                                     0.001f, 1000.0f);

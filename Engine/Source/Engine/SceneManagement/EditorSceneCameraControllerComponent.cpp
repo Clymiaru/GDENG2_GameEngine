@@ -25,7 +25,7 @@ namespace Engine
 		const auto mouseButton = Input::Mouse().Button;
 		const auto mouseState  = Input::Mouse().State;
 
-		const float deltaTime = (float)Application::DeltaTime();
+		//const float deltaTime = (float)Application::DeltaTime();
 
 		const auto currentPosition = m_EntityRef.Transform().Position;
 		const auto currentRotation = m_EntityRef.Transform().Rotation;
@@ -85,8 +85,8 @@ namespace Engine
 
 		newPosition += ProcessZooming();
 
-		m_EntityRef.Transform().Position += newPosition * deltaTime;
-		m_EntityRef.Transform().Rotation += newRotation * deltaTime;
+		//m_EntityRef.Transform().Position += newPosition * deltaTime;
+		//m_EntityRef.Transform().Rotation += newRotation * deltaTime;
 	}
 
 	void EditorSceneCameraControllerComponent::

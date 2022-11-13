@@ -2,24 +2,26 @@
 
 #include "EditorLayer.h"
 
-
 int main()
 {
 	using namespace Engine;
 
-	// TODO: Window Resizing
-	
-	Application::SetLayers({new Editor::EditorLayer()});
-	
-	Application::Start(Application::Profile(
+	const Application::Specification appSpecs = Application::Specification{
 		"Editor",
 		1280,
-		720
-	));
-	
-	Application::Run();
-	
-	Application::End();
+		720,
+		List<Layer*>
+		{
+			new Editor::EditorLayer()
+			// ,new Editor::EditorUILayer()
+		}
+	};
+
+	Application* app = new Application(appSpecs);
+
+	app->Run();
+
+	delete app;
 
 	return 0;
 }
