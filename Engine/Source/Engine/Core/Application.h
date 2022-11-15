@@ -4,11 +4,16 @@
 #include "Core.h"
 #include "Window.h"
 
+// Application should manage lifetimes of the following systems
+// Window
+// Renderer
+
 namespace Engine
 {
+	class Window;
+
 	class Input;
 	class Renderer;
-	class Window;
 	class Layer;
 	class LayerHandler;
 
@@ -66,9 +71,17 @@ namespace Engine
 
 		Profile m_Profile;
 
+		// Systems
+
+		// ResourceHandler
+
 		Window* m_Window;
 
 		Timer* m_Timer;
+
+		// Input
+
+		// Renderer
 
 		LayerHandler* m_LayerHandler;
 

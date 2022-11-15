@@ -20,13 +20,15 @@ namespace Engine
 		m_Timer{nullptr},
 		m_LayerHandler{nullptr}
 	{
-		if (s_Instance == nullptr)
-		{
-			s_Instance = this;
-		}
+		Debug::Assert(s_Instance == nullptr,
+		              "There can only be 1 Application instantiated at any time!");
+		s_Instance = this;
 	}
 
-	Application::~Application() { }
+	Application::~Application()
+	{
+		delete s_Instance; // Wouldn't this loop?
+	}
 
 	Application::Profile Application::GetInfo()
 	{
@@ -54,7 +56,8 @@ namespace Engine
 		s_Instance->m_Window->SetEventCallback(Event::Type::WindowClose,
 		                                       [this](Event* event) -> bool
 		                                       {
-			                                       return Application::Quit(event);
+			                                       s_Instance->m_Profile.IsRunning = false;
+			                                       return true;
 		                                       });
 
 		s_Instance->m_Window->SetEventCallback(Event::Type::WindowResize,
@@ -120,13 +123,13 @@ namespace Engine
 
 		ShaderLibrary::Terminate();
 
+		UISystem::End();
+
 		Renderer::End();
 
 		Input::End();
 
 		delete m_Window;
-
-		UISystem::End();
 	}
 
 	void Application::Update() const
