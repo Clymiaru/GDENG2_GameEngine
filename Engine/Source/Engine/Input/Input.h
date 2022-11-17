@@ -2,36 +2,40 @@
 #include "KeyboardInput.h"
 #include "MouseInput.h"
 
-#include "Engine/Event/Event.h"
+#include "Engine/Event/AEvent.h"
 
 namespace Engine
 {
-	constexpr unsigned char KEY_STATE_FLAG =  0x80;
+	constexpr unsigned char KEY_STATE_FLAG  = 0x80;
 	constexpr unsigned char KEY_TOGGLE_FLAG = 0x00;
-	
+
 	class Input final
 	{
 	public:
-		static void Start();
+		Input();
+		~Input();
 
-		static void End();
-		
-		static void PollInputEvents();
+		void PollInputEvents();
 
 		static MouseInput Mouse();
 
 		static KeyboardInput Keyboard();
 
+		Input(const Input&)                = delete;
+		Input& operator=(const Input&)     = delete;
+		Input(Input&&) noexcept            = delete;
+		Input& operator=(Input&&) noexcept = delete;
+
 	private:
-		static void UpdateMouseInput();
-		
-		static unsigned char s_CurrentKeyState[256];
-		static unsigned char s_PrevKeyState[256];
+		static Input* s_Instance;
 
-		static Vector2Int s_CurrentMousePosition;
-		static Vector2Int s_PrevMousePosition;
+		unsigned char m_CurrentKeyState[256]{};
+		unsigned char m_PrevKeyState[256]{};
 
-		static KeyboardInput s_KeyInput;
-		static MouseInput s_MouseInput;
+		Vector2Int m_CurrentMousePosition;
+		Vector2Int m_PrevMousePosition;
+
+		KeyboardInput m_KeyInput;
+		MouseInput m_MouseInput;
 	};
 }

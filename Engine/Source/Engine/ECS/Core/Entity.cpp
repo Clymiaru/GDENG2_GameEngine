@@ -5,22 +5,19 @@
 
 namespace Engine
 {
-	Entity::Entity(const StringView name) :
-		Name{name.data()},
-		m_ComponentTable{HashMap<String, AComponent*>()},
-		m_Transform{nullptr}
+	Entity::Entity(const EntityID id) :
+		Active{true},
+		m_ID{id} { }
+
+	Entity::~Entity() = default;
+	
+	EntityID Entity::GetID() const
 	{
-		m_Transform = new TransformComponent(*this);
+		return m_ID;
 	}
 
-	Entity::~Entity()
-	{
-		m_ComponentTable.clear();
-		delete m_Transform;
-	}
-
-	TransformComponent& Entity::Transform() const
-	{
-		return *m_Transform;
-	}
+	Entity::Entity(const Entity& other) {}
+	Entity& Entity::operator=(const Entity& other) {}
+	Entity::Entity(Entity&& other) noexcept {}
+	Entity& Entity::operator=(Entity&& other) noexcept {}
 }

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SwapChain.h"
 
-#include "DeviceContext.h"
+#include "RenderContext.h"
 
 #include "Engine/Core/Debug.h"
 
@@ -9,7 +9,7 @@
 
 #include "Engine/Math/Math.h"
 
-#include "Framebuffer.h"
+#include "Engine/Graphics/Buffer/Framebuffer.h"
 
 namespace Engine
 {
@@ -97,7 +97,7 @@ namespace Engine
 		return *m_MainFramebuffer;
 	}
 
-	void SwapChain::Resize(unsigned width, unsigned height, DeviceContext& deviceContext, ID3D11Device* device)
+	void SwapChain::Resize(unsigned width, unsigned height, RenderContext& deviceContext, ID3D11Device* device)
 	{
 		if (deviceContext.m_DeviceContext == nullptr || device == nullptr)
 			return;
@@ -135,40 +135,4 @@ namespace Engine
 		vp.TopLeftY = 0;
 		deviceContext.m_DeviceContext->RSSetViewports(1, &vp);
 	}
-
-	// void SwapChain::ResizeBuffers(Vector2Uint& size,
-	//                               DeviceContext& deviceContext,
-	//                               ID3D11Device* device)
-	// {
-	// 	if (deviceContext.m_DeviceContext == nullptr || device == nullptr)
-	// 		return;
-	//
-	// 	deviceContext.m_DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
-	//
-	// 	m_BackbufferRenderTarget->Release();
-	//
-	// 	HRESULT result = m_SwapChain->ResizeBuffers(1, size.x, size.y, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
-	//
-	// 	ID3D11Texture2D* buffer;
-	// 	result = m_SwapChain->GetBuffer(0, __uuidof( ID3D11Texture2D),
-	// 	                                (void**)&buffer);
-	// 	// Perform error handling here!
-	//
-	// 	result = device->CreateRenderTargetView(buffer, nullptr,
-	// 	                                        &m_BackbufferRenderTarget);
-	// 	// Perform error handling here!
-	// 	buffer->Release();
-	//
-	// 	deviceContext.m_DeviceContext->OMSetRenderTargets(1, &m_BackbufferRenderTarget, m_DepthStencil);
-	//
-	// 	// Set up the viewport.
-	// 	D3D11_VIEWPORT vp;
-	// 	vp.Width    = size.x;
-	// 	vp.Height   = size.y;
-	// 	vp.MinDepth = 0.0f;
-	// 	vp.MaxDepth = 1.0f;
-	// 	vp.TopLeftX = 0;
-	// 	vp.TopLeftY = 0;
-	// 	deviceContext.m_DeviceContext->RSSetViewports(1, &vp);
-	// }
 }

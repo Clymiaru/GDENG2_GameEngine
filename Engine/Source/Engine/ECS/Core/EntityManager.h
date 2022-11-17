@@ -1,17 +1,20 @@
 ﻿#pragma once
-#include "Entity.h"
-#include <queue>
+#include "EntityRegistry.h"
 
 namespace Engine
 {
-	class EntityManager final
+	class EntityManager
 	{
 	public:
-		Entity* CreateEntity();
+		EntityManager();
+		~EntityManager();
 
-		List<Entity*>& GetAllEntities();
+		EntityRegistry& GetEntityRegistry();
+		
 	private:
-		List<Entity*> m_EntityList;
-		// std::queue<EntityID> m_ReservedEntityID;
+		static EntityManager* s_Instance;
+		
+		EntityRegistry m_EntityRegistry;
 	};
+
 }

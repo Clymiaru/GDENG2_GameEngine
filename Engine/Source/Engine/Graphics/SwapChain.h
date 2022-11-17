@@ -5,7 +5,7 @@ namespace Engine
 {
 	class Framebuffer;
 
-	class DeviceContext;
+	class RenderContext;
 
 	class Window;
 
@@ -27,7 +27,7 @@ namespace Engine
 		Framebuffer& GetBackbuffer() const;
 
 		void Resize(unsigned int width, unsigned int height,
-		            DeviceContext& deviceContext, ID3D11Device* device);
+		            RenderContext& deviceContext, ID3D11Device* device);
 
 		SwapChain(const SwapChain&) = delete;
 

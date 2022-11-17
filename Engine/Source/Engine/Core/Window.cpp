@@ -126,6 +126,7 @@ namespace Engine
 			DispatchMessage(&m_Message);
 		}
 	}
+	
 	void Window::ProcessEvents()
 	{
 		while (!m_EventQueue.empty())
@@ -138,11 +139,11 @@ namespace Engine
 				continue;
 			}
 
-			for (auto f : m_EventListenerMap[currentEvent->GetType()])
+			for (auto callback : m_EventListenerMap[currentEvent->GetType()])
 			{
 				if (!currentEvent->IsHandled)
 				{
-					currentEvent->IsHandled |= f(currentEvent);
+					currentEvent->IsHandled |= callback(currentEvent);
 				}
 			}
 
@@ -150,17 +151,7 @@ namespace Engine
 			delete currentEvent;
 		}
 	}
-	void Window::SetEventCallback(const Event::Type eventType,
-	                              std::function<bool(Event*)> callback)
-	{
-		if (!m_EventListenerMap.contains(eventType))
-		{
-			m_EventListenerMap[eventType] = List<std::function<bool(Event*)>>();
-		}
-
-		// TODO: Check for if this callback in stored already?
-		m_EventListenerMap[eventType].push_back(callback);
-	}
+	
 
 	HWND& Window::GetHandle()
 	{

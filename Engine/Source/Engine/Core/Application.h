@@ -3,36 +3,36 @@
 
 #include "Core.h"
 #include "Window.h"
-
-// Application should manage lifetimes of the following systems
-// Window
-// Renderer
+#include "LayerSystem.h"
 
 namespace Engine
 {
 	class Window;
-
 	class Input;
+	class ResourceSystem;
+
 	class Renderer;
 	class Layer;
-	class LayerHandler;
+	class LayerSystem;
+
+	// class EntityManager;
 
 	class Application final
 	{
 	public:
 		struct Specification
 		{
-			String Name         = "Untitled";
+			String Name                      = "Untitled";
 			unsigned int InitialWindowWidth  = 0;
 			unsigned int InitialWindowHeight = 0;
-			List<Layer*> InitialLayers = List<Layer*>();
+			List<Layer*> InitialLayers       = List<Layer*>();
 		};
 
 		struct Profile
 		{
-			bool IsRunning = false;
+			bool IsRunning       = false;
 			String AssetDataPath = "Assets/";
-			TimeData Time = TimeData();
+			TimeData Time        = TimeData();
 		};
 
 		explicit Application(const Specification& specs);
@@ -43,7 +43,7 @@ namespace Engine
 
 		static Window::Profile GetWindowInfo();
 
-		bool Quit(Event* event);
+		static Renderer& GetRenderer();
 
 		void Run();
 
@@ -67,23 +67,35 @@ namespace Engine
 		void Render() const;
 		//--------------------------------//
 
+		//--------------------------------//
+		// WINDOW EVENTS                  //
+		//--------------------------------//
+		bool OnWindowClose(AEvent* e);
+		bool OnWindowResize(AEvent* e);
+		bool OnWindowFocus(AEvent* e);
+		bool OnWindowUnfocus(AEvent* e);
+
 		Specification m_Specs;
 
 		Profile m_Profile;
 
 		// Systems
 
-		// ResourceHandler
-
 		Window* m_Window;
+
+		SwapChain* m_SwapChain;
 
 		Timer* m_Timer;
 
-		// Input
+		Input* m_Input;
 
-		// Renderer
+		ResourceSystem* m_ResourceSystem;
 
-		LayerHandler* m_LayerHandler;
+		Renderer* m_Renderer;
+
+		LayerSystem* m_LayerSystem;
+
+		// EntityManager* m_EntityManager;
 
 		static Application* s_Instance;
 	};

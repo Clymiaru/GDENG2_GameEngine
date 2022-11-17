@@ -3,6 +3,7 @@
 
 namespace Engine::Primitive
 {
+	//TODO: Add UV coordinatates and normals
 	struct Vertex
 	{
 		Vector3Float Position;

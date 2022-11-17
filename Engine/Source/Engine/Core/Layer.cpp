@@ -6,8 +6,7 @@
 namespace Engine
 {
 	Layer::Layer(const String& name) :
-		m_Name{name},
-		m_Framebuffer{nullptr}
+		m_Name{name}
 	{
 		
 	}

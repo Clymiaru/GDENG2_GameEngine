@@ -1,13 +1,11 @@
 ﻿#include "pch.h"
 #include "Application.h"
-
-#include "LayerHandler.h"
 #include "Window.h"
 
 #include "Engine/Graphics/Renderer.h"
-#include "Engine/Resource/ShaderLibrary.h"
-#include "Engine/UI/UISystem.h"
+#include "Engine/Graphics/SwapChain.h"
 #include "Engine/Input/Input.h"
+#include "Engine/ResourceManagement/Core/ResourceSystem.h"
 
 namespace Engine
 {
@@ -17,18 +15,19 @@ namespace Engine
 		m_Specs{specs},
 		m_Profile{},
 		m_Window{nullptr},
+		m_SwapChain{nullptr},
 		m_Timer{nullptr},
-		m_LayerHandler{nullptr}
+		m_Input{nullptr},
+		m_ResourceSystem{nullptr},
+		m_Renderer{nullptr},
+		m_LayerSystem{nullptr}
 	{
 		Debug::Assert(s_Instance == nullptr,
 		              "There can only be 1 Application instantiated at any time!");
 		s_Instance = this;
 	}
 
-	Application::~Application()
-	{
-		delete s_Instance; // Wouldn't this loop?
-	}
+	Application::~Application() = default;
 
 	Application::Profile Application::GetInfo()
 	{
@@ -40,10 +39,9 @@ namespace Engine
 		return s_Instance->m_Window->GetInfo();
 	}
 
-	bool Application::Quit(Event* event)
+	Renderer& Application::GetRenderer()
 	{
-		s_Instance->m_Profile.IsRunning = false;
-		return true;
+		return *s_Instance->m_Renderer;
 	}
 
 	void Application::Start()
@@ -51,112 +49,126 @@ namespace Engine
 		const Window::Specification windowSpecs = Window::Specification{m_Specs.Name,
 		                                                                m_Specs.InitialWindowWidth,
 		                                                                m_Specs.InitialWindowHeight};
-		s_Instance->m_Window = new Window(windowSpecs);
+		m_Window = new Window(windowSpecs);
 
-		s_Instance->m_Window->SetEventCallback(Event::Type::WindowClose,
-		                                       [this](Event* event) -> bool
-		                                       {
-			                                       s_Instance->m_Profile.IsRunning = false;
-			                                       return true;
-		                                       });
+		m_Window->SetEventCallback<WindowCloseEvent>([this](AEvent* event) -> bool
+		{
+			return OnWindowClose(event);
+		});
 
-		s_Instance->m_Window->SetEventCallback(Event::Type::WindowResize,
-		                                       [this](Event* event) -> bool
-		                                       {
-			                                       const auto* e = (WindowResizeEvent*)event;
-			                                       Renderer::Resize(Vector2Uint(e->Width, e->Height));
-			                                       return true;
-		                                       });
+		m_Window->SetEventCallback<WindowResizeEvent>([this](AEvent* event) -> bool
+		{
+			return OnWindowResize(event);
+		});
 
-		s_Instance->m_Timer = new Timer();
+		m_Window->SetEventCallback<WindowFocusEvent>([this](AEvent* event) -> bool
+		{
+			return OnWindowFocus(event);
+		});
 
-		s_Instance->m_LayerHandler = new LayerHandler();
+		m_Window->SetEventCallback<WindowUnfocusEvent>([this](AEvent* event) -> bool
+		{
+			return OnWindowUnfocus(event);
+		});
 
-		// EventSystem::Init();
+		m_Timer = new Timer();
 
-		Renderer::Start(*m_Window);
+		m_Input = new Input();
 
-		UISystem::Start(*m_Window,
-		                &Renderer::GetDevice(),
-		                &Renderer::GetDeviceContext().GetContext());
+		m_ResourceSystem = new ResourceSystem();
 
-		// ResourceLibrary::Init();
-		ShaderLibrary::Initialize(4);
+		m_Renderer = new Renderer();
 
-		Input::Start();
+		m_SwapChain = m_Renderer->GetDevice().CreateSwapChain(*m_Window);
+
+		m_LayerSystem = new LayerSystem(m_Specs.InitialLayers.size());
 
 		for (size_t i = 0; i < m_Specs.InitialLayers.size(); i++)
 		{
-			s_Instance->m_LayerHandler->Add(m_Specs.InitialLayers[i]);
+			m_LayerSystem->Add(m_Specs.InitialLayers[i]);
 		}
 
-		s_Instance->m_LayerHandler->StartLayers();
+		// UISystem::Start(*m_Window,
+		//                 &Renderer::GetDevice(),
+		//                 &Renderer::GetDeviceContext().GetContext());
 
-		s_Instance->m_Profile.IsRunning = true;
+		m_LayerSystem->StartLayers();
+
+		m_Profile.IsRunning = true;
 	}
 
 	void Application::Run()
 	{
-		s_Instance->Start();
+		Start();
 
-		while (s_Instance->m_Profile.IsRunning)
+		while (m_Profile.IsRunning)
 		{
-			s_Instance->m_Timer->Start();
+			m_Timer->Start();
 
-			s_Instance->PollEvents();
-			s_Instance->Update();
-			s_Instance->Render();
+			PollEvents();
+			Update();
+			Render();
 
-			s_Instance->m_Timer->Stop();
+			m_Timer->Stop();
 
 			Sleep(1);
 		}
 
-		s_Instance->End();
+		End();
 	}
+	
+
 
 	void Application::End()
 	{
-		s_Instance->m_LayerHandler->EndLayers();
+		m_LayerSystem->EndLayers();
+		delete m_LayerSystem;
 
-		delete m_LayerHandler;
+		// delete m_EntityManager;
 
-		ShaderLibrary::Terminate();
+		//ShaderLibrary::Terminate();
 
-		UISystem::End();
+		// UISystem::End();
 
-		Renderer::End();
-
-		Input::End();
-
+		delete m_SwapChain;
+		delete m_Renderer;
+		delete m_ResourceSystem;
+		delete m_Input;
+		delete m_Timer;
 		delete m_Window;
+		delete s_Instance;
 	}
 
 	void Application::Update() const
 	{
-		s_Instance->m_Window->ProcessEvents();
-		s_Instance->m_LayerHandler->Update();
+		m_Window->ProcessEvents();
+		// s_Instance->m_LayerHandler->Update();
 	}
 
 	void Application::PollEvents() const
 	{
-		s_Instance->m_Window->PollEvents();
-		Input::PollInputEvents();
+		m_Window->PollEvents();
+		// Input::PollInputEvents();
 	}
 
 	void Application::Render() const
 	{
-		Renderer::ClearFramebuffer(Renderer::GetSwapChain().GetBackbuffer());
+		m_Renderer->StartRender(s_Instance->m_SwapChain->GetBackbuffer());
 
-		// Each layer has the responsibility to retarget the render target to
-		// swap chain if framebuffer will not be utilized for now.
-		m_LayerHandler->Render();
+		m_LayerSystem->Render();
 
-		Renderer::SetRenderTargetTo(&Renderer::GetSwapChain().GetBackbuffer().GetRenderTarget(),
-		                            &Renderer::GetSwapChain().GetBackbuffer().GetDepthStencil());
-
-		m_LayerHandler->ImGuiRender();
-
-		Renderer::ShowFrame();
+		m_SwapChain->Present(1);
 	}
+
+	bool Application::OnWindowClose(AEvent* e)
+	{
+		m_Profile.IsRunning = false;
+		return true;
+	}
+
+	bool Application::OnWindowResize(AEvent* e) { return true; }
+
+	bool Application::OnWindowFocus(AEvent* e) { return true; }
+
+	bool Application::OnWindowUnfocus(AEvent* e) { return true; }
 }

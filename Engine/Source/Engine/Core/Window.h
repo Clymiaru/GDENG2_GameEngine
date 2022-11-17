@@ -4,7 +4,8 @@
 
 #include "Core.h"
 
-#include "Engine/Event/Event.h"
+#include "Engine/Event/AEvent.h"
+#include <functional>
 
 LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
                                   UINT message,
@@ -12,6 +13,8 @@ LRESULT CALLBACK WindowsProcedure(HWND windowHandle,
                                   LPARAM lParam);
 namespace Engine
 {
+	class SwapChain;
+
 	class Window final
 	{
 	public:
@@ -37,8 +40,8 @@ namespace Engine
 
 		void ProcessEvents();
 
-		void SetEventCallback(Event::Type eventType,
-		                      std::function<bool(Event*)> callback);
+		template <typename EventType>
+		void SetEventCallback(std::function<bool(AEvent*)> callback);
 
 		[[nodiscard]]
 		HWND& GetHandle();
@@ -73,13 +76,26 @@ namespace Engine
 
 		MSG m_Message;
 
-		std::queue<Event*> m_EventQueue;
+		std::queue<AEvent*> m_EventQueue;
 
-		HashMap<Event::Type, List<std::function<bool(Event*)>>> m_EventListenerMap;
+		HashMap<AEvent::Type, List<std::function<bool(AEvent*)>>> m_EventListenerMap;
 
+		
 		friend LRESULT CALLBACK ::WindowsProcedure(HWND windowHandle,
 		                                           UINT message,
 		                                           WPARAM wParam,
 		                                           LPARAM lParam);
 	};
+	
+	template <typename EventType>
+	void Window::SetEventCallback(std::function<bool(AEvent*)> callback)
+	{
+		if (!m_EventListenerMap.contains(EventType::GetStaticType()))
+		{
+			m_EventListenerMap[EventType::GetStaticType()] = List<std::function<bool(AEvent*)>>();
+		}
+
+		// TODO: Check for if this callback in stored already?
+		m_EventListenerMap[EventType::GetStaticType()].push_back(callback);
+	}
 }

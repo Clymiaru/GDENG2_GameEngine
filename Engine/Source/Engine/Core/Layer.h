@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Engine/Core/Core.h"
-#include "Engine/Graphics/Framebuffer.h"
 
 namespace Engine
 {
@@ -23,8 +22,6 @@ namespace Engine
 
 		virtual void OnRender() = 0;
 
-		virtual void OnImGuiRender() = 0;
-		
 		// Executes when this layer is destroyed
 		virtual void OnDetach() = 0;
 
@@ -32,12 +29,6 @@ namespace Engine
 		const String& GetName() const
 		{
 			return m_Name;
-		}
-
-		[[nodiscard]]
-		Framebuffer* GetFramebuffer() const
-		{
-			return m_Framebuffer.get();
 		}
 
 		Layer(const Layer&) = delete;
@@ -50,8 +41,5 @@ namespace Engine
 
 	private:
 		String m_Name;
-
-	protected:
-		UniquePtr<Framebuffer> m_Framebuffer;
 	};
 }

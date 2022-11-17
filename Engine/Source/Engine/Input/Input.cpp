@@ -8,28 +8,20 @@
 
 namespace Engine
 {
-	struct KeyEvent;
+	Input* Input::s_Instance = nullptr;
 
-	unsigned char Input::s_CurrentKeyState[256] = {};
-
-	unsigned char Input::s_PrevKeyState[256] = {};
-
-	Vector2Int Input::s_CurrentMousePosition = Vector2Int();
-
-	Vector2Int Input::s_PrevMousePosition = Vector2Int();
-
-	KeyboardInput Input::s_KeyInput = {KeyCode::None, KeyState::None, 0};
-
-	MouseInput Input::s_MouseInput = {Vector2Int(), Vector2Int(), MouseButton::None, MouseState::None};
-
-	void Input::Start()
+	Input::Input() :
+		m_CurrentMousePosition{Vector2Int()},
+		m_PrevMousePosition{Vector2Int()}
 	{
-		s_PrevMousePosition    = Vector2Int();
-		s_CurrentMousePosition = Vector2Int();
+		Debug::Assert(s_Instance == nullptr,
+		              "There can only be 1 Input instantiated at any time!");
+		s_Instance = this;
 	}
 
-	void Input::End()
+	Input::~Input()
 	{
+		s_Instance = nullptr;
 	}
 
 	KeyCode TranslateVirtualKeyCodeToKeyCode(unsigned char vkCode)
@@ -43,35 +35,30 @@ namespace Engine
 		return KeyCode::None;
 	}
 
-	void Input::UpdateMouseInput()
-	{
-		
-	}
-
 	void Input::PollInputEvents()
 	{
 		POINT currentMousePosition = {};
 		GetCursorPos(&currentMousePosition);
-		s_CurrentMousePosition = Vector2Int(currentMousePosition.x,
-											currentMousePosition.y);
+		m_CurrentMousePosition = Vector2Int(currentMousePosition.x,
+		                                    currentMousePosition.y);
 
-		s_MouseInput.MousePosition = s_CurrentMousePosition;
+		m_MouseInput.MousePosition = m_CurrentMousePosition;
 
-		if (s_CurrentMousePosition.x != s_PrevMousePosition.x ||
-			s_CurrentMousePosition.y != s_PrevMousePosition.y)
+		if (m_CurrentMousePosition.x != m_PrevMousePosition.x ||
+		    m_CurrentMousePosition.y != m_PrevMousePosition.y)
 		{
-			s_MouseInput.DeltaMousePosition = s_CurrentMousePosition - s_PrevMousePosition;
+			m_MouseInput.DeltaMousePosition = m_CurrentMousePosition - m_PrevMousePosition;
 		}
 		else
 		{
-			s_MouseInput.DeltaMousePosition = Vector2Int();
+			m_MouseInput.DeltaMousePosition = Vector2Int();
 		}
 
-		if (GetKeyboardState(s_CurrentKeyState))
+		if (GetKeyboardState(m_CurrentKeyState))
 		{
 			for (auto i = 0U; i < 256U; i++)
 			{
-				if (s_CurrentKeyState[i] & KEY_STATE_FLAG) // If this key state is toggled
+				if (m_CurrentKeyState[i] & KEY_STATE_FLAG) // If this key state is toggled
 				{
 					// If not previously toggled
 					// Update Keyboard and Mouse Input
@@ -79,23 +66,23 @@ namespace Engine
 					// Button and Key must be down
 					if (i == VK_LBUTTON)
 					{
-						s_MouseInput.Button = MouseButton::LeftButton;
-						s_MouseInput.State  = MouseState::ButtonPressed;
+						m_MouseInput.Button = MouseButton::LeftButton;
+						m_MouseInput.State  = MouseState::ButtonPressed;
 					}
 					else if (i == VK_RBUTTON)
 					{
-						s_MouseInput.Button = MouseButton::RightButton;
-						s_MouseInput.State  = MouseState::ButtonPressed;
+						m_MouseInput.Button = MouseButton::RightButton;
+						m_MouseInput.State  = MouseState::ButtonPressed;
 					}
 					else if (i == VK_MBUTTON)
 					{
-						s_MouseInput.Button = MouseButton::MiddleButton;
-						s_MouseInput.State  = MouseState::ButtonPressed;
+						m_MouseInput.Button = MouseButton::MiddleButton;
+						m_MouseInput.State  = MouseState::ButtonPressed;
 					}
 					else
 					{
-						s_KeyInput.KeyCode  = TranslateVirtualKeyCodeToKeyCode(i);
-						s_KeyInput.KeyState = KeyState::KeyDown;
+						m_KeyInput.KeyCode  = TranslateVirtualKeyCodeToKeyCode(i);
+						m_KeyInput.KeyState = KeyState::KeyDown;
 					}
 				}
 				else
@@ -103,51 +90,51 @@ namespace Engine
 					// If this key state is untoggled
 
 					// If this key state was previously toggled
-					if (s_CurrentKeyState[i] != s_PrevKeyState[i])
+					if (m_CurrentKeyState[i] != m_PrevKeyState[i])
 					{
 						// Button and Key must be up
 						if (i == VK_LBUTTON)
 						{
-							s_MouseInput.Button = MouseButton::LeftButton;
-							s_MouseInput.State  = MouseState::ButtonReleased;
+							m_MouseInput.Button = MouseButton::LeftButton;
+							m_MouseInput.State  = MouseState::ButtonReleased;
 						}
 						else if (i == VK_RBUTTON)
 						{
-							s_MouseInput.Button = MouseButton::RightButton;
-							s_MouseInput.State  = MouseState::ButtonReleased;
+							m_MouseInput.Button = MouseButton::RightButton;
+							m_MouseInput.State  = MouseState::ButtonReleased;
 						}
 						else if (i == VK_MBUTTON)
 						{
-							s_MouseInput.Button = MouseButton::MiddleButton;
-							s_MouseInput.State  = MouseState::ButtonReleased;
+							m_MouseInput.Button = MouseButton::MiddleButton;
+							m_MouseInput.State  = MouseState::ButtonReleased;
 						}
 						else
 						{
-							s_KeyInput.KeyCode  = TranslateVirtualKeyCodeToKeyCode(i);
-							s_KeyInput.KeyState = KeyState::KeyUp;
+							m_KeyInput.KeyCode  = TranslateVirtualKeyCodeToKeyCode(i);
+							m_KeyInput.KeyState = KeyState::KeyUp;
 						}
 					}
 				}
 			}
-			memcpy(s_PrevKeyState, s_CurrentKeyState, sizeof(unsigned char) * 256);
+			memcpy(m_PrevKeyState, m_CurrentKeyState, sizeof(unsigned char) * 256);
 		}
 		else
 		{
-			s_KeyInput.KeyState = KeyState::None;
-			s_MouseInput.Button = MouseButton::None;
-			s_MouseInput.State  = MouseState::None;
+			m_KeyInput.KeyState = KeyState::None;
+			m_MouseInput.Button = MouseButton::None;
+			m_MouseInput.State  = MouseState::None;
 		}
 
-		s_PrevMousePosition = s_CurrentMousePosition;
+		m_PrevMousePosition = m_CurrentMousePosition;
 	}
 
 	MouseInput Input::Mouse()
 	{
-		return s_MouseInput;
+		return s_Instance->m_MouseInput;
 	}
 
 	KeyboardInput Input::Keyboard()
 	{
-		return s_KeyInput;
+		return s_Instance->m_KeyInput;
 	}
 }

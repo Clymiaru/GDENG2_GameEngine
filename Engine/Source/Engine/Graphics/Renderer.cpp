@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Renderer.h"
 
-#include "Framebuffer.h"
+#include "Buffer/Framebuffer.h"
 
 #include "Engine/Core/Debug.h"
 #include "Engine/Core/Window.h"
@@ -10,20 +10,6 @@
 
 namespace Engine
 {
-	UniquePtr<SwapChain> Renderer::s_SwapChain = nullptr;
-
-	UniquePtr<DeviceContext> Renderer::s_DeviceContext = nullptr;
-
-	IDXGIDevice* Renderer::s_DxgiDevice = nullptr;
-
-	IDXGIAdapter* Renderer::s_DxgiAdapter = nullptr;
-
-	IDXGIFactory* Renderer::s_DxgiFactory = nullptr;
-
-	D3D_FEATURE_LEVEL Renderer::s_FeatureLevel;
-
-	ID3D11Device* Renderer::s_Device = nullptr;
-
 	const std::vector<D3D_DRIVER_TYPE> DRIVER_TYPES_SUPPORTED
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -36,11 +22,12 @@ namespace Engine
 		D3D_FEATURE_LEVEL_11_0
 	};
 
-	void Renderer::Start(Window& window)
+	Renderer::Renderer()
 	{
 		HRESULT result = 0;
 
 		ID3D11DeviceContext* deviceContext = nullptr;
+		ID3D11Device* device = nullptr;
 
 		for (const auto& driverType : DRIVER_TYPES_SUPPORTED)
 		{
@@ -51,8 +38,8 @@ namespace Engine
 			                           FEATURE_LEVELS_SUPPORTED.data(),
 			                           static_cast<UINT>(FEATURE_LEVELS_SUPPORTED.size()),
 			                           D3D11_SDK_VERSION,
-			                           &s_Device,
-			                           &s_FeatureLevel,
+			                           &device,
+			                           &m_FeatureLevel,
 			                           &deviceContext);
 			if (SUCCEEDED(result))
 				break;
@@ -60,55 +47,43 @@ namespace Engine
 
 		Debug::Assert(SUCCEEDED(result), "Failed to create device!");
 
-		s_DeviceContext = CreateUniquePtr<DeviceContext>(deviceContext);
+		m_Context = new RenderContext(deviceContext);
 
-		s_Device->QueryInterface(__uuidof(IDXGIDevice),
-		                         reinterpret_cast<void**>(&s_DxgiDevice));
-
-		s_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
-		                        reinterpret_cast<void**>(&s_DxgiAdapter));
-
-		s_DxgiAdapter->GetParent(__uuidof(IDXGIFactory),
-		                         reinterpret_cast<void**>(&s_DxgiFactory));
-
-		s_SwapChain = CreateUniquePtr<SwapChain>(window, s_Device, s_DxgiFactory);
-
-		const Vector2Int winSize = Vector2Int((int32_t)window.GetInfo().Width,
-		                                      (int32_t)window.GetInfo().Height);
-
-		s_DeviceContext->SetViewportSize(winSize);
+		m_Device = new RenderDevice(device);
 	}
 
-	void Renderer::End()
+	Renderer::~Renderer()
 	{
-		s_SwapChain->Release();
-		s_DxgiAdapter->Release();
-		s_DxgiDevice->Release();
-		s_DxgiFactory->Release();
-		s_DeviceContext->Release();
-		s_Device->Release();
+		delete m_Context;
+		delete m_Device;
 	}
 
 	void Renderer::StartRender(const Framebuffer& framebuffer)
 	{
-		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
-		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
+		SetViewportSize(Vector2Uint(framebuffer.GetInfo().Width,
+		                            framebuffer.GetInfo().Height));
 
-		s_DeviceContext->SetRenderTargetTo(&renderTarget,
-		                                   &depthStencil);
+		SetFramebuffer(framebuffer);
 
-		s_DeviceContext->SetViewportSize(Vector2Int(framebuffer.GetInfo().Width,
-		                                            framebuffer.GetInfo().Height));
-
-		s_DeviceContext->ClearRenderTargetView(renderTarget,
-		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
-
-		s_DeviceContext->ClearDepthStencilView(depthStencil);
+		ClearFramebuffer(framebuffer);
 	}
 
-	void Renderer::EndRender(const Framebuffer& framebuffer)
+	void Renderer::EndRender()
 	{
 		// Unbound render target?
+		m_Context->SetRenderTargetTo(nullptr, nullptr);
+	}
+
+	void Renderer::SetViewportSize(const Vector2Uint& viewportSize) const
+	{
+		m_Context->SetViewportSize(viewportSize);
+	}
+
+	void Renderer::SetFramebuffer(const Framebuffer& framebuffer)
+	{
+		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
+		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
+		m_Context->SetRenderTargetTo(&renderTarget, &depthStencil);
 	}
 
 	void Renderer::ClearFramebuffer(const Framebuffer& framebuffer)
@@ -116,118 +91,25 @@ namespace Engine
 		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
 		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
 
-		s_DeviceContext->ClearRenderTargetView(renderTarget,
+		m_Context->ClearRenderTargetView(renderTarget,
 		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
 
-		s_DeviceContext->ClearDepthStencilView(depthStencil);
+		m_Context->ClearDepthStencilView(depthStencil);
 	}
 
-	void Renderer::SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
-	                                 ID3D11DepthStencilView* depthStencil)
+	RenderDevice& Renderer::GetDevice() const
 	{
-		s_DeviceContext->SetRenderTargetTo(renderTarget,
-		                                   depthStencil);
+		return *m_Device;
 	}
-
-	HRESULT Renderer::CreateBuffer(const D3D11_BUFFER_DESC* desc,
-	                               const D3D11_SUBRESOURCE_DATA* resource,
-	                               ID3D11Buffer** buffer)
+	
+	RenderContext& Renderer::GetContext() const
 	{
-		return s_Device->CreateBuffer(desc, resource, buffer);
+		return *m_Context;
 	}
-
-	HRESULT Renderer::CreateLayout(const D3D11_INPUT_ELEMENT_DESC* desc,
-	                               uint32_t elementCount,
-	                               const void* shaderByteCode,
-	                               uint32_t shaderByteCodeSize,
-	                               ID3D11InputLayout** layout)
-	{
-		return s_Device->CreateInputLayout(desc, elementCount, shaderByteCode, shaderByteCodeSize, layout);
-	}
-
-	HRESULT Renderer::CreateVertexShader(const void* shaderByteCode,
-	                                     size_t bytecodeLength,
-	                                     ID3D11VertexShader** vertexShader)
-	{
-		return s_Device->CreateVertexShader(shaderByteCode, bytecodeLength, nullptr, vertexShader);
-	}
-
-	HRESULT Renderer::CreatePixelShader(const void* shaderByteCode,
-	                                    size_t bytecodeLength,
-	                                    ID3D11PixelShader** pixelShader)
-	{
-		return s_Device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
-	}
-
-	void Renderer::Resize(const Vector2Uint& size)
-	{
-		if (s_SwapChain == nullptr)
-			return;
-
-		s_SwapChain->Resize(size.x, size.y, *s_DeviceContext, s_Device);
-	}
-
-	void Renderer::SetViewportSize(const Vector2Int& viewportSize)
-	{
-		s_DeviceContext->SetViewportSize(viewportSize);
-	}
-
-	void Renderer::Draw(const VertexShader& vertexShader,
-	                    const PixelShader& pixelShader,
-	                    const VertexBuffer& vertexBuffer,
-	                    const IndexBuffer& indexBuffer,
-	                    const ConstantBuffer& constantBuffer,
-	                    const void* updatedConstantBuffer,
-	                    D3D11_PRIMITIVE_TOPOLOGY topology)
-	{
-		s_DeviceContext->SetRenderData<VertexShader>(vertexShader);
-		s_DeviceContext->SetRenderData<PixelShader>(pixelShader);
-
-		s_DeviceContext->UploadShaderData<VertexShader>(constantBuffer);
-
-		s_DeviceContext->UploadShaderData<PixelShader>(constantBuffer);
-
-		s_DeviceContext->SetRenderData<VertexBuffer>(vertexBuffer);
-		s_DeviceContext->SetRenderData<IndexBuffer>(indexBuffer);
-
-		// Set drawing process
-		// Device Context sets Draw Topology
-		s_DeviceContext->SetTopology(topology);
-
-		// Actual drawing into the frame buffer
-		s_DeviceContext->DrawIndexed(indexBuffer.ElementCount(),
-		                             0);
-	}
-
-	void Renderer::ShowFrame()
-	{
-		s_SwapChain->Present(0);
-	}
-
+	
 	void Renderer::UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
 	                                    const void* updatedBufferData)
 	{
-		s_DeviceContext->UpdateBufferResource(constantBuffer.m_Data, updatedBufferData);
-	}
-
-	void Renderer::Draw(const VertexShader& vertexShader,
-	                    const PixelShader& pixelShader,
-	                    const VertexBuffer& vertexBuffer,
-	                    const IndexBuffer& indexBuffer,
-	                    const D3D11_PRIMITIVE_TOPOLOGY topology)
-	{
-		s_DeviceContext->SetRenderData<VertexShader>(vertexShader);
-		s_DeviceContext->SetRenderData<PixelShader>(pixelShader);
-
-		s_DeviceContext->SetRenderData<VertexBuffer>(vertexBuffer);
-		s_DeviceContext->SetRenderData<IndexBuffer>(indexBuffer);
-
-		// Set drawing process
-		// Device Context sets Draw Topology
-		s_DeviceContext->SetTopology(topology);
-
-		// Actual drawing into the frame buffer
-		s_DeviceContext->DrawIndexed(indexBuffer.ElementCount(),
-		                             0);
+		m_Context->UpdateBufferResource(constantBuffer.m_Data, updatedBufferData);
 	}
 }

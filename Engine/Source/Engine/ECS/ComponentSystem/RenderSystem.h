@@ -1,18 +1,12 @@
 ﻿#pragma once
-#include "Engine/ECS/Core/ListMapStorage.h"
+#include "Engine/ECS/Core/EntityRegistry.h"
 
 namespace Engine
 {
-	class RenderComponent;
-
 	class RenderSystem
 	{
 	public:
-		void Register(RenderComponent* toRegister);
-		void Deregister(RenderComponent* toRegister);
-		
-	private:
-		ListMapStorage<String, RenderComponent*> m_RenderComponentStorage; 
+		void Render(EntityRegistry& entityRegistry);
 	};
 }
 

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Event.h"
+#include "AEvent.h"
 
 namespace Engine
 {
@@ -16,7 +16,7 @@ namespace Engine
 		// Register(); 
 		// Deregister();
 		private:
-		List<Event> m_EventList;
+		List<AEvent> m_EventList;
 	};
 
 }

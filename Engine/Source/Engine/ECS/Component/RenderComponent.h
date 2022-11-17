@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Engine/Core/Core.h"
+#include "Engine/Math/Math.h"
 #include "Engine/ECS/Core/AComponent.h"
 
 #include "Engine/Graphics/RenderData.h"
