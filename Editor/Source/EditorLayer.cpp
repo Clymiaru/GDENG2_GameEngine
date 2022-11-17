@@ -51,6 +51,7 @@ namespace Editor
 	
 	void EditorLayer::OnRender()
 	{
+		using namespace Engine;
 	}
 
 	void EditorLayer::OnDetach()

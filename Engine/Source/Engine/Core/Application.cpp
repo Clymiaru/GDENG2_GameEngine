@@ -6,6 +6,7 @@
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Input/Input.h"
 #include "Engine/ResourceManagement/Core/ResourceSystem.h"
+#include "Engine/UI/UISystem.h"
 
 namespace Engine
 {
@@ -20,6 +21,7 @@ namespace Engine
 		m_Input{nullptr},
 		m_ResourceSystem{nullptr},
 		m_Renderer{nullptr},
+		m_UISystem{nullptr},
 		m_LayerSystem{nullptr}
 	{
 		Debug::Assert(s_Instance == nullptr,
@@ -81,6 +83,8 @@ namespace Engine
 
 		m_SwapChain = m_Renderer->GetDevice().CreateSwapChain(*m_Window);
 
+		m_UISystem = new UISystem(*m_Window, *m_Renderer);
+		
 		m_LayerSystem = new LayerSystem(m_Specs.InitialLayers.size());
 
 		for (size_t i = 0; i < m_Specs.InitialLayers.size(); i++)
@@ -88,9 +92,7 @@ namespace Engine
 			m_LayerSystem->Add(m_Specs.InitialLayers[i]);
 		}
 
-		// UISystem::Start(*m_Window,
-		//                 &Renderer::GetDevice(),
-		//                 &Renderer::GetDeviceContext().GetContext());
+		
 
 		m_LayerSystem->StartLayers();
 
@@ -114,10 +116,10 @@ namespace Engine
 			Sleep(1);
 		}
 
+		delete m_UISystem;
+
 		End();
 	}
-	
-
 
 	void Application::End()
 	{
@@ -128,14 +130,15 @@ namespace Engine
 
 		//ShaderLibrary::Terminate();
 
-		// UISystem::End();
 
 		delete m_SwapChain;
 		delete m_Renderer;
 		delete m_ResourceSystem;
 		delete m_Input;
 		delete m_Timer;
+
 		delete m_Window;
+
 		delete s_Instance;
 	}
 

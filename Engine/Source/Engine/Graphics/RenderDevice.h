@@ -12,6 +12,7 @@
 
 namespace Engine
 {
+	class UISystem;
 	// Responsible of creating resources for DirectX
 	class RenderDevice final
 	{
@@ -38,6 +39,9 @@ namespace Engine
 		IDXGIDevice* m_DxgiDevice;
 		IDXGIAdapter* m_DxgiAdapter;
 		IDXGIFactory* m_DxgiFactory;
+
+		// Hack: UISystem needs Device
+		friend class UISystem;
 	};
 
 	template <typename RenderResource, typename ... Args>

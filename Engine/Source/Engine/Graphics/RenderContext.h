@@ -13,6 +13,7 @@
 namespace Engine
 {
 	class SwapChain;
+	class UISystem;
 
 	// Responsible of utilizing resources for DirectX
 	class RenderContext final
@@ -69,6 +70,9 @@ namespace Engine
 		friend class ConstantBuffer;
 
 		friend class SwapChain;
+
+		// Hack: UISystem needs DeviceContext
+		friend class UISystem;
 	};
 
 	template <typename T>

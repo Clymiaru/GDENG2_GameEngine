@@ -116,7 +116,14 @@ namespace Engine
 		m_Profile.Name = specs.Name;
 	}
 
-	Window::~Window() { }
+	Window::~Window()
+	{
+		const auto result = DestroyWindow(m_Handle);
+		Debug::Assert(result, "Window cannot be destroyed!");
+		m_Profile.Width  = 0;
+		m_Profile.Height = 0;
+		m_Handle         = nullptr;
+	}
 
 	void Window::PollEvents()
 	{
@@ -126,7 +133,7 @@ namespace Engine
 			DispatchMessage(&m_Message);
 		}
 	}
-	
+
 	void Window::ProcessEvents()
 	{
 		while (!m_EventQueue.empty())
@@ -151,7 +158,6 @@ namespace Engine
 			delete currentEvent;
 		}
 	}
-	
 
 	HWND& Window::GetHandle()
 	{
@@ -176,12 +182,6 @@ namespace Engine
 
 	void Window::Close()
 	{
-		const auto result = DestroyWindow(m_Handle);
-		Debug::Assert(result, "Window cannot be destroyed!");
-		m_Profile.Width  = 0;
-		m_Profile.Height = 0;
-		m_Handle         = nullptr;
-
 		m_EventQueue.push(new WindowCloseEvent());
 	}
 

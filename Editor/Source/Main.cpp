@@ -1,6 +1,7 @@
 #include <Engine/Engine.h>
 
 #include "EditorLayer.h"
+#include "EditorUILayer.h"
 
 int main()
 {
@@ -12,8 +13,8 @@ int main()
 		720,
 		List<Layer*>
 		{
-			new Editor::EditorLayer()
-			// ,new Editor::EditorUILayer()
+			new Editor::EditorLayer(),
+			new Editor::EditorUILayer()
 		}
 	};
 

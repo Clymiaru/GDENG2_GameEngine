@@ -10,6 +10,7 @@ namespace Engine
 	class Window;
 	class Input;
 	class ResourceSystem;
+	class UISystem;
 
 	class Renderer;
 	class Layer;
@@ -92,6 +93,8 @@ namespace Engine
 		ResourceSystem* m_ResourceSystem;
 
 		Renderer* m_Renderer;
+
+		UISystem* m_UISystem;
 
 		LayerSystem* m_LayerSystem;
 
