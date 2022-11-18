@@ -2,7 +2,6 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 
-#include "Engine/ECS/Core/Entity.h"
 // #include "Engine/Graphics/Renderer.h"
 // #include "Engine/Graphics/ShaderLibrary.h"
 // #include "Engine/ECS/Entity/Camera.h"
@@ -20,10 +19,40 @@ struct RenderObjectData
 namespace Engine
 {
 	RenderComponent::RenderComponent(const EntityID& ownerID) :
-		AComponent{ownerID}
+		AComponent{ownerID},
+		m_RenderData{nullptr},
+		m_VertexShader{nullptr},
+		m_PixelShader{nullptr} { }
+
+	RenderComponent::RenderComponent(const EntityID& ownerID,
+	                                 RenderData* renderData,
+	                                 VertexShaderResourceRef vertexShaderResource,
+	                                 PixelShaderResourceRef pixelShaderResource) :
+		AComponent{ownerID},
+		m_RenderData{std::move(renderData)},
+		m_VertexShader{vertexShaderResource},
+		m_PixelShader{pixelShaderResource},
+		m_VertexBuffer{nullptr},
+		m_IndexBuffer{nullptr},
+		m_ConstantBuffer{nullptr}
 	{
+		if (renderData == nullptr)
+		{
+			Debug::Log("Attempting to Attach a RenderComponent to Cube with null RenderData!");
+			return;
+		}
+
+		const RenderObjectData* constant = new RenderObjectData();
+
+		m_VertexBuffer = Application::GetRenderer().GetDevice().CreateVertexBuffer(*m_RenderData,
+		                                                                           m_VertexShader->GetShader());
+
+		m_IndexBuffer = Application::GetRenderer().GetDevice().CreateIndexBuffer(*m_RenderData);
+
+		m_ConstantBuffer = Application::GetRenderer().GetDevice().CreateConstantBuffer(constant,
+		                                                                               sizeof(RenderObjectData));
 	}
-	
+
 	// RenderComponent::RenderComponent(Entity& owner,
 	//                                  RenderData* renderData,
 	//                                  SharedPtr<VertexShader> vertexShader,

@@ -1,35 +1,31 @@
 ﻿#include "pch.h"
 #include "Cube.h"
 
+#include "Engine/ECS/Component/TransformComponent.h"
 #include "Engine/ECS/Component/RenderComponent.h"
-#include "Engine/Graphics/ShaderLibrary.h"
+#include "Engine/ResourceManagement/Shader/ShaderLibrary.h"
 #include "Engine/Graphics/Primitives/Primitive.h"
+#include "Engine/ResourceManagement/Core/ResourceSystem.h"
 
 namespace Engine
 {
-	Cube::Cube(const StringView name) :
-		Entity{name}
+	Cube::Cube(const EntityID id,
+	           const StringView name,
+	           ComponentRegistry* componentRegistry) :
+		Entity{id, name, componentRegistry}
 	{
 		RenderData* cubeRenderData = Primitive::Cube();
 
-		ShaderLibrary::Register<VertexShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
-		ShaderLibrary::Register<PixelShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
+		Application::GetResourceSystem().Load<VertexShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
+		Application::GetResourceSystem().Load<PixelShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
 
-		auto vertexShader = ShaderLibrary::GetShaderRef<VertexShader>("SolidColorShader");
-		auto pixelShader  = ShaderLibrary::GetShaderRef<PixelShader>("SolidColorShader");
+		AttachComponent<TransformComponent>();
 
-		AttachComponent<RenderComponent>(*this, cubeRenderData, vertexShader, pixelShader);
+		auto vertexShader = Application::GetResourceSystem().Get<VertexShaderResource>("SolidColorShader");
+		auto pixelShader  = Application::GetResourceSystem().Get<PixelShaderResource>("SolidColorShader");
+		
+		AttachComponent<RenderComponent>(cubeRenderData, vertexShader, pixelShader);
 	}
 
 	Cube::~Cube() = default;
-
-	// TODO: Might need to do some other way if this is a performance bottleneck
-	void Cube::Draw(Camera& camera)
-	{
-		if (const auto* component = GetComponent<RenderComponent>();
-			component != nullptr)
-		{
-			component->Draw(camera);
-		}
-	}
 }

@@ -47,6 +47,8 @@ namespace Engine
 		static Window::Profile GetWindowInfo();
 
 		static Renderer& GetRenderer();
+		
+		static ResourceSystem& GetResourceSystem();
 
 		void Run();
 

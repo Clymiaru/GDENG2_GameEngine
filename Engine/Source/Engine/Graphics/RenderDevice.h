@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <d3d11.h>
+#include "Engine/Core/Debug.h"
 
 #include "SwapChain.h"
 
@@ -29,6 +30,14 @@ namespace Engine
 		template <typename RenderResource, typename... Args>
 		RenderResource* Create(Args ... args);
 
+		UniquePtr<VertexBuffer> CreateVertexBuffer(RenderData& renderData,
+		                                           VertexShader& vertexShader) const;
+		
+		UniquePtr<IndexBuffer> CreateIndexBuffer(RenderData& renderData) const;
+		
+		UniquePtr<ConstantBuffer> CreateConstantBuffer(const void* bufferData,
+		                                               const size_t bufferSize) const;
+
 		UniquePtr<VertexShader> CreateVertexShader(ID3DBlob* vertexShaderBlob) const;
 		UniquePtr<PixelShader> CreatePixelShader(ID3DBlob* pixelShaderBlob) const;
 
@@ -52,36 +61,6 @@ namespace Engine
 	{
 		Debug::Log("Attempting to create an unimplemented render resource!");
 		return nullptr;
-	}
-
-	// CreateSwapChain
-	template <>
-	inline SwapChain* RenderDevice::Create<SwapChain>(Window& window)
-	{
-		return new SwapChain(window, m_Device, m_DxgiFactory);
-	}
-
-	// CreateVertexBuffer
-	template <>
-	inline VertexBuffer* RenderDevice::Create<VertexBuffer>(const RenderData& renderDataRef,
-	                                                        const Shader& shaderRef)
-	{
-		return new VertexBuffer(*m_Device, renderDataRef, shaderRef);
-	}
-
-	// CreateIndexBuffer
-	template <>
-	inline IndexBuffer* RenderDevice::Create<IndexBuffer>(const RenderData& renderDataRef)
-	{
-		return new IndexBuffer(*m_Device, renderDataRef);
-	}
-
-	// CreateConstantBuffer
-	template <>
-	inline ConstantBuffer* RenderDevice::Create<ConstantBuffer>(const void* bufferData,
-	                                                            const size_t bufferSize)
-	{
-		return new ConstantBuffer(*m_Device, bufferData, bufferSize);
 	}
 
 	// CreateTexture

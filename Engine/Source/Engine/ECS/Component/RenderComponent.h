@@ -2,12 +2,11 @@
 #include "Engine/Core/Core.h"
 #include "Engine/Math/Math.h"
 #include "Engine/ECS/Core/AComponent.h"
-//
-// #include "Engine/Graphics/RenderData.h"
-//
-// #include "Engine/Graphics/VertexShader.h"
-// #include "Engine/Graphics/PixelShader.h"
-//
+
+#include "Engine/Graphics/RenderData.h"
+
+#include "Engine/ResourceManagement/Core/Resource.h"
+
 // #include "Engine/Graphics/VertexBuffer.h"
 // #include "Engine/Graphics/IndexBuffer.h"
 // #include "Engine/Graphics/ConstantBuffer.h"
@@ -24,6 +23,11 @@ namespace Engine
 	public:
 		explicit RenderComponent(const EntityID& ownerID);
 		
+		explicit RenderComponent(const EntityID& ownerID,
+		                         RenderData* renderData,
+		                         VertexShaderResourceRef vertexShaderResource,
+		                         PixelShaderResourceRef pixelShaderResource);
+
 		//                 RenderData* renderData,
 		//                 SharedPtr<VertexShader> vertexShader,
 		//                 SharedPtr<PixelShader> pixelShader);
@@ -40,9 +44,9 @@ namespace Engine
 
 		MAKE_COMPONENT(Render)
 
-		RenderComponent(const RenderComponent&) = delete;
-		RenderComponent& operator=(const RenderComponent&) = delete;
-		RenderComponent(RenderComponent&&) noexcept = delete;
+		RenderComponent(const RenderComponent&)                = delete;
+		RenderComponent& operator=(const RenderComponent&)     = delete;
+		RenderComponent(RenderComponent&&) noexcept            = delete;
 		RenderComponent& operator=(RenderComponent&&) noexcept = delete;
 
 		//Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -57,18 +61,13 @@ namespace Engine
 		//	VertexBuffer
 		//	IndexBuffer
 
-		// UniquePtr<RenderData> m_RenderData{};
-		//
-		// SharedPtr<VertexShader> m_VertexShader{};
-		//
-		// SharedPtr<PixelShader> m_PixelShader{};
-		//
-		// UniquePtr<VertexBuffer> m_VertexBuffer{};
-		//
-		// UniquePtr<IndexBuffer> m_IndexBuffer{};
-		//
-		// UniquePtr<ConstantBuffer> m_ConstantBuffer{};
-		//
+		UniquePtr<RenderData> m_RenderData{};
+		VertexShaderResourceRef m_VertexShader{};
+		PixelShaderResourceRef m_PixelShader{};
+		UniquePtr<VertexBuffer> m_VertexBuffer{};
+		UniquePtr<IndexBuffer> m_IndexBuffer{};
+		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
+
 		// bool m_HasTexture = false;
 		//
 		// ID3D11ShaderResourceView* m_TextureView = nullptr;

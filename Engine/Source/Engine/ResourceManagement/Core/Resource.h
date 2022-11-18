@@ -32,7 +32,10 @@ namespace Engine
 	class Resource
 	{
 	public:
-		explicit Resource(StringView shaderName);
+		explicit Resource(StringView name) :
+			m_Name{name.data()}
+		{
+		}
 
 		~Resource() = default;
 
@@ -57,13 +60,11 @@ namespace Engine
 	public:
 		ShaderResource(StringView shaderName, ID3DBlob* shaderBlob);
 
-		~ShaderResource()
-		{
+		~ShaderResource() = default;
 			// for (auto callback : m_ResourceUnloadCallbackList)
 			// {
 			// 	callback();
 			// }
-		}
 
 		ShaderType& GetShader()
 		{

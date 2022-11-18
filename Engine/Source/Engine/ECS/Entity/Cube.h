@@ -3,14 +3,13 @@
 
 namespace Engine
 {
-	class Camera;
-	class Cube final: public Entity
+	class Cube final : public Entity
 	{
 	public:
-		explicit Cube(StringView name);
+		explicit Cube(EntityID id,
+		              StringView name,
+		              ComponentRegistry* componentRegistry);
 
 		~Cube() override;
-
-		void Draw(Camera& camera);
 	};
 }

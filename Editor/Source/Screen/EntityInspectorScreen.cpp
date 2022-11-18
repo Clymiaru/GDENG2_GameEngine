@@ -115,6 +115,8 @@ namespace Editor
 
 						if (m_ComponentList[i] == "Render")
 						{
+							// TODO: Determine what to do for components that need parameters
+							// Might need defaults
 							selectedEntity->AttachComponent<RenderComponent>();
 						}
 					}

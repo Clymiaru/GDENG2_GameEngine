@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Engine/ResourceManagement/Core/Resource.h"
 
+#include "Utils/Utils.h"
+
 namespace Engine
 {
 	constexpr const char* VertexShaderEntryPointName = "VSMain";

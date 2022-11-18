@@ -11,17 +11,19 @@ namespace Engine
 	class VertexBuffer final : public Buffer
 	{
 	public:
+		explicit VertexBuffer(ID3D11Device& deviceRef,
+					  const RenderData& renderDataRef,
+					  const Shader& shaderRef);
+
+		~VertexBuffer() override;
+		
 		VertexBuffer(const VertexBuffer&)                = delete;
 		VertexBuffer& operator=(const VertexBuffer&)     = delete;
 		VertexBuffer(VertexBuffer&&) noexcept            = delete;
 		VertexBuffer& operator=(VertexBuffer&&) noexcept = delete;
 
 	private:
-		explicit VertexBuffer(ID3D11Device& deviceRef,
-		                      const RenderData& renderDataRef,
-		                      const Shader& shaderRef);
 
-		~VertexBuffer() override;
 
 		ID3D11InputLayout* m_DataLayout;
 

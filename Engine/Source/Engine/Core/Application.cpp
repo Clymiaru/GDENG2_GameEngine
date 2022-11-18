@@ -48,6 +48,11 @@ namespace Engine
 	{
 		return *s_Instance->m_Renderer;
 	}
+	
+	ResourceSystem& Application::GetResourceSystem()
+	{
+		return *s_Instance->m_ResourceSystem;
+	}
 
 	void Application::Start()
 	{

@@ -9,21 +9,21 @@ namespace Engine
 	class ConstantBuffer final : public Buffer
 	{
 	public:
-		ConstantBuffer(const ConstantBuffer&) = delete;
-		ConstantBuffer& operator=(const ConstantBuffer&) = delete;
-		ConstantBuffer(Buffer&&) noexcept = delete;
-		ConstantBuffer& operator=(ConstantBuffer&&) = delete;
-		
-	private:
 		explicit ConstantBuffer(ID3D11Device& deviceRef,
-								const void* bufferData,
-								size_t bufferSize);
+						const void* bufferData,
+						size_t bufferSize);
 
 		void Update(ID3D11DeviceContext& deviceContext,
 					const void* updatedBufferData) const;
 
 		~ConstantBuffer() override;
 		
+		ConstantBuffer(const ConstantBuffer&) = delete;
+		ConstantBuffer& operator=(const ConstantBuffer&) = delete;
+		ConstantBuffer(Buffer&&) noexcept = delete;
+		ConstantBuffer& operator=(ConstantBuffer&&) = delete;
+		
+	private:
 		friend class Renderer;
 
 		friend class RenderDevice;

@@ -11,7 +11,7 @@ namespace Engine
 
 	{
 		m_Device->QueryInterface(__uuidof(IDXGIDevice),
-		                       reinterpret_cast<void**>(&m_DxgiDevice));
+		                         reinterpret_cast<void**>(&m_DxgiDevice));
 
 		m_DxgiDevice->GetParent(__uuidof(IDXGIAdapter),
 		                        reinterpret_cast<void**>(&m_DxgiAdapter));
@@ -27,19 +27,36 @@ namespace Engine
 		m_DxgiFactory->Release();
 		m_Device->Release();
 	}
-	
+
 	SwapChain* RenderDevice::CreateSwapChain(Window& window) const
 	{
 		return new SwapChain(window, m_Device, m_DxgiFactory);
 	}
-	
+
+	UniquePtr<VertexBuffer> RenderDevice::CreateVertexBuffer(RenderData& renderData,
+	                                                         VertexShader& vertexShader) const
+	{
+		return CreateUniquePtr<VertexBuffer>(*m_Device, renderData, vertexShader);
+	}
+
+	UniquePtr<IndexBuffer> RenderDevice::CreateIndexBuffer(RenderData& renderData) const
+	{
+		return CreateUniquePtr<IndexBuffer>(*m_Device, renderData);
+	}
+
+	UniquePtr<ConstantBuffer> RenderDevice::CreateConstantBuffer(const void* bufferData,
+	                                                             const size_t bufferSize) const
+	{
+		return CreateUniquePtr<ConstantBuffer>(*m_Device, bufferData, bufferSize);
+	}
+
 	UniquePtr<VertexShader> RenderDevice::CreateVertexShader(ID3DBlob* vertexShaderBlob) const
 	{
-		return CreateUniquePtr<VertexShader>(*m_Device, vertexShaderBlob);	
+		return CreateUniquePtr<VertexShader>(*m_Device, vertexShaderBlob);
 	}
-	
+
 	UniquePtr<PixelShader> RenderDevice::CreatePixelShader(ID3DBlob* pixelShaderBlob) const
 	{
-		return CreateUniquePtr<PixelShader>(*m_Device, pixelShaderBlob);	
+		return CreateUniquePtr<PixelShader>(*m_Device, pixelShaderBlob);
 	}
 }
