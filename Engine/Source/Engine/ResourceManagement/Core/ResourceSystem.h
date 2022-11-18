@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Engine/ResourceManagement/Shader/ShaderLibrary.h"
+
 // Idea:
 // ResourceSystem::Load<VertexShader>("VertexShaderPath");
 // ResourceSystem::Get<VertexShader>("VertexShaderName");
@@ -10,6 +12,9 @@ namespace Engine
 	class ResourceSystem
 	{
 	public:
+		ResourceSystem();
+		~ResourceSystem();
+
 		template <typename ResourceType>
 		void Load(StringView filepath);
 
@@ -18,25 +23,50 @@ namespace Engine
 
 		template <typename ResourceType>
 		void Unload(StringView resourceName);
-		
+
 	private:
-		// Respective ResourceLibraries
-		
+		static ResourceSystem* s_Instance;
+
+		ShaderLibrary m_ShaderLibrary;
 	};
-	
+
 	template <typename ResourceType>
 	void ResourceSystem::Load(StringView filepath)
 	{
 		Debug::Log("ResourceSystem Load(): Unimplemented for this resource type!");
 	}
-	
+
+	template <>
+	inline void ResourceSystem::Load<VertexShader>(const StringView filepath)
+	{
+		m_ShaderLibrary.Register<VertexShader>(filepath);
+	}
+
+	template <>
+	inline void ResourceSystem::Load<PixelShader>(const StringView filepath)
+	{
+		m_ShaderLibrary.Register<PixelShader>(filepath);
+	}
+
 	template <typename ResourceType>
 	SharedPtr<ResourceType> ResourceSystem::Get(StringView resourceName)
 	{
 		Debug::Log("ResourceSystem Get(): Unimplemented for this resource type!");
 		return nullptr;
 	}
-	
+
+	template <>
+	inline VertexShaderResourceRef ResourceSystem::Get(const StringView resourceName)
+	{
+		return m_ShaderLibrary.GetShader<VertexShader>(resourceName);
+	}
+
+	template <>
+	inline PixelShaderResourceRef ResourceSystem::Get(const StringView resourceName)
+	{
+		return m_ShaderLibrary.GetShader<PixelShader>(resourceName);
+	}
+
 	template <typename ResourceType>
 	void ResourceSystem::Unload(StringView resourceName)
 	{

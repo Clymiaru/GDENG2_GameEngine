@@ -9,16 +9,18 @@ namespace Engine
 	class PixelShader final : public Shader
 	{
 	public:
+		explicit PixelShader(ID3D11Device& deviceRef,
+							 ID3DBlob* blob);
+
+		~PixelShader() override;
+		
 		PixelShader(const PixelShader&)             = delete;
 		PixelShader& operator=(const PixelShader&)  = delete;
 		PixelShader(const PixelShader&&)            = delete;
 		PixelShader& operator=(const PixelShader&&) = delete;
 
 	private:
-		explicit PixelShader(ID3D11Device& deviceRef,
-		                     ID3DBlob* blob);
-
-		~PixelShader() override;
+		
 
 		ID3D11PixelShader* m_Data;
 

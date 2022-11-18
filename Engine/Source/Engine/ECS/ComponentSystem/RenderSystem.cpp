@@ -3,5 +3,5 @@
 
 namespace Engine
 {
-	
+	void RenderSystem::Render() const {}
 }

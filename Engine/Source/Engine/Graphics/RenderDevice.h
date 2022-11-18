@@ -7,6 +7,9 @@
 #include "Buffer/IndexBuffer.h"
 #include "Buffer/ConstantBuffer.h"
 
+#include "Shader/PixelShader.h"
+#include "Shader/VertexShader.h"
+
 #include "Texture/RenderTexture.h"
 #include "Texture/Texture.h"
 
@@ -26,8 +29,8 @@ namespace Engine
 		template <typename RenderResource, typename... Args>
 		RenderResource* Create(Args ... args);
 
-		// CreateVertexShader
-		// CreatePixelShader
+		UniquePtr<VertexShader> CreateVertexShader(ID3DBlob* vertexShaderBlob) const;
+		UniquePtr<PixelShader> CreatePixelShader(ID3DBlob* pixelShaderBlob) const;
 
 		RenderDevice(const RenderDevice&)                = delete;
 		RenderDevice& operator=(const RenderDevice&)     = delete;

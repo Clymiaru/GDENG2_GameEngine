@@ -32,4 +32,14 @@ namespace Engine
 	{
 		return new SwapChain(window, m_Device, m_DxgiFactory);
 	}
+	
+	UniquePtr<VertexShader> RenderDevice::CreateVertexShader(ID3DBlob* vertexShaderBlob) const
+	{
+		return CreateUniquePtr<VertexShader>(*m_Device, vertexShaderBlob);	
+	}
+	
+	UniquePtr<PixelShader> RenderDevice::CreatePixelShader(ID3DBlob* pixelShaderBlob) const
+	{
+		return CreateUniquePtr<PixelShader>(*m_Device, pixelShaderBlob);	
+	}
 }
