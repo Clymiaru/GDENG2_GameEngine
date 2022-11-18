@@ -22,7 +22,7 @@ namespace Engine
 	class RenderComponent final : public AComponent
 	{
 	public:
-		explicit RenderComponent(Entity& owner);
+		explicit RenderComponent(const EntityID& ownerID);
 		
 		//                 RenderData* renderData,
 		//                 SharedPtr<VertexShader> vertexShader,

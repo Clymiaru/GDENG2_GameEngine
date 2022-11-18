@@ -6,6 +6,7 @@
 #include "ComponentRegistry.h"
 
 #include "Utils/UIIDGenerator.h"
+// Should I have each entity have an event trigger when they are destroyed?
 
 namespace Engine
 {
@@ -18,18 +19,26 @@ namespace Engine
 		template <typename EntityType, typename... Args>
 		static EntityType* Create(Args&&... args);
 
-		static void Destroy(EntityID id);
+		static void Destroy(const Entity* entity);
 
+		// Returns the entity instance found with the given ID
 		static Entity* GetEntity(EntityID id);
 
+		// Returns the first entity instance found with the given name
+		static Entity* GetEntityByName(StringView entityName);
+
+		// Returns the all entity instances found with the given name
+		static List<Entity*> GetEntitiesByName(StringView entityName);
+
+		// Returns all entity instances ever created with Entity Manager
 		static const List<Entity*>& GetAllEntities();
 
-		static List<AComponent*> GetAllComponentsOfEntity(EntityID entity);
-
-		// template <typename ComponentType, typename... Args>
-		// static void AttachComponentToEntity(EntityID id, Args&&... args);
+		// Returns a list of all the components of an entity of given ID
+		static List<AComponent*> GetAllComponentsOfEntity(EntityID entityID);
 
 		static void ListenToCreateEvent(std::function<void(EntityID, StringView)> onCreateCallback);
+
+		static void ListenToDestroyEvent(std::function<void(EntityID, StringView)> onDestroyCallback);
 
 		// static void ListenToAttachComponentEvent(std::function<void(EntityID, StringView)> onCreateCallback);
 
@@ -46,7 +55,8 @@ namespace Engine
 
 		ComponentRegistry m_ComponentRegistry;
 
-		List<std::function<void(EntityID, StringView)>> m_OnCreateCallback;
+		List<std::function<void(EntityID, StringView)>> m_OnCreateCallbackList{};
+		List<std::function<void(EntityID, StringView)>> m_OnDestroyCallbackList{};
 	};
 
 	// TODO: Should we return ptr to created entity.
@@ -64,37 +74,11 @@ namespace Engine
 
 		s_Instance->m_EntityRegistry.RegisterEntity((Entity*)newEntity);
 
-		for (auto callback : s_Instance->m_OnCreateCallback)
+		for (auto callback : s_Instance->m_OnCreateCallbackList)
 		{
 			callback(newEntityID, newEntityName);
 		}
 
 		return newEntity;
 	}
-
-	// template <typename ComponentType, typename ... Args>
-	// void EntityManager::AttachComponentToEntity(EntityID id,  Args&&... args)
-	// {
-	// 	if (!s_Instance->m_EntityToComponentListMap.contains(id))
-	// 	{
-	// 		return;
-	// 	}
-	//
-	// 	auto& componentList = s_Instance->m_EntityToComponentListMap[id];
-	//
-	// 	int index = -1;
-	// 	for (size_t i = 0; i < componentList.size(); i++)
-	// 	{
-	// 		if (componentList[i]->GetName() == ComponentType::GetStaticName())
-	// 		{
-	// 			index = i;
-	// 		}
-	// 	}
-	//
-	// 	if (index != -1)
-	// 		return;
-	//
-	// 	ComponentType* newComponent = new ComponentType(*s_Instance->m_EntityMap[id], std::forward<Args>(args)...);
-	// 	componentList.push_back(newComponent);
-	// }
 }

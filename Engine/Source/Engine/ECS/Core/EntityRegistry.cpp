@@ -41,6 +41,18 @@ namespace Engine
 		}
 		return m_EntityMap[id];
 	}
+	
+	Entity* EntityRegistry::GetEntityByName(const StringView name) const
+	{
+		for (auto* entity : m_EntityList)
+		{
+			if (entity->GetName() == name)
+			{
+				return entity;
+			}
+		}
+		return nullptr;
+	}
 
 	List<Entity*> EntityRegistry::GetEntitiesByName(const StringView name) const
 	{

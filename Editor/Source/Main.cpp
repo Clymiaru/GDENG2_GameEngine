@@ -9,8 +9,8 @@ int main()
 
 	const Application::Specification appSpecs = Application::Specification{
 		"Editor",
-		1280,
-		720,
+		1760,
+		990,
 		List<Layer*>
 		{
 			new Editor::EditorLayer(),

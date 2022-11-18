@@ -13,5 +13,5 @@ namespace Engine
 		AttachComponent<TransformComponent>();
 	}
 
-	TestEntity::~TestEntity() {}
+	TestEntity::~TestEntity() = default;
 }

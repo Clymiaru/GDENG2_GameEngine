@@ -28,6 +28,8 @@ namespace Editor
 	private:
 		void DrawImpl() override;
 
+		void Reset();
+
 		void DrawComponents(const Engine::Entity* selectedEntity,
 		                    Engine::List<Engine::AComponent*> componentList);
 
@@ -37,9 +39,15 @@ namespace Editor
 		void DrawRender(Engine::StringView entityNameID,
 		                Engine::RenderComponent* render) const;
 
+		// Event Callbacks
+		void OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName);
+
+
 		WorldOutlinerScreen& m_WorldOutlinerScreenRef;
 
 		bool m_IsLocked = false;
+
+		bool m_IsDeletingObject = false;
 
 		Engine::EntityID m_CurrentEntityID = 0;
 	};

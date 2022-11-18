@@ -13,7 +13,15 @@ namespace Editor
 {
 	EntityInspectorScreen::EntityInspectorScreen(Engine::ScreenID id, WorldOutlinerScreen& worldOutlinerScreenRef) :
 		AUIScreen{id, "Inspector"},
-		m_WorldOutlinerScreenRef{worldOutlinerScreenRef} { }
+		m_WorldOutlinerScreenRef{worldOutlinerScreenRef}
+	{
+		Engine::EntityManager::ListenToDestroyEvent([this](const Engine::EntityID entityID,
+		                                                   const Engine::StringView entityName) -> void
+		{
+			OnEntityDestroy(entityID, entityName);
+		});
+		
+	}
 
 	EntityInspectorScreen::~EntityInspectorScreen() { }
 
@@ -37,6 +45,14 @@ namespace Editor
 				return;
 			}
 
+			Entity* selectedEntity = EntityManager::GetEntity(m_CurrentEntityID);
+
+			if (selectedEntity == nullptr)
+			{
+				ImGui::End();
+				return;
+			}
+
 			String lockButtonLabel;
 			if (!m_IsLocked)
 			{
@@ -55,7 +71,13 @@ namespace Editor
 				}
 			}
 
-			Entity* selectedEntity = EntityManager::GetEntity(m_CurrentEntityID);
+			ImGui::SameLine();
+
+			String deleteButtonLabel = std::vformat("Delete##{0}{1}", std::make_format_args(m_Name, m_ID));
+			if (ImGui::Button(deleteButtonLabel.c_str()))
+			{
+				m_IsDeletingObject = true;
+			}
 
 			ImGui::Checkbox("##Active", &selectedEntity->Active);
 
@@ -64,18 +86,31 @@ namespace Editor
 			ImGui::Text(selectedEntity->GetName().c_str());
 
 			ImGui::Spacing();
-		
+
 			const auto componentList = EntityManager::GetAllComponentsOfEntity(selectedEntity->GetID());
 
 			DrawComponents(selectedEntity, componentList);
 
 			ImGui::End();
+
+			if (m_IsDeletingObject)
+			{
+				m_IsLocked         = false;
+				m_CurrentEntityID  = 0;
+				m_IsDeletingObject = false;
+				EntityManager::Destroy(selectedEntity);
+			}
 		}
 		else
 		{
 			UISystem::Destroy(GetID());
 		}
-		
+	}
+	void EntityInspectorScreen::Reset()
+	{
+		m_IsLocked         = false;
+		m_CurrentEntityID  = 0;
+		m_IsDeletingObject = false;
 	}
 
 	void EntityInspectorScreen::DrawComponents(const Engine::Entity* selectedEntity,
@@ -128,5 +163,10 @@ namespace Editor
 		{
 			ImGui::Text("Render Options");
 		}
+	}
+
+	void EntityInspectorScreen::OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName)
+	{
+		Reset();
 	}
 }

@@ -1,28 +1,30 @@
 ﻿#include "pch.h"
 #include "ComponentRegistry.h"
 
-#include "Entity.h"
-
 namespace Engine
 {
-	ComponentRegistry::ComponentRegistry() = default;
-	ComponentRegistry::~ComponentRegistry() = default;
-
-	void ComponentRegistry::RegisterComponent(Entity* entity, AComponent* component)
+	ComponentRegistry::ComponentRegistry()  = default;
+	
+	ComponentRegistry::~ComponentRegistry()
 	{
-		if (HasComponent(entity, component->GetName()))
+		DeregisterAllComponents();
+	}
+
+	void ComponentRegistry::RegisterComponent(const EntityID& entityID, AComponent* component)
+	{
+		if (HasComponent(entityID, component->GetName()))
 		{
 			delete component;
 			return;
 		}
 
-		m_EntityToComponentListMap[entity->GetID()].push_back(component);
+		m_EntitiesRegistered.push_back(entityID);
+		m_EntityToComponentListMap[entityID].push_back(component);
 		m_ComponentListMap[component->GetName()].push_back(component);
 	}
 
-	bool ComponentRegistry::HasComponent(const Entity* entity, StringView componentType) const
+	bool ComponentRegistry::HasComponent(const EntityID& entityID, StringView componentType) const
 	{
-		const EntityID entityID = entity->GetID();
 		if (!m_EntityToComponentListMap.contains(entityID))
 		{
 			return false;
@@ -43,15 +45,20 @@ namespace Engine
 
 		return true;
 	}
-	
-	List<AComponent*> ComponentRegistry::GetComponentsOfEntity(const Entity* entity)
+
+	List<AComponent*>& ComponentRegistry::GetComponentListOfEntity(const EntityID& entityID)
 	{
-		return m_EntityToComponentListMap[entity->GetID()];
+		return m_EntityToComponentListMap[entityID];
 	}
 
-	void ComponentRegistry::DeregisterComponent(Entity* entity, StringView componentType)
+	List<AComponent*>& ComponentRegistry::GetComponentListOfType(const StringView componentType)
 	{
-		if (!HasComponent(entity, componentType))
+		return m_ComponentListMap[componentType.data()];
+	}
+
+	void ComponentRegistry::DeregisterComponent(const EntityID& entityID, StringView componentType)
+	{
+		if (!HasComponent(entityID, componentType))
 		{
 			return;
 		}
@@ -59,14 +66,14 @@ namespace Engine
 		List<AComponent*>& componentList = m_ComponentListMap[componentType.data()];
 
 		auto foundComponent = std::ranges::remove_if(componentList,
-		                                             [entity](const AComponent* component) -> bool
+		                                             [entityID](const AComponent* component) -> bool
 		                                             {
-			                                             return component->GetOwner().GetID() == entity->GetID();
+			                                             return component->GetOwnerID() == entityID;
 		                                             });
 		componentList.erase(foundComponent.begin(), foundComponent.end());
 		componentList.shrink_to_fit();
 
-		componentList = m_EntityToComponentListMap[entity->GetID()];
+		componentList = m_EntityToComponentListMap[entityID];
 
 		foundComponent = std::ranges::remove_if(componentList,
 		                                        [componentType](const AComponent* component) -> bool
@@ -75,5 +82,38 @@ namespace Engine
 		                                        });
 		componentList.erase(foundComponent.begin(), foundComponent.end());
 		componentList.shrink_to_fit();
+
+		auto foundRegisteredEntity = std::ranges::remove_if(m_EntitiesRegistered,
+		                                                    [entityID](const EntityID& registeredID) -> bool
+		                                                    {
+			                                                    return registeredID == entityID;
+		                                                    });
+		m_EntitiesRegistered.erase(foundRegisteredEntity.begin(), foundRegisteredEntity.end());
+		m_EntitiesRegistered.shrink_to_fit();
+	}
+
+	void ComponentRegistry::DeregisterAllComponentsOfEntity(const EntityID& entityID)
+	{
+		if (!m_EntityToComponentListMap.contains(entityID))
+		{
+			return;
+		}
+
+		const auto componentList = m_EntityToComponentListMap.find(entityID)->second;
+
+		for (size_t i = 0; i < componentList.size(); i++)
+		{
+			const AComponent* componentRef = componentList[i];
+			DeregisterComponent(entityID, componentList[i]->GetName());
+			delete componentRef;
+		}
+	}
+
+	void ComponentRegistry::DeregisterAllComponents()
+	{
+		for (size_t i = 0; i < m_EntitiesRegistered.size(); i++)
+		{
+			DeregisterAllComponentsOfEntity(m_EntitiesRegistered[i]);
+		}
 	}
 }

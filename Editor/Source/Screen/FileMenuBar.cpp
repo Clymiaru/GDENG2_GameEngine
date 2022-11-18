@@ -1,5 +1,8 @@
 ﻿#include "FileMenuBar.h"
 
+#include <Engine/ECS/Core/EntityManager.h>
+#include <Engine/ECS/Entity/EmptyEntity.h>
+
 #include <Engine/UI/UISystem.h>
 
 #include "EntityInspectorScreen.h"
@@ -15,7 +18,7 @@ namespace Editor
 		AUIScreen{id, "File Menu Bar"},
 		m_WorldOutlinerScreenRef{worldOutlinerScreenRef} { }
 
-	FileMenuBar::~FileMenuBar() { }
+	FileMenuBar::~FileMenuBar() = default;
 
 	void FileMenuBar::DrawImpl()
 	{
@@ -23,6 +26,21 @@ namespace Editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::BeginMenu("Entity"))
+				{
+					if (ImGui::MenuItem("Empty Entity"))
+					{
+						Engine::EntityManager::Create<Engine::EmptyEntity>();
+					}
+					
+					ImGui::EndMenu();
+				}
+				
 				ImGui::EndMenu();
 			}
 

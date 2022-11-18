@@ -19,8 +19,8 @@ struct RenderObjectData
 
 namespace Engine
 {
-	RenderComponent::RenderComponent(Entity& owner) :
-		AComponent{owner}
+	RenderComponent::RenderComponent(const EntityID& ownerID) :
+		AComponent{ownerID}
 	{
 	}
 	

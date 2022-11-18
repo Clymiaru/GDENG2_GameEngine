@@ -6,7 +6,9 @@ namespace Engine
 	EntityManager* EntityManager::s_Instance = nullptr;
 
 	EntityManager::EntityManager() :
-		m_EntityUIIDGenerator{UIIDGenerator()}
+		m_EntityUIIDGenerator{UIIDGenerator()},
+		m_EntityRegistry{EntityRegistry()},
+		m_ComponentRegistry{ComponentRegistry()}
 	{
 		Debug::Assert(s_Instance == nullptr,
 		              "EntityManager has already been instantiated and initialized!");
@@ -16,41 +18,62 @@ namespace Engine
 
 	EntityManager::~EntityManager()
 	{
-		// Clear entity list
+		// Clear all components and delete them
+		// Clear all entities and delete them
 		s_Instance = nullptr;
 	}
 	
-	void EntityManager::Destroy(const EntityID id)
+	void EntityManager::Destroy(const Entity* entity)
 	{
-		if (!s_Instance->m_EntityRegistry.HasEntity(id))
+		if (!s_Instance->m_EntityRegistry.HasEntity(entity->GetID()))
 			return;
 
-		const auto* entityRef = s_Instance->m_EntityRegistry.GetEntity(id);
+		s_Instance->m_EntityUIIDGenerator.AddReservedUIID(entity->GetID());
 
-		s_Instance->m_EntityUIIDGenerator.AddReservedUIID(id);
+		s_Instance->m_EntityRegistry.DeregisterEntity(entity);
 
-		s_Instance->m_EntityRegistry.DeregisterEntity(entityRef);
+		s_Instance->m_ComponentRegistry.DeregisterAllComponentsOfEntity(entity->GetID());
 
-		delete entityRef;
+		for (auto callback : s_Instance->m_OnDestroyCallbackList)
+		{
+			callback(entity->GetID(), entity->GetName());
+		}
+		
+		delete entity;
 	}
 	
-	Entity* EntityManager::GetEntity(EntityID id)
+	Entity* EntityManager::GetEntity(const EntityID id)
 	{
 		return s_Instance->m_EntityRegistry.GetEntity(id);
 	}
 	
+	Entity* EntityManager::GetEntityByName(const StringView entityName)
+	{
+		return s_Instance->m_EntityRegistry.GetEntityByName(entityName);
+	}
+	
+	List<Entity*> EntityManager::GetEntitiesByName(const StringView entityName)
+	{
+		return s_Instance->m_EntityRegistry.GetEntitiesByName(entityName);
+	}
+
 	const List<Entity*>& EntityManager::GetAllEntities()
 	{
 		return s_Instance->m_EntityRegistry.GetAllEntities();
 	}
 	
-	List<AComponent*> EntityManager::GetAllComponentsOfEntity(const EntityID entity)
+	List<AComponent*> EntityManager::GetAllComponentsOfEntity(const EntityID entityID)
 	{
-		return s_Instance->m_ComponentRegistry.GetComponentsOfEntity(s_Instance->m_EntityRegistry.GetEntity(entity));
+		return s_Instance->m_ComponentRegistry.GetComponentListOfEntity(entityID);
 	}
 
 	void EntityManager::ListenToCreateEvent(const std::function<void(EntityID, StringView)> onCreateCallback)
 	{
-		s_Instance->m_OnCreateCallback.push_back(onCreateCallback);
+		s_Instance->m_OnCreateCallbackList.push_back(onCreateCallback);
+	}
+	
+	void EntityManager::ListenToDestroyEvent(std::function<void(EntityID, StringView)> onDestroyCallback)
+	{
+		s_Instance->m_OnDestroyCallbackList.push_back(onDestroyCallback);
 	}
 }

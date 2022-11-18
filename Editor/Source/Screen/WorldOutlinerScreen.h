@@ -36,6 +36,8 @@ namespace Editor
 
 		void OnEntityCreate(Engine::EntityID entityID, Engine::StringView entityName);
 
+		void OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName);
+
 		Engine::List<Entry> m_EntityEntryList;
 
 		Engine::EntityID m_SelectedEntity = 0;

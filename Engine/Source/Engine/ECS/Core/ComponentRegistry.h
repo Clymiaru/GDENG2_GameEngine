@@ -3,7 +3,6 @@
 
 namespace Engine
 {
-	class Entity;
 	using EntityID = uint64_t;
 	
 	class ComponentRegistry final
@@ -12,16 +11,26 @@ namespace Engine
 		ComponentRegistry();
 		~ComponentRegistry();
 
-		void RegisterComponent(Entity* entity, AComponent* component);
+		void RegisterComponent(const EntityID& entityID, AComponent* component);
 		
 		[[nodiscard]]
-		bool HasComponent(const Entity* entity, StringView componentType) const;
+		bool HasComponent(const EntityID& entityID, StringView componentType) const;
 
-		List<AComponent*> GetComponentsOfEntity(const Entity* entity);
+		// Gets a list of components attached with the given entity.
+		List<AComponent*>& GetComponentListOfEntity(const EntityID& entityID);
+
+		// Gets a reference of the list of components of the given ComponentType
+		List<AComponent*>& GetComponentListOfType(StringView componentType);
+
+		// Gets a component of type that attached with the given entity.
+		template <typename ComponentType>
+		ComponentType* GetComponent(const EntityID& entityID);
 		
-		// AComponent* GetComponent(Entity* entity, String componentType);
-		
-		void DeregisterComponent(Entity* entity, StringView componentType);
+		void DeregisterComponent(const EntityID& entityID, StringView componentType);
+
+		void DeregisterAllComponentsOfEntity(const EntityID& entityID);
+
+		void DeregisterAllComponents();
 		
 		ComponentRegistry(const ComponentRegistry&)                = delete;
 		ComponentRegistry& operator=(const ComponentRegistry&)     = delete;
@@ -29,7 +38,31 @@ namespace Engine
 		ComponentRegistry& operator=(ComponentRegistry&&) noexcept = delete;
 		
 	private:
+		List<EntityID> m_EntitiesRegistered{};
 		HashMap<EntityID, List<AComponent*>> m_EntityToComponentListMap{};
 		HashMap<String, List<AComponent*>> m_ComponentListMap{};
 	};
+	
+	template <typename ComponentType>
+	ComponentType* ComponentRegistry::GetComponent(const EntityID& entityID)
+	{
+		if (!HasComponent(entityID, ComponentType::GetStaticName()))
+		{
+			return nullptr;
+		}
+
+		auto componentList = GetComponentListOfType(ComponentType::GetStaticName());
+
+		const auto foundComponent = std::ranges::find_if(componentList,
+														 [entityID](const AComponent* component) -> bool
+														 {
+															 return component->GetOwnerID() == entityID;
+														 });
+
+		if (foundComponent == componentList.end())
+		{
+			return nullptr;
+		}
+		return (ComponentType*)foundComponent;
+	}
 }

@@ -3,8 +3,8 @@
 
 namespace Engine
 {
-	TransformComponent::TransformComponent(Entity& owner) :
-		AComponent{owner},
+	TransformComponent::TransformComponent(const EntityID& ownerID) :
+		AComponent{ownerID},
 		Position{Vector3Float::Zero},
 		Scale{Vector3Float::One},
 		Rotation{Vector3Float::Zero}

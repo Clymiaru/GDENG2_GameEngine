@@ -7,7 +7,7 @@ namespace Engine
 	class TransformComponent final : AComponent
 	{
 	public:
-		explicit TransformComponent(Entity& owner);
+		explicit TransformComponent(const EntityID& ownerID);
 
 		~TransformComponent() override;
 

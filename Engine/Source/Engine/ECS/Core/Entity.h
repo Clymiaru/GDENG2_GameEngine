@@ -1,13 +1,5 @@
 ﻿#pragma once
 
-// Remember:
-// Entity are ID
-// Components are Data
-// System are DataProcessors
-
-// Architecture:
-// 1 Entity : 1 Component type (An entity can only have 1 TransformComponent at any given time)
-
 #include "ComponentRegistry.h"
 namespace Engine
 {
@@ -38,6 +30,9 @@ namespace Engine
 		// template <class T>
 		// T* GetComponent();
 
+		bool operator==(const Entity& other) const;
+		bool operator!=(const Entity& other) const;
+
 		Entity(const Entity& other)                = delete;
 		Entity& operator=(const Entity& other)     = delete;
 		Entity(Entity&& other) noexcept            = delete;
@@ -54,8 +49,8 @@ namespace Engine
 	template <typename T, typename ... Args>
 	void Entity::AttachComponent(Args&&... args)
 	{
-		T* component = new T(*this, std::forward<Args>(args)...);
-		m_ComponentRegistry->RegisterComponent(this, (AComponent*)component);
+		T* component = new T(m_ID, std::forward<Args>(args)...);
+		m_ComponentRegistry->RegisterComponent(m_ID, (AComponent*)component);
 	}
 
 	// template <typename T>

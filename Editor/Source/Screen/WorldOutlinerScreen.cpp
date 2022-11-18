@@ -19,6 +19,11 @@ namespace Editor
 			OnEntityCreate(entityID, entityName);
 		});
 
+		EntityManager::ListenToDestroyEvent([this](const EntityID entityID, const StringView entityName) -> void
+		{
+			OnEntityDestroy(entityID, entityName);
+		});
+
 		const List<Entity*>& entityListRef = EntityManager::GetAllEntities();
 		for (auto* entity : entityListRef)
 		{
@@ -67,6 +72,21 @@ namespace Editor
 		entityEntry.EntityName = entityName.data();
 		entityEntry.IsSelected = false;
 		m_EntityEntryList.push_back(entityEntry);
+	}
+	
+	void WorldOutlinerScreen::OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName)
+	{
+		if (m_SelectedEntity == entityID)
+		{
+			m_SelectedEntity = 0;
+		}
+
+		auto foundEntry = std::ranges::remove_if(m_EntityEntryList, [entityID](const Entry& entry) -> bool
+		{
+			return entry.EntityID == entityID;
+		});
+		m_EntityEntryList.erase(foundEntry.begin(), foundEntry.end());
+		m_EntityEntryList.shrink_to_fit();
 	}
 }
 

@@ -20,10 +20,15 @@ namespace Engine
 
 		Entity* GetEntity(const EntityID& id);
 
-		// Retrieves a list of entities with the same name
+		// Retrieves the first entity instance of the given name
+		[[nodiscard]]
+		Entity* GetEntityByName(StringView name) const;
+
+		// Retrieves a list of entities with the given name
 		[[nodiscard]]
 		List<Entity*> GetEntitiesByName(StringView name) const;
 
+		// Retrieves a list of all entities registered with this Entity Registry
 		[[nodiscard]]
 		const List<Entity*>& GetAllEntities() const;
 

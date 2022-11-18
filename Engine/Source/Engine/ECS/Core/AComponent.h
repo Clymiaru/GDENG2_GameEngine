@@ -5,15 +5,18 @@
 
 namespace Engine
 {
-	class Entity;
+	using EntityID = uint64_t;
 	class AComponent
 	{
 	public:
-		explicit AComponent(Entity& owner);
+		explicit AComponent(const EntityID& ownerID);
 		virtual ~AComponent();
 
 		[[nodiscard]]
-		Entity& GetOwner() const;
+		const EntityID& GetOwnerID() const;
+
+		[[nodiscard]]
+		EntityID GetOwnerID();
 
 		[[nodiscard]]
 		virtual String GetName() const = 0;
@@ -27,6 +30,6 @@ namespace Engine
 		AComponent& operator=(AComponent&&) noexcept = delete;
 
 	private:
-		Entity& m_EntityRef;
+		EntityID m_OwnerID;
 	};
 }

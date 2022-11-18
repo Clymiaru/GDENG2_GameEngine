@@ -22,6 +22,16 @@ namespace Engine
 	{
 		return m_Name;
 	}
+	
+	bool Entity::operator==(const Entity& other) const
+	{
+		return m_ID == other.m_ID;
+	}
+
+	bool Entity::operator!=(const Entity& other) const
+	{
+		return m_ID != other.m_ID;
+	}
 
 	// Entity::Entity(const Entity& other) {}
 	// Entity& Entity::operator=(const Entity& other) {}
