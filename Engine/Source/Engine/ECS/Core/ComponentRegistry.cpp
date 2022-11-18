@@ -63,25 +63,30 @@ namespace Engine
 			return;
 		}
 
-		List<AComponent*>& componentList = m_ComponentListMap[componentType.data()];
-
-		auto foundComponent = std::ranges::remove_if(componentList,
+		auto foundComponent = std::ranges::remove_if(m_ComponentListMap[componentType.data()],
 		                                             [entityID](const AComponent* component) -> bool
 		                                             {
 			                                             return component->GetOwnerID() == entityID;
 		                                             });
-		componentList.erase(foundComponent.begin(), foundComponent.end());
-		componentList.shrink_to_fit();
+		m_ComponentListMap[componentType.data()].erase(foundComponent.begin(), foundComponent.end());
+		m_ComponentListMap[componentType.data()].shrink_to_fit();
+		if (m_ComponentListMap[componentType.data()].size() <= 0)
+		{
+			m_ComponentListMap.erase(componentType.data());
+		}
 
-		componentList = m_EntityToComponentListMap[entityID];
 
-		foundComponent = std::ranges::remove_if(componentList,
+		foundComponent = std::ranges::remove_if(m_EntityToComponentListMap[entityID],
 		                                        [componentType](const AComponent* component) -> bool
 		                                        {
 			                                        return component->GetName() == componentType.data();
 		                                        });
-		componentList.erase(foundComponent.begin(), foundComponent.end());
-		componentList.shrink_to_fit();
+		m_EntityToComponentListMap[entityID].erase(foundComponent.begin(), foundComponent.end());
+		m_EntityToComponentListMap[entityID].shrink_to_fit();
+		if (m_EntityToComponentListMap[entityID].size() <= 0)
+		{
+			m_EntityToComponentListMap.erase(entityID);
+		}
 
 		auto foundRegisteredEntity = std::ranges::remove_if(m_EntitiesRegistered,
 		                                                    [entityID](const EntityID& registeredID) -> bool

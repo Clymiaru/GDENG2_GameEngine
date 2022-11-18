@@ -91,13 +91,44 @@ namespace Editor
 
 			DrawComponents(selectedEntity, componentList);
 
+			String popupLabel = std::vformat("AddComponentPopup##{0}{1}", std::make_format_args(m_Name, m_ID));
+			if (ImGui::Button("Add Component"))
+			{
+				ImGui::OpenPopup(popupLabel.c_str());
+			}
+			
+			if (ImGui::BeginPopup(popupLabel.c_str()))
+			{
+				ImGui::Text("Components");
+				ImGui::Separator();
+				for (size_t i = 0ULL; i < m_ComponentList.size(); i++)
+				{
+					if (ImGui::Selectable(m_ComponentList[i].c_str()))
+					{
+						// TODO: Don't make add component's selectable on components already added
+						// TODO: May refactor to a function
+						
+						if (m_ComponentList[i] == "Transform")
+						{
+							selectedEntity->AttachComponent<TransformComponent>();
+						}
+
+						if (m_ComponentList[i] == "Render")
+						{
+							selectedEntity->AttachComponent<RenderComponent>();
+						}
+					}
+				}
+					
+				ImGui::EndPopup();
+			}
+			
+
 			ImGui::End();
 
 			if (m_IsDeletingObject)
 			{
-				m_IsLocked         = false;
-				m_CurrentEntityID  = 0;
-				m_IsDeletingObject = false;
+				Reset();
 				EntityManager::Destroy(selectedEntity);
 			}
 		}
