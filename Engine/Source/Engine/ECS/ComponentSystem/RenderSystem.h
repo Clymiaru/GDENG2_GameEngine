@@ -1,12 +1,14 @@
 ﻿#pragma once
-#include "Engine/ECS/Core/EntityRegistry.h"
 
 namespace Engine
 {
-	class RenderSystem
+	class RenderSystem final
 	{
 	public:
-		void Render(EntityRegistry& entityRegistry);
+		RenderSystem() = default;
+		~RenderSystem() = default;
+		
+		void Render() const;
 	};
 }
 

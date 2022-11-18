@@ -2,6 +2,7 @@
 
 #include <Engine/ECS/Core/EntityManager.h>
 #include <Engine/ECS/Entity/EmptyEntity.h>
+#include <Engine/ECS/Entity/Camera.h>
 
 #include <Engine/UI/UISystem.h>
 
@@ -31,11 +32,16 @@ namespace Editor
 
 			if (ImGui::BeginMenu("Edit"))
 			{
-				if (ImGui::BeginMenu("Entity"))
+				if (ImGui::BeginMenu("Create Entity"))
 				{
-					if (ImGui::MenuItem("Empty Entity"))
+					if (ImGui::MenuItem("Empty"))
 					{
 						Engine::EntityManager::Create<Engine::EmptyEntity>();
+					}
+
+					if (ImGui::MenuItem("Camera"))
+					{
+						Engine::EntityManager::Create<Engine::Camera>();
 					}
 					
 					ImGui::EndMenu();

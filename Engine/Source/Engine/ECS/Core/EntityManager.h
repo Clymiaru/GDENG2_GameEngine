@@ -36,6 +36,9 @@ namespace Engine
 		// Returns a list of all the components of an entity of given ID
 		static List<AComponent*> GetAllComponentsOfEntity(EntityID entityID);
 
+		template <typename ComponentType>
+		static List<ComponentType*> GetAllComponentsOfType();
+
 		static void ListenToCreateEvent(std::function<void(EntityID, StringView)> onCreateCallback);
 
 		static void ListenToDestroyEvent(std::function<void(EntityID, StringView)> onDestroyCallback);
@@ -80,5 +83,17 @@ namespace Engine
 		}
 
 		return newEntity;
+	}
+	
+	template <typename ComponentType>
+	List<ComponentType*> EntityManager::GetAllComponentsOfType()
+	{
+		List<ComponentType*> componentTypeList = List<ComponentType*>();
+		List<AComponent*>& componentList = s_Instance->m_ComponentRegistry.GetComponentListOfType(ComponentType::GetStaticName());
+		for (size_t i = 0ULL; i < componentList.size(); i++)
+		{
+			componentTypeList.push_back((ComponentType*)componentList[i]);
+		}
+		return componentTypeList;
 	}
 }

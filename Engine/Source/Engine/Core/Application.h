@@ -5,6 +5,9 @@
 #include "Window.h"
 #include "LayerSystem.h"
 
+namespace Engine {
+	class ComponentSystemHandler;
+}
 namespace Engine
 {
 	class Window;
@@ -96,6 +99,8 @@ namespace Engine
 		UISystem* m_UISystem;
 
 		EntityManager* m_EntityManager;
+
+		ComponentSystemHandler* m_ComponentSystemHandler;
 		
 		LayerSystem* m_LayerSystem;
 

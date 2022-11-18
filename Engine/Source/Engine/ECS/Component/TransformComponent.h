@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-	class TransformComponent final : AComponent
+	class TransformComponent final : public AComponent
 	{
 	public:
 		explicit TransformComponent(const EntityID& ownerID);

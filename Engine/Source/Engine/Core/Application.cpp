@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Window.h"
 
+#include "Engine/ECS/ComponentSystem/ComponentSystemHandler.h"
 #include "Engine/ECS/Core/EntityManager.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/SwapChain.h"
@@ -88,6 +89,8 @@ namespace Engine
 		m_UISystem = new UISystem(*m_Window, *m_Renderer);
 
 		m_EntityManager = new EntityManager();
+
+		m_ComponentSystemHandler = new ComponentSystemHandler();
 		
 		m_LayerSystem = new LayerSystem(m_Specs.InitialLayers.size());
 
@@ -129,10 +132,9 @@ namespace Engine
 		m_LayerSystem->EndLayers();
 		delete m_LayerSystem;
 
-		// delete m_EntityManager;
-
 		//ShaderLibrary::Terminate();
 		delete m_EntityManager;
+		
 		delete m_UISystem;
 
 		delete m_SwapChain;
@@ -150,6 +152,8 @@ namespace Engine
 	{
 		m_Window->ProcessEvents();
 		// s_Instance->m_LayerHandler->Update();
+
+		m_ComponentSystemHandler->Update();
 	}
 
 	void Application::PollEvents() const
