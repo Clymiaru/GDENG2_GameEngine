@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "Engine/Core/Debug.h"
-
 // Remember:
 // Entity are ID
 // Components are Data
@@ -10,66 +8,56 @@
 // Architecture:
 // 1 Entity : 1 Component type (An entity can only have 1 TransformComponent at any given time)
 
+#include "ComponentRegistry.h"
 namespace Engine
 {
 	using EntityID = uint64_t;
+	constexpr EntityID InvalidEntity = 0;
+
 	class Entity
 	{
 	public:
-		explicit Entity(EntityID id);
+		explicit Entity(EntityID id,
+		                StringView name,
+		                ComponentRegistry* componentRegistry);
 
 		virtual ~Entity();
 
 		[[nodiscard]]
 		EntityID GetID() const;
 
-		static Entity& Create();
-		
-		// template <typename T, typename... Args>
-		// T& AttachComponent(Args&&... args);
-		//
+		[[nodiscard]]
+		const String& GetName() const;
+
+		template <typename T, typename... Args>
+		void AttachComponent(Args&&... args);
+
 		// template <typename T>
 		// void DetachComponent();
-		//
+
 		// template <class T>
 		// T* GetComponent();
 
-		// TODO: What to do for copying
-		// Idea is that all component's data will be copied
-		Entity(const Entity& other);
-		Entity& operator=(const Entity& other);
-		Entity(Entity&& other) noexcept;
-		Entity& operator=(Entity&& other) noexcept;
+		Entity(const Entity& other)                = delete;
+		Entity& operator=(const Entity& other)     = delete;
+		Entity(Entity&& other) noexcept            = delete;
+		Entity& operator=(Entity&& other) noexcept = delete;
 
 		bool Active{};
-		
+
 	private:
 		EntityID m_ID;
+		String m_Name;
+		ComponentRegistry* m_ComponentRegistry;
 	};
 
-	// template <typename T, typename ... Args>
-	// T& Entity::AttachComponent(Args&&... args)
-	// {
-	// 	// Register this entity on the component's system
-	//
-	//
-	// 	
-	// 	T* component = nullptr;
-	// 	if (m_ComponentTable.contains(T::GetStaticName()))
-	// 	{
-	// 		Debug::Log("Attempting to Attach {0} that is already attached to {1}!",
-	// 		           T::GetStaticName(),
-	// 		           Name.c_str());
-	// 		component = (T*)m_ComponentTable[T::GetStaticName()];
-	// 		return *component;
-	// 	}
-	//
-	// 	component = new T(std::forward<Args>(args)...);
-	// 	m_ComponentTable[T::GetStaticName()] = component;
-	// 	
-	// 	return *component;
-	// }
-	//
+	template <typename T, typename ... Args>
+	void Entity::AttachComponent(Args&&... args)
+	{
+		T* component = new T(*this, std::forward<Args>(args)...);
+		m_ComponentRegistry->RegisterComponent(this, (AComponent*)component);
+	}
+
 	// template <typename T>
 	// void Entity::DetachComponent()
 	// {

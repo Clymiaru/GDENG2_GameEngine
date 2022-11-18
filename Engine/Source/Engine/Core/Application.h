@@ -15,8 +15,7 @@ namespace Engine
 	class Renderer;
 	class Layer;
 	class LayerSystem;
-
-	// class EntityManager;
+	class EntityManager;
 
 	class Application final
 	{
@@ -96,6 +95,8 @@ namespace Engine
 
 		UISystem* m_UISystem;
 
+		EntityManager* m_EntityManager;
+		
 		LayerSystem* m_LayerSystem;
 
 		// EntityManager* m_EntityManager;

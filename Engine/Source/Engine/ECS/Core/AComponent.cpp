@@ -6,9 +6,7 @@
 namespace Engine
 {
 	AComponent::AComponent(Entity& owner) :
-		m_EntityRef{owner}
-	{
-	}
+		m_EntityRef{owner} { }
 
 	AComponent::~AComponent() = default;
 
@@ -20,12 +18,12 @@ namespace Engine
 	bool AComponent::operator==(const AComponent& other) const
 	{
 		return GetName() == other.GetName() &&
-		       m_EntityRef.Name == other.GetOwner().Name;
+		       m_EntityRef.GetID() == other.GetOwner().GetID();
 	}
 
 	bool AComponent::operator!=(const AComponent& other) const
 	{
 		return GetName() != other.GetName() ||
-		       m_EntityRef.Name != other.GetOwner().Name;
+		       m_EntityRef.GetID() != other.GetOwner().GetID();
 	}
 }

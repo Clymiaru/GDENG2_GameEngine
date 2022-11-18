@@ -1,6 +1,9 @@
 ﻿#include "EditorLayer.h"
 
 #include <Engine/Core/Debug.h>
+#include <Engine/ECS/Component/RenderComponent.h>
+#include <Engine/ECS/Core/EntityManager.h>
+#include <Engine/ECS/Entity/TestEntity.h>
 
 // #include <Engine/Core/Application.h>
 // #include <Engine/ECS/Component/RenderComponent.h>
@@ -28,9 +31,7 @@
 namespace Editor
 {
 	EditorLayer::EditorLayer() :
-		Layer{"EditorLayer"}
-	{
-	}
+		Layer{"EditorLayer"} { }
 
 	EditorLayer::~EditorLayer() = default;
 
@@ -38,17 +39,21 @@ namespace Editor
 	{
 		using namespace Engine;
 		Debug::Log("Editor Layer Start");
+
+		auto* e1 = EntityManager::Create<TestEntity>();
+		auto* e2 = EntityManager::Create<TestEntity>();
+		auto* e3 = EntityManager::Create<TestEntity>();
+
+		e3->AttachComponent<RenderComponent>();
 	}
 
-	void EditorLayer::OnPollInput()
-	{
-	}
+	void EditorLayer::OnPollInput() { }
 
 	void EditorLayer::OnUpdate()
 	{
 		using namespace Engine;
 	}
-	
+
 	void EditorLayer::OnRender()
 	{
 		using namespace Engine;

@@ -3,6 +3,7 @@
 #include <Engine/Core/Debug.h>
 #include <Engine/UI/UISystem.h>
 
+#include "Screen/EntityInspectorScreen.h"
 #include "Screen/FileMenuBar.h"
 #include "Screen/ViewportScreen.h"
 #include "Screen/WorldOutlinerScreen.h"
@@ -19,9 +20,11 @@ namespace Editor
 		using namespace Engine;
 		Debug::Log("Editor UI Layer Start");
 
-		UISystem::Create<FileMenuBar>();
+		WorldOutlinerScreen* worldOutlinerScreen = UISystem::Create<WorldOutlinerScreen>();
 
-		UISystem::Create<WorldOutlinerScreen>();
+		UISystem::Create<FileMenuBar>(*worldOutlinerScreen);
+
+		UISystem::Create<EntityInspectorScreen>(*worldOutlinerScreen);
 
 		UISystem::Create<ViewportScreen>();
 		

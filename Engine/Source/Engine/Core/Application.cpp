@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Window.h"
 
+#include "Engine/ECS/Core/EntityManager.h"
 #include "Engine/Graphics/Renderer.h"
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Input/Input.h"
@@ -22,6 +23,7 @@ namespace Engine
 		m_ResourceSystem{nullptr},
 		m_Renderer{nullptr},
 		m_UISystem{nullptr},
+		m_EntityManager{nullptr},
 		m_LayerSystem{nullptr}
 	{
 		Debug::Assert(s_Instance == nullptr,
@@ -84,6 +86,8 @@ namespace Engine
 		m_SwapChain = m_Renderer->GetDevice().CreateSwapChain(*m_Window);
 
 		m_UISystem = new UISystem(*m_Window, *m_Renderer);
+
+		m_EntityManager = new EntityManager();
 		
 		m_LayerSystem = new LayerSystem(m_Specs.InitialLayers.size());
 
@@ -116,7 +120,6 @@ namespace Engine
 			Sleep(1);
 		}
 
-		delete m_UISystem;
 
 		End();
 	}
@@ -129,7 +132,8 @@ namespace Engine
 		// delete m_EntityManager;
 
 		//ShaderLibrary::Terminate();
-
+		delete m_EntityManager;
+		delete m_UISystem;
 
 		delete m_SwapChain;
 		delete m_Renderer;

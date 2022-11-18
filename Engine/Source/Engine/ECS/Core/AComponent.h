@@ -6,32 +6,27 @@
 namespace Engine
 {
 	class Entity;
-
 	class AComponent
 	{
 	public:
-		// TODO: Decide to switch to UUID?
 		explicit AComponent(Entity& owner);
-
 		virtual ~AComponent();
 
+		[[nodiscard]]
 		Entity& GetOwner() const;
 
+		[[nodiscard]]
 		virtual String GetName() const = 0;
 
 		bool operator==(const AComponent& other) const;
-
 		bool operator!=(const AComponent& other) const;
 
 		AComponent(const AComponent&) = delete;
-	
 		AComponent& operator=(const AComponent&) = delete;
-	
 		AComponent(AComponent&&) noexcept = delete;
-	
 		AComponent& operator=(AComponent&&) noexcept = delete;
 
-	protected:
+	private:
 		Entity& m_EntityRef;
 	};
 }

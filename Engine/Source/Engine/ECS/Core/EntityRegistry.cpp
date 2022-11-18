@@ -1,76 +1,87 @@
 ﻿#include "pch.h"
 #include "EntityRegistry.h"
 
+#include "Entity.h"
+
 namespace Engine
 {
-	EntityRegistry::EntityRegistry() :
-		m_EntityUIIDGenerator{UIIDGenerator()},
-		m_EntityList{},
-		m_EntityToComponentListMap{}
-	{
-		
-	}
+	EntityRegistry::EntityRegistry() = default;
 	
 	EntityRegistry::~EntityRegistry()
 	{
-		// Destroy all entities in the registry
+		DeregisterAllEntities();
 	}
-	
-	Entity& EntityRegistry::CreateEntity()
+
+	void EntityRegistry::RegisterEntity(Entity* entity)
 	{
-		const EntityID entityID = m_EntityUIIDGenerator.GenerateUIID();
-		Entity* entity = new Entity(entityID);
+		if (HasEntity(*entity))
+		{
+			return;
+		}
 
-		m_EntityList.emplace_back(entity);
-		m_EntityToComponentListMap[entityID] = List<AComponent*>();
-
-		return *entity;
+		m_EntityMap[entity->GetID()] = entity;
+		m_EntityList.push_back(entity);
 	}
-	
+
 	bool EntityRegistry::HasEntity(const Entity& entity) const
 	{
 		return m_EntityMap.contains(entity.GetID());
 	}
 
-	void EntityRegistry::DestroyEntity(Entity& entity)
+	bool EntityRegistry::HasEntity(const EntityID& id) const
 	{
-		// Find the entity first if it is in the registry
-		if (!HasEntity(entity))
+		return m_EntityMap.contains(id);
+	}
+
+	Entity* EntityRegistry::GetEntity(const EntityID& id)
+	{
+		if (!HasEntity(id))
 		{
-			return; // Entity does not exists!
+			return nullptr;
+		}
+		return m_EntityMap[id];
+	}
+
+	List<Entity*> EntityRegistry::GetEntitiesByName(const StringView name) const
+	{
+		List<Entity*> entities = List<Entity*>();
+
+		for (auto* entity : m_EntityList)
+		{
+			if (entity->GetName() == name)
+			{
+				entities.push_back(entity);
+			}
+		}
+		return entities;
+	}
+	
+	const List<Entity*>& EntityRegistry::GetAllEntities() const
+	{
+		return m_EntityList;
+	}
+
+	void EntityRegistry::DeregisterEntity(const Entity* entity)
+	{
+		if (!HasEntity(*entity))
+		{
+			return;
 		}
 
-		// How to destroy? (Immediate destroy for now)
-		// TODO: Check if Immediate destroy is enough
-		auto* entityRef = m_EntityMap[entity.GetID()];
+		auto* entityRef = m_EntityMap[entity->GetID()];
 
-		// Remove Entity in the list
 		auto entityIndex = std::ranges::remove(m_EntityList, entityRef);
 		m_EntityList.erase(entityIndex.begin(), entityIndex.end());
 		m_EntityList.shrink_to_fit();
 
-		// Remove Entity in the map
 		m_EntityMap.erase(entityRef->GetID());
-		
-		// Remove all components from that entity in the ListMap and ComponentMap
-		const auto deletedEntityComponentList = m_EntityToComponentListMap[entityRef->GetID()];
+	}
 
-		for (size_t i = 0; i < deletedEntityComponentList.size(); i++)
+	void EntityRegistry::DeregisterAllEntities()
+	{
+		for (size_t i = 0; i < m_EntityList.size(); i++)
 		{
-			auto component = deletedEntityComponentList[i]; 
-			auto componentList = m_ComponentMap[component->GetName()];
-
-			const auto foundComponent = std::ranges::find_if(componentList, [component](const AComponent* other) -> bool
-			{
-				return other->GetOwner().GetID() == component->GetOwner().GetID();
-			});
-			componentList.erase(foundComponent);
-			
-			delete deletedEntityComponentList[i];
+			DeregisterEntity(m_EntityList[i]);
 		}
-
-		m_EntityToComponentListMap.erase(entityRef->GetID());
-		
-		delete entityRef;
 	}
 }

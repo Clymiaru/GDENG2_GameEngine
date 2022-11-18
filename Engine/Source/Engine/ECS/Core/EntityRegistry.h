@@ -1,10 +1,5 @@
 ﻿#pragma once
-#include <queue>
-
-#include "AComponent.h"
 #include "Entity.h"
-
-#include "Utils/UIIDGenerator.h"
 
 namespace Engine
 {
@@ -14,32 +9,35 @@ namespace Engine
 		EntityRegistry();
 		
 		~EntityRegistry();
-		
-		Entity& CreateEntity();
 
+		void RegisterEntity(Entity* entity);
+
+		[[nodiscard]]
 		bool HasEntity(const Entity& entity) const;
-		
-		void DestroyEntity(Entity& entity);
 
-		template <typename ComponentType>
-		void RegisterComponent(Entity& entity);
+		[[nodiscard]]
+		bool HasEntity(const EntityID& id) const;
 
-		template <typename ComponentType>
-		void DeregisterComponent(Entity& entity);
+		Entity* GetEntity(const EntityID& id);
 
-		// TODO: Get functionality
+		// Retrieves a list of entities with the same name
+		[[nodiscard]]
+		List<Entity*> GetEntitiesByName(StringView name) const;
+
+		[[nodiscard]]
+		const List<Entity*>& GetAllEntities() const;
+
+		void DeregisterEntity(const Entity* entity);
+
+		void DeregisterAllEntities();
+
+		EntityRegistry(const EntityRegistry&)                = delete;
+		EntityRegistry& operator=(const EntityRegistry&)     = delete;
+		EntityRegistry(EntityRegistry&&) noexcept            = delete;
+		EntityRegistry& operator=(EntityRegistry&&) noexcept = delete;
 
 	private:
-		UIIDGenerator m_EntityUIIDGenerator;
-
-		List<Entity*> m_EntityList;
-		
-		HashMap<EntityID, Entity*> m_EntityMap;
-		
-		// Entity - ComponentList directory
-		HashMap<EntityID, List<AComponent*>> m_EntityToComponentListMap;
-		
-		// ComponentType - ComponentList directory
-		HashMap<String, List<AComponent*>> m_ComponentMap; // Why have this?
+		List<Entity*> m_EntityList{};
+		HashMap<EntityID, Entity*> m_EntityMap{};
 	};
 }

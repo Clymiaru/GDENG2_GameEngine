@@ -21,11 +21,8 @@ namespace Editor
 		void OnDetach() override;
 
 		EditorLayer(const EditorLayer&) = delete;
-
-		EditorLayer& operator=(const EditorLayer& v) = delete;
-
+		EditorLayer& operator=(const EditorLayer&) = delete;
 		EditorLayer(EditorLayer&&) noexcept = delete;
-
 		EditorLayer& operator=(EditorLayer&&) noexcept = delete;
 
 	private:

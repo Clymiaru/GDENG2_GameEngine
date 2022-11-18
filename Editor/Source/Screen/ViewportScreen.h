@@ -9,8 +9,11 @@ namespace Editor
 		explicit ViewportScreen(Engine::ScreenID id);
 		~ViewportScreen() override;
 
+		ViewportScreen(const ViewportScreen&)                = delete;
+		ViewportScreen& operator=(const ViewportScreen&)     = delete;
+		ViewportScreen(ViewportScreen&&) noexcept            = delete;
+		ViewportScreen& operator=(ViewportScreen&&) noexcept = delete;
 	private:
 		void DrawImpl() override;
 	};
-
 }

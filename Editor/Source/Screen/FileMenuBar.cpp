@@ -2,22 +2,20 @@
 
 #include <Engine/UI/UISystem.h>
 
+#include "EntityInspectorScreen.h"
 #include "ViewportScreen.h"
 #include "WorldOutlinerScreen.h"
 
 #include "../../../Engine/Dependencies/ImGui/imgui.h"
+
 namespace Editor
 {
-	FileMenuBar::FileMenuBar(Engine::ScreenID id) :
-		AUIScreen{id, "File Menu Bar"}
-	{
-		
-	}
+	FileMenuBar::FileMenuBar(Engine::ScreenID id,
+	                         WorldOutlinerScreen& worldOutlinerScreenRef) :
+		AUIScreen{id, "File Menu Bar"},
+		m_WorldOutlinerScreenRef{worldOutlinerScreenRef} { }
 
-	FileMenuBar::~FileMenuBar()
-	{
-		
-	}
+	FileMenuBar::~FileMenuBar() { }
 
 	void FileMenuBar::DrawImpl()
 	{
@@ -30,9 +28,9 @@ namespace Editor
 
 			if (ImGui::BeginMenu("Window"))
 			{
-				if (ImGui::MenuItem("World Outliner"))
+				if (ImGui::MenuItem("Inspector"))
 				{
-					Engine::UISystem::Create<WorldOutlinerScreen>();
+					Engine::UISystem::Create<EntityInspectorScreen>(m_WorldOutlinerScreenRef);
 				}
 
 				if (ImGui::MenuItem("Scene Viewport"))
@@ -44,7 +42,7 @@ namespace Editor
 				{
 					Engine::UISystem::Create<ViewportScreen>();
 				}
-				
+
 				ImGui::EndMenu();
 			}
 
@@ -52,9 +50,8 @@ namespace Editor
 			{
 				ImGui::EndMenu();
 			}
-			
+
 			ImGui::EndMainMenuBar();
 		}
 	}
-
 }

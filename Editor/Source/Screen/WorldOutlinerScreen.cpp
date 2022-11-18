@@ -5,65 +5,68 @@
 #include "../Dependencies/ImGui/imgui.h"
 
 #include <Engine/ECS/Core/Entity.h>
+#include <Engine/ECS/Core/EntityManager.h>
 #include <Engine/UI/UISystem.h>
 
 namespace Editor
 {
 	WorldOutlinerScreen::WorldOutlinerScreen(const Engine::ScreenID id)
 		: AUIScreen{id, "World Outliner"}
-	{}
+	{
+		using namespace Engine;
+		EntityManager::ListenToCreateEvent([this](const EntityID entityID, const StringView entityName) -> void
+		{
+			OnEntityCreate(entityID, entityName);
+		});
 
-	// WorldOutlinerPanel::WorldOutlinerPanel(Engine::List<Engine::Entity*>& entityRef) :
-	// 	AUIScreen{"World Outliner"},
-	// 	m_EntitiesRef{entityRef}
-	// {
-	// 	for (int i = 0; i < (int)m_EntitiesRef.size(); i++)
-	// 	{
-	// 		m_SelectedEntities.push_back({i, false});
-	// 	}
-	// }
+		const List<Entity*>& entityListRef = EntityManager::GetAllEntities();
+		for (auto* entity : entityListRef)
+		{
+			OnEntityCreate(entity->GetID(), entity->GetName());
+		}
+	}
 
 	WorldOutlinerScreen::~WorldOutlinerScreen()
 	{
 	}
-
-	// Engine::Entity* WorldOutlinerPanel::GetSelectedEntity() const
-	// {
-	// 	for (int i = 0; i < (int)m_EntitiesRef.size(); i++)
-	// 	{
-	// 		if (m_SelectedEntities[i].second == true)
-	// 		{
-	// 			return m_EntitiesRef[i];
-	// 		}
-	// 	}
-	// 	return nullptr;
-	// }
-
-	// void WorldOutlinerPanel::DrawImpl()
-	// {
-	// 	for (int i = 0; i < (int)m_EntitiesRef.size(); i++)
-	// 	{
-	// 		Engine::String entityLabel = m_EntitiesRef[i]->Name;
-	// 		entityLabel += "##WorldOutlinerPanel";
-	// 		ImGui::Selectable(entityLabel.c_str(), &m_SelectedEntities[i].second);
-	// 	}
-	// }
+	
+	Engine::EntityID WorldOutlinerScreen::GetSelectedEntityID() const
+	{
+		return m_SelectedEntity;
+	}
 
 	void WorldOutlinerScreen::DrawImpl()
 	{
-		if (m_IsOpen)
-		{
-			ImGui::Begin(GetNameAndIDLabel(), &m_IsOpen);
+		using namespace Engine;
+		UISystem::ShowDemoWindow(true);
 
-			ImGui::Text("Placeholder");
+		// This window is always open for the whole duration of the program
+		ImGui::Begin(GetNameAndIDLabel());
 
-			ImGui::End();
-		}
-		else
+		if (ImGui::TreeNode("Scene"))
 		{
-			Engine::UISystem::Destroy(m_ID);
+			for (size_t i = 0ULL; i < m_EntityEntryList.size(); i++)
+			{
+				if (ImGui::Selectable(m_EntityEntryList[i].EntityName.c_str(),
+					m_SelectedEntity == m_EntityEntryList[i].EntityID))
+				{
+					m_SelectedEntity = m_EntityEntryList[i].EntityID;
+				}
+			}
+			ImGui::TreePop();
 		}
+
+		ImGui::End();
 		
+	}
+	
+	void WorldOutlinerScreen::OnEntityCreate(const Engine::EntityID entityID, const Engine::StringView entityName)
+	{
+		Entry entityEntry;
+		entityEntry.EntityID = entityID;
+		entityEntry.EntityName = entityName.data();
+		entityEntry.IsSelected = false;
+		m_EntityEntryList.push_back(entityEntry);
 	}
 }
 
