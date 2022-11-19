@@ -7,6 +7,8 @@
 #include "Engine/Graphics/Shader/VertexShader.h"
 #include "Engine/Graphics/Shader/PixelShader.h"
 
+#include "Engine/Graphics/Texture/Texture.h"
+
 #include "Engine/Core/Application.h"
 
 namespace Engine
@@ -105,4 +107,29 @@ namespace Engine
 		m_ShaderData{Application::GetRenderer().GetDevice().CreatePixelShader(shaderBlob)}
 	{
 	}
+
+	class TextureResource final : public Resource
+	{
+	public:
+		TextureResource(const StringView textureName, UniquePtr<Texture> texture) :
+			Resource{textureName},
+			m_TextureData{std::move(texture)}
+		{
+		}
+
+		~TextureResource() = default;
+
+		Texture& GetTexture() const
+		{
+			return *m_TextureData;
+		}
+
+		TextureResource(const TextureResource&)                = delete;
+		TextureResource& operator=(const TextureResource&)     = delete;
+		TextureResource(TextureResource&&) noexcept            = delete;
+		TextureResource& operator=(TextureResource&&) noexcept = delete;
+
+	private:
+		UniquePtr<Texture> m_TextureData;
+	};
 }

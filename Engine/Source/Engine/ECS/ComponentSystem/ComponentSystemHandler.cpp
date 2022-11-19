@@ -28,6 +28,7 @@ namespace Engine
 	{
 		m_RenderSystem->Render(camera);
 	}
+	
 	void ComponentSystemHandler::Render(EditorCameraComponent& camera)
 	{
 		m_RenderSystem->Render(camera);

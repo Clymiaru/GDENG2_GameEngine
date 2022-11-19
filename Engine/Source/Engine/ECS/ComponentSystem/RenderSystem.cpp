@@ -16,6 +16,7 @@ namespace Engine
 			render->Draw(camera);
 		}
 	}
+	
 	void RenderSystem::Render(EditorCameraComponent& camera) const
 	{
 		const auto renderList = EntityManager::GetAllComponentsOfType<RenderComponent>();

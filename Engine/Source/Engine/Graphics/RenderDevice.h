@@ -43,6 +43,8 @@ namespace Engine
 		
 		UniquePtr<PixelShader> CreatePixelShader(ID3DBlob* pixelShaderBlob) const;
 
+		UniquePtr<Texture> CreateTexture(const Texture::Specification& specs) const;
+
 		UniquePtr<Framebuffer> CreateFramebuffer(const FramebufferProfile& profile) const;
 
 		RenderDevice(const RenderDevice&)                = delete;

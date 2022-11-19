@@ -59,6 +59,14 @@ namespace Engine
 		m_Profile.Height = imageHeight;
 		m_Profile.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
+		D3D11_SAMPLER_DESC textureSamplerDesc = {};
+		textureSamplerDesc.Filter             = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		textureSamplerDesc.AddressU           = D3D11_TEXTURE_ADDRESS_CLAMP;
+		textureSamplerDesc.AddressV           = D3D11_TEXTURE_ADDRESS_CLAMP;
+		textureSamplerDesc.AddressW           = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+		device.CreateSamplerState(&textureSamplerDesc, &m_TextureSampler);
+
 		stbi_image_free(imageData);
 	}
 
@@ -76,5 +84,15 @@ namespace Engine
 	Texture::Profile Texture::GetInfo()
 	{
 		return m_Profile;
+	}
+
+	ID3D11ShaderResourceView& Texture::GetView() const
+	{
+		return *m_TextureView;
+	}
+
+	ID3D11SamplerState& Texture::GetSampler() const
+	{
+		return *m_TextureSampler;
 	}
 }

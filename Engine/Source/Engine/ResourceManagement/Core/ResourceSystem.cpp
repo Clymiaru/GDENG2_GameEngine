@@ -6,7 +6,8 @@ namespace Engine
 	ResourceSystem* ResourceSystem::s_Instance = nullptr;
 	
 	ResourceSystem::ResourceSystem() :
-		m_ShaderLibrary{ShaderLibrary()}
+		m_ShaderLibrary{ShaderLibrary()},
+		m_TextureLibrary{TextureLibrary()}
 	{
 		Debug::Assert(s_Instance == nullptr,
 					  "ResourceSystem has already been instantiated and initialized!");

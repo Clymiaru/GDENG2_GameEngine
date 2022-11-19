@@ -60,6 +60,11 @@ namespace Engine
 		return CreateUniquePtr<PixelShader>(*m_Device, pixelShaderBlob);
 	}
 	
+	UniquePtr<Texture> RenderDevice::CreateTexture(const Texture::Specification& specs) const
+	{
+		return CreateUniquePtr<Texture>(*m_Device, specs);
+	}
+
 	UniquePtr<Framebuffer> RenderDevice::CreateFramebuffer(const FramebufferProfile& profile) const
 	{
 		return CreateUniquePtr<Framebuffer>(*m_Device, profile);

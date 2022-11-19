@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Engine/ResourceManagement/Shader/ShaderLibrary.h"
+#include "Engine/ResourceManagement/Texture/TextureLibrary.h"
 
 // Idea:
 // ResourceSystem::Load<VertexShader>("VertexShaderPath");
@@ -28,6 +29,7 @@ namespace Engine
 		static ResourceSystem* s_Instance;
 
 		ShaderLibrary m_ShaderLibrary;
+		TextureLibrary m_TextureLibrary;
 	};
 
 	template <typename ResourceType>
@@ -48,6 +50,12 @@ namespace Engine
 		m_ShaderLibrary.Register<PixelShader>(filepath);
 	}
 
+	template <>
+	inline void ResourceSystem::Load<Texture>(const StringView filepath)
+	{
+		m_TextureLibrary.Register(filepath);
+	}
+
 	template <typename ResourceType>
 	SharedPtr<ResourceType> ResourceSystem::Get(StringView resourceName)
 	{
@@ -65,6 +73,12 @@ namespace Engine
 	inline PixelShaderResourceRef ResourceSystem::Get(const StringView resourceName)
 	{
 		return m_ShaderLibrary.GetShader<PixelShader>(resourceName);
+	}
+
+	template <>
+	inline SharedPtr<TextureResource> ResourceSystem::Get(const StringView resourceName)
+	{
+		return m_TextureLibrary.GetTexture(resourceName);
 	}
 
 	template <typename ResourceType>

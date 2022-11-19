@@ -47,21 +47,24 @@ namespace Engine
 		void UpdateBufferResource(ID3D11Buffer* bufferResource,
 		                          const void* updatedBufferData) const;
 
+		template <typename T>
+		void SetShaderResource(UINT startSlot, UINT viewCount, ID3D11ShaderResourceView** srvList);
+
+		template <typename T>
+		void SetSamplers(UINT startSlot, UINT samplerCount, ID3D11SamplerState** samplerList);
+
 		void SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) const;
 
 		void DrawIndexed(uint32_t indexCount,
 		                 uint32_t startingIndex) const;
 
 		void SetViewportSize(const Vector2Uint& size) const;
-		
+
 		void SetViewportSize(const Vector2Float& size) const;
 
-		RenderContext(const RenderContext&) = delete;
-
-		RenderContext& operator=(const RenderContext&) = delete;
-
-		RenderContext(RenderContext&&) noexcept = delete;
-
+		RenderContext(const RenderContext&)                = delete;
+		RenderContext& operator=(const RenderContext&)     = delete;
+		RenderContext(RenderContext&&) noexcept            = delete;
 		RenderContext& operator=(RenderContext&&) noexcept = delete;
 
 	private:
@@ -76,9 +79,7 @@ namespace Engine
 	};
 
 	template <typename T>
-	void RenderContext::SetRenderData(const T& renderData) const
-	{
-	}
+	void RenderContext::SetRenderData(const T& renderData) const { }
 
 	// Shader Binds
 	template <>
@@ -118,8 +119,44 @@ namespace Engine
 	}
 
 	template <typename T>
-	void RenderContext::UploadShaderData(const ConstantBuffer& constantBuffer) const
+	void RenderContext::UploadShaderData(const ConstantBuffer& constantBuffer) const { }
+
+	template <typename T>
+	void RenderContext::SetShaderResource(UINT startSlot, UINT viewCount, ID3D11ShaderResourceView** srvList) { }
+
+	template <>
+	inline void RenderContext::SetShaderResource<VertexShader>(const UINT startSlot,
+	                                                           const UINT viewCount,
+	                                                           ID3D11ShaderResourceView** srvList)
 	{
+		m_DeviceContext->VSSetShaderResources(startSlot, viewCount, srvList);
+	}
+
+	template <>
+	inline void RenderContext::SetShaderResource<PixelShader>(const UINT startSlot,
+	                                                          const UINT viewCount,
+	                                                          ID3D11ShaderResourceView** srvList)
+	{
+		m_DeviceContext->PSSetShaderResources(startSlot, viewCount, srvList);
+	}
+
+	template <typename T>
+	void RenderContext::SetSamplers(UINT startSlot, UINT samplerCount, ID3D11SamplerState** samplerList) {}
+
+	template <>
+	inline void RenderContext::SetSamplers<VertexShader>(const UINT startSlot,
+	                                                     const UINT samplerCount,
+	                                                     ID3D11SamplerState** samplerList)
+	{
+		m_DeviceContext->VSSetSamplers(startSlot, samplerCount, samplerList);
+	}
+
+	template <>
+	inline void RenderContext::SetSamplers<PixelShader>(const UINT startSlot,
+	                                                    const UINT samplerCount,
+	                                                    ID3D11SamplerState** samplerList)
+	{
+		m_DeviceContext->PSSetSamplers(startSlot, samplerCount, samplerList);
 	}
 
 	template <>

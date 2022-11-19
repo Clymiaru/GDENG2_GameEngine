@@ -2,6 +2,8 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 
+#include "Engine/ResourceManagement/Core/ResourceSystem.h"
+
 // #include "Engine/Graphics/Renderer.h"
 // #include "Engine/Graphics/ShaderLibrary.h"
 // #include "Engine/ECS/Entity/Camera.h"
@@ -21,10 +23,14 @@ namespace Engine
 	RenderComponent::RenderComponent(const EntityID& ownerID,
 	                                 SharedPtr<TransformComponent> transform) :
 		AComponent{ownerID},
+		m_Transform{transform},
+		m_TextureResource{nullptr},
 		m_RenderData{nullptr},
 		m_VertexShader{nullptr},
 		m_PixelShader{nullptr},
-		m_Transform{transform} { }
+		m_VertexBuffer{nullptr},
+		m_IndexBuffer{nullptr},
+		m_ConstantBuffer{nullptr} { }
 
 	RenderComponent::RenderComponent(const EntityID& ownerID,
 	                                 RenderData* renderData,
@@ -32,19 +38,23 @@ namespace Engine
 	                                 PixelShaderResourceRef pixelShaderResource,
 	                                 SharedPtr<TransformComponent> transform) :
 		AComponent{ownerID},
+		m_Transform{transform},
+		m_TextureResource{nullptr},
 		m_RenderData{std::move(renderData)},
 		m_VertexShader{vertexShaderResource},
 		m_PixelShader{pixelShaderResource},
 		m_VertexBuffer{nullptr},
 		m_IndexBuffer{nullptr},
-		m_ConstantBuffer{nullptr},
-		m_Transform{transform}
+		m_ConstantBuffer{nullptr}
 	{
 		if (renderData == nullptr)
 		{
 			Debug::Log("Attempting to Attach a RenderComponent to Cube with null RenderData!");
 			return;
 		}
+
+		Application::GetResourceSystem().Load<Texture>("Assets/DLSU_Logo.png");
+		m_TextureResource = Application::GetResourceSystem().Get<TextureResource>("DLSU_Logo");
 
 		const RenderObjectData* constant = new RenderObjectData();
 
@@ -71,6 +81,19 @@ namespace Engine
 
 		Application::GetRenderer().GetContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
 		Application::GetRenderer().GetContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+
+		std::vector<ID3D11ShaderResourceView*> textureSRV = {};
+		textureSRV.push_back(&m_TextureResource->GetTexture().GetView());
+
+		Application::GetRenderer().GetContext().SetShaderResource<PixelShader>(0,
+		                                                                       1,
+		                                                                       textureSRV.data());
+
+		std::vector<ID3D11SamplerState*> textureSampler = {};
+		textureSampler.push_back(&m_TextureResource->GetTexture().GetSampler());
+		Application::GetRenderer().GetContext().SetSamplers<PixelShader>(0,
+		                                                                 1,
+		                                                                 textureSampler.data());
 
 		Application::GetRenderer().GetContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
 		Application::GetRenderer().GetContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);

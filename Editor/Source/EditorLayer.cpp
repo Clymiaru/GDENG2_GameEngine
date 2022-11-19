@@ -56,7 +56,11 @@ namespace Editor
 		{
 			Application::GetRenderer().StartRender(gameCamera->GetRenderTarget());
 			Application::GetComponentSystem().Render(*gameCamera);
+
+			// gameCamera->ApplyPostProcessing();
+
 			Application::GetRenderer().EndRender();
+			
 		}
 
 		m_NumberOfEditorViewports = (int)cameraSystem.GetEditorCameraCount();

@@ -34,7 +34,6 @@ namespace Engine
 		void Draw(CameraComponent& camera);
 
 		void Draw(EditorCameraComponent& camera);
-
 		
 		MAKE_COMPONENT(Render)
 
@@ -55,11 +54,16 @@ namespace Engine
 		//	VertexBuffer
 		//	IndexBuffer
 		SharedPtr<TransformComponent> m_Transform;
+		SharedPtr<TextureResource> m_TextureResource;
+		
 		UniquePtr<RenderData> m_RenderData{};
+		
 		VertexShaderResourceRef m_VertexShader{};
 		PixelShaderResourceRef m_PixelShader{};
+		
 		UniquePtr<VertexBuffer> m_VertexBuffer{};
 		UniquePtr<IndexBuffer> m_IndexBuffer{};
+		
 		UniquePtr<ConstantBuffer> m_ConstantBuffer{};
 
 		// bool m_HasTexture = false;

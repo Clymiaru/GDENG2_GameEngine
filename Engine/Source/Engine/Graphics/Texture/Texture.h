@@ -13,7 +13,7 @@ namespace Engine
 	public:
 		struct Specification
 		{
-			const char* Filepath;
+			const char* Filepath = " ";
 			// unsigned int Width;
 			// unsigned int Height;
 			// unsigned int MipLevels;
@@ -28,16 +28,24 @@ namespace Engine
 			DXGI_FORMAT Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		};
 
+		explicit Texture(ID3D11Device& device,
+						 const Specification& specs);
+		~Texture();
+
 		[[nodiscard]]
 		const Profile& GetInfo() const;
 
 		[[nodiscard]]
 		Profile GetInfo();
+
+		[[nodiscard]]
+		ID3D11ShaderResourceView& GetView() const;
+
+		[[nodiscard]]
+		ID3D11SamplerState& GetSampler() const;
 		
 	private:
-		explicit Texture(ID3D11Device& device,
-						 const Specification& specs);
-		~Texture();
+		
 
 		Profile m_Profile;
 		ID3D11ShaderResourceView* m_TextureView;
