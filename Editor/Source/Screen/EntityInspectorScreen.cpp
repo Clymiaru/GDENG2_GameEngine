@@ -15,12 +15,10 @@ namespace Editor
 		AUIScreen{id, "Inspector"},
 		m_WorldOutlinerScreenRef{worldOutlinerScreenRef}
 	{
-		Engine::EntityManager::ListenToDestroyEvent([this](const Engine::EntityID entityID,
-		                                                   const Engine::StringView entityName) -> void
-		{
-			OnEntityDestroy(entityID, entityName);
-		});
+		using namespace Engine;
 		
+		auto destroyEntityCallback = [this](const Entity* entity) { OnEntityDestroy(entity); };
+		EntityManager::ListenToEntityDestroyEvent(destroyEntityCallback);
 	}
 
 	EntityInspectorScreen::~EntityInspectorScreen() { }
@@ -96,7 +94,7 @@ namespace Editor
 			{
 				ImGui::OpenPopup(popupLabel.c_str());
 			}
-			
+
 			if (ImGui::BeginPopup(popupLabel.c_str()))
 			{
 				ImGui::Text("Components");
@@ -107,7 +105,7 @@ namespace Editor
 					{
 						// TODO: Don't make add component's selectable on components already added
 						// TODO: May refactor to a function
-						
+
 						if (m_ComponentList[i] == "Transform")
 						{
 							selectedEntity->AttachComponent<TransformComponent>();
@@ -121,10 +119,9 @@ namespace Editor
 						}
 					}
 				}
-					
+
 				ImGui::EndPopup();
 			}
-			
 
 			ImGui::End();
 
@@ -147,29 +144,29 @@ namespace Editor
 	}
 
 	void EntityInspectorScreen::DrawComponents(const Engine::Entity* selectedEntity,
-	                                           Engine::List<Engine::AComponent*> componentList)
+	                                           Engine::List<Engine::SharedPtr<Engine::AComponent>> componentList)
 	{
 		using namespace Engine;
 		const String entityNameID = std::vformat("{0}{1}",
 		                                         std::make_format_args(selectedEntity->GetName(),
 		                                                               selectedEntity->GetID()));
 
-		for (const auto* component : componentList)
+		for (const auto component : componentList)
 		{
 			if (component->GetName() == "Transform")
 			{
-				DrawTransform(entityNameID, (TransformComponent*)component);
+				DrawTransform(entityNameID, std::dynamic_pointer_cast<TransformComponent>(component));
 			}
 
 			if (component->GetName() == "Render")
 			{
-				DrawRender(entityNameID, (RenderComponent*)component);
+				DrawRender(entityNameID, std::dynamic_pointer_cast<RenderComponent>(component));
 			}
 		}
 	}
 
 	void EntityInspectorScreen::DrawTransform(Engine::StringView entityNameID,
-	                                          Engine::TransformComponent* transform) const
+	                                          Engine::SharedPtr<Engine::TransformComponent> transform) const
 	{
 		using namespace Engine;
 		if (ImGui::CollapsingHeader("Transform Component"))
@@ -189,7 +186,7 @@ namespace Editor
 	}
 
 	void EntityInspectorScreen::DrawRender(Engine::StringView entityNameID,
-	                                       Engine::RenderComponent* render) const
+	                                       Engine::SharedPtr<Engine::RenderComponent> render) const
 	{
 		using namespace Engine;
 		if (ImGui::CollapsingHeader("Render Component"))
@@ -198,7 +195,7 @@ namespace Editor
 		}
 	}
 
-	void EntityInspectorScreen::OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName)
+	void EntityInspectorScreen::OnEntityDestroy(const Engine::Entity* entity)
 	{
 		Reset();
 	}

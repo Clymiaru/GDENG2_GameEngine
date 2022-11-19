@@ -7,6 +7,7 @@
 #include "Buffer/VertexBuffer.h"
 #include "Buffer/IndexBuffer.h"
 #include "Buffer/ConstantBuffer.h"
+#include "Buffer/Framebuffer.h"
 
 #include "Shader/PixelShader.h"
 #include "Shader/VertexShader.h"
@@ -39,7 +40,10 @@ namespace Engine
 		                                               const size_t bufferSize) const;
 
 		UniquePtr<VertexShader> CreateVertexShader(ID3DBlob* vertexShaderBlob) const;
+		
 		UniquePtr<PixelShader> CreatePixelShader(ID3DBlob* pixelShaderBlob) const;
+
+		UniquePtr<Framebuffer> CreateFramebuffer(const FramebufferProfile& profile) const;
 
 		RenderDevice(const RenderDevice&)                = delete;
 		RenderDevice& operator=(const RenderDevice&)     = delete;

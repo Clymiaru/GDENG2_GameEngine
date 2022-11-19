@@ -10,6 +10,12 @@ namespace Engine
 	ComponentSystemHandler::~ComponentSystemHandler()
 	{
 		delete m_CameraSystem;
+		delete m_RenderSystem;
+	}
+	
+	CameraSystem& ComponentSystemHandler::GetCameraSystem() const
+	{
+		return *m_CameraSystem;
 	}
 
 	void ComponentSystemHandler::Update()
@@ -17,8 +23,8 @@ namespace Engine
 		m_CameraSystem->CameraUpdate();
 	}
 
-	void ComponentSystemHandler::Render()
+	void ComponentSystemHandler::Render(CameraComponent& camera)
 	{
-		m_RenderSystem->Render();
+		m_RenderSystem->Render(camera);
 	}
 }

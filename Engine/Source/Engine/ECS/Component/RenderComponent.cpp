@@ -52,6 +52,32 @@ namespace Engine
 		m_ConstantBuffer = Application::GetRenderer().GetDevice().CreateConstantBuffer(constant,
 		                                                                               sizeof(RenderObjectData));
 	}
+	
+	void RenderComponent::Draw(TransformComponent* transform, CameraComponent& camera)
+	{
+		if (transform == nullptr)
+			return;
+		
+		RenderObjectData* constant = new RenderObjectData();
+		constant->Model            = transform->GetLocalMatrix();
+		constant->ViewProjection   = camera.GetViewProjMatrix();
+		constant->SolidColor       = AlbedoColor;
+
+		Application::GetRenderer().GetContext().UpdateBufferResource(&m_ConstantBuffer->GetData(), constant);
+	
+		Application::GetRenderer().GetContext().SetRenderData<VertexShader>(m_VertexShader->GetShader());
+		Application::GetRenderer().GetContext().SetRenderData<PixelShader>(m_PixelShader->GetShader());
+	
+		Application::GetRenderer().GetContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
+		Application::GetRenderer().GetContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+	
+		Application::GetRenderer().GetContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
+		Application::GetRenderer().GetContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);
+	
+		Application::GetRenderer().GetContext().SetTopology(m_RenderData->Topology);
+	
+		Application::GetRenderer().GetContext().DrawIndexed(m_IndexBuffer->ElementCount(), 0);
+	}
 
 	// RenderComponent::RenderComponent(Entity& owner,
 	//                                  RenderData* renderData,

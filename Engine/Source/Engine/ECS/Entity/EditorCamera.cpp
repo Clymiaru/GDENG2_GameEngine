@@ -1,21 +1,21 @@
 ﻿#include "pch.h"
-#include "Camera.h"
+#include "EditorCamera.h"
 
 #include "Engine/ECS/Component/TransformComponent.h"
-#include "Engine/ECS/Component/CameraComponent.h"
+#include "Engine/ECS/Component/EditorCameraComponent.h"
 
 #include "Engine/Core/Application.h"
 #include "Engine/Core/Window.h"
 
 namespace Engine
 {
-	Camera::Camera(const EntityID id,
-	               const StringView name,
-	               ComponentRegistry* componentRegistry) :
+	EditorCamera::EditorCamera(const EntityID id,
+	                           const StringView name,
+	                           ComponentRegistry* componentRegistry) :
 		Entity{id, name, componentRegistry}
 	{
 		auto transform = AttachComponent<TransformComponent>();
-		AttachComponent<CameraComponent>(transform);
+		AttachComponent<EditorCameraComponent>(transform);
 		//
 		// m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
 		// m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
@@ -23,7 +23,7 @@ namespace Engine
 		// UpdateCameraVectors();
 	}
 
-	Camera::~Camera() = default;
+	EditorCamera::~EditorCamera() = default;
 
 	// Matrix4 Camera::ViewProjMatrix()
 	// {

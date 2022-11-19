@@ -59,4 +59,9 @@ namespace Engine
 	{
 		return CreateUniquePtr<PixelShader>(*m_Device, pixelShaderBlob);
 	}
+	
+	UniquePtr<Framebuffer> RenderDevice::CreateFramebuffer(const FramebufferProfile& profile) const
+	{
+		return CreateUniquePtr<Framebuffer>(*m_Device, profile);
+	}
 }

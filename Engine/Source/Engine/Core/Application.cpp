@@ -53,6 +53,16 @@ namespace Engine
 	{
 		return *s_Instance->m_ResourceSystem;
 	}
+	
+	ComponentSystemHandler& Application::GetComponentSystem()
+	{
+		return *s_Instance->m_ComponentSystemHandler;
+	}
+	
+	SwapChain& Application::GetSwapChain()
+	{
+		return *s_Instance->m_SwapChain;
+	}
 
 	void Application::Start()
 	{
@@ -127,8 +137,6 @@ namespace Engine
 
 			Sleep(1);
 		}
-
-
 		End();
 	}
 
@@ -169,8 +177,6 @@ namespace Engine
 
 	void Application::Render() const
 	{
-		m_Renderer->StartRender(s_Instance->m_SwapChain->GetBackbuffer());
-
 		m_LayerSystem->Render();
 
 		m_SwapChain->Present(1);

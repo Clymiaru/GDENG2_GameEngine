@@ -3,8 +3,8 @@
 
 namespace Engine
 {
-	Framebuffer::Framebuffer(const FramebufferProfile& profile,
-	                         ID3D11Device& device) :
+	Framebuffer::Framebuffer(ID3D11Device& device,
+							 const FramebufferProfile& profile) :
 		m_Profile{profile},
 		m_RenderTarget{nullptr},
 		m_DepthStencilView{nullptr}

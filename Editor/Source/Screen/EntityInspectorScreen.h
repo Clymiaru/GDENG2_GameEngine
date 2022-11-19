@@ -31,16 +31,16 @@ namespace Editor
 		void Reset();
 
 		void DrawComponents(const Engine::Entity* selectedEntity,
-		                    Engine::List<Engine::AComponent*> componentList);
+		                    Engine::List<Engine::SharedPtr<Engine::AComponent>> componentList);
 
 		void DrawTransform(Engine::StringView entityNameID,
-		                   Engine::TransformComponent* transform) const;
+		                   Engine::SharedPtr<Engine::TransformComponent> transform) const;
 
 		void DrawRender(Engine::StringView entityNameID,
-		                Engine::RenderComponent* render) const;
+		                Engine::SharedPtr<Engine::RenderComponent> render) const;
 
 		// Event Callbacks
-		void OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName);
+		void OnEntityDestroy(const Engine::Entity* entity);
 
 		WorldOutlinerScreen& m_WorldOutlinerScreenRef;
 

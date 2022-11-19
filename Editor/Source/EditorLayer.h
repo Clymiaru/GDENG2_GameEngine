@@ -12,6 +12,8 @@ namespace Editor
 
 		void OnAttach() override;
 
+		void OnStart() override;
+
 		void OnPollInput() override;
 
 		void OnUpdate() override;
@@ -26,9 +28,6 @@ namespace Editor
 		EditorLayer& operator=(EditorLayer&&) noexcept = delete;
 
 	private:
-		// Only support 1 Game View and 1 Editor View for now
-		// Engine::UniquePtr<Engine::Framebuffer> m_EditorViewFramebuffer;
-		//
-		// Engine::UniquePtr<Engine::Framebuffer> m_GameViewFramebuffer;
+		int m_NumberOfEditorViewports = 1;		
 	};
 }

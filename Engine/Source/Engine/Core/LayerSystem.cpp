@@ -27,6 +27,11 @@ namespace Engine
 			layer->OnAttach();
 			m_ActiveLayers.push_back(layer);
 		}
+
+		for (size_t i = 0; i < m_ActiveLayers.size(); ++i)
+		{
+			m_ActiveLayers[i]->OnStart(); // Let each layer handle their own rendering
+		}
 	}
 
 	void LayerSystem::EndLayers()
@@ -89,32 +94,4 @@ namespace Engine
 			m_ActiveLayers[i]->OnRender(); // Let each layer handle their own rendering
 		}
 	}
-
-	// void LayerSystem::ImGuiRender() const
-	// {
-	// 	ImGui_ImplDX11_NewFrame();
-	// 	ImGui_ImplWin32_NewFrame();
-	// 	ImGui::NewFrame();
-	//
-	// 	for (auto* layer : m_Layers)
-	// 	{
-	// 		layer->OnImGuiRender();
-	// 	}
-	//
-	// 	ImGui::Render();
-	// 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//
-	// 	ImGuiIO& io = ImGui::GetIO();
-	//
-	// 	io.DisplaySize = ImVec2((float)Application::GetWindowInfo().Width,
-	// 	                        (float)Application::GetWindowInfo().Height);
-	//
-	// 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	// 	{
-	// 		ImGui::UpdatePlatformWindows();
-	// 		ImGui::RenderPlatformWindowsDefault();
-	// 	}
-	//
-	// 	ImGui::EndFrame();
-	// }
 }

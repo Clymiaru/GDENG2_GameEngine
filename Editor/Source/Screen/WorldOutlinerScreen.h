@@ -11,19 +11,21 @@ namespace Engine
 namespace Editor
 {
 	// UI that shows all of the Entities in the scene
-	
-	class WorldOutlinerScreen final: public Engine::AUIScreen
+	class WorldOutlinerScreen final : public Engine::AUIScreen
 	{
 	public:
 		struct Entry
 		{
-			Engine::EntityID EntityID;
-			Engine::String EntityName;
-			bool IsSelected = false;
+			Engine::EntityID EntityID = 0;
+			Engine::String EntityName = "Unnamed";
+			bool IsSelected           = false;
 		};
+
 		explicit WorldOutlinerScreen(Engine::ScreenID id);
+
 		~WorldOutlinerScreen() override;
 
+		[[nodiscard]]
 		Engine::EntityID GetSelectedEntityID() const;
 
 		WorldOutlinerScreen(const WorldOutlinerScreen&)                = delete;
@@ -34,13 +36,11 @@ namespace Editor
 	private:
 		void DrawImpl() override;
 
-		void OnEntityCreate(Engine::EntityID entityID, Engine::StringView entityName);
+		void AddEntityEntry(const Engine::Entity* entity);
 
-		void OnEntityDestroy(Engine::EntityID entityID, Engine::StringView entityName);
+		void RemoveEntityEntry(const Engine::Entity* entity);
 
 		Engine::List<Entry> m_EntityEntryList;
-
 		Engine::EntityID m_SelectedEntity = 0;
-
 	};
 }

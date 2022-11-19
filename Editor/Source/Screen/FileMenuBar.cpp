@@ -4,11 +4,13 @@
 #include <Engine/ECS/Entity/EmptyEntity.h>
 #include <Engine/ECS/Entity/Camera.h>
 #include <Engine/ECS/Entity/Cube.h>
+#include <Engine/ECS/Entity/EditorCamera.h>
 
 #include <Engine/UI/UISystem.h>
 
 #include "EntityInspectorScreen.h"
-#include "ViewportScreen.h"
+#include "EditorViewportScreen.h"
+#include "GameViewportScreen.h"
 #include "WorldOutlinerScreen.h"
 
 #include "../../../Engine/Dependencies/ImGui/imgui.h"
@@ -65,12 +67,13 @@ namespace Editor
 
 				if (ImGui::MenuItem("Scene Viewport"))
 				{
-					Engine::UISystem::Create<ViewportScreen>();
+					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>();
+					Engine::UISystem::Create<EditorViewportScreen>(editorCamera);
 				}
 
 				if (ImGui::MenuItem("Game Viewport"))
 				{
-					Engine::UISystem::Create<ViewportScreen>();
+					Engine::UISystem::Create<GameViewportScreen>();
 				}
 
 				ImGui::EndMenu();

@@ -34,9 +34,9 @@ namespace Engine
 
 		s_Instance->m_ComponentRegistry.DeregisterAllComponentsOfEntity(entity->GetID());
 
-		for (auto callback : s_Instance->m_OnDestroyCallbackList)
+		for (auto callback : s_Instance->m_OnDestroyEntityCallbackList)
 		{
-			callback(entity->GetID(), entity->GetName());
+			callback(entity);
 		}
 		
 		delete entity;
@@ -62,18 +62,28 @@ namespace Engine
 		return s_Instance->m_EntityRegistry.GetAllEntities();
 	}
 	
-	List<AComponent*> EntityManager::GetAllComponentsOfEntity(const EntityID entityID)
+	List<SharedPtr<AComponent>> EntityManager::GetAllComponentsOfEntity(const EntityID entityID)
 	{
 		return s_Instance->m_ComponentRegistry.GetComponentListOfEntity(entityID);
 	}
-
-	void EntityManager::ListenToCreateEvent(const std::function<void(EntityID, StringView)> onCreateCallback)
+	
+	void EntityManager::ListenToEntityCreateEvent(const EntityEventCallback& callback)
 	{
-		s_Instance->m_OnCreateCallbackList.push_back(onCreateCallback);
+		s_Instance->m_OnCreateEntityCallbackList.push_back(callback);
 	}
 	
-	void EntityManager::ListenToDestroyEvent(std::function<void(EntityID, StringView)> onDestroyCallback)
+	void EntityManager::ListenToEntityDestroyEvent(const EntityEventCallback& callback)
 	{
-		s_Instance->m_OnDestroyCallbackList.push_back(onDestroyCallback);
+		s_Instance->m_OnDestroyEntityCallbackList.push_back(callback);
+	}
+	
+	void EntityManager::ListenToEntityAttachComponentEvent(const ComponentEventCallback& callback)
+	{
+		s_Instance->m_ComponentRegistry.ListenToAttachComponentEvent(callback);
+	}
+	
+	void EntityManager::ListenToEntityDetachComponentEvent(const ComponentEventCallback& callback)
+	{
+		s_Instance->m_ComponentRegistry.ListenToDetachComponentEvent(callback);
 	}
 }

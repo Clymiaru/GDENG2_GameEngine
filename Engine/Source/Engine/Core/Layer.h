@@ -16,6 +16,9 @@ namespace Engine
 		// Executes when this layer is created
 		virtual void OnAttach() = 0;
 
+		// Executes when OnAttach is finished
+		virtual void OnStart() = 0;
+
 		virtual void OnPollInput() = 0;
 
 		virtual void OnUpdate() = 0;

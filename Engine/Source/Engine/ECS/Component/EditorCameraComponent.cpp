@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CameraComponent.h"
+#include "EditorCameraComponent.h"
 
 #include "TransformComponent.h"
 
@@ -8,8 +8,8 @@
 
 namespace Engine
 {
-	CameraComponent::CameraComponent(const EntityID& ownerID,
-	                                 SharedPtr<TransformComponent> transform) :
+	EditorCameraComponent::EditorCameraComponent(const EntityID& ownerID,
+	                                             SharedPtr<TransformComponent> transform) :
 		AComponent{ownerID},
 		m_Transform{transform}
 	{
@@ -18,9 +18,9 @@ namespace Engine
 		m_WorldUp = m_Up;
 	}
 
-	CameraComponent::~CameraComponent() { }
+	EditorCameraComponent::~EditorCameraComponent() { }
 
-	void CameraComponent::SetSize(uint64_t width, uint64_t height)
+	void EditorCameraComponent::SetSize(uint64_t width, uint64_t height)
 	{
 		const auto* storedFramebuffer = m_RenderTarget.release();
 		delete storedFramebuffer;
@@ -31,10 +31,10 @@ namespace Engine
 		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
 	}
 
-	Matrix4 CameraComponent::GetViewProjMatrix()
+	Matrix4 EditorCameraComponent::GetViewProjMatrix()
 	{
 		const float aspectRatio = (float)m_RenderTarget->GetInfo().Width / (float)m_RenderTarget->GetInfo().Height;
-
+		
 		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(DegreesToRadians(FoV),
 		                                                     aspectRatio,
 		                                                     0.001f, 1000.0f);
@@ -43,25 +43,25 @@ namespace Engine
 		return m_ProjMatrix * m_ViewMatrix;
 	}
 
-	void CameraComponent::Update()
+	void EditorCameraComponent::Update()
 	{
 		UpdateCameraVectors();
 		UpdateViewMatrix();
 	}
 
-	Framebuffer& CameraComponent::GetRenderTarget() const
+	Framebuffer& EditorCameraComponent::GetRenderTarget() const
 	{
 		return *m_RenderTarget;
 	}
 
-	void CameraComponent::UpdateViewMatrix()
+	void EditorCameraComponent::UpdateViewMatrix()
 	{
 		m_ViewMatrix = Matrix4::CreateLookAt(m_Transform->Position,
 		                                     m_Transform->Position + m_Front,
 		                                     m_Up).Transpose();
 	}
 
-	void CameraComponent::UpdateCameraVectors()
+	void EditorCameraComponent::UpdateCameraVectors()
 	{
 		float pitch = m_Transform->Rotation.x;
 		float yaw   = m_Transform->Rotation.y;

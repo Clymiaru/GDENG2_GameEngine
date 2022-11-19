@@ -3,8 +3,6 @@
 #include "RenderDevice.h"
 #include "RenderContext.h"
 
-#include "Engine/Core/Core.h"
-
 namespace Engine
 {
 	class Renderer final
@@ -16,21 +14,18 @@ namespace Engine
 
 		// Takes in the Framebuffer to clear then set it as current render target
 		void StartRender(const Framebuffer& framebuffer);
-
+		
 		// Removes the bound framebuffer as rendertarget
 		void EndRender();
-
+		
 		void SetViewportSize(const Vector2Uint& viewportSize) const;
-
-		void SetFramebuffer(const Framebuffer& framebuffer);
-
-		void ClearFramebuffer(const Framebuffer& framebuffer);
-
+		
+		void SetFramebuffer(const Framebuffer& framebuffer) const;
+		
+		void ClearFramebuffer(const Framebuffer& framebuffer) const;
+		
 		// TODO: Maybe set RasterState
-
-		void UpdateConstantBuffer(const ConstantBuffer& constantBuffer,
-		                          const void* updatedBufferData);
-
+		
 		[[nodiscard]]
 		RenderDevice& GetDevice() const;
 

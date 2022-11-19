@@ -1,15 +1,13 @@
 ﻿#pragma once
 #include "Engine/Core/Core.h"
 #include "Engine/Math/Math.h"
-#include "Engine/ECS/Core/AComponent.h"
 
 #include "Engine/Graphics/RenderData.h"
-
 #include "Engine/ResourceManagement/Core/Resource.h"
 
-// #include "Engine/Graphics/VertexBuffer.h"
-// #include "Engine/Graphics/IndexBuffer.h"
-// #include "Engine/Graphics/ConstantBuffer.h"
+#include "Engine/ECS/Core/AComponent.h"
+#include "CameraComponent.h"
+#include "TransformComponent.h"
 
 namespace Engine
 {
@@ -28,19 +26,9 @@ namespace Engine
 		                         VertexShaderResourceRef vertexShaderResource,
 		                         PixelShaderResourceRef pixelShaderResource);
 
-		//                 RenderData* renderData,
-		//                 SharedPtr<VertexShader> vertexShader,
-		//                 SharedPtr<PixelShader> pixelShader);
-		//
-		// RenderComponent(Entity& owner,
-		//                 RenderData* renderData,
-		//                 SharedPtr<VertexShader> vertexShader,
-		//                 SharedPtr<PixelShader> pixelShader,
-		//                 StringView textureFilepath);
-
 		~RenderComponent() override = default;
 
-		//void Draw(Camera& camera) const;
+		void Draw(TransformComponent* transform, CameraComponent& camera);
 
 		MAKE_COMPONENT(Render)
 
@@ -49,7 +37,7 @@ namespace Engine
 		RenderComponent(RenderComponent&&) noexcept            = delete;
 		RenderComponent& operator=(RenderComponent&&) noexcept = delete;
 
-		//Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+		Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 	private:
 		// Material

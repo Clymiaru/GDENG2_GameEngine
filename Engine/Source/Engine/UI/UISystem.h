@@ -14,8 +14,6 @@ namespace Engine
 	class Window;
 	class Renderer;
 
-	// Issue is that Drawing of UI should happen on a separate layer
-	
 	// This UI is mainly for the editor
 	class UISystem final
 	{

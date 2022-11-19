@@ -5,42 +5,48 @@
 
 #include "Screen/EntityInspectorScreen.h"
 #include "Screen/FileMenuBar.h"
-#include "Screen/ViewportScreen.h"
-#include "Screen/WorldOutlinerScreen.h"
+#include "Screen/EditorViewportScreen.h"
 
 namespace Editor
 {
 	EditorUILayer::EditorUILayer() :
 		Layer{"EditorUILayer"} {}
-	
+
 	EditorUILayer::~EditorUILayer() = default;
-	
+
 	void EditorUILayer::OnAttach()
 	{
 		using namespace Engine;
 		Debug::Log("Editor UI Layer Start");
 
-		WorldOutlinerScreen* worldOutlinerScreen = UISystem::Create<WorldOutlinerScreen>();
+		m_WorldOutlinerScreen = UISystem::Create<WorldOutlinerScreen>();
 
-		UISystem::Create<FileMenuBar>(*worldOutlinerScreen);
-
-		UISystem::Create<EntityInspectorScreen>(*worldOutlinerScreen);
-
-		UISystem::Create<ViewportScreen>();
-		
+		UISystem::Create<FileMenuBar>(*m_WorldOutlinerScreen);
 	}
-	
+
+	void EditorUILayer::OnStart()
+	{
+		using namespace Engine;
+
+		UISystem::Create<EntityInspectorScreen>(*m_WorldOutlinerScreen);
+	}
+
 	void EditorUILayer::OnPollInput() {}
-	
+
 	void EditorUILayer::OnUpdate() {}
-	
+
 	void EditorUILayer::OnRender()
 	{
 		using namespace Engine;
 
+		const SwapChain& swapChain = Application::GetSwapChain();
+		Application::GetRenderer().StartRender(swapChain.GetBackbuffer());
+
 		UISystem::DrawUI();
+
+		Application::GetRenderer().EndRender();
 	}
-	
+
 	void EditorUILayer::OnDetach()
 	{
 		using namespace Engine;

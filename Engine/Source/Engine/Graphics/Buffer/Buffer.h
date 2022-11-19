@@ -20,6 +20,9 @@ namespace Engine
 		[[nodiscard]]
 		size_t ByteSize() const;
 
+		[[nodiscard]]
+		ID3D11Buffer& GetData() const;
+
 		Buffer(const Buffer&) = delete;
 		Buffer& operator=(const Buffer&) = delete;
 		Buffer(Buffer&&) noexcept = delete;

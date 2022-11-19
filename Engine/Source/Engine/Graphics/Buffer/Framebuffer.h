@@ -6,10 +6,10 @@ namespace Engine
 {
 	struct FramebufferProfile
 	{
-		unsigned int Width = 0;
-		unsigned int Height = 0;
+		unsigned int Width               = 0;
+		unsigned int Height              = 0;
 		ID3D11Texture2D* ExistingTexture = nullptr;
-		bool SwapChainTarget = false;
+		bool SwapChainTarget             = false;
 	};
 
 	class Framebuffer final
@@ -17,14 +17,14 @@ namespace Engine
 	public:
 		struct Specification
 		{
-			unsigned int Width = 0;
-			unsigned int Height = 0;
+			unsigned int Width               = 0;
+			unsigned int Height              = 0;
 			ID3D11Texture2D* ExistingTexture = nullptr;
-			bool SwapChainTarget = false;
+			bool SwapChainTarget             = false;
 		};
-		
-		explicit Framebuffer(const FramebufferProfile& profile,
-		                     ID3D11Device& device);
+
+		explicit Framebuffer(ID3D11Device& device,
+		                     const FramebufferProfile& profile);
 
 		~Framebuffer();
 

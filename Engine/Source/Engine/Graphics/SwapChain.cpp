@@ -13,7 +13,6 @@
 
 namespace Engine
 {
-	// TODO: Swap chain resizing
 	SwapChain::SwapChain(Window& window,
 	                     ID3D11Device* device,
 	                     IDXGIFactory* factory) :
@@ -30,7 +29,7 @@ namespace Engine
 		swapChainFramebufferProfile.ExistingTexture = backBuffer;
 		swapChainFramebufferProfile.SwapChainTarget = true;
 
-		m_MainFramebuffer = new Framebuffer(swapChainFramebufferProfile, *device);
+		m_MainFramebuffer = new Framebuffer(*device, swapChainFramebufferProfile);
 	}
 
 	SwapChain::~SwapChain() = default;
@@ -97,7 +96,8 @@ namespace Engine
 		return *m_MainFramebuffer;
 	}
 
-	void SwapChain::Resize(unsigned width, unsigned height, RenderContext& deviceContext, ID3D11Device* device)
+	void SwapChain::Resize(unsigned width, unsigned height,
+	                       RenderContext& deviceContext, ID3D11Device* device)
 	{
 		if (deviceContext.m_DeviceContext == nullptr || device == nullptr)
 			return;
@@ -115,11 +115,11 @@ namespace Engine
 
 		FramebufferProfile resizedFramebuffer;
 		resizedFramebuffer.Width           = width;
-		resizedFramebuffer.Height           = height;
+		resizedFramebuffer.Height          = height;
 		resizedFramebuffer.ExistingTexture = buffer;
 		resizedFramebuffer.SwapChainTarget = true;
 
-		m_MainFramebuffer = new Framebuffer(resizedFramebuffer, *device);
+		m_MainFramebuffer = new Framebuffer(*device, resizedFramebuffer);
 
 		List<ID3D11RenderTargetView*> renderTargetViews;
 		renderTargetViews.push_back(&m_MainFramebuffer->GetRenderTarget());

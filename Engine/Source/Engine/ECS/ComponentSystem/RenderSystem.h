@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Engine/ECS/Component/CameraComponent.h"
 
 namespace Engine
 {
@@ -8,7 +9,7 @@ namespace Engine
 		RenderSystem() = default;
 		~RenderSystem() = default;
 		
-		void Render() const;
+		void Render(CameraComponent& camera) const;
 	};
 }
 

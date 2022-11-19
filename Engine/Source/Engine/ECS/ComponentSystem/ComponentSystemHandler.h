@@ -10,10 +10,12 @@ namespace Engine
 	public:
 		ComponentSystemHandler();
 		~ComponentSystemHandler();
+
+		CameraSystem& GetCameraSystem() const;
 		
 		void Update();
 
-		void Render();
+		void Render(CameraComponent& camera);
 
 	private:
 		CameraSystem* m_CameraSystem;

@@ -1,6 +1,11 @@
 ﻿#include "EditorLayer.h"
 
+#include <Engine/Core/Application.h>
 #include <Engine/Core/Debug.h>
+#include <Engine/ECS/ComponentSystem/ComponentSystemHandler.h>
+#include <Engine/ECS/Core/EntityManager.h>
+#include <Engine/ECS/Entity/Cube.h>
+#include <Engine/Graphics/Renderer.h>
 
 // #include <Engine/Core/Application.h>
 // #include <Engine/ECS/Component/RenderComponent.h>
@@ -35,7 +40,12 @@ namespace Editor
 	void EditorLayer::OnAttach()
 	{
 		using namespace Engine;
-		Debug::Log("Editor Layer Start");
+	}
+
+	void EditorLayer::OnStart()
+	{
+		using namespace Engine;
+		EntityManager::Create<Cube>();
 	}
 
 	void EditorLayer::OnPollInput() { }
@@ -48,6 +58,27 @@ namespace Editor
 	void EditorLayer::OnRender()
 	{
 		using namespace Engine;
+
+		CameraSystem& cameraSystem = Application::GetComponentSystem().GetCameraSystem();
+
+		if (CameraComponent* gameCamera = cameraSystem.GetGameCamera();
+			gameCamera != nullptr)
+		{
+			Application::GetRenderer().StartRender(gameCamera->GetRenderTarget());
+			Application::GetComponentSystem().Render(*gameCamera);
+			Application::GetRenderer().EndRender();
+		}
+		
+		for (int i = 0; i < m_NumberOfEditorViewports; i++)
+		{
+			if (CameraComponent* editorCamera = cameraSystem.GetEditorCamera(i);
+				editorCamera != nullptr)
+			{
+				Application::GetRenderer().StartRender(editorCamera->GetRenderTarget());
+				Application::GetComponentSystem().Render(*editorCamera);
+				Application::GetRenderer().EndRender();
+			}
+		}
 	}
 
 	void EditorLayer::OnDetach()

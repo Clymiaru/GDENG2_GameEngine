@@ -5,9 +5,6 @@
 #include "Window.h"
 #include "LayerSystem.h"
 
-namespace Engine {
-	class ComponentSystemHandler;
-}
 namespace Engine
 {
 	class Window;
@@ -19,6 +16,7 @@ namespace Engine
 	class Layer;
 	class LayerSystem;
 	class EntityManager;
+	class ComponentSystemHandler;
 
 	class Application final
 	{
@@ -49,6 +47,10 @@ namespace Engine
 		static Renderer& GetRenderer();
 		
 		static ResourceSystem& GetResourceSystem();
+
+		static ComponentSystemHandler& GetComponentSystem();
+
+		static SwapChain& GetSwapChain();
 
 		void Run();
 
@@ -105,8 +107,6 @@ namespace Engine
 		ComponentSystemHandler* m_ComponentSystemHandler;
 		
 		LayerSystem* m_LayerSystem;
-
-		// EntityManager* m_EntityManager;
 
 		static Application* s_Instance;
 	};

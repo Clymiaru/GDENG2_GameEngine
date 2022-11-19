@@ -1,22 +1,22 @@
 ﻿#pragma once
-#include "Engine/Math/Math.h"
+#include "TransformComponent.h"
+
 #include "Engine/ECS/Core/AComponent.h"
 #include "Engine/Graphics/Buffer/Framebuffer.h"
 
 namespace Engine
 {
-	// Issue, what if the transform is deleted before camera component?
-
-	class TransformComponent;
-	class CameraComponent final : public AComponent
+	// This component is simply for editor
+	// Difference is that this is controllable for the editor
+	class EditorCameraComponent final : public AComponent
 	{
 	public:
-		explicit CameraComponent(const EntityID& ownerID,
-		                         SharedPtr<TransformComponent> transform);
+		explicit EditorCameraComponent(const EntityID& ownerID,
+		                               SharedPtr<TransformComponent> transform);
 
-		~CameraComponent() override;
+		~EditorCameraComponent() override;
 
-		MAKE_COMPONENT(Camera)
+		MAKE_COMPONENT(EditorCamera)
 
 		void SetSize(uint64_t width, uint64_t height);
 
@@ -34,7 +34,7 @@ namespace Engine
 
 		void UpdateCameraVectors();
 
-		SharedPtr<TransformComponent> m_Transform{};
+		SharedPtr<TransformComponent> m_Transform;
 
 		Matrix4 m_ViewMatrix;
 
@@ -48,6 +48,6 @@ namespace Engine
 
 		Vector3Float m_WorldUp;
 
-		UniquePtr<Framebuffer> m_RenderTarget{};
+		UniquePtr<Framebuffer> m_RenderTarget;
 	};
 }

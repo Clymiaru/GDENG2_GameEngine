@@ -21,8 +21,8 @@ namespace Engine
 		[[nodiscard]]
 		const String& GetName() const;
 
-		template <typename T, typename... Args>
-		void AttachComponent(Args&&... args);
+		template <typename ComponentType, typename... Args>
+		SharedPtr<ComponentType> AttachComponent(Args&&... args);
 
 		// template <typename T>
 		// void DetachComponent();
@@ -46,11 +46,13 @@ namespace Engine
 		ComponentRegistry* m_ComponentRegistry;
 	};
 
-	template <typename T, typename ... Args>
-	void Entity::AttachComponent(Args&&... args)
+	template <typename ComponentType, typename ... Args>
+	SharedPtr<ComponentType> Entity::AttachComponent(Args&&... args)
 	{
-		T* component = new T(m_ID, std::forward<Args>(args)...);
-		m_ComponentRegistry->RegisterComponent(m_ID, (AComponent*)component);
+		SharedPtr<ComponentType> component = CreateSharedPtr<ComponentType>(m_ID,
+		                                                                    std::forward<Args>(args)...);
+		
+		return m_ComponentRegistry->RegisterComponent<ComponentType>(m_ID, component);
 	}
 
 	// template <typename T>

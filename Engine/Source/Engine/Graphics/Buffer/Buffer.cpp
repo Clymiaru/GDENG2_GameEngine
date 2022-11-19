@@ -28,4 +28,9 @@ namespace Engine
 	{
 		return m_BufferSize;
 	}
+	
+	ID3D11Buffer& Buffer::GetData() const
+	{
+		return *m_Data;
+	}
 }

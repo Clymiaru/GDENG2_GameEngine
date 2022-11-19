@@ -6,14 +6,14 @@
 
 namespace Engine
 {
-	class Camera final : public Entity
+	class EditorCamera final : public Entity
 	{
 	public:
-		explicit Camera(EntityID id,
-		                StringView name,
-		                ComponentRegistry* componentRegistry);
+		explicit EditorCamera(EntityID id,
+						StringView name,
+						ComponentRegistry* componentRegistry);
 
-		~Camera() override;
+		~EditorCamera() override;
 
 		// Matrix4 ViewProjMatrix();
 		//
@@ -21,7 +21,7 @@ namespace Engine
 		//
 		// float FoV = 45.0f;
 
-	private:
+		private:
 		// void UpdateViewMatrix();
 		//
 		// void UpdateCameraVectors();
