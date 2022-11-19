@@ -42,5 +42,5 @@ struct PSInput
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-	return t_Frame.Sample(s_FrameSampler, input.UV);
+	return t_Frame.Sample(s_FrameSampler, input.UV) * AlbedoColor;
 }

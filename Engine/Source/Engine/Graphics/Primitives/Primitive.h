@@ -1,14 +1,115 @@
 ﻿#pragma once
+#include "../../../../Dependencies/tinyobj/tiny_obj_loader.h"
+
 #include "Engine/Graphics/RenderData.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace Engine::Primitive
 {
-	//TODO: Add UV coordinatates and normals
+	//TODO: Add normals
 	struct Vertex
 	{
 		Vector3Float Position;
 		Vector2Float UV;
 	};
+
+	inline RenderData* Mesh(StringView filepath)
+	{
+		std::ifstream file = std::ifstream(filepath.data());
+
+		std::string fileOutput;
+		if (file.is_open())
+		{
+			std::string line;
+			while (std::getline(file, line))
+			{
+				fileOutput += line;
+			}
+			file.close();
+		}
+		else
+		{
+			return nullptr;
+		}
+
+		tinyobj::attrib_t attributes;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string warning;
+		std::string error;
+
+		std::string cFilepath = filepath.data();
+		if (!tinyobj::LoadObj(&attributes, &shapes, &materials, &error, cFilepath.c_str()))
+		{
+			Debug::Log("File cannot be loaded! {0}", filepath.data());
+			return nullptr;
+		}
+
+		List<Vertex>* vertices  = new List<Vertex>();
+		List<uint32_t>* indices = new List<uint32_t>();
+
+		// for (const auto& shape : shapes)
+		// {
+		// 	Vertex vertex;
+		// 	
+		// 	size_t index_offset = 0;
+		// 	for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
+		// 	{
+		// 		int fv = shape.mesh.num_face_vertices[f];
+		// 	}
+		// 		
+		// 	for (const auto& index : shape.mesh.indices)
+		// 	{
+		// 		vertex.Position = Vector3Float{attributes.vertices[3 * index.vertex_index + 0],
+		// 		                               attributes.vertices[3 * index.vertex_index + 1],
+		// 		                               attributes.vertices[3 * index.vertex_index + 2]};
+		//
+		// 		vertex.UV = Vector2Float{attributes.texcoords[2 * index.texcoord_index + 0],
+		// 		                         attributes.texcoords[2 * index.texcoord_index + 1]};
+		//
+		// 		vertices->push_back(vertex);
+		// 		indices->push_back(index.vertex_index);
+		// 	}
+		// }
+
+		size_t currentIndex = 0;
+		for (const auto& shape : shapes)
+		{
+			Vertex vertex;
+			for (const auto& index : shape.mesh.indices)
+			{
+				vertex.Position.x    = attributes.vertices[3 * index.vertex_index + 0];
+				vertex.Position.y    = attributes.vertices[3 * index.vertex_index + 1];
+				vertex.Position.z    = attributes.vertices[3 * index.vertex_index + 2];
+				
+				vertex.UV.x          = attributes.texcoords[2 * index.texcoord_index + 0];
+				vertex.UV.y          = 1.0f - attributes.texcoords[2 * index.texcoord_index + 1];
+				vertices->push_back(vertex);
+
+				indices->push_back(currentIndex);
+				currentIndex++;
+			}
+		}
+
+		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
+			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+
+		RenderData* meshRenderData               = new RenderData();
+		meshRenderData->Vertices                 = vertices->data();
+		meshRenderData->VertexCount              = vertices->size();
+		meshRenderData->VertexSize               = sizeof(Vertex);
+		meshRenderData->VertexLayout             = layout->data();
+		meshRenderData->VertexLayoutElementCount = layout->size();
+		meshRenderData->Indices                  = indices->data();
+		meshRenderData->IndexCount               = indices->size();
+		meshRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+		return meshRenderData;
+	}
 
 	// inline RenderData* Circle(const int sectors)
 	// {
@@ -77,8 +178,7 @@ namespace Engine::Primitive
 			{Vector2Float(1.0f, 1.0f)}
 		};
 
-		List<Vertex>* vertices = new List<Vertex>
-		{
+		List<Vertex>* vertices = new List<Vertex>{
 			{positionList[0], uvList[1]},
 			{positionList[1], uvList[0]},
 			{positionList[2], uvList[2]},
@@ -110,14 +210,12 @@ namespace Engine::Primitive
 			{positionList[0], uvList[3]}
 		};
 
-		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>
-		{
+		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 
-		List<uint32_t>* indices = new List<uint32_t>
-		{
+		List<uint32_t>* indices = new List<uint32_t>{
 			//FRONT SIDE
 			0, 1, 2,
 			2, 3, 0,

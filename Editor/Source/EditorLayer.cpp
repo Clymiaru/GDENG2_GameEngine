@@ -9,6 +9,7 @@
 #include <Engine/ECS/Entity/Camera.h>
 #include <Engine/ECS/Entity/EditorCamera.h>
 #include <Engine/ECS/Entity/Cube.h>
+#include <Engine/ResourceManagement/Core/ResourceSystem.h>
 
 #include "Screen/EditorViewportScreen.h"
 #include "Screen/GameViewportScreen.h"
@@ -28,6 +29,10 @@ namespace Editor
 	void EditorLayer::OnStart()
 	{
 		using namespace Engine;
+		Application::GetResourceSystem().Load<Texture>("Assets/Brick1024x1024.jpg");
+		
+		// m_TextureResource = Application::GetResourceSystem().Get<TextureResource>("Brick1024x1024");
+		
 		auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512, 512);
 		UISystem::Create<EditorViewportScreen>(editorCamera);
 

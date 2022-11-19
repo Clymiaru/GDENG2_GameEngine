@@ -31,6 +31,10 @@ namespace Engine
 
 		~RenderComponent() override = default;
 
+		void SetTexture(SharedPtr<TextureResource> texture);
+
+		void RemoveTexture();
+
 		void Draw(CameraComponent& camera);
 
 		void Draw(EditorCameraComponent& camera);

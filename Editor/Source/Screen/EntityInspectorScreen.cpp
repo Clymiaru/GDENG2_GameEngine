@@ -5,6 +5,7 @@
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Core/Entity.h>
 #include <Engine/ECS/Core/EntityManager.h>
+#include <Engine/ResourceManagement/Core/ResourceSystem.h>
 #include <Engine/UI/UISystem.h>
 
 #include "../Dependencies/ImGui/imgui.h"
@@ -16,7 +17,7 @@ namespace Editor
 		m_WorldOutlinerScreenRef{worldOutlinerScreenRef}
 	{
 		using namespace Engine;
-		
+
 		auto destroyEntityCallback = [this](const Entity* entity) { OnEntityDestroy(entity); };
 		EntityManager::ListenToEntityDestroyEvent(destroyEntityCallback);
 	}
@@ -192,6 +193,25 @@ namespace Editor
 		if (ImGui::CollapsingHeader("Render Component"))
 		{
 			ImGui::Text("Render Options");
+			const String entityAlbedoColor = std::vformat("Albedo Color##Render{0}",
+			                                              std::make_format_args(entityNameID));
+			ImGui::ColorEdit4(entityAlbedoColor.c_str(), (float*)&render->AlbedoColor);
+
+			// TODO: Must able to change to any texture that is loaded.
+			const String buttonSetBrick = std::vformat("Set Brick Texture##Render{0}",
+			                                           std::make_format_args(entityNameID));
+			if (ImGui::Button(buttonSetBrick.c_str()))
+			{
+				const auto texture = Application::GetResourceSystem().Get<TextureResource>("Brick1024x1024");
+				render->SetTexture(texture);
+			}
+
+			const String buttonRemoveTexture = std::vformat("Remove Texture##Render{0}",
+													   std::make_format_args(entityNameID));
+			if (ImGui::Button(buttonRemoveTexture.c_str()))
+			{
+				render->RemoveTexture();
+			}
 		}
 	}
 
@@ -200,4 +220,3 @@ namespace Editor
 		Reset();
 	}
 }
-

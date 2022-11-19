@@ -61,9 +61,9 @@ namespace Engine
 
 		D3D11_SAMPLER_DESC textureSamplerDesc = {};
 		textureSamplerDesc.Filter             = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		textureSamplerDesc.AddressU           = D3D11_TEXTURE_ADDRESS_CLAMP;
-		textureSamplerDesc.AddressV           = D3D11_TEXTURE_ADDRESS_CLAMP;
-		textureSamplerDesc.AddressW           = D3D11_TEXTURE_ADDRESS_CLAMP;
+		textureSamplerDesc.AddressU           = D3D11_TEXTURE_ADDRESS_WRAP;
+		textureSamplerDesc.AddressV           = D3D11_TEXTURE_ADDRESS_WRAP;
+		textureSamplerDesc.AddressW           = D3D11_TEXTURE_ADDRESS_WRAP;
 
 		device.CreateSamplerState(&textureSamplerDesc, &m_TextureSampler);
 
