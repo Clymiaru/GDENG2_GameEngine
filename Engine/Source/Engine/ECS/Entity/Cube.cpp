@@ -19,12 +19,12 @@ namespace Engine
 		Application::GetResourceSystem().Load<VertexShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
 		Application::GetResourceSystem().Load<PixelShader>("Assets/Shaders/Basic/SolidColorShader.hlsl");
 
-		AttachComponent<TransformComponent>();
+		auto transform = AttachComponent<TransformComponent>();
 
 		auto vertexShader = Application::GetResourceSystem().Get<VertexShaderResource>("SolidColorShader");
 		auto pixelShader  = Application::GetResourceSystem().Get<PixelShaderResource>("SolidColorShader");
 		
-		AttachComponent<RenderComponent>(cubeRenderData, vertexShader, pixelShader);
+		AttachComponent<RenderComponent>(cubeRenderData, vertexShader, pixelShader, transform);
 	}
 
 	Cube::~Cube() = default;

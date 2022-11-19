@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <Engine/Math/Math.h>
 #include <Engine/UI/AUIScreen.h>
 
 namespace Editor
@@ -16,5 +17,6 @@ namespace Editor
 
 	private:
 		void DrawImpl() override;
+		Engine::Vector2Uint m_ViewportSize;
 	};
 }

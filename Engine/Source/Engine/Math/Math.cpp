@@ -287,11 +287,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector2Float& v)
-	{
-		os << "{" << v.x << ", " << v.y << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector2Float& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << "}";
+	// 	return os;
+	// }
 
 	Vector2Int::Vector2Int() :
 		XMINT2{0, 0} { }
@@ -555,11 +555,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector2Int& v)
-	{
-		os << "{" << v.x << ", " << v.y << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector2Int& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << "}";
+	// 	return os;
+	// }
 
 	Vector2Uint::Vector2Uint() :
 		XMUINT2{0ULL, 0ULL} { }
@@ -818,11 +818,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector2Uint& v)
-	{
-		os << "{" << v.x << ", " << v.y << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector2Uint& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << "}";
+	// 	return os;
+	// }
 
 	//--------------------------------//
 	// Vector3                        //
@@ -1089,11 +1089,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector3Float& v)
-	{
-		os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector3Float& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
+	// 	return os;
+	// }
 
 	Vector3Int::Vector3Int() :
 		XMINT3{0, 0, 0} { }
@@ -1369,11 +1369,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector3Int& v)
-	{
-		os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector3Int& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
+	// 	return os;
+	// }
 
 	Vector3Uint::Vector3Uint() :
 		XMUINT3{0ULL, 0ULL, 0LL} { }
@@ -1632,11 +1632,11 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Vector3Uint& v)
-	{
-		os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Vector3Uint& v)
+	// {
+	// 	os << "{" << v.x << ", " << v.y << ", " << v.z << "}";
+	// 	return os;
+	// }
 
 	//--------------------------------//
 	// Matrix                         //
@@ -2324,9 +2324,9 @@ namespace Engine
 		return result;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const Color& c)
-	{
-		os << "{" << c.Red() << ", " << c.Green() << ", " << c.Blue() << ", " << c.Alpha() << "}";
-		return os;
-	}
+	// std::ostream& operator<<(std::ostream& os, const Color& c)
+	// {
+	// 	os << "{" << c.Red() << ", " << c.Green() << ", " << c.Blue() << ", " << c.Alpha() << "}";
+	// 	return os;
+	// }
 }

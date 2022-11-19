@@ -88,7 +88,7 @@ namespace Engine
 		Vector2Float(Vector2Float&&) noexcept            = default;
 		Vector2Float& operator=(Vector2Float&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector2Float& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector2Float& v);
 
 		static Vector2Float Zero;
 		static Vector2Float One;
@@ -100,7 +100,7 @@ namespace Engine
 	Vector2Float operator*(const Vector2Float& v, float s);
 	Vector2Float operator/(const Vector2Float& v1, const Vector2Float& v2);
 	Vector2Float operator/(const Vector2Float& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector2Float& v);
+	//std::ostream& operator<<(std::ostream& os, const Vector2Float& v);
 
 	struct Vector2Int final : DirectX::XMINT2
 	{
@@ -168,7 +168,7 @@ namespace Engine
 		Vector2Int(Vector2Int&&) noexcept            = default;
 		Vector2Int& operator=(Vector2Int&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector2Int& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector2Int& v);
 
 		static Vector2Int Zero;
 		static Vector2Int One;
@@ -180,7 +180,7 @@ namespace Engine
 	Vector2Int operator*(const Vector2Int& v, float s);
 	Vector2Int operator/(const Vector2Int& v1, const Vector2Int& v2);
 	Vector2Int operator/(const Vector2Int& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector2Int& v);
+	//std::ostream& operator<<(std::ostream& os, const Vector2Int& v);
 
 	struct Vector2Uint final : DirectX::XMUINT2
 	{
@@ -246,7 +246,7 @@ namespace Engine
 		Vector2Uint(Vector2Uint&&) noexcept            = default;
 		Vector2Uint& operator=(Vector2Uint&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector2Uint& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector2Uint& v);
 
 		static Vector2Uint Zero;
 		static Vector2Uint One;
@@ -258,7 +258,7 @@ namespace Engine
 	Vector2Uint operator*(const Vector2Uint& v, float s);
 	Vector2Uint operator/(const Vector2Uint& v1, const Vector2Uint& v2);
 	Vector2Uint operator/(const Vector2Uint& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector2Uint& v);
+	// std::ostream& operator<<(std::ostream& os, const Vector2Uint& v);
 
 	//--------------------------------//
 	// Vector3                        //
@@ -329,7 +329,7 @@ namespace Engine
 		Vector3Float(Vector3Float&&) noexcept            = default;
 		Vector3Float& operator=(Vector3Float&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector3Float& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector3Float& v);
 
 		static Vector3Float Zero;
 		static Vector3Float One;
@@ -341,7 +341,7 @@ namespace Engine
 	Vector3Float operator*(const Vector3Float& v, float s);
 	Vector3Float operator/(const Vector3Float& v1, const Vector3Float& v2);
 	Vector3Float operator/(const Vector3Float& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector3Float& v);
+	//std::ostream& operator<<(std::ostream& os, const Vector3Float& v);
 
 	struct Vector3Int final : DirectX::XMINT3
 	{
@@ -409,7 +409,7 @@ namespace Engine
 		Vector3Int(Vector3Int&&) noexcept            = default;
 		Vector3Int& operator=(Vector3Int&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector3Int& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector3Int& v);
 
 		static Vector3Int Zero;
 		static Vector3Int One;
@@ -421,7 +421,7 @@ namespace Engine
 	Vector3Int operator*(const Vector3Int& v, float s);
 	Vector3Int operator/(const Vector3Int& v1, const Vector3Int& v2);
 	Vector3Int operator/(const Vector3Int& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector3Int& v);
+	//std::ostream& operator<<(std::ostream& os, const Vector3Int& v);
 
 	struct Vector3Uint final : DirectX::XMUINT3
 	{
@@ -487,7 +487,7 @@ namespace Engine
 		Vector3Uint(Vector3Uint&&) noexcept            = default;
 		Vector3Uint& operator=(Vector3Uint&&) noexcept = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector3Uint& v);
+		//friend std::ostream& operator<<(std::ostream& os, const Vector3Uint& v);
 
 		static Vector3Uint Zero;
 		static Vector3Uint One;
@@ -499,7 +499,7 @@ namespace Engine
 	Vector3Uint operator*(const Vector3Uint& v, float s);
 	Vector3Uint operator/(const Vector3Uint& v1, const Vector3Uint& v2);
 	Vector3Uint operator/(const Vector3Uint& v, float s);
-	std::ostream& operator<<(std::ostream& os, const Vector3Uint& v);
+	//std::ostream& operator<<(std::ostream& os, const Vector3Uint& v);
 
 	// TODO
 	//--------------------------------//
@@ -656,7 +656,7 @@ namespace Engine
 		Color(Color&&)                 = default;
 		Color& operator=(Color&&)      = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const Color& c);
+		//friend std::ostream& operator<<(std::ostream& os, const Color& c);
 	};
 
 	Color operator+(const Color& c1, const Color& c2) noexcept;
@@ -664,7 +664,7 @@ namespace Engine
 	Color operator*(const Color& c1, const Color& c2) noexcept;
 	Color operator*(const Color& c, float s) noexcept;
 	Color operator/(const Color& c1, const Color& c2) noexcept;
-	std::ostream& operator<<(std::ostream& os, const Color& c);
+	//std::ostream& operator<<(std::ostream& os, const Color& c);
 
 	// TODO
 	//--------------------------------//

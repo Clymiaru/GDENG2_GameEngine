@@ -12,7 +12,9 @@ namespace Engine
 	{
 	public:
 		explicit EditorCameraComponent(const EntityID& ownerID,
-		                               SharedPtr<TransformComponent> transform);
+		                               SharedPtr<TransformComponent> transform,
+		                               uint64_t width,
+		                               uint64_t height);
 
 		~EditorCameraComponent() override;
 
@@ -29,6 +31,8 @@ namespace Engine
 
 	private:
 		float FoV = 45.0f;
+
+		void InitRenderTarget(uint64_t width, uint64_t height);
 
 		void UpdateViewMatrix();
 

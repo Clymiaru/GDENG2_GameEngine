@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Engine/ECS/Component/CameraComponent.h"
+#include "Engine/ECS/Component/EditorCameraComponent.h"
 
 namespace Engine
 {
@@ -10,6 +11,8 @@ namespace Engine
 		~RenderSystem() = default;
 		
 		void Render(CameraComponent& camera) const;
+
+		void Render(EditorCameraComponent& camera) const;
 	};
 }
 

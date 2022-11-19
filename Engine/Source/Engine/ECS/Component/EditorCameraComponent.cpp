@@ -9,13 +9,17 @@
 namespace Engine
 {
 	EditorCameraComponent::EditorCameraComponent(const EntityID& ownerID,
-	                                             SharedPtr<TransformComponent> transform) :
+	                                             SharedPtr<TransformComponent> transform,
+	                                             uint64_t width,
+	                                             uint64_t height) :
 		AComponent{ownerID},
 		m_Transform{transform}
 	{
 		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
 		m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
 		m_WorldUp = m_Up;
+
+		InitRenderTarget(width, height);
 	}
 
 	EditorCameraComponent::~EditorCameraComponent() { }
@@ -25,16 +29,13 @@ namespace Engine
 		const auto* storedFramebuffer = m_RenderTarget.release();
 		delete storedFramebuffer;
 
-		FramebufferProfile resizedFramebufferProfile;
-		resizedFramebufferProfile.Width = width;
-		resizedFramebufferProfile.Height = height;
-		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
+		InitRenderTarget(width, height);
 	}
 
 	Matrix4 EditorCameraComponent::GetViewProjMatrix()
 	{
 		const float aspectRatio = (float)m_RenderTarget->GetInfo().Width / (float)m_RenderTarget->GetInfo().Height;
-		
+
 		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(DegreesToRadians(FoV),
 		                                                     aspectRatio,
 		                                                     0.001f, 1000.0f);
@@ -52,6 +53,14 @@ namespace Engine
 	Framebuffer& EditorCameraComponent::GetRenderTarget() const
 	{
 		return *m_RenderTarget;
+	}
+
+	void EditorCameraComponent::InitRenderTarget(uint64_t width, uint64_t height)
+	{
+		FramebufferProfile resizedFramebufferProfile;
+		resizedFramebufferProfile.Width = width;
+		resizedFramebufferProfile.Height = height;
+		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
 	}
 
 	void EditorCameraComponent::UpdateViewMatrix()

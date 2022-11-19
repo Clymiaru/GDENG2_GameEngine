@@ -27,8 +27,8 @@ namespace Engine
 		// template <typename T>
 		// void DetachComponent();
 
-		// template <class T>
-		// T* GetComponent();
+		template <class ComponentType>
+		SharedPtr<ComponentType> GetComponent();
 
 		bool operator==(const Entity& other) const;
 		bool operator!=(const Entity& other) const;
@@ -53,6 +53,12 @@ namespace Engine
 		                                                                    std::forward<Args>(args)...);
 		
 		return m_ComponentRegistry->RegisterComponent<ComponentType>(m_ID, component);
+	}
+	
+	template <class ComponentType>
+	SharedPtr<ComponentType> Entity::GetComponent()
+	{
+		return m_ComponentRegistry->GetComponent<ComponentType>(m_ID);
 	}
 
 	// template <typename T>

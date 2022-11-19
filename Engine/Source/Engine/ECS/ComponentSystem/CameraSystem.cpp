@@ -14,18 +14,36 @@ namespace Engine
 	
 	CameraSystem::~CameraSystem() {}
 
-	CameraComponent* CameraSystem::GetGameCamera() const
+	SharedPtr<CameraComponent> CameraSystem::GetGameCamera() const
 	{
-		//return (int)m_GameCameraList.size() > 0 ? nullptr : m_GameCameraList[0];
-		return nullptr;
+		const auto cameraList = EntityManager::GetAllComponentsOfType<CameraComponent>();
+
+		if (0 >= cameraList.size())
+		{
+			return nullptr;
+		}
+		
+		return cameraList[0];
 	}
 	
-	CameraComponent* CameraSystem::GetEditorCamera(int index) const
+	SharedPtr<EditorCameraComponent> CameraSystem::GetEditorCamera(int index) const
 	{
-		// return index >= (int)m_EditorCameraList.size() ? nullptr : m_EditorCameraList[index];
-		return nullptr;
+		const auto cameraList = EntityManager::GetAllComponentsOfType<EditorCameraComponent>();
+
+		if (index >= cameraList.size())
+		{
+			return nullptr;
+		}
+		
+		return cameraList[index];
 	}
 	
+	size_t CameraSystem::GetEditorCameraCount() const
+	{
+		const auto cameraList = EntityManager::GetAllComponentsOfType<EditorCameraComponent>();
+		return cameraList.size();
+	}
+
 	void CameraSystem::CameraUpdate() const
 	{
 		const auto cameraList = EntityManager::GetAllComponentsOfType<CameraComponent>();

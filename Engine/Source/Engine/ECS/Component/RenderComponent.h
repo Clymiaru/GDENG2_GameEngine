@@ -7,6 +7,7 @@
 
 #include "Engine/ECS/Core/AComponent.h"
 #include "CameraComponent.h"
+#include "EditorCameraComponent.h"
 #include "TransformComponent.h"
 
 namespace Engine
@@ -19,17 +20,22 @@ namespace Engine
 	class RenderComponent final : public AComponent
 	{
 	public:
-		explicit RenderComponent(const EntityID& ownerID);
-		
+		explicit RenderComponent(const EntityID& ownerID,
+		                         SharedPtr<TransformComponent> transform);
+
 		explicit RenderComponent(const EntityID& ownerID,
 		                         RenderData* renderData,
 		                         VertexShaderResourceRef vertexShaderResource,
-		                         PixelShaderResourceRef pixelShaderResource);
+		                         PixelShaderResourceRef pixelShaderResource,
+		                         SharedPtr<TransformComponent> transform);
 
 		~RenderComponent() override = default;
 
-		void Draw(TransformComponent* transform, CameraComponent& camera);
+		void Draw(CameraComponent& camera);
 
+		void Draw(EditorCameraComponent& camera);
+
+		
 		MAKE_COMPONENT(Render)
 
 		RenderComponent(const RenderComponent&)                = delete;
@@ -48,7 +54,7 @@ namespace Engine
 		// Buffers
 		//	VertexBuffer
 		//	IndexBuffer
-
+		SharedPtr<TransformComponent> m_Transform;
 		UniquePtr<RenderData> m_RenderData{};
 		VertexShaderResourceRef m_VertexShader{};
 		PixelShaderResourceRef m_PixelShader{};

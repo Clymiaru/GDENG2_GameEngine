@@ -17,8 +17,8 @@ namespace Engine
 	public:
 		struct Specification
 		{
-			unsigned int Width               = 0;
-			unsigned int Height              = 0;
+			unsigned int Width               = 64;
+			unsigned int Height              = 64;
 			ID3D11Texture2D* ExistingTexture = nullptr;
 			bool SwapChainTarget             = false;
 		};

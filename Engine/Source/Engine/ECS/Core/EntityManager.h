@@ -18,7 +18,7 @@ namespace Engine
 		~EntityManager();
 
 		template <typename EntityType, typename... Args>
-		static EntityType* Create(Args&&... args);
+		static EntityType* Create(StringView name = "Entity", Args&&... args);
 
 		static void Destroy(const Entity* entity);
 
@@ -68,10 +68,10 @@ namespace Engine
 	// TODO: Should we return ptr to created entity.
 	// Issue may be deleting entity after creation outside of EntityManager
 	template <typename EntityType, typename ... Args>
-	EntityType* EntityManager::Create(Args&&... args)
+	EntityType* EntityManager::Create(StringView name, Args&&... args)
 	{
 		EntityID newEntityID = s_Instance->m_EntityUIIDGenerator.GenerateUIID();
-		String newEntityName = std::vformat("Entity_{0}", std::make_format_args(newEntityID));
+		String newEntityName = std::vformat("{0}_{1}", std::make_format_args(name, newEntityID));
 
 		EntityType* newEntity = new EntityType(newEntityID,
 		                                       newEntityName,

@@ -42,14 +42,14 @@ namespace Editor
 						Engine::EntityManager::Create<Engine::EmptyEntity>();
 					}
 
-					if (ImGui::MenuItem("Camera"))
+					if (ImGui::MenuItem("Game Camera"))
 					{
-						Engine::EntityManager::Create<Engine::Camera>();
+						Engine::EntityManager::Create<Engine::Camera>("Game Camera", 512, 512);
 					}
 
 					if (ImGui::MenuItem("Cube"))
 					{
-						Engine::EntityManager::Create<Engine::Cube>();
+						Engine::EntityManager::Create<Engine::Cube>("Cube");
 					}
 					
 					ImGui::EndMenu();
@@ -67,7 +67,7 @@ namespace Editor
 
 				if (ImGui::MenuItem("Scene Viewport"))
 				{
-					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>();
+					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>("EditorCamera", 512, 512);
 					Engine::UISystem::Create<EditorViewportScreen>(editorCamera);
 				}
 

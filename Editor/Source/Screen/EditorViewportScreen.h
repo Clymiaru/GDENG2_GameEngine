@@ -1,6 +1,6 @@
 ﻿#pragma once
+#include <Engine/Math/Math.h>
 #include <Engine/UI/AUIScreen.h>
-
 
 namespace Engine
 {
@@ -12,7 +12,7 @@ namespace Editor
 	{
 	public:
 		explicit EditorViewportScreen(Engine::ScreenID id,
-		                        Engine::EditorCamera* editorCamera);
+		                              Engine::EditorCamera* editorCamera);
 		~EditorViewportScreen() override;
 
 		EditorViewportScreen(const EditorViewportScreen&)                = delete;
@@ -24,5 +24,6 @@ namespace Editor
 		void DrawImpl() override;
 
 		Engine::EditorCamera* m_EditorCameraRef = nullptr;
+		Engine::Vector2Uint m_ViewportSize;
 	};
 }

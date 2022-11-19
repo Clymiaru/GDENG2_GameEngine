@@ -21,9 +21,14 @@ namespace Engine
 	void ComponentSystemHandler::Update()
 	{
 		m_CameraSystem->CameraUpdate();
+		m_CameraSystem->EditorCameraUpdate();
 	}
 
 	void ComponentSystemHandler::Render(CameraComponent& camera)
+	{
+		m_RenderSystem->Render(camera);
+	}
+	void ComponentSystemHandler::Render(EditorCameraComponent& camera)
 	{
 		m_RenderSystem->Render(camera);
 	}

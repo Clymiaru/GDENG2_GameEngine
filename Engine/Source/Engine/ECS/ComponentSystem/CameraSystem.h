@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Engine/ECS/Component/CameraComponent.h"
+#include "Engine/ECS/Component/EditorCameraComponent.h"
 
 namespace Engine
 {
@@ -12,9 +13,11 @@ namespace Engine
 		CameraSystem();
 		~CameraSystem();
 		
-		CameraComponent* GetGameCamera() const;
+		SharedPtr<CameraComponent> GetGameCamera() const;
 		
-		CameraComponent* GetEditorCamera(int index) const;
+		SharedPtr<EditorCameraComponent> GetEditorCamera(int index) const;
+
+		size_t GetEditorCameraCount() const;
 		
 		void CameraUpdate() const;
 

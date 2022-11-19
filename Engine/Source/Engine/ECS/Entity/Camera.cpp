@@ -11,11 +11,13 @@ namespace Engine
 {
 	Camera::Camera(const EntityID id,
 	               const StringView name,
-	               ComponentRegistry* componentRegistry) :
+	               ComponentRegistry* componentRegistry,
+	               uint64_t renderWidth,
+	               uint64_t renderHeight) :
 		Entity{id, name, componentRegistry}
 	{
 		auto transform = AttachComponent<TransformComponent>();
-		AttachComponent<CameraComponent>(transform);
+		AttachComponent<CameraComponent>(transform, renderWidth, renderHeight);
 		//
 		// m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
 		// m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);

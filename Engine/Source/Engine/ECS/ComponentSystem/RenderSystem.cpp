@@ -13,7 +13,16 @@ namespace Engine
 		
 		for (auto render : renderList)
 		{
-			render->Draw(nullptr, camera);
+			render->Draw(camera);
+		}
+	}
+	void RenderSystem::Render(EditorCameraComponent& camera) const
+	{
+		const auto renderList = EntityManager::GetAllComponentsOfType<RenderComponent>();
+		
+		for (auto render : renderList)
+		{
+			render->Draw(camera);
 		}
 	}
 }

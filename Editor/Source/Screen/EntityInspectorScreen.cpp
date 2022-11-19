@@ -89,39 +89,39 @@ namespace Editor
 
 			DrawComponents(selectedEntity, componentList);
 
-			String popupLabel = std::vformat("AddComponentPopup##{0}{1}", std::make_format_args(m_Name, m_ID));
-			if (ImGui::Button("Add Component"))
-			{
-				ImGui::OpenPopup(popupLabel.c_str());
-			}
-
-			if (ImGui::BeginPopup(popupLabel.c_str()))
-			{
-				ImGui::Text("Components");
-				ImGui::Separator();
-				for (size_t i = 0ULL; i < m_ComponentList.size(); i++)
-				{
-					if (ImGui::Selectable(m_ComponentList[i].c_str()))
-					{
-						// TODO: Don't make add component's selectable on components already added
-						// TODO: May refactor to a function
-
-						if (m_ComponentList[i] == "Transform")
-						{
-							selectedEntity->AttachComponent<TransformComponent>();
-						}
-
-						if (m_ComponentList[i] == "Render")
-						{
-							// TODO: Determine what to do for components that need parameters
-							// Might need defaults
-							selectedEntity->AttachComponent<RenderComponent>();
-						}
-					}
-				}
-
-				ImGui::EndPopup();
-			}
+			// TODO: Adding components during runtime
+			// String popupLabel = std::vformat("AddComponentPopup##{0}{1}", std::make_format_args(m_Name, m_ID));
+			// if (ImGui::Button("Add Component"))
+			// {
+			// 	ImGui::OpenPopup(popupLabel.c_str());
+			// }
+			//
+			// if (ImGui::BeginPopup(popupLabel.c_str()))
+			// {
+			// 	ImGui::Text("Components");
+			// 	ImGui::Separator();
+			// 	for (size_t i = 0ULL; i < m_ComponentList.size(); i++)
+			// 	{
+			// 		if (ImGui::Selectable(m_ComponentList[i].c_str()))
+			// 		{
+			// 			// TODO: Don't make add component's selectable on components already added
+			// 			// TODO: May refactor to a function
+			//
+			// 			if (m_ComponentList[i] == "Transform")
+			// 			{
+			// 				selectedEntity->AttachComponent<TransformComponent>();
+			// 			}
+			//
+			// 			// if (m_ComponentList[i] == "Render")
+			// 			// {
+			// 			// 	// TODO: Determine what to do for components that need parameters
+			// 			// 	// Might need defaults
+			// 			// 	selectedEntity->AttachComponent<RenderComponent>();
+			// 			// }
+			// 		}
+			// 	}
+			// 	ImGui::EndPopup();
+			// }
 
 			ImGui::End();
 
@@ -200,3 +200,4 @@ namespace Editor
 		Reset();
 	}
 }
+

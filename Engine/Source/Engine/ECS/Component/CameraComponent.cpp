@@ -9,13 +9,17 @@
 namespace Engine
 {
 	CameraComponent::CameraComponent(const EntityID& ownerID,
-	                                 SharedPtr<TransformComponent> transform) :
+	                                 SharedPtr<TransformComponent> transform,
+	                                 uint64_t width,
+	                                 uint64_t height) :
 		AComponent{ownerID},
 		m_Transform{transform}
 	{
 		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
 		m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
 		m_WorldUp = m_Up;
+
+		InitRenderTarget(width, height);
 	}
 
 	CameraComponent::~CameraComponent() { }
@@ -25,10 +29,7 @@ namespace Engine
 		const auto* storedFramebuffer = m_RenderTarget.release();
 		delete storedFramebuffer;
 
-		FramebufferProfile resizedFramebufferProfile;
-		resizedFramebufferProfile.Width = width;
-		resizedFramebufferProfile.Height = height;
-		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
+		InitRenderTarget(width, height);
 	}
 
 	Matrix4 CameraComponent::GetViewProjMatrix()
@@ -52,6 +53,14 @@ namespace Engine
 	Framebuffer& CameraComponent::GetRenderTarget() const
 	{
 		return *m_RenderTarget;
+	}
+
+	void CameraComponent::InitRenderTarget(uint64_t width, uint64_t height)
+	{
+		FramebufferProfile resizedFramebufferProfile;
+		resizedFramebufferProfile.Width = width;
+		resizedFramebufferProfile.Height = height;
+		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
 	}
 
 	void CameraComponent::UpdateViewMatrix()

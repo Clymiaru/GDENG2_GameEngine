@@ -17,6 +17,8 @@ namespace Engine
 
 		void Render(CameraComponent& camera);
 
+		void Render(EditorCameraComponent& camera);
+
 	private:
 		CameraSystem* m_CameraSystem;
 		RenderSystem* m_RenderSystem;
