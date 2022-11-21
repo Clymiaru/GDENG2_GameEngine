@@ -23,13 +23,6 @@ namespace Engine
 
 		~RenderContext();
 
-		void Release() const;
-
-		ID3D11DeviceContext& GetContext()
-		{
-			return *m_DeviceContext;
-		}
-
 		void ClearRenderTargetView(ID3D11RenderTargetView& renderTarget,
 		                           const Color& color) const;
 
@@ -38,22 +31,22 @@ namespace Engine
 		void SetRenderTargetTo(ID3D11RenderTargetView* renderTarget,
 		                       ID3D11DepthStencilView* depthStencil) const;
 
-		template <typename T>
-		void SetRenderData(const T& renderData) const;
+		template <typename RenderDataType>
+		void Bind(const RenderDataType& data) const;
 
-		template <typename T>
-		void UploadShaderData(const ConstantBuffer& constantBuffer) const;
+		template <typename ShaderType>
+		void Bind(uint32_t slot, const ConstantBuffer& data) const;
+
+		template <typename ShaderType>
+		void Bind(uint32_t startSlot, uint32_t viewCount, ID3D11ShaderResourceView** srvList);
+
+		template <typename ShaderType>
+		void Bind(uint32_t startSlot, uint32_t samplerCount, ID3D11SamplerState** samplerList);
+
+		void Bind(D3D11_PRIMITIVE_TOPOLOGY topology) const;
 
 		void UpdateBufferResource(ID3D11Buffer* bufferResource,
 		                          const void* updatedBufferData) const;
-
-		template <typename T>
-		void SetShaderResource(UINT startSlot, UINT viewCount, ID3D11ShaderResourceView** srvList);
-
-		template <typename T>
-		void SetSamplers(UINT startSlot, UINT samplerCount, ID3D11SamplerState** samplerList);
-
-		void SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) const;
 
 		void DrawIndexed(uint32_t indexCount,
 		                 uint32_t startingIndex) const;
@@ -78,100 +71,120 @@ namespace Engine
 		friend class UISystem;
 	};
 
-	template <typename T>
-	void RenderContext::SetRenderData(const T& renderData) const { }
-
-	// Shader Binds
-	template <>
-	inline void RenderContext::SetRenderData<VertexShader>(const VertexShader& toBind) const
+	template <typename RenderDataType>
+	void RenderContext::Bind(const RenderDataType& data) const
 	{
-		m_DeviceContext->VSSetShader(toBind.m_Data,
-		                             nullptr,
-		                             0);
+		Debug::Log("RenderContext Bind: Unsupported RenderDataType!");
 	}
 
 	template <>
-	inline void RenderContext::SetRenderData<PixelShader>(const PixelShader& toBind) const
+	inline void RenderContext::Bind<VertexShader>(const VertexShader& data) const
 	{
-		m_DeviceContext->PSSetShader(toBind.m_Data,
-		                             nullptr,
-		                             0);
+		m_DeviceContext->VSSetShader(&data.GetData(), nullptr, 0);
 	}
 
 	template <>
-	inline void RenderContext::SetRenderData<VertexBuffer>(const VertexBuffer& toBind) const
+	inline void RenderContext::Bind<PixelShader>(const PixelShader& data) const
 	{
-		const uint32_t stride     = static_cast<uint32_t>(toBind.DataTypeSize());
-		constexpr uint32_t offset = 0;
+		m_DeviceContext->PSSetShader(&data.GetData(), nullptr, 0);
+	}
+
+	template <>
+	inline void RenderContext::Bind<VertexBuffer>(const VertexBuffer& data) const
+	{
+		const uint32_t stride             = static_cast<uint32_t>(data.DataTypeSize());
+		constexpr uint32_t offset         = 0;
+		const List<ID3D11Buffer*> buffers = {&data.GetData()};
+
 		m_DeviceContext->IASetVertexBuffers(0,
-		                                    1,
-		                                    &toBind.m_Data,
+		                                    buffers.size(),
+		                                    buffers.data(),
 		                                    &stride,
 		                                    &offset);
-		m_DeviceContext->IASetInputLayout(toBind.m_DataLayout);
+		m_DeviceContext->IASetInputLayout(&data.GetInputLayout());
 	}
 
 	template <>
-	inline void RenderContext::SetRenderData<IndexBuffer>(const IndexBuffer& toBind) const
+	inline void RenderContext::Bind<IndexBuffer>(const IndexBuffer& data) const
 	{
 		constexpr UINT offset = 0;
-		m_DeviceContext->IASetIndexBuffer(toBind.m_Data, DXGI_FORMAT_R32_UINT, offset);
+		m_DeviceContext->IASetIndexBuffer(&data.GetData(), DXGI_FORMAT_R32_UINT, offset);
 	}
 
-	template <typename T>
-	void RenderContext::UploadShaderData(const ConstantBuffer& constantBuffer) const { }
-
-	template <typename T>
-	void RenderContext::SetShaderResource(UINT startSlot, UINT viewCount, ID3D11ShaderResourceView** srvList) { }
+	template <typename ShaderType>
+	void RenderContext::Bind(uint32_t slot, const ConstantBuffer& data) const
+	{
+		Debug::Log("RenderContext Bind::ConstantBuffer: Unsupported ShaderType!");
+	}
 
 	template <>
-	inline void RenderContext::SetShaderResource<VertexShader>(const UINT startSlot,
-	                                                           const UINT viewCount,
-	                                                           ID3D11ShaderResourceView** srvList)
+	inline void RenderContext::Bind<VertexShader>(const uint32_t slot, const ConstantBuffer& data) const
+	{
+		const List<ID3D11Buffer*> buffers = {&data.GetData()};
+		m_DeviceContext->VSSetConstantBuffers(slot,
+		                                      1,
+		                                      buffers.data());
+	}
+
+	template <>
+	inline void RenderContext::Bind<PixelShader>(const uint32_t slot, const ConstantBuffer& data) const
+	{
+		const List<ID3D11Buffer*> buffers = {&data.GetData()};
+		m_DeviceContext->PSSetConstantBuffers(slot,
+		                                      1,
+		                                      buffers.data());
+	}
+
+	template <typename ShaderType>
+	void RenderContext::Bind(uint32_t startSlot,
+	                         uint32_t viewCount,
+	                         ID3D11ShaderResourceView** srvList)
+	{
+		Debug::Log("RenderContext Bind::ShaderResourceView: Unsupported ShaderType!");
+	}
+
+	template <>
+	inline void RenderContext::Bind<VertexShader>(const uint32_t startSlot,
+	                                              const uint32_t viewCount,
+	                                              ID3D11ShaderResourceView** srvList)
 	{
 		m_DeviceContext->VSSetShaderResources(startSlot, viewCount, srvList);
 	}
 
 	template <>
-	inline void RenderContext::SetShaderResource<PixelShader>(const UINT startSlot,
-	                                                          const UINT viewCount,
-	                                                          ID3D11ShaderResourceView** srvList)
+	inline void RenderContext::Bind<PixelShader>(const uint32_t startSlot,
+	                                             const uint32_t viewCount,
+	                                             ID3D11ShaderResourceView** srvList)
 	{
 		m_DeviceContext->PSSetShaderResources(startSlot, viewCount, srvList);
 	}
 
-	template <typename T>
-	void RenderContext::SetSamplers(UINT startSlot, UINT samplerCount, ID3D11SamplerState** samplerList) {}
+	template <typename ShaderType>
+	void RenderContext::Bind(uint32_t startSlot,
+	                         uint32_t samplerCount,
+	                         ID3D11SamplerState** samplerList)
+	{
+		Debug::Log("RenderContext Bind::Sampler: Unsupported ShaderType!");
+	}
 
 	template <>
-	inline void RenderContext::SetSamplers<VertexShader>(const UINT startSlot,
-	                                                     const UINT samplerCount,
-	                                                     ID3D11SamplerState** samplerList)
+	inline void RenderContext::Bind<VertexShader>(const uint32_t startSlot,
+	                                              const uint32_t samplerCount,
+	                                              ID3D11SamplerState** samplerList)
 	{
 		m_DeviceContext->VSSetSamplers(startSlot, samplerCount, samplerList);
 	}
 
 	template <>
-	inline void RenderContext::SetSamplers<PixelShader>(const UINT startSlot,
-	                                                    const UINT samplerCount,
-	                                                    ID3D11SamplerState** samplerList)
+	inline void RenderContext::Bind<PixelShader>(const uint32_t startSlot,
+	                                             const uint32_t samplerCount,
+	                                             ID3D11SamplerState** samplerList)
 	{
 		m_DeviceContext->PSSetSamplers(startSlot, samplerCount, samplerList);
 	}
 
-	template <>
-	inline void RenderContext::UploadShaderData<VertexShader>(const ConstantBuffer& constantBuffer) const
+	inline void RenderContext::Bind(const D3D11_PRIMITIVE_TOPOLOGY topology) const
 	{
-		m_DeviceContext->VSSetConstantBuffers(0,
-		                                      1,
-		                                      &constantBuffer.m_Data);
-	}
-
-	template <>
-	inline void RenderContext::UploadShaderData<PixelShader>(const ConstantBuffer& constantBuffer) const
-	{
-		m_DeviceContext->PSSetConstantBuffers(0,
-		                                      1,
-		                                      &constantBuffer.m_Data);
+		m_DeviceContext->IASetPrimitiveTopology(topology);
 	}
 }

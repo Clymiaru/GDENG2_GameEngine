@@ -16,7 +16,7 @@ namespace Engine
 		m_Transform{transform}
 	{
 		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
-		m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
+		m_Front   = Vector3Float(0.0f, 0.0f, 0.0f);
 		m_WorldUp = m_Up;
 
 		InitRenderTarget(width, height);
@@ -65,9 +65,7 @@ namespace Engine
 
 	void EditorCameraComponent::UpdateViewMatrix()
 	{
-		m_ViewMatrix = Matrix4::CreateLookAt(m_Transform->Position,
-		                                     m_Transform->Position + m_Front,
-		                                     m_Up).Transpose();
+		m_ViewMatrix = m_Transform->GetLocalMatrix();
 	}
 
 	void EditorCameraComponent::UpdateCameraVectors()

@@ -13,6 +13,8 @@ namespace Engine
 							  ID3DBlob* vertexShaderBlob);
 
 		~VertexShader() override;
+
+		ID3D11VertexShader& GetData() const;
 		
 		VertexShader(const VertexShader&) = delete;
 		VertexShader& operator=(const VertexShader&) = delete;

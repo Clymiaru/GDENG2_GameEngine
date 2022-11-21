@@ -16,6 +16,8 @@ namespace Engine
 					  const Shader& shaderRef);
 
 		~VertexBuffer() override;
+
+		ID3D11InputLayout& GetInputLayout() const;
 		
 		VertexBuffer(const VertexBuffer&)                = delete;
 		VertexBuffer& operator=(const VertexBuffer&)     = delete;
@@ -23,8 +25,6 @@ namespace Engine
 		VertexBuffer& operator=(VertexBuffer&&) noexcept = delete;
 
 	private:
-
-
 		ID3D11InputLayout* m_DataLayout;
 
 		friend class RenderContext;

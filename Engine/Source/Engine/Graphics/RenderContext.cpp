@@ -9,9 +9,7 @@ namespace Engine
 	{
 	}
 
-	RenderContext::~RenderContext() = default;
-
-	void RenderContext::Release() const
+	RenderContext::~RenderContext()
 	{
 		m_DeviceContext->Release();
 	}
@@ -74,11 +72,6 @@ namespace Engine
 		                                   updatedBufferData,
 		                                   NULL,
 		                                   NULL);
-	}
-
-	void RenderContext::SetTopology(const D3D11_PRIMITIVE_TOPOLOGY& topology) const
-	{
-		m_DeviceContext->IASetPrimitiveTopology(topology);
 	}
 
 	void RenderContext::DrawIndexed(const uint32_t indexCount,

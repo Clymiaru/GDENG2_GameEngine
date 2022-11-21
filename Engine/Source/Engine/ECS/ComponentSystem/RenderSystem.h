@@ -13,6 +13,7 @@ namespace Engine
 		void Render(CameraComponent& camera) const;
 
 		void Render(EditorCameraComponent& camera) const;
+
 	};
 }
 

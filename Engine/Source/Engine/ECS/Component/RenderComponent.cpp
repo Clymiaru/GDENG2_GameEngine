@@ -68,7 +68,7 @@ namespace Engine
 	{
 		m_TextureResource = texture;
 	}
-	
+
 	void RenderComponent::RemoveTexture()
 	{
 		m_TextureResource = nullptr;
@@ -83,11 +83,11 @@ namespace Engine
 
 		Application::GetRenderer().GetContext().UpdateBufferResource(&m_ConstantBuffer->GetData(), constant);
 
-		Application::GetRenderer().GetContext().SetRenderData<VertexShader>(m_VertexShader->GetShader());
-		Application::GetRenderer().GetContext().SetRenderData<PixelShader>(m_PixelShader->GetShader());
+		Application::GetRenderer().GetContext().Bind<VertexShader>(m_VertexShader->GetShader());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(m_PixelShader->GetShader());
 
-		Application::GetRenderer().GetContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
-		Application::GetRenderer().GetContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+		Application::GetRenderer().GetContext().Bind<VertexShader>(0, *m_ConstantBuffer);
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0, *m_ConstantBuffer);
 
 		std::vector<ID3D11ShaderResourceView*> textureSRV = {};
 		if (m_TextureResource != nullptr)
@@ -99,9 +99,9 @@ namespace Engine
 			textureSRV.push_back(nullptr);
 		}
 
-		Application::GetRenderer().GetContext().SetShaderResource<PixelShader>(0,
-																			   1,
-																			   textureSRV.data());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0,
+		                                                          1,
+		                                                          textureSRV.data());
 
 		std::vector<ID3D11SamplerState*> textureSampler = {};
 		if (m_TextureResource != nullptr)
@@ -112,18 +112,18 @@ namespace Engine
 		{
 			textureSampler.push_back(nullptr);
 		}
-		Application::GetRenderer().GetContext().SetSamplers<PixelShader>(0,
-																		 1,
-																		 textureSampler.data());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0,
+		                                                          1,
+		                                                          textureSampler.data());
 
-		Application::GetRenderer().GetContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
-		Application::GetRenderer().GetContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);
+		Application::GetRenderer().GetContext().Bind<VertexBuffer>(*m_VertexBuffer);
+		Application::GetRenderer().GetContext().Bind<IndexBuffer>(*m_IndexBuffer);
 
-		Application::GetRenderer().GetContext().SetTopology(m_RenderData->Topology);
+		Application::GetRenderer().GetContext().Bind(m_RenderData->Topology);
 
 		Application::GetRenderer().GetContext().DrawIndexed(m_IndexBuffer->ElementCount(), 0);
 	}
-	
+
 	void RenderComponent::Draw(EditorCameraComponent& camera)
 	{
 		RenderObjectData* constant = new RenderObjectData();
@@ -133,11 +133,11 @@ namespace Engine
 
 		Application::GetRenderer().GetContext().UpdateBufferResource(&m_ConstantBuffer->GetData(), constant);
 
-		Application::GetRenderer().GetContext().SetRenderData<VertexShader>(m_VertexShader->GetShader());
-		Application::GetRenderer().GetContext().SetRenderData<PixelShader>(m_PixelShader->GetShader());
+		Application::GetRenderer().GetContext().Bind<VertexShader>(m_VertexShader->GetShader());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(m_PixelShader->GetShader());
 
-		Application::GetRenderer().GetContext().UploadShaderData<VertexShader>(*m_ConstantBuffer);
-		Application::GetRenderer().GetContext().UploadShaderData<PixelShader>(*m_ConstantBuffer);
+		Application::GetRenderer().GetContext().Bind<VertexShader>(0, *m_ConstantBuffer);
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0, *m_ConstantBuffer);
 
 		std::vector<ID3D11ShaderResourceView*> textureSRV = {};
 		if (m_TextureResource != nullptr)
@@ -149,9 +149,9 @@ namespace Engine
 			textureSRV.push_back(nullptr);
 		}
 
-		Application::GetRenderer().GetContext().SetShaderResource<PixelShader>(0,
-																			   1,
-																			   textureSRV.data());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0,
+		                                                          1,
+		                                                          textureSRV.data());
 
 		std::vector<ID3D11SamplerState*> textureSampler = {};
 		if (m_TextureResource != nullptr)
@@ -162,14 +162,14 @@ namespace Engine
 		{
 			textureSampler.push_back(nullptr);
 		}
-		Application::GetRenderer().GetContext().SetSamplers<PixelShader>(0,
-																		 1,
-																		 textureSampler.data());
+		Application::GetRenderer().GetContext().Bind<PixelShader>(0,
+		                                                          1,
+		                                                          textureSampler.data());
 
-		Application::GetRenderer().GetContext().SetRenderData<VertexBuffer>(*m_VertexBuffer);
-		Application::GetRenderer().GetContext().SetRenderData<IndexBuffer>(*m_IndexBuffer);
+		Application::GetRenderer().GetContext().Bind<VertexBuffer>(*m_VertexBuffer);
+		Application::GetRenderer().GetContext().Bind<IndexBuffer>(*m_IndexBuffer);
 
-		Application::GetRenderer().GetContext().SetTopology(m_RenderData->Topology);
+		Application::GetRenderer().GetContext().Bind(m_RenderData->Topology);
 
 		Application::GetRenderer().GetContext().DrawIndexed(m_IndexBuffer->ElementCount(), 0);
 	}

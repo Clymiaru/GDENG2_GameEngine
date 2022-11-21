@@ -14,6 +14,8 @@ namespace Engine
 
 		~PixelShader() override;
 		
+		ID3D11PixelShader& GetData() const;
+
 		PixelShader(const PixelShader&)             = delete;
 		PixelShader& operator=(const PixelShader&)  = delete;
 		PixelShader(const PixelShader&&)            = delete;

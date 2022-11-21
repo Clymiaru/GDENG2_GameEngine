@@ -16,7 +16,6 @@ namespace Engine
 
 	class Camera;
 
-	// TODO: Abstract to material later on
 	class RenderComponent final : public AComponent
 	{
 	public:
@@ -53,10 +52,7 @@ namespace Engine
 		//	Shader
 		//		VertexShader
 		//		PixelShader
-		//	ConstantBuffers
-		// Buffers
-		//	VertexBuffer
-		//	IndexBuffer
+		//	ShaderData
 		SharedPtr<TransformComponent> m_Transform;
 		SharedPtr<TextureResource> m_TextureResource;
 		

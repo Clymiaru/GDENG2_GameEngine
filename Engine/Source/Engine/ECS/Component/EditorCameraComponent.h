@@ -40,6 +40,8 @@ namespace Engine
 
 		SharedPtr<TransformComponent> m_Transform;
 
+		Quaternion m_Quaternion;
+
 		Matrix4 m_ViewMatrix;
 
 		Matrix4 m_ProjMatrix;

@@ -24,4 +24,9 @@ namespace Engine
 		m_Data->Release();
 		m_Blob->Release();
 	}
+
+	ID3D11PixelShader& PixelShader::GetData() const
+	{
+		return *m_Data;
+	}
 }

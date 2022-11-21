@@ -23,15 +23,15 @@ namespace Engine
 	{
 		using namespace DirectX;
 		m_LocalMatrix = Matrix4();
-		
-		// Apply Rotation
-		m_LocalMatrix *= Matrix4::CreateRotationX(DegreesToRadians(Rotation.x));
-		m_LocalMatrix *= Matrix4::CreateRotationY(DegreesToRadians(Rotation.y));
-		m_LocalMatrix *= Matrix4::CreateRotationZ(DegreesToRadians(Rotation.z));
 
 		// Apply Scale 
 		m_LocalMatrix *= Matrix4::CreateScale(Scale);
 
+		// Apply Rotation
+		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(0, 1, 0), DegreesToRadians(Rotation.y));
+		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(1, 0, 0), DegreesToRadians(Rotation.x));
+		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(0, 0, 1), DegreesToRadians(Rotation.z));
+		
 		// Apply Translation
 		m_LocalMatrix *= Matrix4::CreateTranslation(Position);
 

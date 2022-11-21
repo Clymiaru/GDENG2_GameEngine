@@ -65,9 +65,7 @@ namespace Engine
 
 	void CameraComponent::UpdateViewMatrix()
 	{
-		m_ViewMatrix = Matrix4::CreateLookAt(m_Transform->Position,
-		                                     m_Transform->Position + m_Front,
-		                                     m_Up).Transpose();
+		m_ViewMatrix = m_Transform->GetLocalMatrix();
 	}
 
 	void CameraComponent::UpdateCameraVectors()

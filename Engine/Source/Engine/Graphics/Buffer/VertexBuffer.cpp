@@ -44,4 +44,9 @@ namespace Engine
 		m_DataLayout->Release();
 		m_Data->Release();
 	}
+	
+	ID3D11InputLayout& VertexBuffer::GetInputLayout() const
+	{
+		return *m_DataLayout;
+	}
 }
