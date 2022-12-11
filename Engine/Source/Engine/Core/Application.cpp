@@ -36,6 +36,7 @@ namespace Engine
 
 	Application::Profile Application::GetInfo()
 	{
+		s_Instance->m_Profile.Time = s_Instance->m_Timer->GetInfo();
 		return s_Instance->m_Profile;
 	}
 
@@ -114,8 +115,6 @@ namespace Engine
 			m_LayerSystem->Add(m_Specs.InitialLayers[i]);
 		}
 
-		
-
 		m_LayerSystem->StartLayers();
 
 		m_Profile.IsRunning = true;
@@ -123,7 +122,7 @@ namespace Engine
 
 	void Application::Run()
 	{
-		Start();
+		Start(); // Initialization
 
 		while (m_Profile.IsRunning)
 		{
@@ -137,7 +136,8 @@ namespace Engine
 
 			Sleep(1);
 		}
-		End();
+		
+		End(); // Termination
 	}
 
 	void Application::End()
@@ -146,6 +146,7 @@ namespace Engine
 		delete m_LayerSystem;
 
 		//ShaderLibrary::Terminate();
+		delete m_ComponentSystemHandler;
 		delete m_EntityManager;
 		
 		delete m_UISystem;
@@ -163,16 +164,15 @@ namespace Engine
 
 	void Application::Update() const
 	{
-		m_Window->ProcessEvents();
-		// s_Instance->m_LayerHandler->Update();
-
-		m_ComponentSystemHandler->Update();
+		m_LayerSystem->Update(m_Timer->GetInfo());
 	}
 
 	void Application::PollEvents() const
 	{
 		m_Window->PollEvents();
-		// Input::PollInputEvents();
+		m_Input->PollInputEvents();
+		m_Window->ProcessEvents();
+		m_LayerSystem->PollInput(m_Input->GetInput());
 	}
 
 	void Application::Render() const

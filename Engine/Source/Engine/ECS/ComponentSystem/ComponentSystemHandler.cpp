@@ -5,22 +5,33 @@ namespace Engine
 {
 	ComponentSystemHandler::ComponentSystemHandler() :
 		m_CameraSystem{new CameraSystem()},
-		m_RenderSystem{new RenderSystem()} { }
+		m_RenderSystem{new RenderSystem()},
+		m_InputSystem{new InputSystem()} { }
 
 	ComponentSystemHandler::~ComponentSystemHandler()
 	{
 		delete m_CameraSystem;
 		delete m_RenderSystem;
 	}
-	
+
 	CameraSystem& ComponentSystemHandler::GetCameraSystem() const
 	{
 		return *m_CameraSystem;
 	}
 
-	void ComponentSystemHandler::Update()
+	InputSystem& ComponentSystemHandler::GetInputSystem() const
 	{
-		m_CameraSystem->CameraUpdate();
+		return *m_InputSystem;
+	}
+
+	void ComponentSystemHandler::ProcessInputs(const InputData& inputData)
+	{
+		m_InputSystem->ProcessInput(inputData);	
+	}
+
+	void ComponentSystemHandler::UpdateCameras()
+	{
+		m_CameraSystem->GameCameraUpdate();
 		m_CameraSystem->EditorCameraUpdate();
 	}
 
@@ -28,7 +39,7 @@ namespace Engine
 	{
 		m_RenderSystem->Render(camera);
 	}
-	
+
 	void ComponentSystemHandler::Render(EditorCameraComponent& camera)
 	{
 		m_RenderSystem->Render(camera);

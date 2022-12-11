@@ -4,8 +4,14 @@
 #include "Engine/ECS/Component/TransformComponent.h"
 #include "Engine/ECS/Component/CameraComponent.h"
 
+#include "Engine/ECS/Component/RenderComponent.h"
+#include "Engine/ECS/Component/CameraRenderComponent.h"
+#include "Engine/ResourceManagement/Shader/ShaderLibrary.h"
+#include "Engine/Graphics/Primitives/Primitive.h"
+#include "Engine/ResourceManagement/Core/ResourceSystem.h"
+
 #include "Engine/Core/Application.h"
-#include "Engine/Core/Window.h"
+#include "Engine/ECS/Component/Input/CameraControllerComponent.h"
 
 namespace Engine
 {
@@ -17,60 +23,32 @@ namespace Engine
 		Entity{id, name, componentRegistry}
 	{
 		auto transform = AttachComponent<TransformComponent>();
-		AttachComponent<CameraComponent>(transform, renderWidth, renderHeight);
-		//
-		// m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
-		// m_Front   = Vector3Float(0.0f, 0.0f, -1.0f);
-		// m_WorldUp = m_Up;
-		// UpdateCameraVectors();
+		transform->Position.z = -10.0f;
+		auto cameraComponent = AttachComponent<CameraComponent>(transform, renderWidth, renderHeight);
+
+		Application::GetResourceSystem().Load<VertexShader>("Assets/Shaders/Basic/TexturedShader.hlsl");
+		Application::GetResourceSystem().Load<PixelShader>("Assets/Shaders/Basic/TexturedShader.hlsl");
+		
+		auto vertexShader = Application::GetResourceSystem().Get<VertexShaderResource>("TexturedShader");
+		auto pixelShader  = Application::GetResourceSystem().Get<PixelShaderResource>("TexturedShader");
+
+		auto texture = Application::GetResourceSystem().Get<TextureResource>("SuzunaDerpComfy");
+		
+		//RenderData* cubeRenderData = Primitive::Mesh("Assets/Mesh/Camera/10128_Video_camera_v1_L3.obj");
+		RenderData* frustumRenderData = Primitive::Frustum(cameraComponent->FoV, 512, 512, cameraComponent->NearClipPlane, cameraComponent->FarClipPlane);
+		
+		auto render = AttachComponent<RenderComponent>(frustumRenderData, vertexShader, pixelShader, transform);
+
+
+		RenderData* cubeRenderData = Primitive::Cube();
+
+		auto cameraRender = AttachComponent<CameraRenderComponent>(cubeRenderData, vertexShader, pixelShader, transform);
+
+		//AttachComponent<CameraControllerComponent>();
 	}
 
 	Camera::~Camera() = default;
-
-	// Matrix4 Camera::ViewProjMatrix()
-	// {
-	// 	using namespace DirectX;
-	// 	UpdateCameraVectors();
-	// 	UpdateViewMatrix();
-	//
-	// 	const auto windowInfo = Application::GetWindowInfo();
-	//
-	// 	m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(XMConvertToRadians(FoV),
-	// 	                                                     (float)windowInfo.Width / (float)windowInfo.Height,
-	// 	                                                     0.001f, 1000.0f);
-	// 	m_ProjMatrix = m_ProjMatrix.Transpose();
-	//
-	// 	return m_ProjMatrix * m_ViewMatrix;
-	// }
-	//
-	// void Camera::Update()
-	// {
-	// 	UpdateCameraVectors();
-	// 	UpdateViewMatrix();
-	// }
-	//
-	// void Camera::UpdateViewMatrix()
-	// {
-	// 	// m_ViewMatrix = Matrix4::CreateLookAt(m_Transform->Position,
-	// 	//                                      m_Transform->Position + m_Front,
-	// 	//                                      m_Up).Transpose();
-	// }
-	//
-	// void Camera::UpdateCameraVectors()
-	// {
-	// 	float pitch = m_Transform->Rotation.x;
-	// 	float yaw   = m_Transform->Rotation.y;
-	// 	float roll  = m_Transform->Rotation.z;
-	// 	
-	// 	m_Front.x = std::cos(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
-	// 	m_Front.y = std::sin(DegreesToRadians(pitch));
-	// 	m_Front.z = std::sin(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
-	// 	m_Front.Normalize();
-	// 	
-	// 	m_Right = m_Front.Cross(m_WorldUp);
-	// 	m_Right.Normalize();
-	// 	
-	// 	m_Up = m_Right.Cross(m_Front);
-	// 	m_Up.Normalize();
-	// }
+	
 }
+
+

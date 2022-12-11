@@ -3,6 +3,7 @@
 #include <Engine/Core/Debug.h>
 #include <Engine/UI/UISystem.h>
 
+#include "Screen/EditorConsoleScreen.h"
 #include "Screen/EntityInspectorScreen.h"
 #include "Screen/FileMenuBar.h"
 #include "Screen/EditorViewportScreen.h"
@@ -29,11 +30,13 @@ namespace Editor
 		using namespace Engine;
 
 		UISystem::Create<EntityInspectorScreen>(*m_WorldOutlinerScreen);
+
+		UISystem::Create<EditorConsoleScreen>();
 	}
-
-	void EditorUILayer::OnPollInput() {}
-
-	void EditorUILayer::OnUpdate() {}
+	
+	void EditorUILayer::OnPollInput(const Engine::InputData& inputData) {}
+	
+	void EditorUILayer::OnUpdate(const Engine::TimeData& timeData) {}
 
 	void EditorUILayer::OnRender()
 	{

@@ -8,21 +8,13 @@
 
 namespace Engine
 {
-	Input* Input::s_Instance = nullptr;
-
 	Input::Input() :
 		m_CurrentMousePosition{Vector2Int()},
 		m_PrevMousePosition{Vector2Int()}
 	{
-		Debug::Assert(s_Instance == nullptr,
-		              "There can only be 1 Input instantiated at any time!");
-		s_Instance = this;
 	}
 
-	Input::~Input()
-	{
-		s_Instance = nullptr;
-	}
+	Input::~Input() = default;
 
 	KeyCode TranslateVirtualKeyCodeToKeyCode(unsigned char vkCode)
 	{
@@ -127,14 +119,9 @@ namespace Engine
 
 		m_PrevMousePosition = m_CurrentMousePosition;
 	}
-
-	MouseInput Input::Mouse()
+	
+	InputData Input::GetInput() const
 	{
-		return s_Instance->m_MouseInput;
-	}
-
-	KeyboardInput Input::Keyboard()
-	{
-		return s_Instance->m_KeyInput;
+		return {m_KeyInput, m_MouseInput};
 	}
 }

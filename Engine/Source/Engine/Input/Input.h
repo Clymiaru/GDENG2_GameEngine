@@ -1,14 +1,11 @@
 ﻿#pragma once
-#include "KeyboardInput.h"
-#include "MouseInput.h"
-
-#include "Engine/Event/AEvent.h"
+#include "InputData.h"
 
 namespace Engine
 {
 	constexpr unsigned char KEY_STATE_FLAG  = 0x80;
 	constexpr unsigned char KEY_TOGGLE_FLAG = 0x00;
-
+	
 	class Input final
 	{
 	public:
@@ -17,9 +14,7 @@ namespace Engine
 
 		void PollInputEvents();
 
-		static MouseInput Mouse();
-
-		static KeyboardInput Keyboard();
+		InputData GetInput() const;
 
 		Input(const Input&)                = delete;
 		Input& operator=(const Input&)     = delete;
@@ -27,8 +22,6 @@ namespace Engine
 		Input& operator=(Input&&) noexcept = delete;
 
 	private:
-		static Input* s_Instance;
-
 		unsigned char m_CurrentKeyState[256]{};
 		unsigned char m_PrevKeyState[256]{};
 

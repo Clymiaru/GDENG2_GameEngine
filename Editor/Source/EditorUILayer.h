@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <Engine/Core/Layer.h>
 
-
 #include "Screen/WorldOutlinerScreen.h"
 
 namespace Editor
@@ -13,8 +12,8 @@ namespace Editor
 		~EditorUILayer() override;
 		void OnAttach() override;
 		void OnStart() override;
-		void OnPollInput() override;
-		void OnUpdate() override;
+		void OnPollInput(const Engine::InputData& inputData) override;
+		void OnUpdate(const Engine::TimeData& timeData) override;
 		void OnRender() override;
 		void OnDetach() override;
 
@@ -22,6 +21,7 @@ namespace Editor
 		EditorUILayer& operator=(const EditorUILayer&)     = delete;
 		EditorUILayer(EditorUILayer&&) noexcept            = delete;
 		EditorUILayer& operator=(EditorUILayer&&) noexcept = delete;
+
 
 	private:
 		WorldOutlinerScreen* m_WorldOutlinerScreen;

@@ -23,6 +23,8 @@ namespace Engine
 		void SetFramebuffer(const Framebuffer& framebuffer) const;
 		
 		void ClearFramebuffer(const Framebuffer& framebuffer) const;
+
+		void ClearFramebuffer(const Framebuffer& framebuffer, const Color& clearColor) const;
 		
 		// TODO: Maybe set RasterState
 		

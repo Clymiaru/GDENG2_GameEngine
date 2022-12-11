@@ -1,6 +1,7 @@
 ﻿#include "EditorLayer.h"
 #include <Engine/Core/Debug.h>
 #include <Engine/Core/Application.h>
+#include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/Graphics/Renderer.h>
 #include <Engine/ECS/ComponentSystem/ComponentSystemHandler.h>
 #include <Engine/ECS/Core/EntityManager.h>
@@ -9,6 +10,7 @@
 #include <Engine/ECS/Entity/Camera.h>
 #include <Engine/ECS/Entity/EditorCamera.h>
 #include <Engine/ECS/Entity/Cube.h>
+#include <Engine/ECS/Entity/Plane.h>
 #include <Engine/ResourceManagement/Core/ResourceSystem.h>
 
 #include "Screen/EditorViewportScreen.h"
@@ -30,24 +32,37 @@ namespace Editor
 	{
 		using namespace Engine;
 		Application::GetResourceSystem().Load<Texture>("Assets/Brick1024x1024.jpg");
-		
-		// m_TextureResource = Application::GetResourceSystem().Get<TextureResource>("Brick1024x1024");
-		
-		auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512, 512);
+		Application::GetResourceSystem().Load<Texture>("Assets/image0-42.png");
+		Application::GetResourceSystem().Load<Texture>("Assets/SuzunaDerpComfy.png");
+
+		auto shioriTexture = Application::GetResourceSystem().Get<TextureResource>("image0-42");
+
+		auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512UL, 512UL);
 		UISystem::Create<EditorViewportScreen>(editorCamera);
 
 		UISystem::Create<GameViewportScreen>();
 
-		EntityManager::Create<Camera>("GameCamera", 512, 512);
+		EntityManager::Create<Camera>("GameCamera", 512UL, 512UL);
 
-		EntityManager::Create<Cube>("Cube");
+		auto cubeEntity   = EntityManager::Create<Cube>("Cube");
+		auto cubeRenderer = cubeEntity->GetComponent<RenderComponent>();
+		cubeRenderer->SetTexture(shioriTexture);
+
+		// auto plane = EntityManager::Create<Plane>("Plane");
+		// auto planeTransform = plane->GetComponent<TransformComponent>();
+		// planeTransform->Scale = Vector3Float(100.0f, 100.0f, 100.0f);
 	}
-
-	void EditorLayer::OnPollInput() { }
-
-	void EditorLayer::OnUpdate()
+	
+	void EditorLayer::OnPollInput(const Engine::InputData& inputData)
 	{
 		using namespace Engine;
+		Application::GetComponentSystem().ProcessInputs(inputData);
+	}
+	
+	void EditorLayer::OnUpdate(const Engine::TimeData& timeData)
+	{
+		using namespace Engine;
+		Application::GetComponentSystem().UpdateCameras();
 	}
 
 	void EditorLayer::OnRender()
@@ -59,13 +74,18 @@ namespace Editor
 		if (const auto gameCamera = cameraSystem.GetGameCamera();
 			gameCamera != nullptr)
 		{
-			Application::GetRenderer().StartRender(gameCamera->GetRenderTarget());
+			const auto& framebuffer = gameCamera->GetRenderTarget();
+
+			Application::GetRenderer().SetViewportSize(Vector2Uint(framebuffer.GetInfo().Width,
+			                                                       framebuffer.GetInfo().Height));
+			Application::GetRenderer().SetFramebuffer(framebuffer);
+			Application::GetRenderer().ClearFramebuffer(framebuffer, gameCamera->ClearColor);
+
 			Application::GetComponentSystem().Render(*gameCamera);
 
 			// gameCamera->ApplyPostProcessing();
 
 			Application::GetRenderer().EndRender();
-			
 		}
 
 		m_NumberOfEditorViewports = (int)cameraSystem.GetEditorCameraCount();

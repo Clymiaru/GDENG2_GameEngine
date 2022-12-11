@@ -27,7 +27,7 @@ namespace Engine
 		HRESULT result = 0;
 
 		ID3D11DeviceContext* deviceContext = nullptr;
-		ID3D11Device* device = nullptr;
+		ID3D11Device* device               = nullptr;
 
 		for (const auto& driverType : DRIVER_TYPES_SUPPORTED)
 		{
@@ -62,37 +62,48 @@ namespace Engine
 	{
 		SetViewportSize(Vector2Uint(framebuffer.GetInfo().Width,
 		                            framebuffer.GetInfo().Height));
-	
+
 		SetFramebuffer(framebuffer);
-	
+
 		ClearFramebuffer(framebuffer);
 	}
-	
+
 	void Renderer::EndRender()
 	{
 		m_Context->SetRenderTargetTo(nullptr, nullptr);
 	}
-	
+
 	void Renderer::SetViewportSize(const Vector2Uint& viewportSize) const
 	{
 		m_Context->SetViewportSize(viewportSize);
 	}
-	
+
 	void Renderer::SetFramebuffer(const Framebuffer& framebuffer) const
 	{
 		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
 		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
 		m_Context->SetRenderTargetTo(&renderTarget, &depthStencil);
 	}
-	
+
 	void Renderer::ClearFramebuffer(const Framebuffer& framebuffer) const
 	{
 		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
 		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
-	
+
 		m_Context->ClearRenderTargetView(renderTarget,
-		                                       Color(0.5f, 0.3f, 0.8f, 1.0f));
-	
+		                                 Color(0.5f, 0.3f, 0.8f, 1.0f));
+
+		m_Context->ClearDepthStencilView(depthStencil);
+	}
+
+	void Renderer::ClearFramebuffer(const Framebuffer& framebuffer, const Color& clearColor) const
+	{
+		ID3D11RenderTargetView& renderTarget = framebuffer.GetRenderTarget();
+		ID3D11DepthStencilView& depthStencil = framebuffer.GetDepthStencil();
+
+		m_Context->ClearRenderTargetView(renderTarget,
+		                                 clearColor);
+
 		m_Context->ClearDepthStencilView(depthStencil);
 	}
 
@@ -100,7 +111,7 @@ namespace Engine
 	{
 		return *m_Device;
 	}
-	
+
 	RenderContext& Renderer::GetContext() const
 	{
 		return *m_Context;

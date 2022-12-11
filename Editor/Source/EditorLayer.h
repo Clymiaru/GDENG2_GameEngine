@@ -14,9 +14,9 @@ namespace Editor
 
 		void OnStart() override;
 
-		void OnPollInput() override;
-
-		void OnUpdate() override;
+		void OnPollInput(const Engine::InputData& inputData) override;
+		
+		void OnUpdate(const Engine::TimeData& timeData) override;
 
 		void OnRender() override;
 

@@ -5,6 +5,8 @@
 
 namespace Engine::Debug
 {
+	inline List<String> g_DebugMessageHistory = List<String>();
+	
 	template <typename... Args>
 	void Log(std::string_view message,
 	         Args&&... args);
@@ -13,17 +15,11 @@ namespace Engine::Debug
 	void Log(const std::string_view message,
 			 Args&&... args)
 	{
+		String debugString = std::vformat(message, std::make_format_args(args...));
+		debugString += "\n";
+		g_DebugMessageHistory.push_back(debugString);
 #ifdef DEBUG
-		std::cout << std::vformat(message, std::make_format_args(args...)) << "\n";
-#endif
-	}
-
-	template <typename... Args>
-	void Log(const std::wstring_view message,
-	         Args&&... args)
-	{
-#ifdef DEBUG
-		std::wcout << std::vformat(message, std::make_wformat_args(args...)) << "\n";
+		std::cout << debugString.c_str();
 #endif
 	}
 

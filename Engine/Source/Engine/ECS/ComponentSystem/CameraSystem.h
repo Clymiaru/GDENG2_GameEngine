@@ -19,7 +19,7 @@ namespace Engine
 
 		size_t GetEditorCameraCount() const;
 		
-		void CameraUpdate() const;
+		void GameCameraUpdate() const;
 
 		void EditorCameraUpdate() const;
 		

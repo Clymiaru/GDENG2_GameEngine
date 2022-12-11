@@ -5,7 +5,6 @@
 #include "Engine/ECS/Component/EditorCameraComponent.h"
 
 #include "Engine/Core/Application.h"
-#include "Engine/Core/Window.h"
 
 namespace Engine
 {
@@ -17,7 +16,10 @@ namespace Engine
 		Entity{id, name, componentRegistry}
 	{
 		auto transform = AttachComponent<TransformComponent>();
-		transform->Position.z = 10.0f;
+		transform->Position.y = 20.0f;
+		transform->Position.z = -5.0f;
+		transform->Rotation.x = 90.0f;
+		
 		AttachComponent<EditorCameraComponent>(transform, renderWidth, renderHeight);
 	}
 

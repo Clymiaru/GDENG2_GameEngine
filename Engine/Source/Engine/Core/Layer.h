@@ -1,11 +1,12 @@
 ﻿#pragma once
 
+#include "Time.h"
+
 #include "Engine/Core/Core.h"
+#include "Engine/Input/InputData.h"
 
 namespace Engine
 {
-	class Input;
-	class Renderer;
 	class Layer
 	{
 	public:
@@ -19,9 +20,9 @@ namespace Engine
 		// Executes when OnAttach is finished
 		virtual void OnStart() = 0;
 
-		virtual void OnPollInput() = 0;
+		virtual void OnPollInput(const InputData& inputData) = 0;
 
-		virtual void OnUpdate() = 0;
+		virtual void OnUpdate(const TimeData& timeData) = 0;
 
 		virtual void OnRender() = 0;
 

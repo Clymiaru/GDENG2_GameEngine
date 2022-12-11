@@ -97,7 +97,7 @@ namespace Engine
 		const List<ID3D11Buffer*> buffers = {&data.GetData()};
 
 		m_DeviceContext->IASetVertexBuffers(0,
-		                                    buffers.size(),
+		                                    (UINT)buffers.size(),
 		                                    buffers.data(),
 		                                    &stride,
 		                                    &offset);

@@ -30,5 +30,7 @@ namespace Engine
 		void RecalculateLocalMatrix();
 
 		Matrix4 m_LocalMatrix;
+		Quaternion m_Quaternion;
+		Vector3Float m_PrevRotation;
 	};
 }

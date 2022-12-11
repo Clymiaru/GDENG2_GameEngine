@@ -1,5 +1,6 @@
 ﻿#include "FileMenuBar.h"
 
+#include <Engine/ECS/ComponentSystem/ComponentSystemHandler.h>
 #include <Engine/ECS/Core/EntityManager.h>
 #include <Engine/ECS/Entity/EmptyEntity.h>
 #include <Engine/ECS/Entity/Camera.h>
@@ -44,17 +45,17 @@ namespace Editor
 
 					if (ImGui::MenuItem("Game Camera"))
 					{
-						Engine::EntityManager::Create<Engine::Camera>("Game Camera", 512, 512);
+						Engine::EntityManager::Create<Engine::Camera>("Game Camera", 512UL, 512UL);
 					}
 
 					if (ImGui::MenuItem("Cube"))
 					{
 						Engine::EntityManager::Create<Engine::Cube>("Cube");
 					}
-					
+
 					ImGui::EndMenu();
 				}
-				
+
 				ImGui::EndMenu();
 			}
 
@@ -67,13 +68,34 @@ namespace Editor
 
 				if (ImGui::MenuItem("Scene Viewport"))
 				{
-					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>("EditorCamera", 512, 512);
+					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>("EditorCamera", 512UL, 512UL);
 					Engine::UISystem::Create<EditorViewportScreen>(editorCamera);
 				}
 
 				if (ImGui::MenuItem("Game Viewport"))
 				{
 					Engine::UISystem::Create<GameViewportScreen>();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Camera"))
+			{
+				if (ImGui::MenuItem("Align With View"))
+				{
+					using namespace Engine;
+					// Get Current Editor Camera
+					const auto currentEditorCamera = Application::GetComponentSystem()
+					                                 .GetCameraSystem().GetEditorCamera(0);
+
+					// Get Game Camera
+					const auto gameCamera = Application::GetComponentSystem()
+					                        .GetCameraSystem().GetGameCamera();
+
+					// Game Camera Transform = EditorCamera Transform
+					gameCamera->SetPosition(currentEditorCamera->GetPosition());
+					gameCamera->SetRotation(currentEditorCamera->GetRotation());
 				}
 
 				ImGui::EndMenu();

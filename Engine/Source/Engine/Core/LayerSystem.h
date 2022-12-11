@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Layer.h"
+#include "Time.h"
 
+#include "Engine/Input/InputData.h"
 namespace Engine
 {
 	class LayerSystem final
@@ -17,8 +19,8 @@ namespace Engine
 		// TODO: Add overlay layers?
 		void Remove(Layer* layer);
 
-		void PollInput() const;
-		void Update() const;
+		void PollInput(const InputData& inputData) const;
+		void Update(const TimeData& timeData) const;
 		void Render() const;
 
 		LayerSystem(const LayerSystem&)                = delete;

@@ -5,6 +5,7 @@
 
 #include "Engine/Core/Application.h"
 #include "Engine/Graphics/Renderer.h"
+#include "Engine/Input/Input.h"
 
 namespace Engine
 {
@@ -13,18 +14,30 @@ namespace Engine
 	                                             uint64_t width,
 	                                             uint64_t height) :
 		AComponent{ownerID},
+		FoV{45.0f},
+		Front{Vector3Float{0.0f, 0.0f, 1.0f}},
+		Up{Vector3Float{0.0f, 1.0f, 0.0f}},
 		m_Transform{transform}
 	{
-		m_Up      = Vector3Float(0.0f, 1.0f, 0.0f);
-		m_Front   = Vector3Float(0.0f, 0.0f, 0.0f);
-		m_WorldUp = m_Up;
-
 		InitRenderTarget(width, height);
 	}
 
 	EditorCameraComponent::~EditorCameraComponent() { }
 
-	void EditorCameraComponent::SetSize(uint64_t width, uint64_t height)
+	TransformComponent& EditorCameraComponent::GetTransform() const
+	{
+		return *m_Transform;
+	}
+
+	void EditorCameraComponent::UpdateViewMatrix(const Vector3Float& target,
+	                                             const Vector3Float& up)
+	{
+		m_ViewMatrix = Matrix4::CreateLookAt(m_Transform->Position,
+											 target,
+											 up);
+	}
+
+	void EditorCameraComponent::SetSize(const uint64_t width, const uint64_t height)
 	{
 		const auto* storedFramebuffer = m_RenderTarget.release();
 		delete storedFramebuffer;
@@ -39,15 +52,39 @@ namespace Engine
 		m_ProjMatrix = Matrix4::CreatePerspectiveFieldOfView(DegreesToRadians(FoV),
 		                                                     aspectRatio,
 		                                                     0.001f, 1000.0f);
-		m_ProjMatrix = m_ProjMatrix.Transpose();
-
-		return m_ProjMatrix * m_ViewMatrix;
+		Matrix4 result = m_ViewMatrix * m_ProjMatrix;
+		result         = result.Transpose();
+		return result;
 	}
 
 	void EditorCameraComponent::Update()
 	{
-		UpdateCameraVectors();
-		UpdateViewMatrix();
+		
+	}
+
+	void EditorCameraComponent::SetPosition(const Vector3Float& position) const
+	{
+		m_Transform->Position = position;
+	}
+
+	void EditorCameraComponent::SetRotation(const Vector3Float& rotation) const
+	{
+		m_Transform->Rotation = rotation;
+	}
+
+	void EditorCameraComponent::SetFocus(bool flag)
+	{
+		m_IsFocused = flag;
+	}
+
+	const Vector3Float& EditorCameraComponent::GetPosition() const
+	{
+		return m_Transform->Position;
+	}
+
+	const Vector3Float& EditorCameraComponent::GetRotation() const
+	{
+		return m_Transform->Rotation;
 	}
 
 	Framebuffer& EditorCameraComponent::GetRenderTarget() const
@@ -61,28 +98,5 @@ namespace Engine
 		resizedFramebufferProfile.Width = width;
 		resizedFramebufferProfile.Height = height;
 		m_RenderTarget = Application::GetRenderer().GetDevice().CreateFramebuffer(resizedFramebufferProfile);
-	}
-
-	void EditorCameraComponent::UpdateViewMatrix()
-	{
-		m_ViewMatrix = m_Transform->GetLocalMatrix();
-	}
-
-	void EditorCameraComponent::UpdateCameraVectors()
-	{
-		float pitch = m_Transform->Rotation.x;
-		float yaw   = m_Transform->Rotation.y;
-		float roll  = m_Transform->Rotation.z;
-
-		m_Front.x = std::cos(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
-		m_Front.y = std::sin(DegreesToRadians(pitch));
-		m_Front.z = std::sin(DegreesToRadians(yaw)) * std::cos(DegreesToRadians(pitch));
-		m_Front.Normalize();
-
-		m_Right = m_Front.Cross(m_WorldUp);
-		m_Right.Normalize();
-
-		m_Up = m_Right.Cross(m_Front);
-		m_Up.Normalize();
 	}
 }

@@ -6,6 +6,7 @@
 
 namespace Engine
 {
+	
 	class Camera final : public Entity
 	{
 	public:
@@ -17,4 +18,5 @@ namespace Engine
 
 		~Camera() override;
 	};
+	
 }

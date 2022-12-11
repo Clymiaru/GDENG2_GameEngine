@@ -12,8 +12,7 @@ namespace Editor
 	                                           Engine::EditorCamera* editorCamera) :
 		AUIScreen{id, "Editor Viewport"},
 		m_EditorCameraRef{editorCamera},
-		m_ViewportSize{512, 512}
-	{ }
+		m_ViewportSize{512, 512} { }
 
 	EditorViewportScreen::~EditorViewportScreen() { }
 
@@ -21,12 +20,13 @@ namespace Editor
 	{
 		using namespace Engine;
 
-		auto editorCameraComponent = m_EditorCameraRef->GetComponent<EditorCameraComponent>();
-		auto* renderTarget = &editorCameraComponent->GetRenderTarget();
+		SharedPtr<EditorCameraComponent> editorCameraComponent = m_EditorCameraRef->GetComponent<EditorCameraComponent>();
+
+		Framebuffer* renderTarget = &editorCameraComponent->GetRenderTarget();
 
 		if ((m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f) &&
-			(m_ViewportSize.x != renderTarget->GetInfo().Width ||
-			m_ViewportSize.y != renderTarget->GetInfo().Height))
+		    (m_ViewportSize.x != renderTarget->GetInfo().Width ||
+		     m_ViewportSize.y != renderTarget->GetInfo().Height))
 		{
 			editorCameraComponent->SetSize(m_ViewportSize.x, m_ViewportSize.y);
 			renderTarget = &editorCameraComponent->GetRenderTarget();
@@ -34,12 +34,14 @@ namespace Editor
 
 		ImGui::Begin(GetNameAndIDLabel());
 
-		auto displaySize = ImGui::GetContentRegionAvail();
+		editorCameraComponent->SetFocus(ImGui::IsWindowFocused());
+
+		ImVec2 displaySize = ImGui::GetContentRegionAvail();
 		m_ViewportSize.x = displaySize.x;
 		m_ViewportSize.y = displaySize.y;
 
 		ImGui::Image(&renderTarget->GetFrame(), ImVec2(m_ViewportSize.x, m_ViewportSize.y));
-		
+
 		ImGui::End();
 	}
 }

@@ -78,7 +78,7 @@ namespace Engine
 	{
 		if (!s_UIScreenMap.contains(screenID))
 			return;
-		
+
 		int index = -1;
 		for (size_t i = 0; i < s_UIScreenList.size(); i++)
 		{

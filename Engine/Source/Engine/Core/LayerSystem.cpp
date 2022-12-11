@@ -70,19 +70,19 @@ namespace Engine
 		m_Layers.erase(resultFromLayers);
 	}
 
-	void LayerSystem::PollInput() const
+	void LayerSystem::PollInput(const InputData& inputData) const
 	{
 		for (int i = (int)m_ActiveLayers.size() - 1; i >= 0; --i)
 		{
-			m_ActiveLayers[i]->OnPollInput();
+			m_ActiveLayers[i]->OnPollInput(inputData);
 		}
 	}
 
-	void LayerSystem::Update() const
+	void LayerSystem::Update(const TimeData& timeData) const
 	{
 		for (auto* layer : m_Layers)
 		{
-			layer->OnUpdate();
+			layer->OnUpdate(timeData);
 		}
 	}
 

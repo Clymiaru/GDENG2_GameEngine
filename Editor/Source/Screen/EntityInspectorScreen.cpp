@@ -163,6 +163,11 @@ namespace Editor
 			{
 				DrawRender(entityNameID, std::dynamic_pointer_cast<RenderComponent>(component));
 			}
+
+			if (component->GetName() == "Camera")
+			{
+				DrawCamera(entityNameID, std::dynamic_pointer_cast<CameraComponent>(component));
+			}
 		}
 	}
 
@@ -206,12 +211,77 @@ namespace Editor
 				render->SetTexture(texture);
 			}
 
+			const String buttonSetShiori = std::vformat("Set Shiori Texture##Render{0}",
+			                                            std::make_format_args(entityNameID));
+			if (ImGui::Button(buttonSetShiori.c_str()))
+			{
+				const auto texture = Application::GetResourceSystem().Get<TextureResource>("image0-42");
+				render->SetTexture(texture);
+			}
+
 			const String buttonRemoveTexture = std::vformat("Remove Texture##Render{0}",
-													   std::make_format_args(entityNameID));
+			                                                std::make_format_args(entityNameID));
 			if (ImGui::Button(buttonRemoveTexture.c_str()))
 			{
 				render->RemoveTexture();
 			}
+		}
+	}
+
+
+	void EntityInspectorScreen::DrawCamera(Engine::StringView entityNameID,
+	                                       Engine::SharedPtr<Engine::CameraComponent> camera) const
+	{
+		using namespace Engine;
+		if (ImGui::CollapsingHeader("Camera Component"))
+		{
+			// Camera Clear Color
+			const String cameraClearColor = std::vformat("Clear Color##Camera{0}",
+			                                             std::make_format_args(entityNameID));
+			ImGui::ColorEdit4(cameraClearColor.c_str(), (float*)camera->ClearColor);
+
+			// Camera Projection
+			int projectionMode = (int)camera->Projection;
+			ImGui::Combo("Projection", &projectionMode, "Perspective\0Orthographic\0");
+
+			if (projectionMode == 0)
+			{
+				camera->Projection = CameraComponent::Projection::Perspective;
+			}
+			if (projectionMode == 1)
+			{
+				camera->Projection = CameraComponent::Projection::Orthographic;
+			}
+
+			// If Camera Projection is Perspective
+			if (camera->Projection == CameraComponent::Projection::Perspective)
+			{
+				// Camera FoV
+				const String cameraFoV = std::vformat("FoV##Camera{0}",
+				                                      std::make_format_args(entityNameID));
+				ImGui::DragFloat(cameraFoV.c_str(), &camera->FoV, 0.1f, 0.1f, 180.0f);
+			}
+
+			// If Camera Projection is Orthographic
+			if (camera->Projection == CameraComponent::Projection::Orthographic)
+			{
+				// Camera Size
+				const String cameraOrthographicSize = std::vformat("Orthographic Size##Camera{0}",
+				                                                   std::make_format_args(entityNameID));
+				ImGui::DragFloat(cameraOrthographicSize.c_str(),
+				                 &camera->OrthographicSize, 0.1f, 0.1f, 100.0f);
+			}
+
+			// Clipping Planes
+			const String cameraNearClipPlane = std::vformat("Near Clip Plane##Camera{0}",
+			                                                std::make_format_args(entityNameID));
+			ImGui::DragFloat(cameraNearClipPlane.c_str(),
+			                 &camera->NearClipPlane, 0.1f, 0.01f, 100000.0f);
+
+			const String cameraFarClipPlane = std::vformat("Far Clip Plane##Camera{0}",
+			                                               std::make_format_args(entityNameID));
+			ImGui::DragFloat(cameraFarClipPlane.c_str(),
+			                 &camera->FarClipPlane, 0.1f, 0.01f, 100000.0f);
 		}
 	}
 

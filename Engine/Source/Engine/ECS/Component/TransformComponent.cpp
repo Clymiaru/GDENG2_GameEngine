@@ -7,9 +7,8 @@ namespace Engine
 		AComponent{ownerID},
 		Position{Vector3Float::Zero},
 		Scale{Vector3Float::One},
-		Rotation{Vector3Float::Zero}
-	{
-	}
+		Rotation{Vector3Float::Zero},
+		m_Quaternion{Quaternion::Identity} { }
 
 	TransformComponent::~TransformComponent() = default;
 
@@ -27,10 +26,13 @@ namespace Engine
 		// Apply Scale 
 		m_LocalMatrix *= Matrix4::CreateScale(Scale);
 
-		// Apply Rotation
-		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(0, 1, 0), DegreesToRadians(Rotation.y));
-		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(1, 0, 0), DegreesToRadians(Rotation.x));
-		m_LocalMatrix *= Matrix4::CreateFromAxisAngle(Vector3Float(0, 0, 1), DegreesToRadians(Rotation.z));
+		const float theta = std::sqrt(Rotation.x * Rotation.x +
+		                              Rotation.y * Rotation.y +
+		                              Rotation.z * Rotation.z) * 180.0f / PI;
+
+		m_Quaternion = Quaternion::CreateFromYawPitchRoll(Rotation.y, Rotation.x, Rotation.z);
+		
+		m_LocalMatrix *= Matrix4::CreateFromQuaternion(m_Quaternion);
 		
 		// Apply Translation
 		m_LocalMatrix *= Matrix4::CreateTranslation(Position);
