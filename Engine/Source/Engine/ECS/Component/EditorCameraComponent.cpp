@@ -11,8 +11,8 @@ namespace Engine
 {
 	EditorCameraComponent::EditorCameraComponent(const EntityID& ownerID,
 	                                             SharedPtr<TransformComponent> transform,
-	                                             uint64_t width,
-	                                             uint64_t height) :
+	                                             uint32_t width,
+	                                             uint32_t height) :
 		AComponent{ownerID},
 		FoV{45.0f},
 		Front{Vector3Float{0.0f, 0.0f, 1.0f}},
@@ -37,7 +37,7 @@ namespace Engine
 											 up);
 	}
 
-	void EditorCameraComponent::SetSize(const uint64_t width, const uint64_t height)
+	void EditorCameraComponent::SetSize(const uint32_t width, const uint32_t height)
 	{
 		const auto* storedFramebuffer = m_RenderTarget.release();
 		delete storedFramebuffer;
@@ -92,7 +92,7 @@ namespace Engine
 		return *m_RenderTarget;
 	}
 
-	void EditorCameraComponent::InitRenderTarget(uint64_t width, uint64_t height)
+	void EditorCameraComponent::InitRenderTarget(uint32_t width, uint32_t height)
 	{
 		FramebufferProfile resizedFramebufferProfile;
 		resizedFramebufferProfile.Width = width;

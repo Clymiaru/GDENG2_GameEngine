@@ -84,7 +84,7 @@ namespace Engine
 		{
 			if (s_UIScreenList[i]->GetID() == screenID)
 			{
-				index = i;
+				index = (int)i;
 			}
 		}
 

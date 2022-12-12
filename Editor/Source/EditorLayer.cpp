@@ -2,6 +2,7 @@
 #include <Engine/Core/Debug.h>
 #include <Engine/Core/Application.h>
 #include <Engine/ECS/Component/RenderComponent.h>
+#include <Engine/ECS/Component/Render/StaticMeshComponent.h>
 #include <Engine/Graphics/Renderer.h>
 #include <Engine/ECS/ComponentSystem/ComponentSystemHandler.h>
 #include <Engine/ECS/Core/EntityManager.h>
@@ -45,7 +46,7 @@ namespace Editor
 		EntityManager::Create<Camera>("GameCamera", 512UL, 512UL);
 
 		auto cubeEntity   = EntityManager::Create<Cube>("Cube");
-		auto cubeRenderer = cubeEntity->GetComponent<RenderComponent>();
+		auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
 		cubeRenderer->SetTexture(shioriTexture);
 
 		// auto plane = EntityManager::Create<Plane>("Plane");

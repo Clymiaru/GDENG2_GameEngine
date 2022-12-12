@@ -13,8 +13,8 @@ namespace Engine
 	public:
 		explicit EditorCameraComponent(const EntityID& ownerID,
 		                               SharedPtr<TransformComponent> transform,
-		                               uint64_t width,
-		                               uint64_t height);
+		                               uint32_t width,
+		                               uint32_t height);
 
 		~EditorCameraComponent() override;
 
@@ -31,7 +31,7 @@ namespace Engine
 		void UpdateViewMatrix(const Vector3Float& target,
 		                      const Vector3Float& up);
 
-		void SetSize(uint64_t width, uint64_t height);
+		void SetSize(uint32_t width, uint32_t height);
 
 		void SetPosition(const Vector3Float& position) const;
 
@@ -51,7 +51,7 @@ namespace Engine
 		Framebuffer& GetRenderTarget() const;
 
 	private:
-		void InitRenderTarget(uint64_t width, uint64_t height);
+		void InitRenderTarget(uint32_t width, uint32_t height);
 
 		SharedPtr<TransformComponent> m_Transform;
 

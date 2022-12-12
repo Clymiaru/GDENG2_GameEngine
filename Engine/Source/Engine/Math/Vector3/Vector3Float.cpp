@@ -6,6 +6,13 @@ namespace Engine
 	Vector3Float Vector3Float::Zero = Vector3Float(0.0f, 0.0f, 0.0f);
 	Vector3Float Vector3Float::One  = Vector3Float(1.0f, 1.0f, 1.0f);
 
+	Vector3Float Vector3Float::Up       = Vector3Float(0.0f, 1.0f, 0.0f);
+	Vector3Float Vector3Float::Down     = Vector3Float(0.0f, -1.0f, 0.0f);
+	Vector3Float Vector3Float::Forward  = Vector3Float(0.0f, 0.0f, 1.0f);
+	Vector3Float Vector3Float::Backward = Vector3Float(0.0f, 0.0f, -1.0f);
+	Vector3Float Vector3Float::Left     = Vector3Float(-1.0f, 0.0f, 0.0f);
+	Vector3Float Vector3Float::Right    = Vector3Float(1.0f, 0.0f, 0.0f);
+
 	Vector3Float::Vector3Float() :
 		XMFLOAT3{0.0f, 0.0f, 0.0f} { }
 
@@ -61,13 +68,13 @@ namespace Engine
 		const XMVECTOR result = XMVector3Normalize(v1);
 		XMStoreFloat3(this, result);
 	}
-	
+
 	Vector3Float Vector3Float::Transform(const Vector3Float& v, const Matrix4& m)
 	{
 		using namespace DirectX;
 		const XMVECTOR v1 = XMLoadFloat3(&v);
-		const XMMATRIX M = XMLoadFloat4x4(&m);
-		const XMVECTOR X = XMVector3TransformCoord(v1, M);
+		const XMMATRIX M  = XMLoadFloat4x4(&m);
+		const XMVECTOR X  = XMVector3TransformCoord(v1, M);
 
 		Vector3Float result;
 		XMStoreFloat3(&result, X);

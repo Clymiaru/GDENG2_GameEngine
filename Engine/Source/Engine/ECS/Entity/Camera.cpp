@@ -18,8 +18,8 @@ namespace Engine
 	Camera::Camera(const EntityID id,
 	               const StringView name,
 	               ComponentRegistry* componentRegistry,
-	               uint64_t renderWidth,
-	               uint64_t renderHeight) :
+	               uint32_t renderWidth,
+	               uint32_t renderHeight) :
 		Entity{id, name, componentRegistry}
 	{
 		auto transform = AttachComponent<TransformComponent>();
@@ -35,9 +35,9 @@ namespace Engine
 		auto texture = Application::GetResourceSystem().Get<TextureResource>("SuzunaDerpComfy");
 		
 		//RenderData* cubeRenderData = Primitive::Mesh("Assets/Mesh/Camera/10128_Video_camera_v1_L3.obj");
-		RenderData* frustumRenderData = Primitive::Frustum(cameraComponent->FoV, 512, 512, cameraComponent->NearClipPlane, cameraComponent->FarClipPlane);
-		
-		auto render = AttachComponent<RenderComponent>(frustumRenderData, vertexShader, pixelShader, transform);
+		// RenderData* frustumRenderData = Primitive::Frustum(cameraComponent->FoV, 512, 512, cameraComponent->NearClipPlane, cameraComponent->FarClipPlane);
+		//
+		// auto render = AttachComponent<RenderComponent>(frustumRenderData, vertexShader, pixelShader, transform);
 
 
 		RenderData* cubeRenderData = Primitive::Cube();

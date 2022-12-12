@@ -3,6 +3,7 @@
 
 #include "Engine/ECS/Component/TransformComponent.h"
 #include "Engine/ECS/Component/RenderComponent.h"
+#include "Engine/ECS/Component/Render/StaticMeshComponent.h"
 #include "Engine/ResourceManagement/Shader/ShaderLibrary.h"
 #include "Engine/Graphics/Primitives/Primitive.h"
 #include "Engine/ResourceManagement/Core/ResourceSystem.h"
@@ -24,7 +25,7 @@ namespace Engine
 		auto vertexShader = Application::GetResourceSystem().Get<VertexShaderResource>("TexturedShader");
 		auto pixelShader  = Application::GetResourceSystem().Get<PixelShaderResource>("TexturedShader");
 		
-		AttachComponent<RenderComponent>(cubeRenderData, vertexShader, pixelShader, transform);
+		AttachComponent<StaticMeshComponent>(cubeRenderData, vertexShader, pixelShader, transform);
 	}
 
 	Cube::~Cube() = default;

@@ -13,8 +13,8 @@ namespace Engine
 		explicit Camera(EntityID id,
 		                StringView name,
 		                ComponentRegistry* componentRegistry,
-		                uint64_t renderWidth,
-		                uint64_t renderHeight);
+		                uint32_t renderWidth,
+		                uint32_t renderHeight);
 
 		~Camera() override;
 	};

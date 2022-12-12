@@ -75,6 +75,13 @@ namespace Engine
 
 		static Vector3Float Zero;
 		static Vector3Float One;
+
+		static Vector3Float Up;
+		static Vector3Float Down;
+		static Vector3Float Forward;
+		static Vector3Float Backward;
+		static Vector3Float Left;
+		static Vector3Float Right;
 	};
 
 	Vector3Float operator+(const Vector3Float& v1, const Vector3Float& v2);

@@ -3,6 +3,7 @@
 
 #include "Engine/ECS/Component/RenderComponent.h"
 #include "Engine/ECS/Component/CameraRenderComponent.h"
+#include "Engine/ECS/Component/Render/StaticMeshComponent.h"
 #include "Engine/ECS/Core/EntityManager.h"
 
 struct RenderObjectData;
@@ -10,7 +11,7 @@ namespace Engine
 {
 	void RenderSystem::Render(CameraComponent& camera) const
 	{
-		const auto renderList = EntityManager::GetAllComponentsOfType<RenderComponent>();
+		const auto renderList = EntityManager::GetAllComponentsOfType<StaticMeshComponent>();
 		const auto CameraRenderList = EntityManager::GetAllComponentsOfType<CameraRenderComponent>();
 		
 		for (auto render : renderList)
@@ -27,7 +28,7 @@ namespace Engine
 	
 	void RenderSystem::Render(EditorCameraComponent& camera) const
 	{
-		const auto renderList = EntityManager::GetAllComponentsOfType<RenderComponent>();
+		const auto renderList = EntityManager::GetAllComponentsOfType<StaticMeshComponent>();
 		const auto CameraRenderList = EntityManager::GetAllComponentsOfType<CameraRenderComponent>();
 		
 		for (auto render : renderList)

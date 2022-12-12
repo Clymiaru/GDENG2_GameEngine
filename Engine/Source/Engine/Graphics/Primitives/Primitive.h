@@ -12,6 +12,7 @@ namespace Engine::Primitive
 	{
 		Vector3Float Position;
 		Vector2Float UV;
+		Vector3Float Normal;
 	};
 
 	inline RenderData* Mesh(StringView filepath)
@@ -88,18 +89,20 @@ namespace Engine::Primitive
 
 	inline RenderData* Cube()
 	{
+		const Vector3Float basisVector = Vector3Float(0.5f, 0.5f, 0.5f);
+
 		const Vector3Float positionList[] =
 		{
-			{Vector3Float(-0.5f, -0.5f, -0.5f)},
-			{Vector3Float(-0.5f, 0.5f, -0.5f)},
-			{Vector3Float(0.5f, 0.5f, -0.5f)},
-			{Vector3Float(0.5f, -0.5f, -0.5f)},
+			{Vector3Float(-basisVector.x, -basisVector.y, -basisVector.z)},
+			{Vector3Float(-basisVector.x, basisVector.y, -basisVector.z)},
+			{Vector3Float(basisVector.x, basisVector.y, -basisVector.z)},
+			{Vector3Float(basisVector.x, -basisVector.y, -basisVector.z)},
 
 			//BACK FACE
-			{Vector3Float(0.5f, -0.5f, 0.5f)},
-			{Vector3Float(0.5f, 0.5f, 0.5f)},
-			{Vector3Float(-0.5f, 0.5f, 0.5f)},
-			{Vector3Float(-0.5f, -0.5f, 0.5f)}
+			{Vector3Float(basisVector.x, -basisVector.y, basisVector.z)},
+			{Vector3Float(basisVector.x, basisVector.y, basisVector.z)},
+			{Vector3Float(-basisVector.x, basisVector.y, basisVector.z)},
+			{Vector3Float(-basisVector.x, -basisVector.y, basisVector.z)}
 		};
 
 		const Vector2Float uvList[] =
@@ -110,41 +113,52 @@ namespace Engine::Primitive
 			{Vector2Float(1.0f, 1.0f)}
 		};
 
+		const Vector3Float normalList[] =
+		{
+			Vector3Float::Up,
+			Vector3Float::Down,
+			Vector3Float::Forward,
+			Vector3Float::Backward,
+			Vector3Float::Left,
+			Vector3Float::Right
+		};
+
 		List<Vertex>* vertices = new List<Vertex>{
-			{positionList[0], uvList[1]},
-			{positionList[1], uvList[0]},
-			{positionList[2], uvList[2]},
-			{positionList[3], uvList[3]},
+			{positionList[0], uvList[1], normalList[1]},
+			{positionList[1], uvList[0], normalList[1]},
+			{positionList[2], uvList[2], normalList[1]},
+			{positionList[3], uvList[3], normalList[1]},
 
-			{positionList[4], uvList[1]},
-			{positionList[5], uvList[0]},
-			{positionList[6], uvList[2]},
-			{positionList[7], uvList[3]},
+			{positionList[4], uvList[1], normalList[4]},
+			{positionList[5], uvList[0], normalList[4]},
+			{positionList[6], uvList[2], normalList[4]},
+			{positionList[7], uvList[3], normalList[4]},
 
-			{positionList[1], uvList[1]},
-			{positionList[6], uvList[0]},
-			{positionList[5], uvList[2]},
-			{positionList[2], uvList[3]},
+			{positionList[1], uvList[1], normalList[2]},
+			{positionList[6], uvList[0], normalList[2]},
+			{positionList[5], uvList[2], normalList[2]},
+			{positionList[2], uvList[3], normalList[2]},
 
-			{positionList[7], uvList[1]},
-			{positionList[0], uvList[0]},
-			{positionList[3], uvList[2]},
-			{positionList[4], uvList[3]},
+			{positionList[7], uvList[1], normalList[3]},
+			{positionList[0], uvList[0], normalList[3]},
+			{positionList[3], uvList[2], normalList[3]},
+			{positionList[4], uvList[3], normalList[3]},
 
-			{positionList[3], uvList[1]},
-			{positionList[2], uvList[0]},
-			{positionList[5], uvList[2]},
-			{positionList[4], uvList[3]},
+			{positionList[3], uvList[1], normalList[5]},
+			{positionList[2], uvList[0], normalList[5]},
+			{positionList[5], uvList[2], normalList[5]},
+			{positionList[4], uvList[3], normalList[5]},
 
-			{positionList[7], uvList[1]},
-			{positionList[6], uvList[0]},
-			{positionList[1], uvList[2]},
-			{positionList[0], uvList[3]}
+			{positionList[7], uvList[1], normalList[0]},
+			{positionList[6], uvList[0], normalList[0]},
+			{positionList[1], uvList[2], normalList[0]},
+			{positionList[0], uvList[3], normalList[0]}
 		};
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 
 		List<uint32_t>* indices = new List<uint32_t>{
@@ -192,16 +206,17 @@ namespace Engine::Primitive
 		};
 
 		List<Vertex>* vertices = new List<Vertex>{
-			{Vector3Float{-0.5f, 0, -0.5f}, uvList[0]},
-			{Vector3Float{-0.5f, 0, 0.5f}, uvList[1]},
-			{Vector3Float{0.5f, 0.0f, 0.5f}, uvList[3]},
-			{Vector3Float{0.5f, 0.0f, -0.5f}, uvList[2]},
+			{Vector3Float{-0.5f, 0, -0.5f}, uvList[0], Vector3Float::Up},
+			{Vector3Float{-0.5f, 0, 0.5f}, uvList[1], Vector3Float::Up},
+			{Vector3Float{0.5f, 0.0f, 0.5f}, uvList[3], Vector3Float::Up},
+			{Vector3Float{0.5f, 0.0f, -0.5f}, uvList[2], Vector3Float::Up},
 		};
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
-			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
+				{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
 
 		List<uint32_t>* indices = new List<uint32_t>{
 			0,
@@ -225,17 +240,22 @@ namespace Engine::Primitive
 		return planeRenderData;
 	}
 
-	inline RenderData* Frustum(float FOV, float windowHeight, float windowLength, float nearZ, float farZ)
+	struct FrustrumVertex
 	{
-		float fovRadians = FOV / 180 * 3.14;
-		float aspectRatio = ((float)windowLength / 2) / ((float)windowHeight / 2);
-		
-		float nearHeight = 2 * tan(fovRadians / 2) * nearZ;
-		float farHeight = 2 * tan(fovRadians / 2) * farZ;
-		float nearWidth = (nearHeight * aspectRatio);
-		float farWidth = (farHeight * aspectRatio);
+		Vector3Float Position;
+		Vector2Float UV;
+	};
 
-		
+	inline RenderData* Frustum(float fov, float windowHeight, float windowLength, float nearZ, float farZ)
+	{
+		float fovRadians  = fov / 180.0f * 3.14f;
+		float aspectRatio = ((float)windowLength / 2.0f) / ((float)windowHeight / 2.0f);
+
+		float nearHeight = 2.0f * std::tan(fovRadians / 2.0f) * nearZ;
+		float farHeight  = 2.0f * std::tan(fovRadians / 2.0f) * farZ;
+		float nearWidth  = (nearHeight * aspectRatio);
+		float farWidth   = (farHeight * aspectRatio);
+
 		float alpha = 0.5f;
 
 		const Vector2Float uvList[] =
@@ -246,24 +266,21 @@ namespace Engine::Primitive
 			{Vector2Float(1.0f, 1.0f)}
 		};
 
-		List<Vertex>* vertices = new List<Vertex>{
-			{Vector3Float((-nearWidth * 0.5), (nearHeight * 0.5), nearZ * 6), uvList[1]},
-			{Vector3Float((nearWidth * 0.5), (nearHeight * 0.5), nearZ * 6), uvList[0]},
-			{Vector3Float((nearWidth * 0.5), (-nearHeight * 0.5), nearZ * 6), uvList[2]},
-			{Vector3Float(-(nearWidth * 0.5), (-nearHeight * 0.5), nearZ * 6), uvList[3]},
-			{Vector3Float((-farWidth * 0.5), (farHeight * 0.5), farZ * 6), uvList[1]},
-			{Vector3Float((farWidth * 0.5), (farHeight * 0.5), farZ * 6), uvList[0]},
-			{Vector3Float((farWidth * 0.5), (-farHeight * 0.5), farZ * 6), uvList[2]},
-			{Vector3Float(-(farWidth * 0.5), (-farHeight * 0.5), farZ * 6), uvList[3]}
+		List<FrustrumVertex>* vertices = new List<FrustrumVertex>{
+			{Vector3Float((-nearWidth * 0.5f), (nearHeight * 0.5f), nearZ * 6.0f), uvList[1]},
+			{Vector3Float((nearWidth * 0.5f), (nearHeight * 0.5f), nearZ * 6.0f), uvList[0]},
+			{Vector3Float((nearWidth * 0.5f), (-nearHeight * 0.5f), nearZ * 6.0f), uvList[2]},
+			{Vector3Float(-(nearWidth * 0.5f), (-nearHeight * 0.5f), nearZ * 6.0f), uvList[3]},
+			{Vector3Float((-farWidth * 0.5f), (farHeight * 0.5f), farZ * 6.0f), uvList[1]},
+			{Vector3Float((farWidth * 0.5f), (farHeight * 0.5f), farZ * 6.0f), uvList[0]},
+			{Vector3Float((farWidth * 0.5f), (-farHeight * 0.5f), farZ * 6.0f), uvList[2]},
+			{Vector3Float(-(farWidth * 0.5f), (-farHeight * 0.5f), farZ * 6.0f), uvList[3]}
 		};
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
-
-
-
 
 		List<uint32_t>* indices = new List<uint32_t>{
 			//Near Plane
@@ -286,17 +303,16 @@ namespace Engine::Primitive
 			3, 6, 7,
 		};
 
-		RenderData* FrustumRenderData = new RenderData();
-		FrustumRenderData->Vertices = vertices->data();
-		FrustumRenderData->VertexCount = vertices->size();
-		FrustumRenderData->VertexSize = sizeof(Vertex);
-		FrustumRenderData->VertexLayout = layout->data();
-		FrustumRenderData->VertexLayoutElementCount = layout->size();
-		FrustumRenderData->Indices = indices->data();
-		FrustumRenderData->IndexCount = indices->size();
-		FrustumRenderData->Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		RenderData* frustumRenderData               = new RenderData();
+		frustumRenderData->Vertices                 = vertices->data();
+		frustumRenderData->VertexCount              = vertices->size();
+		frustumRenderData->VertexSize               = sizeof(FrustrumVertex);
+		frustumRenderData->VertexLayout             = layout->data();
+		frustumRenderData->VertexLayoutElementCount = layout->size();
+		frustumRenderData->Indices                  = indices->data();
+		frustumRenderData->IndexCount               = indices->size();
+		frustumRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 
-		return FrustumRenderData;
-
+		return frustumRenderData;
 	}
 }
