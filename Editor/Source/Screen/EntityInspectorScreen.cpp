@@ -3,6 +3,7 @@
 
 #include <Engine/Core/Core.h>
 #include <Engine/ECS/Component/TransformComponent.h>
+#include <Engine/ECS/Component/Render/StaticMeshComponent.h>
 #include <Engine/ECS/Core/Entity.h>
 #include <Engine/ECS/Core/EntityManager.h>
 #include <Engine/ResourceManagement/Core/ResourceSystem.h>
@@ -159,9 +160,9 @@ namespace Editor
 				DrawTransform(entityNameID, std::dynamic_pointer_cast<TransformComponent>(component));
 			}
 
-			if (component->GetName() == "Render")
+			if (component->GetName() == "StaticMesh")
 			{
-				DrawRender(entityNameID, std::dynamic_pointer_cast<RenderComponent>(component));
+				DrawStaticMesh(entityNameID, std::dynamic_pointer_cast<StaticMeshComponent>(component));
 			}
 
 			if (component->GetName() == "Camera")
@@ -191,11 +192,11 @@ namespace Editor
 		}
 	}
 
-	void EntityInspectorScreen::DrawRender(Engine::StringView entityNameID,
-	                                       Engine::SharedPtr<Engine::RenderComponent> render) const
+	void EntityInspectorScreen::DrawStaticMesh(Engine::StringView entityNameID,
+	                                       Engine::SharedPtr<Engine::StaticMeshComponent> render) const
 	{
 		using namespace Engine;
-		if (ImGui::CollapsingHeader("Render Component"))
+		if (ImGui::CollapsingHeader("Static Mesh Component"))
 		{
 			ImGui::Text("Render Options");
 			const String entityAlbedoColor = std::vformat("Albedo Color##Render{0}",

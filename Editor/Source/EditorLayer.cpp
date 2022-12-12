@@ -37,6 +37,7 @@ namespace Editor
 		Application::GetResourceSystem().Load<Texture>("Assets/SuzunaDerpComfy.png");
 
 		auto shioriTexture = Application::GetResourceSystem().Get<TextureResource>("image0-42");
+		auto suzunaTexture = Application::GetResourceSystem().Get<TextureResource>("SuzunaDerpComfy");
 
 		auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512UL, 512UL);
 		UISystem::Create<EditorViewportScreen>(editorCamera);
@@ -49,9 +50,12 @@ namespace Editor
 		auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
 		cubeRenderer->SetTexture(shioriTexture);
 
-		// auto plane = EntityManager::Create<Plane>("Plane");
-		// auto planeTransform = plane->GetComponent<TransformComponent>();
-		// planeTransform->Scale = Vector3Float(100.0f, 100.0f, 100.0f);
+		auto planeEntity = EntityManager::Create<Plane>("Plane");
+		auto planeTransform = planeEntity->GetComponent<TransformComponent>();
+		planeTransform->Scale = Vector3Float(10.0f, 10.0f, 10.0f);
+
+		auto planeRenderer = planeEntity->GetComponent<StaticMeshComponent>();
+		planeRenderer->SetTexture(suzunaTexture);
 	}
 	
 	void EditorLayer::OnPollInput(const Engine::InputData& inputData)

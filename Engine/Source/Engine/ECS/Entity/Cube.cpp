@@ -15,7 +15,7 @@ namespace Engine
 	           ComponentRegistry* componentRegistry) :
 		Entity{id, name, componentRegistry}
 	{
-		RenderData* cubeRenderData = Primitive::Cube();
+		RenderData* cubeRenderData = Primitive::Sphere(32);
 
 		Application::GetResourceSystem().Load<VertexShader>("Assets/Shaders/Basic/TexturedShader.hlsl");
 		Application::GetResourceSystem().Load<PixelShader>("Assets/Shaders/Basic/TexturedShader.hlsl");

@@ -3,6 +3,7 @@
 #include <Engine/ECS/Component/TransformComponent.h>
 #include <Engine/ECS/Component/RenderComponent.h>
 #include <Engine/ECS/Component/CameraRenderComponent.h>
+#include <Engine/ECS/Component/Render/StaticMeshComponent.h>
 #include <Engine/UI/AUIScreen.h>
 
 #include "WorldOutlinerScreen.h"
@@ -37,8 +38,8 @@ namespace Editor
 		void DrawTransform(Engine::StringView entityNameID,
 		                   Engine::SharedPtr<Engine::TransformComponent> transform) const;
 
-		void DrawRender(Engine::StringView entityNameID,
-		                Engine::SharedPtr<Engine::RenderComponent> render) const;
+		void DrawStaticMesh(Engine::StringView entityNameID,
+		                Engine::SharedPtr<Engine::StaticMeshComponent> render) const;
 
 		void DrawCamera(Engine::StringView entityNameID,
 						Engine::SharedPtr<Engine::CameraComponent> camera) const;
@@ -55,7 +56,7 @@ namespace Editor
 		Engine::List<Engine::String> m_ComponentList =
 		{
 			"Transform",
-			"Render"
+			"StaticMesh"
 		};
 
 		Engine::EntityID m_CurrentEntityID = 0;

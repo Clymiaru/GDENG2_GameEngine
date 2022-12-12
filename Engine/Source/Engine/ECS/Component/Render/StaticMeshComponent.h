@@ -34,7 +34,7 @@ namespace Engine
 
 		void Draw(EditorCameraComponent& camera);
 		
-		MAKE_COMPONENT(Render)
+		MAKE_COMPONENT(StaticMesh)
 
 		StaticMeshComponent(const StaticMeshComponent&)                = delete;
 		StaticMeshComponent& operator=(const StaticMeshComponent&)     = delete;
