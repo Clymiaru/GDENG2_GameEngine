@@ -31,6 +31,26 @@ namespace Editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::BeginMenu("Load Scene"))
+				{
+					// Show list of level files in the base directory (For now since expected files is not many)
+
+					if (ImGui::MenuItem("Test.level"))
+					{
+						Engine::Debug::Log("SceneName.level loaded!");
+						// SceneManager::LoadScene("SceneFile.level");
+					}
+
+					//ImGui::Begin()
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					// SceneManager::SaveCurrentScene();
+					Engine::Debug::Log("SceneName.level saved!");
+				}
+				
 				ImGui::EndMenu();
 			}
 

@@ -17,7 +17,11 @@ project ("Engine")
         "Dependencies/ImGui/**.h",
         "Dependencies/ImGui/**.cpp",
         "Dependencies/stb/**.h",
-        "Dependencies/stb/**.cpp"
+        "Dependencies/stb/**.cpp",
+        "Dependencies/rapidjson/**.h",
+        "Dependencies/rapidjson/**.cpp",
+        "Dependencies/tinyobj/**.h",
+        "Dependencies/tinyobj/**.cpp"
 
     }
 

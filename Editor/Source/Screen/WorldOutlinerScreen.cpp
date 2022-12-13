@@ -7,6 +7,7 @@
 
 #include <Engine/ECS/Core/Entity.h>
 #include <Engine/ECS/Core/EntityManager.h>
+#include <Engine/SceneManagement/SceneManager.h>
 #include <Engine/UI/UISystem.h>
 
 namespace Editor
@@ -38,7 +39,7 @@ namespace Editor
 		// This window is always open for the whole duration of the program
 		ImGui::Begin(GetNameAndIDLabel());
 
-		if (ImGui::TreeNode("Scene"))
+		if (ImGui::TreeNode(SceneManager::GetCurrentScene()->GetName().c_str()))
 		{
 			for (size_t i = 0ULL; i < m_EntityEntryList.size(); i++)
 			{

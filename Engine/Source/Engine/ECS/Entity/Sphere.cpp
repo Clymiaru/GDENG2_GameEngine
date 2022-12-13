@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Cube.h"
+#include "Sphere.h"
 
 #include "Engine/ECS/Component/TransformComponent.h"
 #include "Engine/ECS/Component/RenderComponent.h"
@@ -10,12 +10,12 @@
 
 namespace Engine
 {
-	Cube::Cube(const EntityID id,
-	           const StringView name,
-	           ComponentRegistry* componentRegistry) :
+	Sphere::Sphere(const EntityID id,
+			   const StringView name,
+			   ComponentRegistry* componentRegistry) :
 		Entity{id, name, componentRegistry}
 	{
-		RenderData* cubeRenderData = Primitive::Cube();
+		RenderData* cubeRenderData = Primitive::Sphere(32);
 
 		Application::GetResourceSystem().Load<VertexShader>("Assets/Shaders/Basic/TexturedShader.hlsl");
 		Application::GetResourceSystem().Load<PixelShader>("Assets/Shaders/Basic/TexturedShader.hlsl");
@@ -28,5 +28,5 @@ namespace Engine
 		AttachComponent<StaticMeshComponent>(cubeRenderData, vertexShader, pixelShader, transform);
 	}
 
-	Cube::~Cube() = default;
+	Sphere::~Sphere() = default;
 }
