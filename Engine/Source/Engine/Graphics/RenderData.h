@@ -3,6 +3,15 @@
 
 namespace Engine
 {
+	enum class PrimitiveType
+	{
+		None,
+		Cube,
+		Plane,
+		Sphere,
+		Capsule,
+		Mesh
+	};
 	struct RenderData
 	{
 		// Vertices
@@ -20,5 +29,7 @@ namespace Engine
 
 		// Topology
 		D3D11_PRIMITIVE_TOPOLOGY Topology;
+
+		PrimitiveType PrimitiveType;
 	};
 }

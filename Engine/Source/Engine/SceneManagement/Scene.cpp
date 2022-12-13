@@ -44,6 +44,10 @@ namespace Engine
 		}
 		return false;
 	}
+	List<UIID>& Scene::GetSceneEntityIDList()
+	{
+		return m_InSceneEntityIDList;
+	}
 
 	void Scene::AddEntity(const Entity* entity)
 	{

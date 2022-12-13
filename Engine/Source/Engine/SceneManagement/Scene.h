@@ -23,6 +23,8 @@ namespace Engine
 		const String& GetName() const; 
 
 		bool IsEntityInScene(UIID entityID) const;
+
+		List<UIID>& GetSceneEntityIDList();
 		
 	private:
 

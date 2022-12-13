@@ -4,8 +4,13 @@
 #include <Engine/ECS/Core/EntityManager.h>
 #include <Engine/ECS/Entity/EmptyEntity.h>
 #include <Engine/ECS/Entity/Camera.h>
+#include <Engine/ECS/Entity/Capsule.h>
 #include <Engine/ECS/Entity/Cube.h>
 #include <Engine/ECS/Entity/EditorCamera.h>
+#include <Engine/ECS/Entity/Plane.h>
+#include <Engine/ECS/Entity/Sphere.h>
+#include <Engine/ResourceManagement/Core/ResourceSystem.h>
+#include <Engine/SceneManagement/SceneManager.h>
 
 #include <Engine/UI/UISystem.h>
 
@@ -31,6 +36,18 @@ namespace Editor
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("New Scene"))
+				{
+					Engine::SceneManager::CreateNewScene("New Scene");
+					Engine::Debug::Log("New scene created!");
+				}
+
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					Engine::SceneManager::SaveScene("Assets/Scenes/TestScene.level");
+					Engine::Debug::Log("SceneName.level saved!");
+				}
+
 				if (ImGui::BeginMenu("Load Scene"))
 				{
 					// Show list of level files in the base directory (For now since expected files is not many)
@@ -38,19 +55,13 @@ namespace Editor
 					if (ImGui::MenuItem("Test.level"))
 					{
 						Engine::Debug::Log("SceneName.level loaded!");
-						// SceneManager::LoadScene("SceneFile.level");
+						Engine::SceneManager::LoadSceneFromFile("Assets/Scenes/TestScene.level");
 					}
 
 					//ImGui::Begin()
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::MenuItem("Save Scene"))
-				{
-					// SceneManager::SaveCurrentScene();
-					Engine::Debug::Log("SceneName.level saved!");
-				}
-				
 				ImGui::EndMenu();
 			}
 
@@ -70,7 +81,42 @@ namespace Editor
 
 					if (ImGui::MenuItem("Cube"))
 					{
-						Engine::EntityManager::Create<Engine::Cube>("Cube");
+						auto* entity = Engine::EntityManager::Create<Engine::Cube>("Cube");
+
+						const auto staticMesh = entity->GetComponent<Engine::StaticMeshComponent>();
+						const auto texture    = Engine::Application::GetResourceSystem().Get<
+							Engine::TextureResource>("WhiteSquare");
+						staticMesh->SetTexture(texture);
+					}
+
+					if (ImGui::MenuItem("Plane"))
+					{
+						auto* entity = Engine::EntityManager::Create<Engine::Plane>("Plane");
+
+						const auto staticMesh = entity->GetComponent<Engine::StaticMeshComponent>();
+						const auto texture    = Engine::Application::GetResourceSystem().Get<
+							Engine::TextureResource>("WhiteSquare");
+						staticMesh->SetTexture(texture);
+					}
+
+					if (ImGui::MenuItem("Sphere"))
+					{
+						auto* entity = Engine::EntityManager::Create<Engine::Sphere>("Sphere");
+
+						const auto staticMesh = entity->GetComponent<Engine::StaticMeshComponent>();
+						const auto texture    = Engine::Application::GetResourceSystem().Get<
+							Engine::TextureResource>("WhiteSquare");
+						staticMesh->SetTexture(texture);
+					}
+
+					if (ImGui::MenuItem("Capsule"))
+					{
+						auto* entity = Engine::EntityManager::Create<Engine::Capsule>("Capsule");
+
+						const auto staticMesh = entity->GetComponent<Engine::StaticMeshComponent>();
+						const auto texture    = Engine::Application::GetResourceSystem().Get<
+							Engine::TextureResource>("WhiteSquare");
+						staticMesh->SetTexture(texture);
 					}
 
 					ImGui::EndMenu();
@@ -88,7 +134,8 @@ namespace Editor
 
 				if (ImGui::MenuItem("Scene Viewport"))
 				{
-					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>("EditorCamera", 512UL, 512UL);
+					auto* editorCamera = Engine::EntityManager::Create<Engine::EditorCamera>("EditorCamera", 512UL,
+					                                                                         512UL);
 					Engine::UISystem::Create<EditorViewportScreen>(editorCamera);
 				}
 

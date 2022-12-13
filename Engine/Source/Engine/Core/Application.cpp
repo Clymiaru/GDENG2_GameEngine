@@ -8,6 +8,7 @@
 #include "Engine/Graphics/SwapChain.h"
 #include "Engine/Input/Input.h"
 #include "Engine/ResourceManagement/Core/ResourceSystem.h"
+#include "Engine/SceneManagement/SceneManager.h"
 #include "Engine/UI/UISystem.h"
 
 namespace Engine
@@ -133,6 +134,8 @@ namespace Engine
 			Render();
 
 			m_Timer->Stop();
+
+			SceneManager::GetInstance().UpdateScene();
 
 			Sleep(1);
 		}

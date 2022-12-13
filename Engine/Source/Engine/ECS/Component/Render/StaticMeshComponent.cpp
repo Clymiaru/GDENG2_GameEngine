@@ -172,4 +172,9 @@ namespace Engine
 
 		Application::GetRenderer().GetContext().DrawIndexed(m_IndexBuffer->ElementCount(), 0);
 	}
+	
+	RenderData& StaticMeshComponent::GetRenderData() const
+	{
+		return *m_RenderData;
+	}
 }

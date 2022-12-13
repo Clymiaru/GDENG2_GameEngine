@@ -22,6 +22,11 @@ namespace Editor
 
 		SharedPtr<EditorCameraComponent> editorCameraComponent = m_EditorCameraRef->GetComponent<EditorCameraComponent>();
 
+		if (editorCameraComponent == nullptr)
+		{
+			return;
+		}
+
 		Framebuffer* renderTarget = &editorCameraComponent->GetRenderTarget();
 
 		if ((m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f) &&

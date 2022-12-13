@@ -43,6 +43,8 @@ namespace Engine
 
 		Color AlbedoColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
+		RenderData& GetRenderData() const;
+
 	private:
 		// Material
 		//	Shader

@@ -39,7 +39,14 @@ namespace Editor
 		// This window is always open for the whole duration of the program
 		ImGui::Begin(GetNameAndIDLabel());
 
-		if (ImGui::TreeNode(SceneManager::GetCurrentScene()->GetName().c_str()))
+		auto scene = SceneManager::GetCurrentScene();
+		if (scene == nullptr)
+		{
+			ImGui::End();
+			return;
+		}
+
+		if (ImGui::TreeNode(scene->GetName().c_str()))
 		{
 			for (size_t i = 0ULL; i < m_EntityEntryList.size(); i++)
 			{

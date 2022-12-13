@@ -12,7 +12,7 @@ namespace Engine::Primitive
 	{
 		Vector3Float Position;
 		Vector2Float UV;
-		Vector3Float Normal;
+		//Vector3Float Normal;
 	};
 
 	inline RenderData* Mesh(StringView filepath)
@@ -83,7 +83,7 @@ namespace Engine::Primitive
 		meshRenderData->Indices                  = indices->data();
 		meshRenderData->IndexCount               = indices->size();
 		meshRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
+		meshRenderData->PrimitiveType            = PrimitiveType::Mesh;
 		return meshRenderData;
 	}
 
@@ -123,43 +123,80 @@ namespace Engine::Primitive
 			Vector3Float::Right
 		};
 
+		// List<Vertex>* vertices = new List<Vertex>{
+		// 	{positionList[0], uvList[1], normalList[1]},
+		// 	{positionList[1], uvList[0], normalList[1]},
+		// 	{positionList[2], uvList[2], normalList[1]},
+		// 	{positionList[3], uvList[3], normalList[1]},
+		//
+		// 	{positionList[4], uvList[1], normalList[4]},
+		// 	{positionList[5], uvList[0], normalList[4]},
+		// 	{positionList[6], uvList[2], normalList[4]},
+		// 	{positionList[7], uvList[3], normalList[4]},
+		//
+		// 	{positionList[1], uvList[1], normalList[2]},
+		// 	{positionList[6], uvList[0], normalList[2]},
+		// 	{positionList[5], uvList[2], normalList[2]},
+		// 	{positionList[2], uvList[3], normalList[2]},
+		//
+		// 	{positionList[7], uvList[1], normalList[3]},
+		// 	{positionList[0], uvList[0], normalList[3]},
+		// 	{positionList[3], uvList[2], normalList[3]},
+		// 	{positionList[4], uvList[3], normalList[3]},
+		//
+		// 	{positionList[3], uvList[1], normalList[5]},
+		// 	{positionList[2], uvList[0], normalList[5]},
+		// 	{positionList[5], uvList[2], normalList[5]},
+		// 	{positionList[4], uvList[3], normalList[5]},
+		//
+		// 	{positionList[7], uvList[1], normalList[0]},
+		// 	{positionList[6], uvList[0], normalList[0]},
+		// 	{positionList[1], uvList[2], normalList[0]},
+		// 	{positionList[0], uvList[3], normalList[0]}
+		// };
+
 		List<Vertex>* vertices = new List<Vertex>{
-			{positionList[0], uvList[1], normalList[1]},
-			{positionList[1], uvList[0], normalList[1]},
-			{positionList[2], uvList[2], normalList[1]},
-			{positionList[3], uvList[3], normalList[1]},
+				{positionList[0], uvList[1]},
+				{positionList[1], uvList[0]},
+				{positionList[2], uvList[2]},
+				{positionList[3], uvList[3]},
 
-			{positionList[4], uvList[1], normalList[4]},
-			{positionList[5], uvList[0], normalList[4]},
-			{positionList[6], uvList[2], normalList[4]},
-			{positionList[7], uvList[3], normalList[4]},
+				{positionList[4], uvList[1]},
+				{positionList[5], uvList[0]},
+				{positionList[6], uvList[2]},
+				{positionList[7], uvList[3]},
 
-			{positionList[1], uvList[1], normalList[2]},
-			{positionList[6], uvList[0], normalList[2]},
-			{positionList[5], uvList[2], normalList[2]},
-			{positionList[2], uvList[3], normalList[2]},
+				{positionList[1], uvList[1]},
+				{positionList[6], uvList[0]},
+				{positionList[5], uvList[2]},
+				{positionList[2], uvList[3]},
 
-			{positionList[7], uvList[1], normalList[3]},
-			{positionList[0], uvList[0], normalList[3]},
-			{positionList[3], uvList[2], normalList[3]},
-			{positionList[4], uvList[3], normalList[3]},
+				{positionList[7], uvList[1]},
+				{positionList[0], uvList[0]},
+				{positionList[3], uvList[2]},
+				{positionList[4], uvList[3]},
 
-			{positionList[3], uvList[1], normalList[5]},
-			{positionList[2], uvList[0], normalList[5]},
-			{positionList[5], uvList[2], normalList[5]},
-			{positionList[4], uvList[3], normalList[5]},
+				{positionList[3], uvList[1]},
+				{positionList[2], uvList[0]},
+				{positionList[5], uvList[2]},
+				{positionList[4], uvList[3]},
 
-			{positionList[7], uvList[1], normalList[0]},
-			{positionList[6], uvList[0], normalList[0]},
-			{positionList[1], uvList[2], normalList[0]},
-			{positionList[0], uvList[3], normalList[0]}
+				{positionList[7], uvList[1]},
+				{positionList[6], uvList[0]},
+				{positionList[1], uvList[2]},
+				{positionList[0], uvList[3]}
 		};
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
+
+		// List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
+		// 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	};
 
 		List<uint32_t>* indices = new List<uint32_t>{
 			//FRONT SIDE
@@ -191,6 +228,7 @@ namespace Engine::Primitive
 		cubeRenderData->Indices                  = indices->data();
 		cubeRenderData->IndexCount               = indices->size();
 		cubeRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		cubeRenderData->PrimitiveType            = PrimitiveType::Cube;
 
 		return cubeRenderData;
 	}
@@ -214,17 +252,29 @@ namespace Engine::Primitive
 		};
 
 		List<Vertex>* vertices = new List<Vertex>{
-			{positionList[0], uvList[0], Vector3Float::Up},
-			{positionList[1], uvList[1], Vector3Float::Up},
-			{positionList[2], uvList[2], Vector3Float::Up},
-			{positionList[3], uvList[3], Vector3Float::Up},
-		};
+				{positionList[0], uvList[0]},
+				{positionList[1], uvList[1]},
+				{positionList[2], uvList[2]},
+				{positionList[3], uvList[3]},
+			};
+		//
+		// List<Vertex>* vertices = new List<Vertex>{
+		// 	{positionList[0], uvList[0], Vector3Float::Up},
+		// 	{positionList[1], uvList[1], Vector3Float::Up},
+		// 	{positionList[2], uvList[2], Vector3Float::Up},
+		// 	{positionList[3], uvList[3], Vector3Float::Up},
+		// };
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
+
+		// List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
+		// 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	};
 
 		List<uint32_t>* indices = new List<uint32_t>{
 			0, 2, 3,
@@ -240,6 +290,7 @@ namespace Engine::Primitive
 		planeRenderData->Indices                  = indices->data();
 		planeRenderData->IndexCount               = indices->size();
 		planeRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		planeRenderData->PrimitiveType            = PrimitiveType::Plane;
 
 		return planeRenderData;
 	}
@@ -293,7 +344,8 @@ namespace Engine::Primitive
 
 				const Vector2Float uv = Vector2Float{s, t};
 
-				vertices->push_back(Vertex{position, uv, normal});
+				//vertices->push_back(Vertex{position, uv, normal});
+				vertices->push_back(Vertex{position, uv});
 			}
 		}
 
@@ -324,8 +376,13 @@ namespace Engine::Primitive
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
+
+		// List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
+		// 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 		{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		// 	};
 
 		RenderData* sphereRenderData               = new RenderData();
 		sphereRenderData->Vertices                 = vertices->data();
@@ -336,41 +393,126 @@ namespace Engine::Primitive
 		sphereRenderData->Indices                  = indices->data();
 		sphereRenderData->IndexCount               = indices->size();
 		sphereRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		sphereRenderData->PrimitiveType            = PrimitiveType::Sphere;
 
 		return sphereRenderData;
 	}
 
 	// Capsule
-	inline RenderData* Capsule(Vector3Float dimensions, int sectors, int meridians, float equatorialHeight)
+	inline RenderData* Capsule(const int sectors,
+	                           const int meridians,
+	                           const float equatorialHeight)
 	{
-		List<Vector3Float> positionList = List<Vector3Float>();
-		List<Vector2Float> uvList       = List<Vector2Float>();
-		List<Vector3Float> normalList   = List<Vector3Float>();
-
 		List<Vertex>* vertices  = new List<Vertex>();
 		List<uint32_t>* indices = new List<uint32_t>();
 
-		// TODO: Capsule vertices and indices generation
+		const int equatorialMeridian = meridians / 2;
+
+		for (int i = 0; i <= sectors; i++)
+		{
+			float longitude = (PI * 2 * (float)i) / (float)sectors;
+
+			float verticalOffset = -equatorialHeight / 2;
+
+			// This sequences multiple times through on the equatorial meridian:
+			//	- the last band of verts on the lower hemisphere
+			//	- the bottom band of verts on the equator
+			//	- the top band of verts on the equator
+			//	- finally to continue to draw the first band of verts on the upper hemisphere
+
+			constexpr int extraMeridians = 4;
+
+			int createEquator = extraMeridians - 1;
+
+			// total V distance along the curved portion (upper and lower hemispheres combined)
+			// see note about elliptical distance: this distorts with non-uniform dimensions.
+			float curvedVDistance = PI;
+
+			for (int j = 0; j <= meridians; j++)
+			{
+				bool emitTriangles = true;
+
+				const int effectiveJ = j;
+
+				if (j == equatorialMeridian)
+				{
+					if (createEquator > 0)
+					{
+						// last (topmost) band of verts on lower hemisphere
+						if (createEquator == 3)
+						{
+						}
+						// bottom band of verts on the equator band
+						if (createEquator == 2)
+						{
+							// don't want these zero-height polys as we transition
+							// from the lower hemisphere to the equatorial band.
+							emitTriangles = false;
+						}
+						// top band of verts on the equator band
+						if (createEquator == 1)
+						{
+							verticalOffset = -verticalOffset;
+						}
+
+						createEquator--;
+
+						j--;
+					}
+					else
+					{
+						// don't want these zero-height polys as we transition
+						// from the equatorial band to the upper hemisphere
+						emitTriangles = false;
+					}
+				}
+
+				int n = vertices->size();
+
+				const float latitude = ((float)effectiveJ * PI) / (float)meridians - PI / 2;
+
+				const Vector3Float sphericalPoint = Vector3Float(std::cos(longitude) * std::cos(latitude),
+				                                                 std::sin(latitude) + verticalOffset,
+				                                                 std::sin(longitude) * std::cos(latitude));
+
+				vertices->push_back({sphericalPoint, Vector2Float::One});
+
+				if (emitTriangles)
+				{
+					if (i > 0 && j > 0)
+					{
+						const int effectiveMeridians = meridians + extraMeridians;
+
+						indices->push_back(n);
+						indices->push_back(n - effectiveMeridians - 1);
+						indices->push_back(n - effectiveMeridians);
+
+						indices->push_back(n);
+						indices->push_back(n - 1);
+						indices->push_back(n - effectiveMeridians - 1);
+					}
+				}
+			}
+		}
 
 		List<D3D11_INPUT_ELEMENT_DESC>* layout = new List<D3D11_INPUT_ELEMENT_DESC>{
 				{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 
-		RenderData* capsuleRenderData               = new RenderData();
-		capsuleRenderData->Vertices                 = vertices->data();
-		capsuleRenderData->VertexCount              = vertices->size();
-		capsuleRenderData->VertexSize               = sizeof(Vertex);
-		capsuleRenderData->VertexLayout             = layout->data();
-		capsuleRenderData->VertexLayoutElementCount = layout->size();
-		capsuleRenderData->Indices                  = indices->data();
-		capsuleRenderData->IndexCount               = indices->size();
-		capsuleRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		RenderData* cylinderRenderData               = new RenderData();
+		cylinderRenderData->Vertices                 = vertices->data();
+		cylinderRenderData->VertexCount              = vertices->size();
+		cylinderRenderData->VertexSize               = sizeof(Vertex);
+		cylinderRenderData->VertexLayout             = layout->data();
+		cylinderRenderData->VertexLayoutElementCount = layout->size();
+		cylinderRenderData->Indices                  = indices->data();
+		cylinderRenderData->IndexCount               = indices->size();
+		cylinderRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-		return capsuleRenderData;
+		return cylinderRenderData;
 	}
-	
+
 	struct FrustrumVertex
 	{
 		Vector3Float Position;
@@ -443,6 +585,7 @@ namespace Engine::Primitive
 		frustumRenderData->Indices                  = indices->data();
 		frustumRenderData->IndexCount               = indices->size();
 		frustumRenderData->Topology                 = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		frustumRenderData->PrimitiveType            = PrimitiveType::None;
 
 		return frustumRenderData;
 	}

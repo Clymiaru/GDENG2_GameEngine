@@ -35,42 +35,45 @@ namespace Editor
 	void EditorLayer::OnStart()
 	{
 		using namespace Engine;
-		SceneManager::CreateNewScene("Default Scene");
-		
+		Application::GetResourceSystem().Load<Texture>("Assets/WhiteSquare.jpg");
 		Application::GetResourceSystem().Load<Texture>("Assets/Brick1024x1024.jpg");
 		Application::GetResourceSystem().Load<Texture>("Assets/image0-42.png");
 		Application::GetResourceSystem().Load<Texture>("Assets/SuzunaDerpComfy.png");
-
-		auto shioriTexture = Application::GetResourceSystem().Get<TextureResource>("image0-42");
-		auto suzunaTexture = Application::GetResourceSystem().Get<TextureResource>("SuzunaDerpComfy");
-
-		auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512UL, 512UL);
-		UISystem::Create<EditorViewportScreen>(editorCamera);
-
-		// UISystem::Create<GameViewportScreen>();
-
-		EntityManager::Create<Camera>("GameCamera", 512UL, 512UL);
-
-		// for (int i = 0; i < 10000; i++)
-		// {
-		// 	auto cubeEntity   = EntityManager::Create<Cube>("Cube");
-		// 	auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
-		// 	cubeRenderer->SetTexture(shioriTexture);
+		
+		// SceneManager::CreateNewScene("Default Scene");
 		//
-		// 	auto cubeTransform      = cubeEntity->GetComponent<TransformComponent>();
-		// 	cubeTransform->Position = Vector3Float(Random::Range(-50.0f, 50.0f),
-		// 	                                       Random::Range(-50.0f, 50.0f),
-		// 	                                       Random::Range(-50.0f, 50.0f));
-		// }
-
-		const auto cubeEntity = EntityManager::Create<Cube>("Cube");
-
-		const auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
-		cubeRenderer->SetTexture(shioriTexture);
-
-		const auto cubeTransform = cubeEntity->GetComponent<TransformComponent>();
-
-		cubeTransform->Position = Vector3Float(0, 0, 0);
+		
+		//
+		// auto shioriTexture = Application::GetResourceSystem().Get<TextureResource>("image0-42");
+		// auto suzunaTexture = Application::GetResourceSystem().Get<TextureResource>("SuzunaDerpComfy");
+		//
+		// auto* editorCamera = EntityManager::Create<EditorCamera>("EditorCamera", 512UL, 512UL);
+		// UISystem::Create<EditorViewportScreen>(editorCamera);
+		//
+		// // UISystem::Create<GameViewportScreen>();
+		//
+		// EntityManager::Create<Camera>("GameCamera", 512UL, 512UL);
+		//
+		// // for (int i = 0; i < 10000; i++)
+		// // {
+		// // 	auto cubeEntity   = EntityManager::Create<Cube>("Cube");
+		// // 	auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
+		// // 	cubeRenderer->SetTexture(shioriTexture);
+		// //
+		// // 	auto cubeTransform      = cubeEntity->GetComponent<TransformComponent>();
+		// // 	cubeTransform->Position = Vector3Float(Random::Range(-50.0f, 50.0f),
+		// // 	                                       Random::Range(-50.0f, 50.0f),
+		// // 	                                       Random::Range(-50.0f, 50.0f));
+		// // }
+		//
+		// const auto cubeEntity = EntityManager::Create<Cube>("Cube");
+		//
+		// const auto cubeRenderer = cubeEntity->GetComponent<StaticMeshComponent>();
+		// cubeRenderer->SetTexture(shioriTexture);
+		//
+		// const auto cubeTransform = cubeEntity->GetComponent<TransformComponent>();
+		//
+		// cubeTransform->Position = Vector3Float(0, 0, 0);
 
 		// auto planeEntity      = EntityManager::Create<Plane>("Plane");
 		// auto planeTransform   = planeEntity->GetComponent<TransformComponent>();

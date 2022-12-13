@@ -1,0 +1,23 @@
+{
+    "SceneInfo": {
+        "SceneName": "New Scene"
+    },
+    "Entities": [
+        {
+            "Id": "2",
+            "Name": "Cube_2"
+        },
+        {
+            "Id": "3",
+            "Name": "Cube_3"
+        },
+        {
+            "Id": "4",
+            "Name": "Cube_4"
+        },
+        {
+            "Id": "5",
+            "Name": "Plane_5"
+        }
+    ]
+}
